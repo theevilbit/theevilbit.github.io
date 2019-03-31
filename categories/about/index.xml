@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>About on theevilbit blog</title>
+    <link>/categories/about/</link>
+    <description>Recent content in About on theevilbit blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sun, 31 Mar 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/about/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>About</title>
+      <link>/about/</link>
+      <pubDate>Sun, 31 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/about/</guid>
+      <description>Csaba graduated in 2006 as a computer engineer. He worked for 6 years as a network engineer, troubleshooting and designing big Cisco networks. After that he started to work as a blue teamer, focusing on network forensics, malware analysis and kernel exploitation. Currently he works in a red team, where he spends most of his time simulating adversary techniques and doing pentents. He gave talks / workshops on various international IT security conferences, including Hacktivity, hack.</description>
+    </item>
+    
+  </channel>
+</rss>

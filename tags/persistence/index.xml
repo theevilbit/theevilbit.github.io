@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Blog on theevilbit blog</title>
-    <link>/categories/blog/</link>
-    <description>Recent content in Blog on theevilbit blog</description>
+    <title>Persistence on theevilbit blog</title>
+    <link>/tags/persistence/</link>
+    <description>Recent content in Persistence on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Tue, 23 Apr 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/categories/blog/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/persistence/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -17,15 +17,6 @@
       
       <guid>/posts/macos_persisting_through-application_script_files/</guid>
       <description>I started to explore to possibility of persisting on macOS through script files contained in an application. The basic idea is that if we find a script file, which is being executed by a given application, we can edit that script file, put our code inside, and wait for an execution. Such technique is highly dependent on the applications the user has installed, so I looked through first how rare / frequent is having such scripts inside applications.</description>
-    </item>
-    
-    <item>
-      <title>VMware Fusion 11 - Guest VM RCE - CVE-2019-5514</title>
-      <link>/posts/vmware_fusion_11_guest_vm_rce_cve-2019-5514/</link>
-      <pubDate>Sun, 31 Mar 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/posts/vmware_fusion_11_guest_vm_rce_cve-2019-5514/</guid>
-      <description>TL;DR You can run an arbitrary command on a VMware Fusion guest VM through a website without any priory knowledge. Basically VMware Fusion is starting up a websocket listening only on the localhost. You can fully control all the VMs (also create/delete snapshots, whatever you want) through this websocket interface, including launching apps. You need to have VMware Tools installed on the guest for launching apps, but honestly who doesn’t have it installed.</description>
     </item>
     
   </channel>

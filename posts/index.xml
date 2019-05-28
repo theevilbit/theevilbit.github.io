@@ -5,10 +5,20 @@
     <link>/posts/</link>
     <description>Recent content in Posts on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 23 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 28 May 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>GNS3 ubridge SETUID bit - arbitrary file read</title>
+      <link>/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/</link>
+      <pubDate>Tue, 28 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/</guid>
+      <description>A couple of weeks ago, I had the idea of scanning my Mac for files that has the SUID bit set, I wanted to see if there is anything interesting showing up. You can do it this way:
+/usr/bin/sudo find / -perm -4000 -exec /bin/ls -ldb {} \; &amp;gt; suidfilelist There was one item that caught my attention, and that was a file called ubridge inside GNS3. I used to be a network guy, and GNS3 is a great tool to emulate real network gear, practice configuration, etc.</description>
+    </item>
     
     <item>
       <title>macOS - Persisting through Application script files</title>

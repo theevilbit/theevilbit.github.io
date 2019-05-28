@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Rest Api on theevilbit blog</title>
+    <title>rest api on theevilbit blog</title>
     <link>/tags/rest-api/</link>
-    <description>Recent content in Rest Api on theevilbit blog</description>
+    <description>Recent content in rest api on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Sun, 31 Mar 2019 00:00:00 +0000</lastBuildDate>
     

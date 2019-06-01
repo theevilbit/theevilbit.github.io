@@ -5,10 +5,19 @@
     <link>/year/2019/</link>
     <description>Recent content in 2019 on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 28 May 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 01 Jun 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/year/2019/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>macOS - Getting root with benign AppStore apps</title>
+      <link>/posts/getting_root_with_benign_appstore_apps/</link>
+      <pubDate>Sat, 01 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/getting_root_with_benign_appstore_apps/</guid>
+      <description>This writeup is intended to be a bit of storytelling. I would like to show how I went down the rabbit hole in a quick ’research’ I wanted to do, and eventually found a local privilege escalation vulnerability in macOS. I also want to show, tell about all the obstacles and failures I run into, stuff that people don’t talk about usually, but I feel it’s part of the process all of us go through, when we try to create something.</description>
+    </item>
     
     <item>
       <title>GNS3 ubridge SETUID bit - arbitrary file read</title>

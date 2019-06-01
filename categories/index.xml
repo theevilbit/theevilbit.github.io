@@ -5,26 +5,26 @@
     <link>/categories/</link>
     <description>Recent content in Categories on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 31 Mar 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 01 Jun 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>About</title>
-      <link>/categories/about/</link>
-      <pubDate>Sun, 31 Mar 2019 00:00:00 +0000</pubDate>
+      <title>BLOG</title>
+      <link>/categories/blog/</link>
+      <pubDate>Sat, 01 Jun 2019 00:00:00 +0000</pubDate>
       
-      <guid>/categories/about/</guid>
+      <guid>/categories/blog/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Blog</title>
-      <link>/categories/blog/</link>
-      <pubDate>Tue, 28 May 2019 00:00:00 +0000</pubDate>
+      <title>about</title>
+      <link>/categories/about/</link>
+      <pubDate>Sun, 31 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>/categories/blog/</guid>
+      <guid>/categories/about/</guid>
       <description></description>
     </item>
     

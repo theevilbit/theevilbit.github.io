@@ -16,7 +16,7 @@
       <pubDate>Tue, 09 Jul 2019 00:00:00 +0000</pubDate>
       
       <guid>/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/</guid>
-      <description>After my recent blog post, my old mate @_DarkKnight reached out to me and he asked me a question:
+      <description>After my recent blog post, my old mate @_Dark_Knight_ reached out to me and he asked me a question:
  “Do you typically callout user apps that allow dyld_insert_libraries?”
  And a few similar ones, and I will be honest, I had no idea what is he talking about, if only I understood the question :D Despite the fact that my recent blog posts and talks are about macOS, I deal much more with Windows on a daily basis, probably like 95%, and macOS is still a whole new territory for me.</description>
     </item>

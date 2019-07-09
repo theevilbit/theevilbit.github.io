@@ -5,15 +5,24 @@
     <link>/tags/</link>
     <description>Recent content in Tags on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 01 Jun 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 09 Jul 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>injection</title>
+      <link>/tags/injection/</link>
+      <pubDate>Tue, 09 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/injection/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>lpe</title>
       <link>/tags/lpe/</link>
-      <pubDate>Sat, 01 Jun 2019 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 09 Jul 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/lpe/</guid>
       <description></description>
@@ -22,7 +31,7 @@
     <item>
       <title>macos</title>
       <link>/tags/macos/</link>
-      <pubDate>Sat, 01 Jun 2019 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 09 Jul 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/macos/</guid>
       <description></description>

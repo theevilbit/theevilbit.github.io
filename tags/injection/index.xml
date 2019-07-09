@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>lpe on theevilbit blog</title>
-    <link>/tags/lpe/</link>
-    <description>Recent content in lpe on theevilbit blog</description>
+    <title>injection on theevilbit blog</title>
+    <link>/tags/injection/</link>
+    <description>Recent content in injection on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Tue, 09 Jul 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/tags/lpe/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/injection/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -19,15 +19,6 @@
       <description>After my recent blog post, my old mate @_DarkKnight reached out to me and he asked me a question:
  “Do you typically callout user apps that allow dyld_insert_libraries?”
  And a few similar ones, and I will be honest, I had no idea what is he talking about, if only I understood the question :D Despite the fact that my recent blog posts and talks are about macOS, I deal much more with Windows on a daily basis, probably like 95%, and macOS is still a whole new territory for me.</description>
-    </item>
-    
-    <item>
-      <title>macOS - Getting root with benign AppStore apps</title>
-      <link>/posts/getting_root_with_benign_appstore_apps/</link>
-      <pubDate>Sat, 01 Jun 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/posts/getting_root_with_benign_appstore_apps/</guid>
-      <description>This writeup is intended to be a bit of storytelling. I would like to show how I went down the rabbit hole in a quick ’research’ I wanted to do, and eventually found a local privilege escalation vulnerability in macOS. I also want to show, tell about all the obstacles and failures I run into, stuff that people don’t talk about usually, but I feel it’s part of the process all of us go through, when we try to create something.</description>
     </item>
     
   </channel>

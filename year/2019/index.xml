@@ -5,10 +5,21 @@
     <link>/year/2019/</link>
     <description>Recent content in 2019 on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 01 Jun 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 09 Jul 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/year/2019/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX</title>
+      <link>/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/</link>
+      <pubDate>Tue, 09 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/</guid>
+      <description>After my recent blog post, my old mate @_DarkKnight reached out to me and he asked me a question:
+ “Do you typically callout user apps that allow dyld_insert_libraries?”
+ And a few similar ones, and I will be honest, I had no idea what is he talking about, if only I understood the question :D Despite the fact that my recent blog posts and talks are about macOS, I deal much more with Windows on a daily basis, probably like 95%, and macOS is still a whole new territory for me.</description>
+    </item>
     
     <item>
       <title>macOS - Getting root with benign AppStore apps</title>

@@ -5,10 +5,19 @@
     <link>/tags/</link>
     <description>Recent content in Tags on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 09 Jul 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 31 Jul 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>kernel exploitation</title>
+      <link>/tags/kernel-exploitation/</link>
+      <pubDate>Wed, 31 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/kernel-exploitation/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>injection</title>

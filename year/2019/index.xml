@@ -5,10 +5,20 @@
     <link>/year/2019/</link>
     <description>Recent content in 2019 on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 09 Jul 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 31 Jul 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/year/2019/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>A simple protection against HMValidateHandle technique</title>
+      <link>/posts/a_simple_protection_against_hmvalidatehandle_technique/</link>
+      <pubDate>Wed, 31 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/a_simple_protection_against_hmvalidatehandle_technique/</guid>
+      <description>In the recent days I was reading technical analysis of win32k exploits from recent years, and it caught my eyes, that the HMValidateHandle technique is very heavily used almost everywhere. Then I had an idea how to protect against this family of exploits, which I think is very simple. This post will be about that.
+What is HMValidateHandle? HMValidateHandle is an internal, unexported function of user32.dll. It takes a handle and a handle type as arguments, and by looking up the handle table, if the handle is matching with the type it will copy the object to user memory.</description>
+    </item>
     
     <item>
       <title>DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX</title>

@@ -4,43 +4,60 @@
   
   <url>
     <loc>/year/2019/</loc>
-    <lastmod>2019-07-09T00:00:00+00:00</lastmod>
+    <lastmod>2019-07-31T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
+    <loc>/posts/a_simple_protection_against_hmvalidatehandle_technique/</loc>
+    <lastmod>2019-07-31T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/categories/blog/</loc>
-    <lastmod>2019-07-09T00:00:00+00:00</lastmod>
+    <lastmod>2019-07-31T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/categories/</loc>
-    <lastmod>2019-07-09T00:00:00+00:00</lastmod>
+    <lastmod>2019-07-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/posts/</loc>
+    <lastmod>2019-07-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2019-07-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/year/</loc>
+    <lastmod>2019-07-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/kernel-exploitation/</loc>
+    <lastmod>2019-07-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/</loc>
+    <lastmod>2019-07-31T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/</loc>
     <lastmod>2019-07-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/posts/</loc>
-    <lastmod>2019-07-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
-    <lastmod>2019-07-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/year/</loc>
-    <lastmod>2019-07-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
@@ -57,12 +74,6 @@
   
   <url>
     <loc>/tags/macos/</loc>
-    <lastmod>2019-07-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/</loc>
     <lastmod>2019-07-09T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>

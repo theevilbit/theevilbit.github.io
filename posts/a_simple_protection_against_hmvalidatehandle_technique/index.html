@@ -308,6 +308,21 @@ The normal version worked as expected:
 <p>Although I didn’t test it extensively if it creates false positives or not - although if yes I would take a look at that binary - I’m pretty confident that it should work universally. It will handle all cases, no matter from where you get <code>HMValidateHandle</code>’s address.
 Not sure if any exploit protection products are using this trick, but it should be pretty easy.</p>
 
+<h2 id="note-update-2019-08-01">Note - UPDATE 2019.08.01.</h2>
+
+<p>As noted by others, I almost forget to mention one thing. Obviously you can bypass this protection if you mimic what the function does, and never call it. Essentially there is another well known technique for achieving the same, which is getting to the DesktopHeap where all these structures are stored and parse the heap. This method is beyond the scope of this post, but if you want to read about it, here are some awesome resources:</p>
+
+<p><a href="https://www.blackhat.com/docs/us-17/wednesday/us-17-Schenk-Taking-Windows-10-Kernel-Exploitation-To-The-Next-Level%E2%80%93Leveraging-Write-What-Where-Vulnerabilities-In-Creators-Update.pdf">https://www.blackhat.com/docs/us-17/wednesday/us-17-Schenk-Taking-Windows-10-Kernel-Exploitation-To-The-Next-Level%E2%80%93Leveraging-Write-What-Where-Vulnerabilities-In-Creators-Update.pdf
+</a></p>
+
+<p><a href="https://www.fuzzysecurity.com/tutorials/expDev/22.html">FuzzySecurity | Windows ExploitDev: Part 18</a></p>
+
+<p><a href="https://www.offensive-security.com/vulndev/development-of-a-new-windows-10-kaslr-bypass-in-one-windbg-command/">https://www.offensive-security.com/vulndev/development-of-a-new-windows-10-kaslr-bypass-in-one-windbg-command/</a></p>
+
+<p><a href="https://twitter.com/blomster81/status/844544024224710656">https://twitter.com/blomster81/status/844544024224710656</a></p>
+
+<p><a href="https://github.com/sam-b/windows_kernel_address_leaks/tree/master/DesktopHeap">windows_kernel_address_leaks/DesktopHeap at master · sam-b/windows_kernel_address_leaks · GitHub</a></p>
+
       </div>
 
       <footer>

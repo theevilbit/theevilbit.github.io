@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>windows on theevilbit blog</title>
+    <link>/tags/windows/</link>
+    <description>Recent content in windows on theevilbit blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 09 Aug 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/windows/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>UninstallString - a possible LPE via Social Engineering</title>
+      <link>/posts/uninstallstring_a_possible_lpe_via_social_engineering/</link>
+      <pubDate>Fri, 09 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/uninstallstring_a_possible_lpe_via_social_engineering/</guid>
+      <description>Whenever you install an application on Windows, typically through MSI, there is a registry key created, with plenty of information for uninstallation, like the uninstaller location, install date, publisher, etc… you can find all of the options here: Add uninstall information to Add/Remove Programs - NSIS
+In case an application is installed for the current user and not for all user, the Installation/Uninstallation details will go to the Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\ registry key instead of the HKLM hive.</description>
+    </item>
+    
+  </channel>
+</rss>

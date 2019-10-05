@@ -4,31 +4,60 @@
   
   <url>
     <loc>/year/2019/</loc>
-    <lastmod>2019-08-09T00:00:00+00:00</lastmod>
+    <lastmod>2019-10-05T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/categories/blog/</loc>
-    <lastmod>2019-08-09T00:00:00+00:00</lastmod>
+    <lastmod>2019-10-05T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/categories/</loc>
-    <lastmod>2019-08-09T00:00:00+00:00</lastmod>
+    <lastmod>2019-10-05T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
+    <loc>/posts/few_click_rce_via_github_desktop_macos_client_with_gatekeeper_bypass_and_custom_url_handlers/</loc>
+    <lastmod>2019-10-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/posts/</loc>
-    <lastmod>2019-08-09T00:00:00+00:00</lastmod>
+    <lastmod>2019-10-05T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/tags/</loc>
-    <lastmod>2019-08-09T00:00:00+00:00</lastmod>
+    <lastmod>2019-10-05T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/year/</loc>
+    <lastmod>2019-10-05T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/gatekeeper/</loc>
+    <lastmod>2019-10-05T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/macos/</loc>
+    <lastmod>2019-10-05T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/</loc>
+    <lastmod>2019-10-05T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -38,19 +67,7 @@
   </url>
   
   <url>
-    <loc>/year/</loc>
-    <lastmod>2019-08-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>/tags/lpe/</loc>
-    <lastmod>2019-08-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/</loc>
     <lastmod>2019-08-09T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
@@ -79,12 +96,6 @@
   
   <url>
     <loc>/tags/injection/</loc>
-    <lastmod>2019-07-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/macos/</loc>
     <lastmod>2019-07-09T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>

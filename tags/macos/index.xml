@@ -5,10 +5,20 @@
     <link>/tags/macos/</link>
     <description>Recent content in macos on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 09 Jul 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 05 Oct 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/macos/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Few click RCE via GitHub Desktop macOS client with Gatekeeper bypass and custom URL handlers</title>
+      <link>/posts/few_click_rce_via_github_desktop_macos_client_with_gatekeeper_bypass_and_custom_url_handlers/</link>
+      <pubDate>Sat, 05 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/few_click_rce_via_github_desktop_macos_client_with_gatekeeper_bypass_and_custom_url_handlers/</guid>
+      <description>TL;DR The GitHub Desktop app doesn’t add the quarantine extended attribute to files downloaded from the web, and this along with macOS’s URL handler auto-registration feature allows an attacker to execute arbitrary, even unsigned code on a macOS system. If we don’t count the clicks required to open the GitHub App, and cloning an external repository, then this is a 2 click RCE.
+The idea I recently came across a very good blog post about an RCE vulnerability on GitHub Desktop: GitHub Desktop RCE (OSX) - André Baptista via its custom URL handlers.</description>
+    </item>
     
     <item>
       <title>DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX</title>

@@ -5,10 +5,22 @@
     <link>/posts/</link>
     <description>Recent content in Posts on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 05 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 12 Oct 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>IOBit Unlocker 1.1.2 - Local Privilege Escalation</title>
+      <link>/posts/iobit_unlocker_lpe/</link>
+      <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/iobit_unlocker_lpe/</guid>
+      <description>IOBit’s Unlocker program is advertised to solve the following issues:
+ IObit Unlocker performs well in solving “cannot delete files”, “access is denied”, “The file is in use by another program or user”, or “There has been a sharing violation” problems. With IObit Unlocker, you can manage all your files the way you want.
+ and even:
+ With “Unlock &amp;amp; Delete”, “Unlock &amp;amp; Rename”, “Unlock &amp;amp; Move”, and “Unlock &amp;amp; Copy”, IObit Unlocker offers easier ways to unlock and manage the files and folders to keep them safe and available.</description>
+    </item>
     
     <item>
       <title>Few click RCE via GitHub Desktop macOS client with Gatekeeper bypass and custom URL handlers</title>

@@ -17,8 +17,8 @@
 <meta property="og:description" content="This writeup is intended to be a bit of storytelling. I would like to show how I went down the rabbit hole in a quick ’research’ I wanted to do, and eventually found a local privilege escalation vulnerability in macOS. I also want to show, tell about all the obstacles and failures I run into, stuff that people don’t talk about usually, but I feel it’s part of the process all of us go through, when we try to create something." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/posts/getting_root_with_benign_appstore_apps/" />
-<meta property="article:published_time" content="2019-06-01T00:00:00&#43;00:00"/>
-<meta property="article:modified_time" content="2019-06-01T00:00:00&#43;00:00"/>
+<meta property="article:published_time" content="2019-06-01T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-06-01T00:00:00+00:00" />
 
 
     
@@ -53,7 +53,7 @@
     <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.55.6" />
+    <meta name="generator" content="Hugo 0.58.3" />
   </head>
 
   <body class=" ">
@@ -373,10 +373,11 @@ total <span style="color:#f60">8</span>
 drwxr-xr-x   <span style="color:#f60">4</span> csaby  staff   <span style="color:#f60">128</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:25 .
 drwxr-xr-x+ <span style="color:#f60">50</span> csaby  staff  <span style="color:#f60">1600</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:16 ..
 -rw-r--r--   <span style="color:#f60">1</span> csaby  staff     <span style="color:#f60">8</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:16 a
--rw-r--r--   <span style="color:#f60">1</span> csaby  staff     <span style="color:#f60">0</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:25 b</code></pre></div>
-<ol>
-<li>Even if we create a hardlink instead of symlink, that will be overwritten like in the 1st case.</li>
-<li>As noted earlier we can’t write to folder protected by SIP.</li>
+-rw-r--r--   <span style="color:#f60">1</span> csaby  staff     <span style="color:#f60">0</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:25 b</code></pre></div></li>
+
+<li><p>Even if we create a hardlink instead of symlink, that will be overwritten like in the 1st case.</p></li>
+
+<li><p>As noted earlier we can’t write to folder protected by SIP.</p></li>
 </ol>
 
 <h3 id="ideas-for-using-this-for-privilege-escalation">Ideas for using this for privilege escalation</h3>
@@ -391,7 +392,7 @@ drwxr-xr-x+ <span style="color:#f60">50</span> csaby  staff  <span style="color:
 
 <p>I will admit that at this point I took the lazy approach and reported the above to Apple, mainly because:
 * I found it very unlikely that I will find a suitable file that satisfies either #1 or #2
-* Xcode almost satisfied #2 as it has some cron examples, but not named as root
+    * Xcode almost satisfied #2 as it has some cron examples, but not named as root
 * I had 0 experience in developing AppStore apps, and I couldn’t code neither in Objective-C or Swift
 * I had better things to do at work and after work :)</p>
 
@@ -411,9 +412,7 @@ drwxr-xr-x+ <span style="color:#f60">50</span> csaby  staff  <span style="color:
 <h3 id="choosing-a-language">Choosing a language</h3>
 
 <p>I had no prior knowledge of either Objective C or Swift, but looking on the following syntax for Obj-C, freaked me out:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">myFraction <span style="color:#555">=</span> [[Fraction alloc] init];</code></pre></div></li>
-</ol>
-
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">myFraction <span style="color:#555">=</span> [[Fraction alloc] init];</code></pre></div>
 <p>This is how you call methods of objects and pass parameters. It’s against every syntax I ever knew and I just didn’t want to consume this. So I looked at Swift which looked much nicer in this space and decided to go with that. :)</p>
 
 <h3 id="learning-swift">Learning Swift</h3>
@@ -501,13 +500,15 @@ mas install <span style="color:#f60">1438725196</span></code></pre></div>
 
 <li><p>Embedded your file (it can be anywhere and anything):</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ mkdir Example.app/Contents/test
-$ <span style="color:#366">echo</span> aaaa &gt; Example.app/Contents/test/a</code></pre></div>
-<ol>
-<li>Recompress the app:
-<code>find ./Example.app | cpio -o --format odc | gzip -c &gt; Payload</code></li>
-<li>Delete unnecessary files, and move the Payload to the embedded pkg folder.</li>
-<li>Repack the pkg
-<code>pkgutil --flatten myfolder/ mypackage.pkg</code></li>
+$ <span style="color:#366">echo</span> aaaa &gt; Example.app/Contents/test/a</code></pre></div></li>
+
+<li><p>Recompress the app:
+<code>find ./Example.app | cpio -o --format odc | gzip -c &gt; Payload</code></p></li>
+
+<li><p>Delete unnecessary files, and move the Payload to the embedded pkg folder.</p></li>
+
+<li><p>Repack the pkg
+<code>pkgutil --flatten myfolder/ mypackage.pkg</code></p></li>
 </ol>
 
 <p>The package’s digital signature will be lost, so you will need a method to bypass Gatekeeper. The embedded App’s signature will be also broken, as these days every single file inside an .app bundle must be digitally signed. Typically the main mach-o file is signed, and it has the hash of the _CodeSignatures plist file. The file will contain all the hashes for the other files. If you place a new file inside the .app bundle that will invalidate the signature. However this is not a problem here, as if you can bypass Gatekeeper for the .pkg file, the installed Application will not be subject to Gatekeeper’s verification.</p>
@@ -525,9 +526,7 @@ Developers should build-in some verification of Apple IDs. I’m not sure that i
 <p>This year (2019) I’ve been talking to a few people about this, and it hit me, that I didn’t do any further checks if symlinks are completely broken (during the installation) or not. It turned out that they are still a thing.</p>
 
 <p>The way the fix is working is that <code>installd</code> has no longer access to the crontab folder (<code>/usr/lib/cron/tabs</code>) even running as root, so it won’t be able to create files there. I’m not even sure that this is a direct fix for my POC or some other coincidence. We can find the related error message in <code>/var/log/install.log</code> (you can use the Console app for viewing logs):</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f60">2019</span>-01-31 <span style="color:#f60">20</span>:44:49+01 csabymac shove<span style="color:#555">[</span><span style="color:#f60">1057</span><span style="color:#555">]</span>: <span style="color:#555">[</span><span style="color:#033">source</span><span style="color:#555">=</span>file<span style="color:#555">]</span> failed _RelinkFile<span style="color:#555">(</span>/var/folders/zz/zyxvpxvq6csfxvn_n0000000000000/C/PKInstallSandboxManager/401FEDFC-1D7B-4E47-A6E9-E26B83F8988F.activeSandbox/Root/Applications/Crontab Creator.app/Contents/Resources/peter, /private/var/at/tabs/peter<span style="color:#555">)</span>: Operation not permitted</code></pre></div></li>
-</ol>
-
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f60">2019</span>-01-31 <span style="color:#f60">20</span>:44:49+01 csabymac shove<span style="color:#555">[</span><span style="color:#f60">1057</span><span style="color:#555">]</span>: <span style="color:#555">[</span><span style="color:#033">source</span><span style="color:#555">=</span>file<span style="color:#555">]</span> failed _RelinkFile<span style="color:#555">(</span>/var/folders/zz/zyxvpxvq6csfxvn_n0000000000000/C/PKInstallSandboxManager/401FEDFC-1D7B-4E47-A6E9-E26B83F8988F.activeSandbox/Root/Applications/Crontab Creator.app/Contents/Resources/peter, /private/var/at/tabs/peter<span style="color:#555">)</span>: Operation not permitted</code></pre></div>
 <h3 id="the-problem">The problem</h3>
 
 <p>The <code>installd</code> process had still access to other folders, and can drop files there during the redirection, and those could be abused as well. I tested and you could redirect file writes to the following potentially dangerous folders:</p>

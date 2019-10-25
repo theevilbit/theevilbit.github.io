@@ -5,10 +5,19 @@
     <link>/posts/</link>
     <description>Recent content in Posts on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 12 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 25 Oct 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>GateKeeper - Bypass or not bypass?</title>
+      <link>/posts/gatekeeper_bypass_or_not_bypass/</link>
+      <pubDate>Fri, 25 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/gatekeeper_bypass_or_not_bypass/</guid>
+      <description>TL;DR On macOS Mojave Gatekeeper only verifies executables, which are run with the open command or the user double clicks. It won’t verify files, that are executed through other means like, directly executing a binary ./myapp regardless of the quarantine attribute. If you can place a plist file inside LaunchAgents/LaunchDaemons, the command inside will also be executed. Prior to Catalina there is a way to trick users to drag &amp;amp; drop files in the LaunchAgents folder.</description>
+    </item>
     
     <item>
       <title>IOBit Unlocker 1.1.2 - Local Privilege Escalation</title>

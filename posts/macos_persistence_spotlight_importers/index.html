@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Csaba Fitzl">
+    
+    
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="macOS persistence - Spotlight importers and how to create them"/>
+<meta name="twitter:description" content="TL;DR It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware.
+Intro I’m reading Jonathan Levin’s *OS Internals Vol I. book (user mode - *OS Internals: - Welcome!), and I got to the chapter where he talks about Spotlight importers, and my first thought was that it would be an awesome way to persist on macOS."/>
+
+    <meta property="og:title" content="macOS persistence - Spotlight importers and how to create them" />
+<meta property="og:description" content="TL;DR It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware.
+Intro I’m reading Jonathan Levin’s *OS Internals Vol I. book (user mode - *OS Internals: - Welcome!), and I got to the chapter where he talks about Spotlight importers, and my first thought was that it would be an awesome way to persist on macOS." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/macos_persistence_spotlight_importers/" />
+<meta property="article:published_time" content="2019-11-04T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-11-04T00:00:00+00:00" />
+
+
+    
+      <base href="/posts/macos_persistence_spotlight_importers/">
+    
+    <title>
+  macOS persistence - Spotlight importers and how to create them · theevilbit blog
+</title>
+
+    
+      <link rel="canonical" href="/posts/macos_persistence_spotlight_importers/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+
+    
+    
+    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.58.3" />
+  </head>
+
+  <body class=" ">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="">
+      theevilbit blog
+    </a>
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="/categories/">Categories</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="/posts/">Posts</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="/tags/">Tags</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="/about/">About</a>
+          </li>
+        
+      
+      
+    </ul>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">macOS persistence - Spotlight importers and how to create them</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2019-11-04T00:00:00Z'>
+                November 4, 2019
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              10 minutes read
+            </span>
+          </div>
+          <div class="categories">
+  <i class="fas fa-folder"></i>
+    <a href="/categories/blog/">BLOG</a></div>
+
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="/tags/macos/">macos</a>
+      <span class="separator">•</span>
+    <a href="/tags/persistence/">persistence</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        
+
+<h2 id="tl-dr">TL;DR</h2>
+
+<p>It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware.</p>
+
+<h2 id="intro">Intro</h2>
+
+<p>I’m reading Jonathan Levin’s *OS Internals Vol I. book (user mode - <a href="http://newosxbook.com/index.php">*OS Internals: - Welcome!</a>), and I got to the chapter where he talks about Spotlight importers, and my first thought was that it would be an awesome way to persist on macOS. Typically there is nothing new in InfoSec, so after a quick Google search I found that Patrick Wardle already mentioned this in his BlackHat USA / Immunity talk back in 2015.
+Slides: <a href="https://www.blackhat.com/docs/us-15/materials/us-15-Wardle-Writing-Bad-A-Malware-For-OS-X.pdf">https://www.blackhat.com/docs/us-15/materials/us-15-Wardle-Writing-Bad-A-Malware-For-OS-X.pdf</a>
+Talk: <a href="https://vimeo.com/129435995">Patrick Wardle Writing Bad@ss OS X Malware on Vimeo</a> (This is the Immunity one, as he cut this part from the actual BH talk)
+But I didn’t find anything beyond this, nothing about how to persist this way. So I decided to experiment with it and see what can or cannot be done.</p>
+
+<h2 id="what-are-spotlight-importers">What are Spotlight importers?</h2>
+
+<p>Spotlight on OSX / macOS is basically an indexing / search service. When you press CMD+SPACE a searcher comes up (that’s Spotlight) and you can type in whatever you look for. Spotlight will search in its index, and that index is being built by Spotlight Importers. These importers are made for various filetypes, typically documents, which will be able to parse the file and extract useful, indexable content from it. There are a bunch of these included in macOS, but you can also write your own, and extend the system’s capabilities. You can check your current list of importers with <code>mdimport -L</code> command. This is how my system looks like:</p>
+
+<pre><code>csaby@mac scripts % mdimport -L
+Paths: id(501) (
+    “/Library/Spotlight/iBooksAuthor.mdimporter”,
+    “/System/Library/Spotlight/SystemPrefs.mdimporter”,
+    “/System/Library/Spotlight/Chat.mdimporter”,
+    “/System/Library/Spotlight/iWork.mdimporter”,
+    “/System/Library/Spotlight/iPhoto.mdimporter”,
+    “/System/Library/Spotlight/PDF.mdimporter”,
+    “/System/Library/Spotlight/RichText.mdimporter”,
+    “/System/Library/Spotlight/Office.mdimporter”,
+    “/System/Library/Spotlight/PS.mdimporter”,
+    “/System/Library/Spotlight/MIDI.mdimporter”,
+    “/System/Library/Spotlight/Archives.mdimporter”,
+    “/System/Library/Spotlight/Audio.mdimporter”,
+    “/System/Library/Spotlight/iPhoto8.mdimporter”,
+    “/System/Library/Spotlight/Automator.mdimporter”,
+    “/System/Library/Spotlight/Application.mdimporter”,
+    “/System/Library/Spotlight/Font.mdimporter”,
+    “/System/Library/Spotlight/Mail.mdimporter”,
+    “/System/Library/Spotlight/QuartzComposer.mdimporter”,
+    “/System/Library/Spotlight/vCard.mdimporter”,
+    “/System/Library/Spotlight/Image.mdimporter”,
+    “/System/Library/Spotlight/iCal.mdimporter”,
+    “/System/Library/Spotlight/CoreMedia.mdimporter”,
+    “/Applications/Microsoft Outlook.app/Contents/Library/Spotlight/Microsoft Outlook Spotlight Importer.mdimporter”,
+    “/Applications/Evernote.app/Contents/Library/Spotlight/EvernoteSpotlightImporter.mdimporter”,
+    “/Applications/Xcode.app/Contents/Library/Spotlight/uuid.mdimporter”
+)
+</code></pre>
+
+<p>You can create a Spotlight Importer and basically put it into one of these locations:
+1. The <code>/Library/Spotlight</code> directory
+2. The <code>~/Library/Spotlight</code> directory
+3. Inside an application bundle. This bundle can be almost anywhere, I tried <code>Desktop</code>, <code>Downloads</code>, <code>/Applications</code> and all worked - most of the time.
+The <code>/System/Library/Spotlight</code> contains the built in importers and as it’s protected by SIP you can’t add/modify/delete these.</p>
+
+<h2 id="creating-an-mdimporter">Creating an .mdimporter</h2>
+
+<h3 id="basics">Basics</h3>
+
+<p>I’m not a developer in general and definitely not a macOS developer, although I had a tiny exposure in the past, I’m far from being able to code anything. Apple’s most recent article on the subject is 6 years old: <a href="https://developer.apple.com/library/archive/documentation/Carbon/Conceptual/MDImporters/Concepts/WritingAnImp.html">Writing a Spotlight Importer</a> If you Google for how to create Spotlight Importers, all of the articles will say that open Xcode, and create a Spotlight Importer project, there is a template for it. NOPE, it’s gone. It was there up-until Xcode 9, and right now we are at Xcode 11, so you either download the old one, or look for an existing project to modify. I did the second, searched Github, and eventually found several projects, and I chose this: <a href="https://github.com/GenjiApp/EPUB-Plugins">GitHub - GenjiApp/EPUB-Plugins: OS X Spotlight / Quick Look plugins for EPUBs</a>
+It’s pretty old, but works. First I just compiled it to see if this importer is working at all or not, and it did. It indexed ePub files, with extra attributes, like Author.</p>
+
+<blockquote>
+<p>You can use the <code>mdls /path/to/file</code> command to view attributes of the file.</p>
+</blockquote>
+
+<p>What I did after that is cleaning up the project, I removed the other targets (like Quicklook) and also cleaned up the metadata generator function. Here are the mandatory building blocks your importer will have to have, I will try to explain them to the best of my understanding, but please bear in mind that I’m a n00b for Objective-C or macOS development. If you want to follow here is the one I made / modified: <a href="https://github.com/theevilbit/macos/tree/master/PersistentImporter">macos/PersistentImporter at master · theevilbit/macos · GitHub</a></p>
+
+<ol>
+<li><p>schema.xml - this will contain the attributes your importer will support. The attributes are the metadata buckets your importer can extract data into, and which will be indexed by Spotlight. For the above project I actually made it mostly intact, but I could likely clean it completely.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#099">&lt;?xml version=“1.0” encoding=“UTF-8”?&gt;</span>
+
+<span style="color:#309;font-weight:bold">&lt;schema</span> <span style="color:#309">version=</span><span style="color:#c30">“1.0”</span> <span style="color:#309">xmlns=</span><span style="color:#c30">“http://www.apple.com/metadata”</span> <span style="color:#309">xmlns:xsi=</span><span style="color:#c30">“http://www.w3.org/2001/XMLSchema-instance”</span> <span style="color:#309">xsi:schemaLocation=</span><span style="color:#c30">“http://www.apple.com/metadata</span> <span style="color:#a00;background-color:#faa">file:///System/Library/Frameworks/CoreServices.framework/Frameworks/Metadata.framework/Resources/MetadataSchema.xsd”</span><span style="color:#309;font-weight:bold">&gt;</span>
+
+<span style="color:#099">&lt;!— “attributes” element must exist in schema.xml file even if mdimporter doesn’t support any custom attributes. if it doesn’t exist, the metadata which are listed by “displayattrs” elements aren’t displayed by Finder’s “Get Info” panel (in OS X 10.10.2). —&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;attributes&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;attribute</span> <span style="color:#309">name=</span><span style="color:#c30">“com_csaby_persist_mdimporter”</span> <span style="color:#309">multivalued=</span><span style="color:#c30">“false”</span> <span style="color:#309">type=</span><span style="color:#c30">“CFString”/</span><span style="color:#309;font-weight:bold">&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;/attributes&gt;</span>
+
+<span style="color:#309;font-weight:bold">&lt;types&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;type</span> <span style="color:#309">name=</span><span style="color:#c30">“org.idpf.epub-container”</span><span style="color:#309;font-weight:bold">&gt;</span>
+
+  <span style="color:#309;font-weight:bold">&lt;allattrs&gt;</span>
+    kMDItemTitle
+    kMDItemAuthors
+    kMDItemKeywords
+    kMDItemDescription
+    kMDItemHeadline
+    kMDItemPublishers
+    kMDItemOrganizations
+    kMDItemContributors
+    kMDItemIdentifier
+    kMDItemLanguages
+    kMDItemCoverage
+    kMDItemCopyright
+    kMDItemRights
+    kMDItemTextContent
+    kMDItemNumberOfPages
+    kMDItemContentCreationDate
+    kMDItemContentModificationDate
+    com_csaby_persist_mdimporter
+  <span style="color:#309;font-weight:bold">&lt;/allattrs&gt;</span>
+
+  <span style="color:#309;font-weight:bold">&lt;displayattrs&gt;</span>
+    kMDItemTitle
+    kMDItemAuthors
+    kMDItemContributors
+    kMDItemPublishers
+    kMDItemCopyright
+    kMDItemLanguages
+    kMDItemNumberOfPages
+    kMDItemKeywords
+    com_csaby_persist_mdimporter
+    kMDItemIdentifier
+    kMDItemContentCreationDate
+    kMDItemContentModificationDate
+    kMDItemDescription
+  <span style="color:#309;font-weight:bold">&lt;/displayattrs&gt;</span>
+
+<span style="color:#309;font-weight:bold">&lt;/type&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;/types&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;/schema&gt;</span></code></pre></div></li>
+
+<li><p>main.c file - This is a standard file, typically generated by Xcode, you don’t need to modify it. I will not paste it here, as it’s quite long, but you can get it from my GitHub project (link above).</p></li>
+
+<li><p>Info.plist file - Here you must define (along some other standard things) what kind of files your importer will support. It should contain file extensions, and the <a href="https://en.wikipedia.org/wiki/Uniform_Type_Identifier">Uniform Type Identifier</a>. Below is the one related to epub from the Info.plist. As mentioned by Patrick you can also specify all files, but I opted to stick with epubs, I didn’t want my importer to run always, as my goal was only experimenting.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml">	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>UTImportedTypeDeclarations<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>UTTypeConformsTo<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>public.data<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>public.item<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>public.composite-content<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>public.content<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>UTTypeIdentifier<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>org.idpf.epub-container<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>UTTypeTagSpecification<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>public.filename-extension<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+					<span style="color:#309;font-weight:bold">&lt;string&gt;</span>epub<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>public.mime-type<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+					<span style="color:#309;font-weight:bold">&lt;string&gt;</span>application/epub+zip<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;/array&gt;</span></code></pre></div></li>
+
+<li><p>GetMetadataForFile.m file, which will be the brain of your importer, here you actually define how the content is parsed, and how metadata is extracted. For that you need to implement the following function (and eventually return true at the end):</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#078;font-weight:bold">Boolean</span> GetMetadataForFile(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>thisInterface, CFMutableDictionaryRef attributes, CFStringRef contentTypeUTI, CFStringRef pathToFile)</code></pre></div></li>
+</ol>
+
+<p>I started to experiment what I can do here, and it quickly turned out that this importer is heavily sandboxed. The only thing you can really do is read the actual file that Spotlight wants you to get metadata from, and write to your temp folder. That’s pretty much it, no access to any other random file, no network, can’t start other apps, so pretty much locked down. With that, my importer will copy every epub to a temp folder, I have also a network test included, just to show that it fails.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#099">#include</span> <span style="color:#099">&lt;CoreFoundation/CoreFoundation.h&gt;</span><span style="color:#099">
+</span><span style="color:#099">#import &lt;Cocoa/Cocoa.h&gt;
+</span><span style="color:#099"></span>
+<span style="color:#078;font-weight:bold">Boolean</span> <span style="color:#c0f">GetMetadataForFile</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>thisInterface, CFMutableDictionaryRef attributes, CFStringRef contentTypeUTI, CFStringRef pathToFile);
+
+<span style="color:#09f;font-style:italic">//==============================================================================
+</span><span style="color:#09f;font-style:italic">//
+</span><span style="color:#09f;font-style:italic">//	Get metadata attributes from document files
+</span><span style="color:#09f;font-style:italic">//
+</span><span style="color:#09f;font-style:italic">//	The purpose of this function is to extract useful information from the
+</span><span style="color:#09f;font-style:italic">//	file formats for your document, and set the values into the attribute
+</span><span style="color:#09f;font-style:italic">//  dictionary for Spotlight to include.
+</span><span style="color:#09f;font-style:italic">//
+</span><span style="color:#09f;font-style:italic">//==============================================================================
+</span><span style="color:#09f;font-style:italic"></span>
+<span style="color:#078;font-weight:bold">Boolean</span> <span style="color:#c0f">GetMetadataForFile</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>thisInterface, CFMutableDictionaryRef attributes, CFStringRef contentTypeUTI, CFStringRef pathToFile)
+{
+    NSLog(@<span style="color:#a00;background-color:#faa">“</span>Hello from peristent mdimporter by <span style="color:#99f">csaby</span> :)<span style="color:#a00;background-color:#faa">”</span>);
+
+    NSString<span style="color:#555">*</span> tempDir <span style="color:#555">=</span> NSTemporaryDirectory();
+    NSString<span style="color:#555">*</span> tempDirFolder <span style="color:#555">=</span> [tempDir <span style="color:#99f">stringByAppendingPathComponent</span>:@<span style="color:#a00;background-color:#faa">“</span>TestPersist<span style="color:#a00;background-color:#faa">”</span>];
+    NSString <span style="color:#555">*</span>source <span style="color:#555">=</span> (<span style="color:#069;font-weight:bold">__bridge</span> NSString <span style="color:#555">*</span>)pathToFile;
+    NSString <span style="color:#555">*</span>theFileName <span style="color:#555">=</span> [[source lastPathComponent] stringByDeletingPathExtension];
+    NSString <span style="color:#555">*</span>destination <span style="color:#555">=</span> [tempDirFolder <span style="color:#99f">stringByAppendingPathComponent</span>:theFileName];
+    NSError <span style="color:#555">*</span>error;
+    NSFileManager <span style="color:#555">*</span>fileManager <span style="color:#555">=</span> [NSFileManager defaultManager];
+
+    <span style="color:#09f;font-style:italic">//create temp folder
+</span><span style="color:#09f;font-style:italic"></span>    <span style="color:#078;font-weight:bold">BOOL</span> fileOK <span style="color:#555">=</span> [[NSFileManager defaultManager] <span style="color:#99f">createDirectoryAtPath</span>:tempDirFolder <span style="color:#99f">withIntermediateDirectories</span>:<span style="color:#366">NO</span> <span style="color:#99f">attributes</span>:<span style="color:#366">nil</span> <span style="color:#99f">error</span>:<span style="color:#555">&amp;</span>error ];
+    <span style="color:#069;font-weight:bold">if</span> ( <span style="color:#555">!</span>fileOK )
+        NSLog(@<span style="color:#a00;background-color:#faa">“</span>createDirectoryAtPath <span style="color:#555">%</span>@<span style="color:#a00;background-color:#faa">“</span>, [error localizedDescription]);
+    
+    <span style="color:#09f;font-style:italic">//copy file
+</span><span style="color:#09f;font-style:italic"></span>    <span style="color:#069;font-weight:bold">if</span> ([fileManager <span style="color:#99f">copyItemAtPath</span>:source <span style="color:#99f">toPath</span>:destination <span style="color:#99f">error</span>:<span style="color:#555">&amp;</span>error]){
+        NSLog(@<span style="color:#a00;background-color:#faa">“</span>Copy Success <span style="color:#99f">from</span>: <span style="color:#555">%</span>@, to <span style="color:#555">%</span>@<span style="color:#a00;background-color:#faa">“</span>, source, destination);
+    }
+    <span style="color:#069;font-weight:bold">else</span>{
+        NSLog(<span style="color:#c30">@&#34;Copy error: %@&#34;</span>, error);
+    }
+    
+    <span style="color:#09f;font-style:italic">//network test
+</span><span style="color:#09f;font-style:italic"></span>    NSString <span style="color:#555">*</span>URLString <span style="color:#555">=</span> [NSString <span style="color:#99f">stringWithContentsOfURL</span>:[NSURL <span style="color:#99f">URLWithString</span>:<span style="color:#c30">@&#34;https://www.google.com&#34;</span>]];
+    NSLog(<span style="color:#c30">@&#34;URL: %@&#34;</span>, URLString);
+
+    <span style="color:#069;font-weight:bold">return</span> <span style="color:#366">true</span>;
+}</code></pre></div>
+<p>As it turned out during my research, since OSX 10.8 you can’t use the standard <code>/tmp/</code> folder, as you have no access to that, you need to query your sandboxed <code>tmp</code> directory, you can do that with <code>NSTemporaryDirectory()</code>. More on that:</p>
+
+<p><a href="https://web.archive.org/web/20170615173848/http://www.cocoabuilder.com/archive/cocoa/328611-creating-temp-files-or-temp-folders-in-standard-temp-file-locations-in-mdimporter-on-mac-os-10-8-3.html">creating temp files or temp folders in standard temp file locations in mdimporter on Mac OS X 10.8.3 | Cocoabuilder</a></p>
+
+<p><a href="https://stackoverflow.com/questions/50939980/creating-temp-files-in-spotlight-module-mdimporter">objective c - Creating temp files in Spotlight Module / MDimporter - Stack Overflow</a></p>
+
+<h3 id="installation">Installation</h3>
+
+<p>Once you build it, you get an <code>.mdimporter</code> plugin. You should place it into one of the <code>Spotlight</code> directories, and eventually after a few minutes it will be discovered by the system and it will show up in the list of your importers. You can also force an import with <code>mdimport -r /path/to/your/mdimporter</code> but it still have to live in the right place otherwise it won’t be used / imported. Once that’s done, you can force an indexing with running <code>mdimport /path/to/epub</code>. If you check the device log, you will see something like this:</p>
+
+<p><img src="/images/macOS_persistence_Spotlight_importers/Screenshot%202019-11-04%20at%2023.13.43.png" alt="" /></p>
+
+<p>The <code>URL:(null)</code> indicates the failed network connection. You can also see that the copy of the file was successful.</p>
+
+<p>There is really nothing much more your importer can do, I tried it also on Yosemite, but essentially the same results. Actually even worse, as likely I need to do the file copy differently.</p>
+
+<p>Side track: if you need to install older macOS VMs on Fusion, here you can find the links to the installer packages from 10.10 (Yosemite) to 10.15 (Catalina): <a href="https://tidbits.com/2019/10/28/redownload-archived-macos-installers-to-address-expired-certificates/">Redownload Archived macOS Installers to Address Expired Certificates - TidBITS</a> Once you download the installer, run it, and it will extract the actual OS installer to <code>/Applications</code>, which can be used by VMware Fusion. As an addition to Yosemite: Use USB 2.0 as the last security update will mess up VMware, and neither the keyboard nor the mouse will work. More on the bug: <a href="https://communities.vmware.com/thread/568561">Solved: OS X 10.10.5 Yosemite VM freezes after … |VMware Communities</a></p>
+
+<h3 id="adding-an-app-bundle">Adding an App bundle</h3>
+
+<p>As we saw earlier another way to install an importer is part of an <code>.app</code> bundle. This was super tricky, and it required heavy Google-Fu from my side to figure out :) The above GitHub project already has it, but here is a short writeup how to do it on your own.</p>
+
+<ol>
+<li><p>Add a new target to your Xcode project, and select a Cocoa app for it. Be sure to tick <code>Create Document-Based Application</code>. Ideally the extension should be the same what your importer supports - <em>I THINK</em> - but to be on the safe side do the same. The language is not important as we won’t do anything.
+<img src="/images/macOS_persistence_Spotlight_importers/Screenshot%202019-11-04%20at%2023.27.58.png" alt="" /></p></li>
+
+<li><p>On your new target go to <code>Build Phases</code>, and then select <code>Editor -&gt; Add Build Phase -&gt; Add Copy Files Build Phase</code>, and set it like this:
+Destination: <code>Wrapper</code>
+Subpath: <code>Contents/Library/Spotlight</code>
+Add your importer below.
+<img src="/images/macOS_persistence_Spotlight_importers/Screenshot%202019-11-04%20at%2023.30.07.png" alt="" /></p></li>
+
+<li><p>Go back to General tab, and if not already there, also add your importer.
+<img src="/images/macOS_persistence_Spotlight_importers/Screenshot%202019-11-04%20at%2023.32.18.png" alt="" /></p></li>
+
+<li><p>First build your mdimporter and then the App. The app should have the importer embedded.</p></li>
+</ol>
+
+<p>If you copy that app now somewhere, most likely it will be consumed and the mdimporter will be added to the list of your available Spotlight Importers.</p>
+
+<h4 id="download-unzip-rce-nope">Download - unzip - RCE? - NOPE</h4>
+
+<p>Since the app bundle seems to be auto-parsed just like in the case of URL handlers, and the Spotlight importer is auto registered, I thought that someone could gain RCE with a drive by download, as Safari will auto-extract the ZIP file, which could contain an application that could contain an importer. Luckily it seems that macOS won’t import a Spotlight importer in this case. Hallelujah! :)</p>
+
+<h3 id="gatekeeper-on-catalina">Gatekeeper on Catalina</h3>
+
+<p>I also tried what happens if I download an mdimporter and manually place it into the Spotlight folder. It will be imported in that case, however due to the quarantine flag (download!!), GateKeeper will actually generate a popup, which is really nice. It seems that Apple significantly improved it indeed.</p>
+
+<h2 id="closing-thoughts">Closing thoughts</h2>
+
+<p>I think plugins, like this is a bit unexplored space for persisting on macOS systems, there might be more similar ones. For example you could also use a Spotlight Quicklook plugin which is invoked, whenever someone hits the spacebar on a file in <code>Finder.app</code> for a quick preview of the file. Likely it would have the same level of access, and it’s much more limited cause you need the user to preview something, but it could still work.</p>
+
+      </div>
+
+      <footer>
+        
+
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+     © 2019
+    
+       · 
+      Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-151008930-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+  </body>
+
+</html>

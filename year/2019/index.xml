@@ -5,10 +5,20 @@
     <link>/year/2019/</link>
     <description>Recent content in 2019 on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 25 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 04 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/year/2019/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>macOS persistence - Spotlight importers and how to create them</title>
+      <link>/posts/macos_persistence_spotlight_importers/</link>
+      <pubDate>Mon, 04 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/macos_persistence_spotlight_importers/</guid>
+      <description>TL;DR It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware.
+Intro I’m reading Jonathan Levin’s *OS Internals Vol I. book (user mode - *OS Internals: - Welcome!), and I got to the chapter where he talks about Spotlight importers, and my first thought was that it would be an awesome way to persist on macOS.</description>
+    </item>
     
     <item>
       <title>GateKeeper - Bypass or not bypass?</title>

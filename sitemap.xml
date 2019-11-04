@@ -4,17 +4,52 @@
   
   <url>
     <loc>/year/2019/</loc>
-    <lastmod>2019-10-25T00:00:00+00:00</lastmod>
+    <lastmod>2019-11-04T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/categories/blog/</loc>
-    <lastmod>2019-10-25T00:00:00+00:00</lastmod>
+    <lastmod>2019-11-04T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/categories/</loc>
-    <lastmod>2019-10-25T00:00:00+00:00</lastmod>
+    <lastmod>2019-11-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/macos/</loc>
+    <lastmod>2019-11-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/posts/macos_persistence_spotlight_importers/</loc>
+    <lastmod>2019-11-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/persistence/</loc>
+    <lastmod>2019-11-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/posts/</loc>
+    <lastmod>2019-11-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2019-11-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/</loc>
+    <lastmod>2019-11-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/year/</loc>
+    <lastmod>2019-11-04T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -24,31 +59,6 @@
   
   <url>
     <loc>/posts/gatekeeper_bypass_or_not_bypass/</loc>
-    <lastmod>2019-10-25T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/macos/</loc>
-    <lastmod>2019-10-25T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/posts/</loc>
-    <lastmod>2019-10-25T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
-    <lastmod>2019-10-25T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/</loc>
-    <lastmod>2019-10-25T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/year/</loc>
     <lastmod>2019-10-25T00:00:00+00:00</lastmod>
   </url>
   
@@ -114,11 +124,6 @@
   
   <url>
     <loc>/posts/macos_persisting_through-application_script_files/</loc>
-    <lastmod>2019-04-23T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/persistence/</loc>
     <lastmod>2019-04-23T00:00:00+00:00</lastmod>
   </url>
   

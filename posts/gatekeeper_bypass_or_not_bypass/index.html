@@ -109,7 +109,7 @@
             </span>
             <span class="reading-time">
               <i class="fas fa-clock"></i>
-              13 minutes read
+              14 minutes read
             </span>
           </div>
           <div class="categories">
@@ -497,6 +497,14 @@ Here I will only highlight the main item involving GateKeeper. The most signific
 <img src="/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-10-18%20at%2011.18.31.png" alt="" /></p>
 
 <p>IMO they should disallow the loading of PLIST files that has the quarantine flag present. Someone might find another way to drop there PLIST files, and in that case we are back to ground 0.</p>
+
+<h3 id="changes-in-macos-catalina-10-15-2-security-update">Changes in macOS Catalina 10.15.2 security update</h3>
+
+<p>Above I mentioned that Finder doesn’t allow anymore to D&amp;D into the user’s LaunchAgent’s directory. This is true, however there was a glitch. If you kept the file above the symlink, Finder eventually popped up the folder location, something Apple called a SpringBoard popup, and you could drop the file there. So although you couldn’t place the file on top of the link, if you waited a second or two, the location showed up, and nothing prevented you from D&amp;D the file to its location. I made a video showing this behaviour on Catalina beta:</p>
+
+<p><center><video style="max-width: 100%; border: 1px solid #e5e5e5; border-radius: 4px;" controls="" src="/videos/GateKeeper_Bypass_or_not_bypass/catalina-gatekeeper-bypass.mov"></video></center></p>
+
+<p>Apple fixed this in their 10.15.2 update, the location no longer pops up.</p>
 
 <h3 id="malware-using-qemu-vm-to-run-code-on-macos">Malware using Qemu VM to run code on macOS</h3>
 

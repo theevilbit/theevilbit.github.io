@@ -18,20 +18,20 @@ The idea I recently came across a very good blog post about an RCE vulnerability
 <meta property="og:description" content="TL;DR The GitHub Desktop app doesn’t add the quarantine extended attribute to files downloaded from the web, and this along with macOS’s URL handler auto-registration feature allows an attacker to execute arbitrary, even unsigned code on a macOS system. If we don’t count the clicks required to open the GitHub App, and cloning an external repository, then this is a 2 click RCE.
 The idea I recently came across a very good blog post about an RCE vulnerability on GitHub Desktop: GitHub Desktop RCE (OSX) - André Baptista via its custom URL handlers." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/few_click_rce_via_github_desktop_macos_client_with_gatekeeper_bypass_and_custom_url_handlers/" />
-<meta property="article:published_time" content="2019-10-05T00:00:00+00:00" />
-<meta property="article:modified_time" content="2019-10-05T00:00:00+00:00" />
+<meta property="og:url" content="https://theevilbit.github.io/posts/few_click_rce_via_github_desktop_macos_client_with_gatekeeper_bypass_and_custom_url_handlers/" />
+<meta property="article:published_time" content="2019-10-05T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2019-10-05T00:00:00&#43;00:00"/>
 
 
     
-      <base href="/posts/few_click_rce_via_github_desktop_macos_client_with_gatekeeper_bypass_and_custom_url_handlers/">
+      <base href="https://theevilbit.github.io/posts/few_click_rce_via_github_desktop_macos_client_with_gatekeeper_bypass_and_custom_url_handlers/">
     
     <title>
   Few click RCE via GitHub Desktop macOS client with Gatekeeper bypass and custom URL handlers · theevilbit blog
 </title>
 
     
-      <link rel="canonical" href="/posts/few_click_rce_via_github_desktop_macos_client_with_gatekeeper_bypass_and_custom_url_handlers/">
+      <link rel="canonical" href="https://theevilbit.github.io/posts/few_click_rce_via_github_desktop_macos_client_with_gatekeeper_bypass_and_custom_url_handlers/">
     
 
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
@@ -41,7 +41,7 @@ The idea I recently came across a very good blog post about an RCE vulnerability
     
       
       
-      <link rel="stylesheet" href="/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
     
 
     
@@ -52,17 +52,17 @@ The idea I recently came across a very good blog post about an RCE vulnerability
 
     
     
-    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.58.3" />
+    <meta name="generator" content="Hugo 0.54.0" />
   </head>
 
   <body class=" ">
     <main class="wrapper">
       <nav class="navigation">
   <section class="container">
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
     <input type="checkbox" id="menu-toggle" />
@@ -71,19 +71,19 @@ The idea I recently came across a very good blog post about an RCE vulnerability
       
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/categories/">Categories</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/categories/">Categories</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/posts/">Posts</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/tags/">Tags</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/about/">About</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
           </li>
         
       
@@ -116,13 +116,13 @@ The idea I recently came across a very good blog post about an RCE vulnerability
           </div>
           <div class="categories">
   <i class="fas fa-folder"></i>
-    <a href="/categories/blog/">BLOG</a></div>
+    <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
 
           <div class="tags">
   <i class="fas fa-tag"></i>
-    <a href="/tags/macos/">macos</a>
+    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
       <span class="separator">•</span>
-    <a href="/tags/gatekeeper/">gatekeeper</a></div>
+    <a href="https://theevilbit.github.io/tags/gatekeeper/">gatekeeper</a></div>
 
         </div>
       </header>
@@ -284,7 +284,7 @@ In short upon download of the application launch services daemon (<code>lsd</cod
 <a href="https://theevilbit.github.io/hidden/githubpoc.html">https://theevilbit.github.io/hidden/githubpoc.html</a></p>
 
 <p>I made a video showing the entire chain in action:
-<center><video style="max-width: 100%; border: 1px solid #e5e5e5; border-radius: 4px;" controls="" src="/videos/Few_click_RCE_via_GitHub_Desktop_macOS_client_with_Gatekeeper_bypass_and_custom_URL_handlers/evilapp_via_github_desktop_2.mov"></video></center></p>
+<center><video style="max-width: 100%; border: 1px solid #e5e5e5; border-radius: 4px;" controls="" src="https://theevilbit.github.io/videos/Few_click_RCE_via_GitHub_Desktop_macOS_client_with_Gatekeeper_bypass_and_custom_URL_handlers/evilapp_via_github_desktop_2.mov"></video></center></p>
 
 <p>To show the extended attributes of a file, run:</p>
 
@@ -316,7 +316,7 @@ In short upon download of the application launch services daemon (<code>lsd</cod
       <footer class="footer">
   <section class="container">
     
-     © 2019
+     © 2020
     
        · 
       Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.

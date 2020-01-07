@@ -20,20 +20,20 @@
  “Do you typically callout user apps that allow dyld_insert_libraries?”
  And a few similar ones, and I will be honest, I had no idea what is he talking about, if only I understood the question :D Despite the fact that my recent blog posts and talks are about macOS, I deal much more with Windows on a daily basis, probably like 95%, and macOS is still a whole new territory for me." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/" />
-<meta property="article:published_time" content="2019-07-09T00:00:00+00:00" />
-<meta property="article:modified_time" content="2019-07-09T00:00:00+00:00" />
+<meta property="og:url" content="https://theevilbit.github.io/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/" />
+<meta property="article:published_time" content="2019-07-09T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2019-07-09T00:00:00&#43;00:00"/>
 
 
     
-      <base href="/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/">
+      <base href="https://theevilbit.github.io/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/">
     
     <title>
   DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX · theevilbit blog
 </title>
 
     
-      <link rel="canonical" href="/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/">
+      <link rel="canonical" href="https://theevilbit.github.io/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/">
     
 
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
@@ -43,7 +43,7 @@
     
       
       
-      <link rel="stylesheet" href="/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
     
 
     
@@ -54,17 +54,17 @@
 
     
     
-    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.58.3" />
+    <meta name="generator" content="Hugo 0.54.0" />
   </head>
 
   <body class=" ">
     <main class="wrapper">
       <nav class="navigation">
   <section class="container">
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
     <input type="checkbox" id="menu-toggle" />
@@ -73,19 +73,19 @@
       
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/categories/">Categories</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/categories/">Categories</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/posts/">Posts</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/tags/">Tags</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/about/">About</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
           </li>
         
       
@@ -118,15 +118,15 @@
           </div>
           <div class="categories">
   <i class="fas fa-folder"></i>
-    <a href="/categories/blog/">BLOG</a></div>
+    <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
 
           <div class="tags">
   <i class="fas fa-tag"></i>
-    <a href="/tags/macos/">macos</a>
+    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
       <span class="separator">•</span>
-    <a href="/tags/injection/">injection</a>
+    <a href="https://theevilbit.github.io/tags/injection/">injection</a>
       <span class="separator">•</span>
-    <a href="/tags/lpe/">lpe</a></div>
+    <a href="https://theevilbit.github.io/tags/lpe/">lpe</a></div>
 
         </div>
       </header>
@@ -174,7 +174,7 @@ Hello world</code></pre></div>
 Hello from dylib!</code></pre></div>
 <p>We can also see all these events in the log (as our dylib puts there a message):</p>
 
-<p><img src="/images/DYLD_INSERT_LIBRARIES_DYLIB_injection_in_macOS_OSX_deep_dive/Screenshot%202019-07-08%20at%2016.53.29.png" alt="image" /></p>
+<p><img src="https://theevilbit.github.io/images/DYLD_INSERT_LIBRARIES_DYLIB_injection_in_macOS_OSX_deep_dive/Screenshot%202019-07-08%20at%2016.53.29.png" alt="image" /></p>
 
 <p>There are two nice examples in the following blog posts about how to hook the application itself:</p>
 
@@ -533,7 +533,7 @@ dyld: warning: could not load inserted library 'inject.dylib' into hardened proc
 
 <p>Interestingly, even if I set the <code>com.apple.security.cs.allow-dyld-environment-variables</code> entitlement at the capabilities page, I can’t load a dylib with other signature. Not sure what I’m doing wrong.</p>
 
-<p><img src="/images/DYLD_INSERT_LIBRARIES_DYLIB_injection_in_macOS_OSX_deep_dive/Screenshot%202019-07-09%20at%2012.54.44.png" alt="image" /></p>
+<p><img src="https://theevilbit.github.io/images/DYLD_INSERT_LIBRARIES_DYLIB_injection_in_macOS_OSX_deep_dive/Screenshot%202019-07-09%20at%2012.54.44.png" alt="image" /></p>
 
 <p>To move on, let’s set the library validation (<code>CS_REQUIRE_LV</code>) requirement for the application. It can be done, by going to <code>Build Settings -&gt; Signing -&gt; Other Code Signing Flags</code> and set it to <code>-o library</code>. If we recompile and check the code signature for our binary, we can see it enabled:</p>
 
@@ -674,7 +674,7 @@ com.apple.quarantine: 0081;5d248e35;Chrome;CE4482F1-0AD8-4387-ABF6-C05A4443CAF4
 
 <p>However it doesn’t work anymore on Catalina, which is also expected with the introduced changes:</p>
 
-<p><img src="/images/DYLD_INSERT_LIBRARIES_DYLIB_injection_in_macOS_OSX_deep_dive/Screenshot%202019-07-09%20at%2019.04.04.png" alt="image" /></p>
+<p><img src="https://theevilbit.github.io/images/DYLD_INSERT_LIBRARIES_DYLIB_injection_in_macOS_OSX_deep_dive/Screenshot%202019-07-09%20at%2019.04.04.png" alt="image" /></p>
 
 <p>We got a very similar error message as before:</p>
 
@@ -706,7 +706,7 @@ com.apple.quarantine: 0081;5d248e35;Chrome;CE4482F1-0AD8-4387-ABF6-C05A4443CAF4
       <footer class="footer">
   <section class="container">
     
-     © 2019
+     © 2020
     
        · 
       Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.

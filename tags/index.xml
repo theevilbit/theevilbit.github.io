@@ -2,128 +2,128 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on theevilbit blog</title>
-    <link>/tags/</link>
+    <link>https://theevilbit.github.io/tags/</link>
     <description>Recent content in Tags on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 04 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 31 Mar 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://theevilbit.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>macos</title>
-      <link>/tags/macos/</link>
-      <pubDate>Mon, 04 Nov 2019 00:00:00 +0000</pubDate>
+      <title>Fusion</title>
+      <link>https://theevilbit.github.io/tags/fusion/</link>
+      <pubDate>Sun, 31 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/macos/</guid>
+      <guid>https://theevilbit.github.io/tags/fusion/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>persistence</title>
-      <link>/tags/persistence/</link>
-      <pubDate>Mon, 04 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/persistence/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>gatekeeper</title>
-      <link>/tags/gatekeeper/</link>
+      <title>Gatekeeper</title>
+      <link>https://theevilbit.github.io/tags/gatekeeper/</link>
       <pubDate>Fri, 25 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/gatekeeper/</guid>
+      <guid>https://theevilbit.github.io/tags/gatekeeper/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>lpe</title>
-      <link>/tags/lpe/</link>
-      <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/lpe/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>vulnerability</title>
-      <link>/tags/vulnerability/</link>
-      <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/vulnerability/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>windows</title>
-      <link>/tags/windows/</link>
-      <pubDate>Fri, 09 Aug 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/windows/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>kernel exploitation</title>
-      <link>/tags/kernel-exploitation/</link>
-      <pubDate>Wed, 31 Jul 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/kernel-exploitation/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>injection</title>
-      <link>/tags/injection/</link>
+      <title>Injection</title>
+      <link>https://theevilbit.github.io/tags/injection/</link>
       <pubDate>Tue, 09 Jul 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/injection/</guid>
+      <guid>https://theevilbit.github.io/tags/injection/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>fusion</title>
-      <link>/tags/fusion/</link>
-      <pubDate>Sun, 31 Mar 2019 00:00:00 +0000</pubDate>
+      <title>Kernel Exploitation</title>
+      <link>https://theevilbit.github.io/tags/kernel-exploitation/</link>
+      <pubDate>Wed, 31 Jul 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/fusion/</guid>
+      <guid>https://theevilbit.github.io/tags/kernel-exploitation/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>rce</title>
-      <link>/tags/rce/</link>
-      <pubDate>Sun, 31 Mar 2019 00:00:00 +0000</pubDate>
+      <title>Lpe</title>
+      <link>https://theevilbit.github.io/tags/lpe/</link>
+      <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/rce/</guid>
+      <guid>https://theevilbit.github.io/tags/lpe/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>rest api</title>
-      <link>/tags/rest-api/</link>
-      <pubDate>Sun, 31 Mar 2019 00:00:00 +0000</pubDate>
+      <title>Macos</title>
+      <link>https://theevilbit.github.io/tags/macos/</link>
+      <pubDate>Mon, 04 Nov 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/rest-api/</guid>
+      <guid>https://theevilbit.github.io/tags/macos/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>vmware</title>
-      <link>/tags/vmware/</link>
-      <pubDate>Sun, 31 Mar 2019 00:00:00 +0000</pubDate>
+      <title>Persistence</title>
+      <link>https://theevilbit.github.io/tags/persistence/</link>
+      <pubDate>Mon, 04 Nov 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/vmware/</guid>
+      <guid>https://theevilbit.github.io/tags/persistence/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>websocket</title>
-      <link>/tags/websocket/</link>
+      <title>Rce</title>
+      <link>https://theevilbit.github.io/tags/rce/</link>
       <pubDate>Sun, 31 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/websocket/</guid>
+      <guid>https://theevilbit.github.io/tags/rce/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Rest Api</title>
+      <link>https://theevilbit.github.io/tags/rest-api/</link>
+      <pubDate>Sun, 31 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/tags/rest-api/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Vmware</title>
+      <link>https://theevilbit.github.io/tags/vmware/</link>
+      <pubDate>Sun, 31 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/tags/vmware/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Vulnerability</title>
+      <link>https://theevilbit.github.io/tags/vulnerability/</link>
+      <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/tags/vulnerability/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Websocket</title>
+      <link>https://theevilbit.github.io/tags/websocket/</link>
+      <pubDate>Sun, 31 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/tags/websocket/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Windows</title>
+      <link>https://theevilbit.github.io/tags/windows/</link>
+      <pubDate>Fri, 09 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/tags/windows/</guid>
       <description></description>
     </item>
     

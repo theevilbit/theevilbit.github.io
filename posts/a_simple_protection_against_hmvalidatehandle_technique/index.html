@@ -18,20 +18,20 @@ What is HMValidateHandle? HMValidateHandle is an internal, unexported function o
 <meta property="og:description" content="In the recent days I was reading technical analysis of win32k exploits from recent years, and it caught my eyes, that the HMValidateHandle technique is very heavily used almost everywhere. Then I had an idea how to protect against this family of exploits, which I think is very simple. This post will be about that.
 What is HMValidateHandle? HMValidateHandle is an internal, unexported function of user32.dll. It takes a handle and a handle type as arguments, and by looking up the handle table, if the handle is matching with the type it will copy the object to user memory." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/a_simple_protection_against_hmvalidatehandle_technique/" />
-<meta property="article:published_time" content="2019-07-31T00:00:00+00:00" />
-<meta property="article:modified_time" content="2019-07-31T00:00:00+00:00" />
+<meta property="og:url" content="https://theevilbit.github.io/posts/a_simple_protection_against_hmvalidatehandle_technique/" />
+<meta property="article:published_time" content="2019-07-31T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2019-07-31T00:00:00&#43;00:00"/>
 
 
     
-      <base href="/posts/a_simple_protection_against_hmvalidatehandle_technique/">
+      <base href="https://theevilbit.github.io/posts/a_simple_protection_against_hmvalidatehandle_technique/">
     
     <title>
   A simple protection against HMValidateHandle technique · theevilbit blog
 </title>
 
     
-      <link rel="canonical" href="/posts/a_simple_protection_against_hmvalidatehandle_technique/">
+      <link rel="canonical" href="https://theevilbit.github.io/posts/a_simple_protection_against_hmvalidatehandle_technique/">
     
 
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
@@ -41,7 +41,7 @@ What is HMValidateHandle? HMValidateHandle is an internal, unexported function o
     
       
       
-      <link rel="stylesheet" href="/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
     
 
     
@@ -52,17 +52,17 @@ What is HMValidateHandle? HMValidateHandle is an internal, unexported function o
 
     
     
-    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.58.3" />
+    <meta name="generator" content="Hugo 0.54.0" />
   </head>
 
   <body class=" ">
     <main class="wrapper">
       <nav class="navigation">
   <section class="container">
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
     <input type="checkbox" id="menu-toggle" />
@@ -71,19 +71,19 @@ What is HMValidateHandle? HMValidateHandle is an internal, unexported function o
       
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/categories/">Categories</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/categories/">Categories</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/posts/">Posts</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/tags/">Tags</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/about/">About</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
           </li>
         
       
@@ -116,11 +116,11 @@ What is HMValidateHandle? HMValidateHandle is an internal, unexported function o
           </div>
           <div class="categories">
   <i class="fas fa-folder"></i>
-    <a href="/categories/blog/">BLOG</a></div>
+    <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
 
           <div class="tags">
   <i class="fas fa-tag"></i>
-    <a href="/tags/kernel-exploitation/">kernel exploitation</a></div>
+    <a href="https://theevilbit.github.io/tags/kernel-exploitation/">kernel exploitation</a></div>
 
         </div>
       </header>
@@ -157,13 +157,13 @@ BYTE<span style="color:#555">*</span> pIsMenu <span style="color:#555">=</span> 
 <a href="https://github.com/sam-b/windows_kernel_address_leaks/tree/master/HMValidateHandle">windows_kernel_address_leaks/HMValidateHandle at master · sam-b/windows_kernel_address_leaks · GitHub</a></p>
 
 <p>Here is how <code>IsMenu</code> function looks like in the latest Windows 10 version:
-<img src="/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.05.04.png" alt="image" /></p>
+<img src="https://theevilbit.github.io/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.05.04.png" alt="image" /></p>
 
 <p>Simple enough? Likely this is why this was chosen. However you could chose many other functions, as you can see below.
-<img src="/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.07.31.png" alt="image" /></p>
+<img src="https://theevilbit.github.io/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.07.31.png" alt="image" /></p>
 
 <p>For example picking up <code>GetMenuItemCount</code> would be similarly easy:
-<img src="/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.08.19.png" alt="image" /></p>
+<img src="https://theevilbit.github.io/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.08.19.png" alt="image" /></p>
 
 <p>Likely the only thing you would need to change is this:</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">BYTE<span style="color:#555">*</span> pIsMenu <span style="color:#555">=</span> (BYTE <span style="color:#555">*</span>)GetProcAddress(hUser32, <span style="color:#c30">&#34;IsMenu&#34;</span>);</code></pre></div>
@@ -172,7 +172,7 @@ BYTE<span style="color:#555">*</span> pIsMenu <span style="color:#555">=</span> 
 <p>and maybe the offset calculation at the end because of some nops, but otherwise easy-peasy.</p>
 
 <p>In older versions of Windows it was a bit less used, but still pretty good, this one is from Windows 7 x86:
-<img src="/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.23.05.png" alt="image" /></p>
+<img src="https://theevilbit.github.io/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.23.05.png" alt="image" /></p>
 
 <h2 id="protecting-against-the-technique">Protecting against the technique</h2>
 
@@ -191,10 +191,10 @@ This will build all the examples, create the <code>lib</code> files, etc… Now 
 <p>In you C / C++ code you need to include the header:</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#include</span> <span style="color:#099">&lt;detours.h&gt;</span></code></pre></div>
 <p>In the <code>Project -&gt; C/C++ -&gt; General -&gt; Additional Include Directories</code> add the folder where the header files present.
-<img src="/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.24.53.png" alt="image" /></p>
+<img src="https://theevilbit.github.io/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.24.53.png" alt="image" /></p>
 
 <p>And under <code>Project -&gt; Linker -&gt; General -&gt; Additional Library Directories</code> add the folder where the compiled lib files present.
-<img src="/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.25.08.png" alt="image" /></p>
+<img src="https://theevilbit.github.io/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.25.08.png" alt="image" /></p>
 
 <p>That’s all you need.</p>
 
@@ -290,14 +290,14 @@ To simulate the hook of an AV vendor I put a line to the beginning of the exploi
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">LoadLibraryA(<span style="color:#c30">&#34;HookHMVH.dll&#34;</span>);</code></pre></div>
 <p>and compiled it again with that.
 The normal version worked as expected:
-<img src="/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.54.58.png" alt="image" /></p>
+<img src="https://theevilbit.github.io/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.54.58.png" alt="image" /></p>
 
 <p>However when I run it with my DLL loaded, it failed:
-<img src="/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.55.54.png" alt="image" /></p>
+<img src="https://theevilbit.github.io/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.55.54.png" alt="image" /></p>
 
 <p><code>(…)</code></p>
 
-<p><img src="/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.56.06.png" alt="image" /></p>
+<p><img src="https://theevilbit.github.io/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.56.06.png" alt="image" /></p>
 
 <h3 id="hook-every-process">Hook every process</h3>
 
@@ -341,7 +341,7 @@ Not sure if any exploit protection products are using this trick, but it should 
       <footer class="footer">
   <section class="container">
     
-     © 2019
+     © 2020
     
        · 
       Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.

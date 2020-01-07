@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>fusion on theevilbit blog</title>
-    <link>/tags/fusion/</link>
-    <description>Recent content in fusion on theevilbit blog</description>
+    <title>Fusion on theevilbit blog</title>
+    <link>https://theevilbit.github.io/tags/fusion/</link>
+    <description>Recent content in Fusion on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Sun, 31 Mar 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/tags/fusion/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://theevilbit.github.io/tags/fusion/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>VMware Fusion 11 - Guest VM RCE - CVE-2019-5514</title>
-      <link>/posts/vmware_fusion_11_guest_vm_rce_cve-2019-5514/</link>
+      <link>https://theevilbit.github.io/posts/vmware_fusion_11_guest_vm_rce_cve-2019-5514/</link>
       <pubDate>Sun, 31 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>/posts/vmware_fusion_11_guest_vm_rce_cve-2019-5514/</guid>
+      <guid>https://theevilbit.github.io/posts/vmware_fusion_11_guest_vm_rce_cve-2019-5514/</guid>
       <description>TL;DR You can run an arbitrary command on a VMware Fusion guest VM through a website without any priory knowledge. Basically VMware Fusion is starting up a websocket listening only on the localhost. You can fully control all the VMs (also create/delete snapshots, whatever you want) through this websocket interface, including launching apps. You need to have VMware Tools installed on the guest for launching apps, but honestly who doesn’t have it installed.</description>
     </item>
     

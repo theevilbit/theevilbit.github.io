@@ -18,20 +18,20 @@ In case an application is installed for the current user and not for all user, t
 <meta property="og:description" content="Whenever you install an application on Windows, typically through MSI, there is a registry key created, with plenty of information for uninstallation, like the uninstaller location, install date, publisher, etc… you can find all of the options here: Add uninstall information to Add/Remove Programs - NSIS
 In case an application is installed for the current user and not for all user, the Installation/Uninstallation details will go to the Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\ registry key instead of the HKLM hive." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/uninstallstring_a_possible_lpe_via_social_engineering/" />
-<meta property="article:published_time" content="2019-08-09T00:00:00+00:00" />
-<meta property="article:modified_time" content="2019-08-09T00:00:00+00:00" />
+<meta property="og:url" content="https://theevilbit.github.io/posts/uninstallstring_a_possible_lpe_via_social_engineering/" />
+<meta property="article:published_time" content="2019-08-09T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2019-08-09T00:00:00&#43;00:00"/>
 
 
     
-      <base href="/posts/uninstallstring_a_possible_lpe_via_social_engineering/">
+      <base href="https://theevilbit.github.io/posts/uninstallstring_a_possible_lpe_via_social_engineering/">
     
     <title>
   UninstallString - a possible LPE via Social Engineering · theevilbit blog
 </title>
 
     
-      <link rel="canonical" href="/posts/uninstallstring_a_possible_lpe_via_social_engineering/">
+      <link rel="canonical" href="https://theevilbit.github.io/posts/uninstallstring_a_possible_lpe_via_social_engineering/">
     
 
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
@@ -41,7 +41,7 @@ In case an application is installed for the current user and not for all user, t
     
       
       
-      <link rel="stylesheet" href="/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
     
 
     
@@ -52,17 +52,17 @@ In case an application is installed for the current user and not for all user, t
 
     
     
-    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.58.3" />
+    <meta name="generator" content="Hugo 0.54.0" />
   </head>
 
   <body class=" ">
     <main class="wrapper">
       <nav class="navigation">
   <section class="container">
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
     <input type="checkbox" id="menu-toggle" />
@@ -71,19 +71,19 @@ In case an application is installed for the current user and not for all user, t
       
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/categories/">Categories</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/categories/">Categories</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/posts/">Posts</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/tags/">Tags</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/about/">About</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
           </li>
         
       
@@ -116,13 +116,13 @@ In case an application is installed for the current user and not for all user, t
           </div>
           <div class="categories">
   <i class="fas fa-folder"></i>
-    <a href="/categories/blog/">BLOG</a></div>
+    <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
 
           <div class="tags">
   <i class="fas fa-tag"></i>
-    <a href="/tags/windows/">windows</a>
+    <a href="https://theevilbit.github.io/tags/windows/">windows</a>
       <span class="separator">•</span>
-    <a href="/tags/lpe/">lpe</a></div>
+    <a href="https://theevilbit.github.io/tags/lpe/">lpe</a></div>
 
         </div>
       </header>
@@ -142,13 +142,13 @@ ModifyPath
 
 <p>As these settings are under the user’s registry hive he/she has the rights to modify it and set a custom value. Setting a custom executable here could result in a privilege escalation scenario if the person (likely an administrator) running the uninstaller, and entering his / her creds is unaware of the change. This happens because <code>Apps &amp; Features</code> behaves differently from <code>Control Panel</code>. For example, let’s set it to cmd.exe with OneDriveSetup.exe (which exists normally by default on most installations):</p>
 
-<p><img src="/images/UninstallString_a_possible_LPE_via_Social_Engineering/Screenshot%202019-07-17%20at%2018.04.31.png" alt="image" /></p>
+<p><img src="https://theevilbit.github.io/images/UninstallString_a_possible_LPE_via_Social_Engineering/Screenshot%202019-07-17%20at%2018.04.31.png" alt="image" /></p>
 
 <p>If we run the uninstall through the Control Panel, it will execute the process with the current user’s rights. So in the above case we get a command prompt running as the user. If the application we choose has the <code>requireAdministrator</code> set in its manifest, it will still prompt for password, but Control Panel - more precisely <code>appwiz.cpl</code> will only try to elevate the rights before execution if the registry value is taken from the HKLM hive. In other words, if you uninstall something, where the settings are coming from <code>HKLM</code> Control Panel will try to elevate the rights, otherwise not. This is good.</p>
 
 <p>However if we try to uninstall this app from the System Settings -&gt; Apps &amp; Features, it will try to execute the referred application with admin rights.</p>
 
-<p><img src="/images/UninstallString_a_possible_LPE_via_Social_Engineering/Screenshot%202019-07-17%20at%2018.09.42.png" alt="image" /></p>
+<p><img src="https://theevilbit.github.io/images/UninstallString_a_possible_LPE_via_Social_Engineering/Screenshot%202019-07-17%20at%2018.09.42.png" alt="image" /></p>
 
 <p>The user will get a UAC prompt upon clicking <code>Uninstall</code>. The prompt will mark what is executed (like in the case of cmd.exe it will show that it’s trying to execute the Windows Command Processor), however before that there is no indication what will be executed (as we can see above). The same behaviour is observed if we set the <code>ModifyPath</code> value.</p>
 
@@ -174,7 +174,7 @@ ModifyPath
       <footer class="footer">
   <section class="container">
     
-     © 2019
+     © 2020
     
        · 
       Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.

@@ -18,20 +18,20 @@
 <meta property="og:description" content="A couple of weeks ago, I had the idea of scanning my Mac for files that has the SUID bit set, I wanted to see if there is anything interesting showing up. You can do it this way:
 /usr/bin/sudo find / -perm -4000 -exec /bin/ls -ldb {} \; &gt; suidfilelist There was one item that caught my attention, and that was a file called ubridge inside GNS3. I used to be a network guy, and GNS3 is a great tool to emulate real network gear, practice configuration, etc." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/" />
-<meta property="article:published_time" content="2019-05-28T00:00:00+00:00" />
-<meta property="article:modified_time" content="2019-05-28T00:00:00+00:00" />
+<meta property="og:url" content="https://theevilbit.github.io/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/" />
+<meta property="article:published_time" content="2019-05-28T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2019-05-28T00:00:00&#43;00:00"/>
 
 
     
-      <base href="/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/">
+      <base href="https://theevilbit.github.io/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/">
     
     <title>
   GNS3 ubridge SETUID bit - arbitrary file read · theevilbit blog
 </title>
 
     
-      <link rel="canonical" href="/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/">
+      <link rel="canonical" href="https://theevilbit.github.io/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/">
     
 
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
@@ -41,7 +41,7 @@
     
       
       
-      <link rel="stylesheet" href="/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
     
 
     
@@ -52,17 +52,17 @@
 
     
     
-    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.58.3" />
+    <meta name="generator" content="Hugo 0.54.0" />
   </head>
 
   <body class=" ">
     <main class="wrapper">
       <nav class="navigation">
   <section class="container">
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
     <input type="checkbox" id="menu-toggle" />
@@ -71,19 +71,19 @@
       
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/categories/">Categories</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/categories/">Categories</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/posts/">Posts</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/tags/">Tags</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/about/">About</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
           </li>
         
       
@@ -116,13 +116,13 @@
           </div>
           <div class="categories">
   <i class="fas fa-folder"></i>
-    <a href="/categories/blog/">BLOG</a></div>
+    <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
 
           <div class="tags">
   <i class="fas fa-tag"></i>
-    <a href="/tags/macos/">macos</a>
+    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
       <span class="separator">•</span>
-    <a href="/tags/vulnerability/">vulnerability</a></div>
+    <a href="https://theevilbit.github.io/tags/vulnerability/">vulnerability</a></div>
 
         </div>
       </header>
@@ -191,11 +191,11 @@ That exploit is still available at:
 
 <p>Essentially the fix is to eliminate printing out the error details.</p>
 
-<p><img src="/images/GNS3_ubridge_SETUID_bit_arbitrary_file_read/Screenshot%202019-05-09%20at%209.56.35.png" alt="image1" /></p>
+<p><img src="https://theevilbit.github.io/images/GNS3_ubridge_SETUID_bit_arbitrary_file_read/Screenshot%202019-05-09%20at%209.56.35.png" alt="image1" /></p>
 
-<p><img src="/images/GNS3_ubridge_SETUID_bit_arbitrary_file_read/Screenshot%202019-05-09%20at%209.56.47.png" alt="image2" /></p>
+<p><img src="https://theevilbit.github.io/images/GNS3_ubridge_SETUID_bit_arbitrary_file_read/Screenshot%202019-05-09%20at%209.56.47.png" alt="image2" /></p>
 
-<p><img src="/images/GNS3_ubridge_SETUID_bit_arbitrary_file_read/Screenshot%202019-05-09%20at%209.56.56.png" alt="image3" /></p>
+<p><img src="https://theevilbit.github.io/images/GNS3_ubridge_SETUID_bit_arbitrary_file_read/Screenshot%202019-05-09%20at%209.56.56.png" alt="image3" /></p>
 
 <p>Kudos to the team for the quick fix!</p>
 
@@ -219,7 +219,7 @@ That exploit is still available at:
       <footer class="footer">
   <section class="container">
     
-     © 2019
+     © 2020
     
        · 
       Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.

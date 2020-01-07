@@ -16,20 +16,20 @@
     <meta property="og:title" content="GateKeeper - Bypass or not bypass?" />
 <meta property="og:description" content="TL;DR On macOS Mojave Gatekeeper only verifies executables, which are run with the open command or the user double clicks. It won’t verify files, that are executed through other means like, directly executing a binary ./myapp regardless of the quarantine attribute. If you can place a plist file inside LaunchAgents/LaunchDaemons, the command inside will also be executed. Prior to Catalina there is a way to trick users to drag &amp; drop files in the LaunchAgents folder." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/gatekeeper_bypass_or_not_bypass/" />
-<meta property="article:published_time" content="2019-10-25T00:00:00+00:00" />
-<meta property="article:modified_time" content="2019-10-25T00:00:00+00:00" />
+<meta property="og:url" content="https://theevilbit.github.io/posts/gatekeeper_bypass_or_not_bypass/" />
+<meta property="article:published_time" content="2019-10-25T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2019-10-25T00:00:00&#43;00:00"/>
 
 
     
-      <base href="/posts/gatekeeper_bypass_or_not_bypass/">
+      <base href="https://theevilbit.github.io/posts/gatekeeper_bypass_or_not_bypass/">
     
     <title>
   GateKeeper - Bypass or not bypass? · theevilbit blog
 </title>
 
     
-      <link rel="canonical" href="/posts/gatekeeper_bypass_or_not_bypass/">
+      <link rel="canonical" href="https://theevilbit.github.io/posts/gatekeeper_bypass_or_not_bypass/">
     
 
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
@@ -39,7 +39,7 @@
     
       
       
-      <link rel="stylesheet" href="/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
     
 
     
@@ -50,17 +50,17 @@
 
     
     
-    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.58.3" />
+    <meta name="generator" content="Hugo 0.54.0" />
   </head>
 
   <body class=" ">
     <main class="wrapper">
       <nav class="navigation">
   <section class="container">
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
     <input type="checkbox" id="menu-toggle" />
@@ -69,19 +69,19 @@
       
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/categories/">Categories</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/categories/">Categories</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/posts/">Posts</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/tags/">Tags</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/about/">About</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
           </li>
         
       
@@ -114,13 +114,13 @@
           </div>
           <div class="categories">
   <i class="fas fa-folder"></i>
-    <a href="/categories/blog/">BLOG</a></div>
+    <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
 
           <div class="tags">
   <i class="fas fa-tag"></i>
-    <a href="/tags/macos/">macos</a>
+    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
       <span class="separator">•</span>
-    <a href="/tags/gatekeeper/">gatekeeper</a></div>
+    <a href="https://theevilbit.github.io/tags/gatekeeper/">gatekeeper</a></div>
 
         </div>
       </header>
@@ -174,7 +174,7 @@ com.apple.quarantine: <span style="color:#f60">0081</span>;5c5d2f53;Chrome;4FFAA
 
 <p>If I double click the file in Finder I get it blocked as expected:</p>
 
-<p><img src="/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-02-08%20at%208.46.06.png" alt="" /></p>
+<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-02-08%20at%208.46.06.png" alt="" /></p>
 
 <p>If I try the <code>open</code> command it will be also blocked.</p>
 
@@ -266,7 +266,7 @@ com.apple.quarantine: 0081;5d248e35;Chrome;CE4482F1-0AD8-4387-ABF6-C05A4443CAF4
 
 <p>It seemed that even Patrick Wardle is unsure if this counts or not (taken from the above post):</p>
 
-<p><img src="/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-04-03%20at%2011.02.47.png" alt="" /></p>
+<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-04-03%20at%2011.02.47.png" alt="" /></p>
 
 <p>So I decided to ask Apple about this, they must know it for sure. I sent a report, and after a couple of weeks they decided that it’s normal behaviour.</p>
 
@@ -284,7 +284,7 @@ com.apple.quarantine: 0081;5d248e35;Chrome;CE4482F1-0AD8-4387-ABF6-C05A4443CAF4
 
 <p>I think it’s a well known feature of Apple’s Safari browser, that by default it will auto-extract archives. IMO this is super unsafe and everyone should disable it.</p>
 
-<p><img src="/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-04-03%20at%2011.27.40.png" alt="" /></p>
+<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-04-03%20at%2011.27.40.png" alt="" /></p>
 
 <p>I started to see if I can go ahead and drop a file to the LaunchAgent folder of the user, utilising this functionality. I didn’t want to modify any default setting, obviously pointing the location to LaunchAgent folder would solve this right away, but no one on Earth does that, so let’s just be realistic.</p>
 
@@ -328,7 +328,7 @@ G_?N?5?;+??Users/csaby/Library/LaunchAgents/test.plistUT???<span style="color:#c
 Users/csaby/Library/LaunchAgents/test.plist</code></pre></div>
 <p>Why that happens? If we look at the archive utility settings, which is used to extract files, we got this:</p>
 
-<p><img src="/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-04-03%20at%2012.03.48.png" alt="" /></p>
+<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-04-03%20at%2012.03.48.png" alt="" /></p>
 
 <p>So it seems, whatever we do, it will create the files there.</p>
 
@@ -350,7 +350,7 @@ mac:Downloads csaby$ rm la
 mac:Downloads csaby$ rm ../Library/LaunchAgents/test.plist </code></pre></div>
 <p>If we try to uncompress it know we get an error:</p>
 
-<p><img src="/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-04-04%20at%209.22.47.png" alt="" /></p>
+<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-04-04%20at%209.22.47.png" alt="" /></p>
 
 <p>If we add just a symbolic link, it will be extracted, but anything inside that won’t be.</p>
 
@@ -410,7 +410,7 @@ mac:Downloads csaby$ cat test.cpio
 <span style="color:#f60">0707077777770000011006440007650000240000010000001345133562600004300000000000</span>../Library/LaunchAgents/test.plist0707070000000000000000000000000000000000010000000000000000000001300000000000TRAILER!!!</code></pre></div>
 <p>Even if you update the path with tilde, everything will be created in the Downloads folder.</p>
 
-<p><img src="/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-04-04%20at%2010.16.30.png" alt="" /></p>
+<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-04-04%20at%2010.16.30.png" alt="" /></p>
 
 <h3 id="try-fail-4-many-others">Try &amp; Fail 4 - Many Others</h3>
 
@@ -426,7 +426,7 @@ mac:Downloads csaby$ cat test.cpio
 
 <p>After many trials it seems that auto-dropping a file to the LaunchAgents folder doesn’t work, or at lest I didn’t find a way. What if we trick the user to place the file there for us? Now, I think average Mac users won’t have a knowledge necessary to do it for us, so we need to provide a convenient and misleading way of doing that. The most obvious location I thought of is the ‘Drag &amp; Drop’ look of mounted DMG file. I mean this (taken from the GNS3 2.1.17 DMG file):</p>
 
-<p><img src="/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-05-28%20at%2015.12.04.png" alt="" /></p>
+<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-05-28%20at%2015.12.04.png" alt="" /></p>
 
 <p>What if we replace the app on the left with a plist file, and the link on the right pointing to LaunchAgents.</p>
 
@@ -439,15 +439,15 @@ mac:Downloads csaby$ cat test.cpio
 
 <p>Replacing the one at the left is also easy. Put there the plist file, and on the “Get Info” pane replace its icon with D&amp;D a new image on the top left corner of the info pane, here:</p>
 
-<p><img src="/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-05-28%20at%2015.19.41.png" alt="" /></p>
+<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-05-28%20at%2015.19.41.png" alt="" /></p>
 
 <p>Finally we get this:</p>
 
-<p><img src="/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-05-28%20at%2015.17.45.png" alt="" /></p>
+<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-05-28%20at%2015.17.45.png" alt="" /></p>
 
 <p>If we tick the option “Hide Extension” on the Info pane and if Finder doesn’t have the “Show all filename extensions” setting enabled, we will actually see this:</p>
 
-<p><img src="/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-05-28%20at%2015.18.01.png" alt="" /></p>
+<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-05-28%20at%2015.18.01.png" alt="" /></p>
 
 <p>Does it look legit? For me for sure it is! :) Now if you drag and drop the gecko from the left to the right, you actually drop the PLIST into the user’s LaunchDaemon’s folder. I’m not sure that the average user will notice that something went wrong, other than not being able to execute the application, and won’t see it.</p>
 
@@ -489,12 +489,12 @@ mac:Downloads csaby$ cat test.cpio
 <a href="https://developer.apple.com/videos/play/wwdc2019/701">Advances in macOS Security - WWDC 2019 - Videos - Apple Developer</a>
 Here I will only highlight the main item involving GateKeeper. The most significant change is that GK will also verify applications, binaries when they are run from the command line, via classic ‘exec’ methods. This means that my previous experiments won’t really work anymore. Awesome! Interestingly Apple said that my previous report inspired them to implement this, and they mentioned me in their security advisory of Catalina:</p>
 
-<p><img src="/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-10-18%20at%2011.08.08.png" alt="" /></p>
+<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-10-18%20at%2011.08.08.png" alt="" /></p>
 
 <p>I, by no means want to suggest that I discovered this bypass, as you saw that it was well documented, however likely it was only me who raised this as an issue to Apple.</p>
 
 <p>The other protection they implemented was related my drag &amp; drop trick. They modified <code>Finder</code>  to disallow D&amp;D into the user&rsquo;s LaucnAgents folder.
-<img src="/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-10-18%20at%2011.18.31.png" alt="" /></p>
+<img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-10-18%20at%2011.18.31.png" alt="" /></p>
 
 <p>IMO they should disallow the loading of PLIST files that has the quarantine flag present. Someone might find another way to drop there PLIST files, and in that case we are back to ground 0.</p>
 
@@ -502,7 +502,7 @@ Here I will only highlight the main item involving GateKeeper. The most signific
 
 <p>Above I mentioned that Finder doesn’t allow anymore to D&amp;D into the user’s LaunchAgent’s directory. This is true, however there was a glitch. If you kept the file above the symlink, Finder eventually popped up the folder location, something Apple called a SpringBoard popup, and you could drop the file there. So although you couldn’t place the file on top of the link, if you waited a second or two, the location showed up, and nothing prevented you from D&amp;D the file to its location. I made a video showing this behaviour on Catalina beta:</p>
 
-<p><center><video style="max-width: 100%; border: 1px solid #e5e5e5; border-radius: 4px;" controls="" src="/videos/GateKeeper_Bypass_or_not_bypass/catalina-gatekeeper-bypass.mov"></video></center></p>
+<p><center><video style="max-width: 100%; border: 1px solid #e5e5e5; border-radius: 4px;" controls="" src="https://theevilbit.github.io/videos/GateKeeper_Bypass_or_not_bypass/catalina-gatekeeper-bypass.mov"></video></center></p>
 
 <p>Apple fixed this in their 10.15.2 update, the location no longer pops up.</p>
 
@@ -533,7 +533,7 @@ Here I will only highlight the main item involving GateKeeper. The most signific
       <footer class="footer">
   <section class="container">
     
-     © 2019
+     © 2020
     
        · 
       Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.

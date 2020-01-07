@@ -22,20 +22,20 @@
  and even:
  With “Unlock &amp; Delete”, “Unlock &amp; Rename”, “Unlock &amp; Move”, and “Unlock &amp; Copy”, IObit Unlocker offers easier ways to unlock and manage the files and folders to keep them safe and available." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/iobit_unlocker_lpe/" />
-<meta property="article:published_time" content="2019-10-12T00:00:00+00:00" />
-<meta property="article:modified_time" content="2019-10-12T00:00:00+00:00" />
+<meta property="og:url" content="https://theevilbit.github.io/posts/iobit_unlocker_lpe/" />
+<meta property="article:published_time" content="2019-10-12T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2019-10-12T00:00:00&#43;00:00"/>
 
 
     
-      <base href="/posts/iobit_unlocker_lpe/">
+      <base href="https://theevilbit.github.io/posts/iobit_unlocker_lpe/">
     
     <title>
   IOBit Unlocker 1.1.2 - Local Privilege Escalation · theevilbit blog
 </title>
 
     
-      <link rel="canonical" href="/posts/iobit_unlocker_lpe/">
+      <link rel="canonical" href="https://theevilbit.github.io/posts/iobit_unlocker_lpe/">
     
 
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
@@ -45,7 +45,7 @@
     
       
       
-      <link rel="stylesheet" href="/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
     
 
     
@@ -56,17 +56,17 @@
 
     
     
-    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.58.3" />
+    <meta name="generator" content="Hugo 0.54.0" />
   </head>
 
   <body class=" ">
     <main class="wrapper">
       <nav class="navigation">
   <section class="container">
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
     <input type="checkbox" id="menu-toggle" />
@@ -75,19 +75,19 @@
       
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/categories/">Categories</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/categories/">Categories</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/posts/">Posts</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/tags/">Tags</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/about/">About</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
           </li>
         
       
@@ -120,13 +120,13 @@
           </div>
           <div class="categories">
   <i class="fas fa-folder"></i>
-    <a href="/categories/blog/">BLOG</a></div>
+    <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
 
           <div class="tags">
   <i class="fas fa-tag"></i>
-    <a href="/tags/lpe/">lpe</a>
+    <a href="https://theevilbit.github.io/tags/lpe/">lpe</a>
       <span class="separator">•</span>
-    <a href="/tags/vulnerability/">vulnerability</a></div>
+    <a href="https://theevilbit.github.io/tags/vulnerability/">vulnerability</a></div>
 
         </div>
       </header>
@@ -158,29 +158,29 @@
 
 <p>The application installs a helper driver that will perform the above actions. If we examine the permissions of the device in OSR’s Device Tree, we can see that everyone has full access to the driver:</p>
 
-<p><img src="/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2015.56.38.png" alt="" /></p>
+<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2015.56.38.png" alt="" /></p>
 
 <p>Interestingly, when we start up the client application it will prompt for elevated access:</p>
 
-<p><img src="/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2015.53.11.png" alt="" /></p>
+<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2015.53.11.png" alt="" /></p>
 
 <p>To see what the client does, or how does it perform the actions, we can go with reversing the driver, but it’s easier to use @zodiacon’s <a href="https://github.com/zodiacon/DriverMon">DriverMon</a> tool, which can monitor IOCTL requests for us, and also show the data going on.</p>
 
 <p>As we add files, we can see that there is an IOCTL code that seemingly seems to query information about the file - if any process is using it or not. This uses IOCTL code <code>0x222128</code>.</p>
 
-<p><img src="/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.04.14.png" alt="" /></p>
+<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.04.14.png" alt="" /></p>
 
 <p>If yes, we will get back the PID of the process using the file:</p>
 
-<p><img src="/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.05.14.png" alt="" /></p>
+<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.05.14.png" alt="" /></p>
 
 <p>If we click unlock, we will see a slightly different request, using IOCTL <code>0x222124</code>, again passing the filename and also number 3 at offset 0x424:</p>
 
-<p><img src="/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.10.06.png" alt="" /></p>
+<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.10.06.png" alt="" /></p>
 
 <p>If we look at the driver file in IDA, we will see that these are the two IOCTL code it will support.</p>
 
-<p><img src="/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.12.57.png" alt="" /></p>
+<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.12.57.png" alt="" /></p>
 
 <p>Playing around with the other option, this is what we can see in the requests in the relevant offsets:</p>
 
@@ -226,7 +226,7 @@
 
 <p>This is the input of a file rename operation:</p>
 
-<p><img src="/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2023.53.48.png" alt="" /></p>
+<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2023.53.48.png" alt="" /></p>
 
 <p>If we click <code>Force mode</code> the byte at offset 0x424 is set to 0x7. All the other bytes are 0 in the request. We can also conclude that the tool doesn’t support file paths over 256 bytes, which is the typical MAX_PATH value.
 I believe the 4 byte return value is the NTSTATUS code. If we select a folder instead of a file, we got the same input values.</p>
@@ -235,7 +235,7 @@ I believe the 4 byte return value is the NTSTATUS code. If we select a folder in
 1. delete, copy, move any file in the system
 2. kill any process (the unlock feature will terminate processes holding handles to the file) - almost any, if we look at the code, we can see that there is a whitelist for critical system processes:</p>
 
-<p><img src="/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.31.17.png" alt="" /></p>
+<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.31.17.png" alt="" /></p>
 
 <p>The possibilities are endless with these capabilities. For example we can easily replace any binary running as SYSTEM, or copy a DLL to a location where it will be loaded as SYSTEM.</p>
 
@@ -445,7 +445,7 @@ sc start iobitunlocker
       <footer class="footer">
   <section class="container">
     
-     © 2019
+     © 2020
     
        · 
       Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.

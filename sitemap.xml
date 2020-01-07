@@ -3,168 +3,189 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/year/2019/</loc>
+    <loc>https://theevilbit.github.io/posts/macos_persistence_spotlight_importers/</loc>
     <lastmod>2019-11-04T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/categories/blog/</loc>
-    <lastmod>2019-11-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/</loc>
-    <lastmod>2019-11-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/macos/</loc>
-    <lastmod>2019-11-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/posts/macos_persistence_spotlight_importers/</loc>
-    <lastmod>2019-11-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/persistence/</loc>
-    <lastmod>2019-11-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/posts/</loc>
-    <lastmod>2019-11-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
-    <lastmod>2019-11-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/</loc>
-    <lastmod>2019-11-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/year/</loc>
-    <lastmod>2019-11-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/gatekeeper/</loc>
+    <loc>https://theevilbit.github.io/posts/gatekeeper_bypass_or_not_bypass/</loc>
     <lastmod>2019-10-25T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/posts/gatekeeper_bypass_or_not_bypass/</loc>
-    <lastmod>2019-10-25T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/posts/iobit_unlocker_lpe/</loc>
+    <loc>https://theevilbit.github.io/posts/iobit_unlocker_lpe/</loc>
     <lastmod>2019-10-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/lpe/</loc>
-    <lastmod>2019-10-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/vulnerability/</loc>
-    <lastmod>2019-10-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/posts/few_click_rce_via_github_desktop_macos_client_with_gatekeeper_bypass_and_custom_url_handlers/</loc>
+    <loc>https://theevilbit.github.io/posts/few_click_rce_via_github_desktop_macos_client_with_gatekeeper_bypass_and_custom_url_handlers/</loc>
     <lastmod>2019-10-05T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/posts/uninstallstring_a_possible_lpe_via_social_engineering/</loc>
+    <loc>https://theevilbit.github.io/posts/uninstallstring_a_possible_lpe_via_social_engineering/</loc>
     <lastmod>2019-08-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/windows/</loc>
-    <lastmod>2019-08-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/posts/a_simple_protection_against_hmvalidatehandle_technique/</loc>
+    <loc>https://theevilbit.github.io/posts/a_simple_protection_against_hmvalidatehandle_technique/</loc>
     <lastmod>2019-07-31T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/kernel-exploitation/</loc>
-    <lastmod>2019-07-31T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/</loc>
+    <loc>https://theevilbit.github.io/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/</loc>
     <lastmod>2019-07-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/injection/</loc>
-    <lastmod>2019-07-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/posts/getting_root_with_benign_appstore_apps/</loc>
+    <loc>https://theevilbit.github.io/posts/getting_root_with_benign_appstore_apps/</loc>
     <lastmod>2019-06-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/</loc>
+    <loc>https://theevilbit.github.io/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/</loc>
     <lastmod>2019-05-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/posts/macos_persisting_through-application_script_files/</loc>
+    <loc>https://theevilbit.github.io/posts/macos_persisting_through-application_script_files/</loc>
     <lastmod>2019-04-23T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/about/</loc>
+    <loc>https://theevilbit.github.io/about/</loc>
     <lastmod>2019-03-31T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/categories/about/</loc>
+    <loc>https://theevilbit.github.io/posts/vmware_fusion_11_guest_vm_rce_cve-2019-5514/</loc>
     <lastmod>2019-03-31T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/fusion/</loc>
-    <lastmod>2019-03-31T00:00:00+00:00</lastmod>
+    <loc>https://theevilbit.github.io/year/2019/</loc>
+    <lastmod>2019-11-04T00:00:00+00:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/rce/</loc>
+    <loc>https://theevilbit.github.io/categories/about/</loc>
     <lastmod>2019-03-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/rest-api/</loc>
-    <lastmod>2019-03-31T00:00:00+00:00</lastmod>
+    <loc>https://theevilbit.github.io/categories/blog/</loc>
+    <lastmod>2019-11-04T00:00:00+00:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/vmware/</loc>
+    <loc>https://theevilbit.github.io/categories/</loc>
     <lastmod>2019-03-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
-    <loc>/posts/vmware_fusion_11_guest_vm_rce_cve-2019-5514/</loc>
+    <loc>https://theevilbit.github.io/tags/fusion/</loc>
     <lastmod>2019-03-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/websocket/</loc>
+    <loc>https://theevilbit.github.io/tags/gatekeeper/</loc>
+    <lastmod>2019-10-25T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/injection/</loc>
+    <lastmod>2019-07-09T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/kernel-exploitation/</loc>
+    <lastmod>2019-07-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/lpe/</loc>
+    <lastmod>2019-10-12T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/macos/</loc>
+    <lastmod>2019-11-04T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/persistence/</loc>
+    <lastmod>2019-11-04T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/posts/</loc>
+    <lastmod>2019-11-04T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/rce/</loc>
     <lastmod>2019-03-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/rest-api/</loc>
+    <lastmod>2019-03-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/</loc>
+    <lastmod>2019-03-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/vmware/</loc>
+    <lastmod>2019-03-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/vulnerability/</loc>
+    <lastmod>2019-10-12T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/websocket/</loc>
+    <lastmod>2019-03-31T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/windows/</loc>
+    <lastmod>2019-08-09T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/year/</loc>
+    <lastmod>2019-11-04T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/</loc>
+    <lastmod>2019-11-04T00:00:00+00:00</lastmod>
+    <priority>0</priority>
   </url>
   
 </urlset>

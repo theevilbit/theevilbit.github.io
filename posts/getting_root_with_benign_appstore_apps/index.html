@@ -16,20 +16,20 @@
     <meta property="og:title" content="macOS - Getting root with benign AppStore apps" />
 <meta property="og:description" content="This writeup is intended to be a bit of storytelling. I would like to show how I went down the rabbit hole in a quick ’research’ I wanted to do, and eventually found a local privilege escalation vulnerability in macOS. I also want to show, tell about all the obstacles and failures I run into, stuff that people don’t talk about usually, but I feel it’s part of the process all of us go through, when we try to create something." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/getting_root_with_benign_appstore_apps/" />
-<meta property="article:published_time" content="2019-06-01T00:00:00+00:00" />
-<meta property="article:modified_time" content="2019-06-01T00:00:00+00:00" />
+<meta property="og:url" content="https://theevilbit.github.io/posts/getting_root_with_benign_appstore_apps/" />
+<meta property="article:published_time" content="2019-06-01T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2019-06-01T00:00:00&#43;00:00"/>
 
 
     
-      <base href="/posts/getting_root_with_benign_appstore_apps/">
+      <base href="https://theevilbit.github.io/posts/getting_root_with_benign_appstore_apps/">
     
     <title>
   macOS - Getting root with benign AppStore apps · theevilbit blog
 </title>
 
     
-      <link rel="canonical" href="/posts/getting_root_with_benign_appstore_apps/">
+      <link rel="canonical" href="https://theevilbit.github.io/posts/getting_root_with_benign_appstore_apps/">
     
 
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
@@ -39,7 +39,7 @@
     
       
       
-      <link rel="stylesheet" href="/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
     
 
     
@@ -50,17 +50,17 @@
 
     
     
-    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.58.3" />
+    <meta name="generator" content="Hugo 0.54.0" />
   </head>
 
   <body class=" ">
     <main class="wrapper">
       <nav class="navigation">
   <section class="container">
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
     <input type="checkbox" id="menu-toggle" />
@@ -69,19 +69,19 @@
       
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/categories/">Categories</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/categories/">Categories</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/posts/">Posts</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/tags/">Tags</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/about/">About</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
           </li>
         
       
@@ -114,15 +114,15 @@
           </div>
           <div class="categories">
   <i class="fas fa-folder"></i>
-    <a href="/categories/blog/">BLOG</a></div>
+    <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
 
           <div class="tags">
   <i class="fas fa-tag"></i>
-    <a href="/tags/macos/">macos</a>
+    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
       <span class="separator">•</span>
-    <a href="/tags/vulnerability/">vulnerability</a>
+    <a href="https://theevilbit.github.io/tags/vulnerability/">vulnerability</a>
       <span class="separator">•</span>
-    <a href="/tags/lpe/">lpe</a></div>
+    <a href="https://theevilbit.github.io/tags/lpe/">lpe</a></div>
 
         </div>
       </header>
@@ -161,7 +161,7 @@ or watch his talk on the subject:
 <li>For the walkthrough I will use the Tresorit app as an example as they already fixed the problem, and big kudos for them, as they not only responded but also fixed this in a couple of days after reporting. I will not mention all of the apps here, but you will be amazed how many are out there.</li>
 </ol>
 
-<p><img src="/images/Getting_root_with_benign_AppStore_apps/Screen%20Shot%202018-09-12%20at%2014.05.35.png" alt="image1" /></p>
+<p><img src="https://theevilbit.github.io/images/Getting_root_with_benign_AppStore_apps/Screen%20Shot%202018-09-12%20at%2014.05.35.png" alt="image1" /></p>
 
 <p>The vulnerability is with Tresorit’s FinderExtension:</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/FinderExtension</code></pre></div>
@@ -252,7 +252,7 @@ configures an attacker supplied .dylib to be compatible with a target hijackable
 <p>This is a procmon like app created by FireEye, it can be downloaded from here: <a href="https://www.fireeye.com/services/freeware/monitor.html">Monitor.app | Free Security Software | FireEye</a>
 It’s quite good!</p>
 
-<p><img src="/images/Getting_root_with_benign_AppStore_apps/Screenshot%202019-03-11%20at%2021.10.47.png" alt="image2" /></p>
+<p><img src="https://theevilbit.github.io/images/Getting_root_with_benign_AppStore_apps/Screenshot%202019-03-11%20at%2021.10.47.png" alt="image2" /></p>
 
 <h3 id="objective-see-s-procinfo-library-procinfoexample">Objective-See’s ProcInfo library &amp; ProcInfoExample</h3>
 
@@ -344,40 +344,40 @@ Essentially what we can achieve with this is to drop any files that can be found
 <h3 id="what-can-t-we-do-or-at-least-i-didn-t-find-a-way">What can’t we do? (Or at least I didn’t find a way)</h3>
 
 <ol>
-<li><p>Change the name of the file being dropped, or with other words, put the contents of one file into another one with different name. If we create a symlink for the actual mach-o file, like:
+<li>Change the name of the file being dropped, or with other words, put the contents of one file into another one with different name. If we create a symlink for the actual mach-o file, like:
 <code>ln -s /opt/myname /Applications/Example.app/Contents/MacOS/Example</code>
-What will happen is that the symlink will be overwritten, when the installd daemon moves the file from the temporary location to the final. You can find the same behaviour if you experiment with the <code>mv</code> command:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ <span style="color:#366">echo</span> aaa &gt; a
+What will happen is that the symlink will be overwritten, when the installd daemon moves the file from the temporary location to the final. You can find the same behaviour if you experiment with the <code>mv</code> command:
+<code>bash
+$ echo aaa &gt; a
 $ ln -s a b
 $ ls -la
-total <span style="color:#f60">8</span>
-drwxr-xr-x   <span style="color:#f60">4</span> csaby  staff   <span style="color:#f60">128</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:16 .
-drwxr-xr-x+ <span style="color:#f60">50</span> csaby  staff  <span style="color:#f60">1600</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:16 ..
--rw-r--r--   <span style="color:#f60">1</span> csaby  staff     <span style="color:#f60">4</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:16 a
-lrwxr-xr-x   <span style="color:#f60">1</span> csaby  staff     <span style="color:#f60">1</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:16 b -&gt; a
+total 8
+drwxr-xr-x   4 csaby  staff   128 Sep 11 16:16 .
+drwxr-xr-x+ 50 csaby  staff  1600 Sep 11 16:16 ..
+-rw-r--r--   1 csaby  staff     4 Sep 11 16:16 a
+lrwxr-xr-x   1 csaby  staff     1 Sep 11 16:16 b -&gt; a
 $ cat b
 aaa
-$ <span style="color:#366">echo</span> bbb &gt;&gt; b
+$ echo bbb &gt;&gt; b
 $ cat b
 aaa
 bbb
 $ touch c
 $ ls -l
-total <span style="color:#f60">8</span>
--rw-r--r--  <span style="color:#f60">1</span> csaby  staff  <span style="color:#f60">8</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:16 a
-lrwxr-xr-x  <span style="color:#f60">1</span> csaby  staff  <span style="color:#f60">1</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:16 b -&gt; a
--rw-r--r--  <span style="color:#f60">1</span> csaby  staff  <span style="color:#f60">0</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:25 c
+total 8
+-rw-r--r--  1 csaby  staff  8 Sep 11 16:16 a
+lrwxr-xr-x  1 csaby  staff  1 Sep 11 16:16 b -&gt; a
+-rw-r--r--  1 csaby  staff  0 Sep 11 16:25 c
 $ mv c b
 $ ls -la
-total <span style="color:#f60">8</span>
-drwxr-xr-x   <span style="color:#f60">4</span> csaby  staff   <span style="color:#f60">128</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:25 .
-drwxr-xr-x+ <span style="color:#f60">50</span> csaby  staff  <span style="color:#f60">1600</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:16 ..
--rw-r--r--   <span style="color:#f60">1</span> csaby  staff     <span style="color:#f60">8</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:16 a
--rw-r--r--   <span style="color:#f60">1</span> csaby  staff     <span style="color:#f60">0</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:25 b</code></pre></div></li>
-
-<li><p>Even if we create a hardlink instead of symlink, that will be overwritten like in the 1st case.</p></li>
-
-<li><p>As noted earlier we can’t write to folder protected by SIP.</p></li>
+total 8
+drwxr-xr-x   4 csaby  staff   128 Sep 11 16:25 .
+drwxr-xr-x+ 50 csaby  staff  1600 Sep 11 16:16 ..
+-rw-r--r--   1 csaby  staff     8 Sep 11 16:16 a
+-rw-r--r--   1 csaby  staff     0 Sep 11 16:25 b
+</code></li>
+<li>Even if we create a hardlink instead of symlink, that will be overwritten like in the 1st case.</li>
+<li>As noted earlier we can’t write to folder protected by SIP.</li>
 </ol>
 
 <h3 id="ideas-for-using-this-for-privilege-escalation">Ideas for using this for privilege escalation</h3>
@@ -425,10 +425,10 @@ drwxr-xr-x+ <span style="color:#f60">50</span> csaby  staff  <span style="color:
 <li>Become an Apple Developer, costs 99$/year</li>
 
 <li><p>Login to App Store Connect and create a Bundle ID: <a href="https://developer.apple.com/account/mac/identifier/bundle/create">https://developer.apple.com/account/mac/identifier/bundle/create</a>
-<img src="/images/Getting_root_with_benign_AppStore_apps/Screenshot%202019-03-11%20at%2018.50.08.png" alt="image3" /></p></li>
+<img src="https://theevilbit.github.io/images/Getting_root_with_benign_AppStore_apps/Screenshot%202019-03-11%20at%2018.50.08.png" alt="image3" /></p></li>
 
 <li><p>Go back and create a new App referring the Bundle ID you created: <a href="https://appstoreconnect.apple.com/WebObjects/iTunesConnect.woa/ra/ng/app">https://appstoreconnect.apple.com/WebObjects/iTunesConnect.woa/ra/ng/app</a>
-<img src="/images/Getting_root_with_benign_AppStore_apps/Screenshot%202019-03-11%20at%2018.50.55.png" alt="image4" /></p></li>
+<img src="https://theevilbit.github.io/images/Getting_root_with_benign_AppStore_apps/Screenshot%202019-03-11%20at%2018.50.55.png" alt="image4" /></p></li>
 
 <li><p>Populate the details (license page, description, etc…)</p></li>
 
@@ -448,7 +448,7 @@ drwxr-xr-x+ <span style="color:#f60">50</span> csaby  staff  <span style="color:
 <p>The application I developed, is called “Crontab Creator”, which is actually very useful for creating crontab files. It’s still there and available, and as it turns out, there are a few people using it.
 <a href="https://itunes.apple.com/ao/app/crontab-creator/id1438725196?mt=12">‎Crontab Creator on the Mac App Store</a></p>
 
-<p><img src="/images/Getting_root_with_benign_AppStore_apps/Screenshot%202018-10-14%20at%2010.12.46.png" alt="image5" /></p>
+<p><img src="https://theevilbit.github.io/images/Getting_root_with_benign_AppStore_apps/Screenshot%202018-10-14%20at%2010.12.46.png" alt="image5" /></p>
 
 <p>The application is absolutely benign! However it contains different examples for crontab files, which are all stored as separate files within the application. The only reason I didn’t store the strings embedded in the source code is to be able to use it for exploitation :) Among these there is one called ‘root’, which will try to execute a script from the _Applications_Scripts folder.</p>
 
@@ -497,18 +497,16 @@ mas install <span style="color:#f60">1438725196</span></code></pre></div>
 <code>pkgutil --expand example.pkg myfolder</code></li>
 <li>Enter the folder, and decompress the embedded Payload (inside the embedded pkg folder):
 <code>tar xvf embedded.pkg/Payload</code></li>
-
-<li><p>Embedded your file (it can be anywhere and anything):</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ mkdir Example.app/Contents/test
-$ <span style="color:#366">echo</span> aaaa &gt; Example.app/Contents/test/a</code></pre></div></li>
-
-<li><p>Recompress the app:
-<code>find ./Example.app | cpio -o --format odc | gzip -c &gt; Payload</code></p></li>
-
-<li><p>Delete unnecessary files, and move the Payload to the embedded pkg folder.</p></li>
-
-<li><p>Repack the pkg
-<code>pkgutil --flatten myfolder/ mypackage.pkg</code></p></li>
+<li>Embedded your file (it can be anywhere and anything):
+<code>bash
+$ mkdir Example.app/Contents/test
+$ echo aaaa &gt; Example.app/Contents/test/a
+</code></li>
+<li>Recompress the app:
+<code>find ./Example.app | cpio -o --format odc | gzip -c &gt; Payload</code></li>
+<li>Delete unnecessary files, and move the Payload to the embedded pkg folder.</li>
+<li>Repack the pkg
+<code>pkgutil --flatten myfolder/ mypackage.pkg</code></li>
 </ol>
 
 <p>The package’s digital signature will be lost, so you will need a method to bypass Gatekeeper. The embedded App’s signature will be also broken, as these days every single file inside an .app bundle must be digitally signed. Typically the main mach-o file is signed, and it has the hash of the _CodeSignatures plist file. The file will contain all the hashes for the other files. If you place a new file inside the .app bundle that will invalidate the signature. However this is not a problem here, as if you can bypass Gatekeeper for the .pkg file, the installed Application will not be subject to Gatekeeper’s verification.</p>
@@ -552,7 +550,7 @@ Developers should build-in some verification of Apple IDs. I’m not sure that i
 <p>With that, and now being an ‘experienced’ :D macOS developer, I made a new POC, called StartUp. It’s this:
 <a href="https://itunes.apple.com/us/app/startup/id1452212620">‎StartUp on the Mac App Store</a></p>
 
-<p><img src="/images/Getting_root_with_benign_AppStore_apps/Screenshot%202019-02-12%20at%2010.39.44.png" alt="image6" /></p>
+<p><img src="https://theevilbit.github.io/images/Getting_root_with_benign_AppStore_apps/Screenshot%202019-02-12%20at%2010.39.44.png" alt="image6" /></p>
 
 <p>It is really built along the same line as the previous one, but in this case for LaunchDaemons.</p>
 
@@ -603,19 +601,19 @@ lport <span style="color:#555">=</span> <span style="color:#f60">31337</span> <s
 
 <p>Apple never admitted this as a security bug, they never assigned a CVE, they considered it as an enhancement. Finally this came with Mojave 10.14.5, and they even mentioned my name on their website.</p>
 
-<p><img src="/images/Getting_root_with_benign_AppStore_apps/Screenshot%202019-05-13%20at%2020.42.59.png" alt="image7" /></p>
+<p><img src="https://theevilbit.github.io/images/Getting_root_with_benign_AppStore_apps/Screenshot%202019-05-13%20at%2020.42.59.png" alt="image7" /></p>
 
 <p>I made a quick test, and it turned out that they eventually managed to fix it properly. If you create the App’s folder, place there files, those will be all wiped. Using FireEye’s Monitor.app we can actually see it. The first event shows that they move the entire folder.</p>
 
-<p><img src="/images/Getting_root_with_benign_AppStore_apps/Screenshot%202019-05-14%20at%2021.39.17.png" alt="image8" /></p>
+<p><img src="https://theevilbit.github.io/images/Getting_root_with_benign_AppStore_apps/Screenshot%202019-05-14%20at%2021.39.17.png" alt="image8" /></p>
 
 <p>Being in Game Of Thrones mood I imagine it like this:</p>
 
-<p><img src="/images/Getting_root_with_benign_AppStore_apps/Screenshot%202019-05-14%20at%207.21.05%20copy%202.png" alt="image9" /></p>
+<p><img src="https://theevilbit.github.io/images/Getting_root_with_benign_AppStore_apps/Screenshot%202019-05-14%20at%207.21.05%20copy%202.png" alt="image9" /></p>
 
 <p>The following event shows that they install the application into its proper location:</p>
 
-<p><img src="/images/Getting_root_with_benign_AppStore_apps/Screenshot%202019-05-14%20at%2021.40.50.png" alt="image10" /></p>
+<p><img src="https://theevilbit.github.io/images/Getting_root_with_benign_AppStore_apps/Screenshot%202019-05-14%20at%2021.40.50.png" alt="image10" /></p>
 
 <p>So you can no longer drop there your files, etc…</p>
 
@@ -645,7 +643,7 @@ lport <span style="color:#555">=</span> <span style="color:#f60">31337</span> <s
       <footer class="footer">
   <section class="container">
     
-     © 2019
+     © 2020
     
        · 
       Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.

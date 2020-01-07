@@ -2,39 +2,39 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>theevilbit blog</title>
-    <link>/</link>
+    <link>https://theevilbit.github.io/</link>
     <description>Recent content on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Mon, 04 Nov 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://theevilbit.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>macOS persistence - Spotlight importers and how to create them</title>
-      <link>/posts/macos_persistence_spotlight_importers/</link>
+      <link>https://theevilbit.github.io/posts/macos_persistence_spotlight_importers/</link>
       <pubDate>Mon, 04 Nov 2019 00:00:00 +0000</pubDate>
       
-      <guid>/posts/macos_persistence_spotlight_importers/</guid>
+      <guid>https://theevilbit.github.io/posts/macos_persistence_spotlight_importers/</guid>
       <description>TL;DR It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware.
 Intro I’m reading Jonathan Levin’s *OS Internals Vol I. book (user mode - *OS Internals: - Welcome!), and I got to the chapter where he talks about Spotlight importers, and my first thought was that it would be an awesome way to persist on macOS.</description>
     </item>
     
     <item>
       <title>GateKeeper - Bypass or not bypass?</title>
-      <link>/posts/gatekeeper_bypass_or_not_bypass/</link>
+      <link>https://theevilbit.github.io/posts/gatekeeper_bypass_or_not_bypass/</link>
       <pubDate>Fri, 25 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>/posts/gatekeeper_bypass_or_not_bypass/</guid>
+      <guid>https://theevilbit.github.io/posts/gatekeeper_bypass_or_not_bypass/</guid>
       <description>TL;DR On macOS Mojave Gatekeeper only verifies executables, which are run with the open command or the user double clicks. It won’t verify files, that are executed through other means like, directly executing a binary ./myapp regardless of the quarantine attribute. If you can place a plist file inside LaunchAgents/LaunchDaemons, the command inside will also be executed. Prior to Catalina there is a way to trick users to drag &amp;amp; drop files in the LaunchAgents folder.</description>
     </item>
     
     <item>
       <title>IOBit Unlocker 1.1.2 - Local Privilege Escalation</title>
-      <link>/posts/iobit_unlocker_lpe/</link>
+      <link>https://theevilbit.github.io/posts/iobit_unlocker_lpe/</link>
       <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>/posts/iobit_unlocker_lpe/</guid>
+      <guid>https://theevilbit.github.io/posts/iobit_unlocker_lpe/</guid>
       <description>IOBit’s Unlocker program is advertised to solve the following issues:
  IObit Unlocker performs well in solving “cannot delete files”, “access is denied”, “The file is in use by another program or user”, or “There has been a sharing violation” problems. With IObit Unlocker, you can manage all your files the way you want.
  and even:
@@ -43,40 +43,40 @@ Intro I’m reading Jonathan Levin’s *OS Internals Vol I. book (user mode - *O
     
     <item>
       <title>Few click RCE via GitHub Desktop macOS client with Gatekeeper bypass and custom URL handlers</title>
-      <link>/posts/few_click_rce_via_github_desktop_macos_client_with_gatekeeper_bypass_and_custom_url_handlers/</link>
+      <link>https://theevilbit.github.io/posts/few_click_rce_via_github_desktop_macos_client_with_gatekeeper_bypass_and_custom_url_handlers/</link>
       <pubDate>Sat, 05 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>/posts/few_click_rce_via_github_desktop_macos_client_with_gatekeeper_bypass_and_custom_url_handlers/</guid>
+      <guid>https://theevilbit.github.io/posts/few_click_rce_via_github_desktop_macos_client_with_gatekeeper_bypass_and_custom_url_handlers/</guid>
       <description>TL;DR The GitHub Desktop app doesn’t add the quarantine extended attribute to files downloaded from the web, and this along with macOS’s URL handler auto-registration feature allows an attacker to execute arbitrary, even unsigned code on a macOS system. If we don’t count the clicks required to open the GitHub App, and cloning an external repository, then this is a 2 click RCE.
 The idea I recently came across a very good blog post about an RCE vulnerability on GitHub Desktop: GitHub Desktop RCE (OSX) - André Baptista via its custom URL handlers.</description>
     </item>
     
     <item>
       <title>UninstallString - a possible LPE via Social Engineering</title>
-      <link>/posts/uninstallstring_a_possible_lpe_via_social_engineering/</link>
+      <link>https://theevilbit.github.io/posts/uninstallstring_a_possible_lpe_via_social_engineering/</link>
       <pubDate>Fri, 09 Aug 2019 00:00:00 +0000</pubDate>
       
-      <guid>/posts/uninstallstring_a_possible_lpe_via_social_engineering/</guid>
+      <guid>https://theevilbit.github.io/posts/uninstallstring_a_possible_lpe_via_social_engineering/</guid>
       <description>Whenever you install an application on Windows, typically through MSI, there is a registry key created, with plenty of information for uninstallation, like the uninstaller location, install date, publisher, etc… you can find all of the options here: Add uninstall information to Add/Remove Programs - NSIS
 In case an application is installed for the current user and not for all user, the Installation/Uninstallation details will go to the Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\ registry key instead of the HKLM hive.</description>
     </item>
     
     <item>
       <title>A simple protection against HMValidateHandle technique</title>
-      <link>/posts/a_simple_protection_against_hmvalidatehandle_technique/</link>
+      <link>https://theevilbit.github.io/posts/a_simple_protection_against_hmvalidatehandle_technique/</link>
       <pubDate>Wed, 31 Jul 2019 00:00:00 +0000</pubDate>
       
-      <guid>/posts/a_simple_protection_against_hmvalidatehandle_technique/</guid>
+      <guid>https://theevilbit.github.io/posts/a_simple_protection_against_hmvalidatehandle_technique/</guid>
       <description>In the recent days I was reading technical analysis of win32k exploits from recent years, and it caught my eyes, that the HMValidateHandle technique is very heavily used almost everywhere. Then I had an idea how to protect against this family of exploits, which I think is very simple. This post will be about that.
 What is HMValidateHandle? HMValidateHandle is an internal, unexported function of user32.dll. It takes a handle and a handle type as arguments, and by looking up the handle table, if the handle is matching with the type it will copy the object to user memory.</description>
     </item>
     
     <item>
       <title>DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX</title>
-      <link>/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/</link>
+      <link>https://theevilbit.github.io/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/</link>
       <pubDate>Tue, 09 Jul 2019 00:00:00 +0000</pubDate>
       
-      <guid>/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/</guid>
+      <guid>https://theevilbit.github.io/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/</guid>
       <description>After my recent blog post, my old mate @_Dark_Knight_ reached out to me and he asked me a question:
  “Do you typically callout user apps that allow dyld_insert_libraries?”
  And a few similar ones, and I will be honest, I had no idea what is he talking about, if only I understood the question :D Despite the fact that my recent blog posts and talks are about macOS, I deal much more with Windows on a daily basis, probably like 95%, and macOS is still a whole new territory for me.</description>
@@ -84,38 +84,38 @@ What is HMValidateHandle? HMValidateHandle is an internal, unexported function o
     
     <item>
       <title>macOS - Getting root with benign AppStore apps</title>
-      <link>/posts/getting_root_with_benign_appstore_apps/</link>
+      <link>https://theevilbit.github.io/posts/getting_root_with_benign_appstore_apps/</link>
       <pubDate>Sat, 01 Jun 2019 00:00:00 +0000</pubDate>
       
-      <guid>/posts/getting_root_with_benign_appstore_apps/</guid>
+      <guid>https://theevilbit.github.io/posts/getting_root_with_benign_appstore_apps/</guid>
       <description>This writeup is intended to be a bit of storytelling. I would like to show how I went down the rabbit hole in a quick ’research’ I wanted to do, and eventually found a local privilege escalation vulnerability in macOS. I also want to show, tell about all the obstacles and failures I run into, stuff that people don’t talk about usually, but I feel it’s part of the process all of us go through, when we try to create something.</description>
     </item>
     
     <item>
       <title>GNS3 ubridge SETUID bit - arbitrary file read</title>
-      <link>/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/</link>
+      <link>https://theevilbit.github.io/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/</link>
       <pubDate>Tue, 28 May 2019 00:00:00 +0000</pubDate>
       
-      <guid>/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/</guid>
+      <guid>https://theevilbit.github.io/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/</guid>
       <description>A couple of weeks ago, I had the idea of scanning my Mac for files that has the SUID bit set, I wanted to see if there is anything interesting showing up. You can do it this way:
 /usr/bin/sudo find / -perm -4000 -exec /bin/ls -ldb {} \; &amp;gt; suidfilelist There was one item that caught my attention, and that was a file called ubridge inside GNS3. I used to be a network guy, and GNS3 is a great tool to emulate real network gear, practice configuration, etc.</description>
     </item>
     
     <item>
       <title>macOS - Persisting through Application script files</title>
-      <link>/posts/macos_persisting_through-application_script_files/</link>
+      <link>https://theevilbit.github.io/posts/macos_persisting_through-application_script_files/</link>
       <pubDate>Tue, 23 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>/posts/macos_persisting_through-application_script_files/</guid>
+      <guid>https://theevilbit.github.io/posts/macos_persisting_through-application_script_files/</guid>
       <description>I started to explore to possibility of persisting on macOS through script files contained in an application. The basic idea is that if we find a script file, which is being executed by a given application, we can edit that script file, put our code inside, and wait for an execution. Such technique is highly dependent on the applications the user has installed, so I looked through first how rare / frequent is having such scripts inside applications.</description>
     </item>
     
     <item>
       <title>About</title>
-      <link>/about/</link>
+      <link>https://theevilbit.github.io/about/</link>
       <pubDate>Sun, 31 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>/about/</guid>
+      <guid>https://theevilbit.github.io/about/</guid>
       <description>My name is Csaba Fitzl or also known as &amp;ldquo;theevilbit&amp;rdquo;, which comes from RFC 3514. I currently work as a red teamer at a Big Oil company, but I also worked 5 years as blue teamer, and also spent 6 years building network infrastructure, and mostly having fun with BGP.
 This is the new place for my blog, the old one is here: https://theevilbit.blogspot.com/
 Other places where you can find me:</description>
@@ -123,10 +123,10 @@ Other places where you can find me:</description>
     
     <item>
       <title>VMware Fusion 11 - Guest VM RCE - CVE-2019-5514</title>
-      <link>/posts/vmware_fusion_11_guest_vm_rce_cve-2019-5514/</link>
+      <link>https://theevilbit.github.io/posts/vmware_fusion_11_guest_vm_rce_cve-2019-5514/</link>
       <pubDate>Sun, 31 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>/posts/vmware_fusion_11_guest_vm_rce_cve-2019-5514/</guid>
+      <guid>https://theevilbit.github.io/posts/vmware_fusion_11_guest_vm_rce_cve-2019-5514/</guid>
       <description>TL;DR You can run an arbitrary command on a VMware Fusion guest VM through a website without any priory knowledge. Basically VMware Fusion is starting up a websocket listening only on the localhost. You can fully control all the VMs (also create/delete snapshots, whatever you want) through this websocket interface, including launching apps. You need to have VMware Tools installed on the guest for launching apps, but honestly who doesn’t have it installed.</description>
     </item>
     

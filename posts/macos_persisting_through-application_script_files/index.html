@@ -16,20 +16,20 @@
     <meta property="og:title" content="macOS - Persisting through Application script files" />
 <meta property="og:description" content="I started to explore to possibility of persisting on macOS through script files contained in an application. The basic idea is that if we find a script file, which is being executed by a given application, we can edit that script file, put our code inside, and wait for an execution. Such technique is highly dependent on the applications the user has installed, so I looked through first how rare / frequent is having such scripts inside applications." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/macos_persisting_through-application_script_files/" />
-<meta property="article:published_time" content="2019-04-23T00:00:00+00:00" />
-<meta property="article:modified_time" content="2019-04-23T00:00:00+00:00" />
+<meta property="og:url" content="https://theevilbit.github.io/posts/macos_persisting_through-application_script_files/" />
+<meta property="article:published_time" content="2019-04-23T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2019-04-23T00:00:00&#43;00:00"/>
 
 
     
-      <base href="/posts/macos_persisting_through-application_script_files/">
+      <base href="https://theevilbit.github.io/posts/macos_persisting_through-application_script_files/">
     
     <title>
   macOS - Persisting through Application script files · theevilbit blog
 </title>
 
     
-      <link rel="canonical" href="/posts/macos_persisting_through-application_script_files/">
+      <link rel="canonical" href="https://theevilbit.github.io/posts/macos_persisting_through-application_script_files/">
     
 
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
@@ -39,7 +39,7 @@
     
       
       
-      <link rel="stylesheet" href="/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
     
 
     
@@ -50,17 +50,17 @@
 
     
     
-    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.58.3" />
+    <meta name="generator" content="Hugo 0.54.0" />
   </head>
 
   <body class=" ">
     <main class="wrapper">
       <nav class="navigation">
   <section class="container">
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
     <input type="checkbox" id="menu-toggle" />
@@ -69,19 +69,19 @@
       
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/categories/">Categories</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/categories/">Categories</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/posts/">Posts</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/tags/">Tags</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="/about/">About</a>
+            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
           </li>
         
       
@@ -114,13 +114,13 @@
           </div>
           <div class="categories">
   <i class="fas fa-folder"></i>
-    <a href="/categories/blog/">BLOG</a></div>
+    <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
 
           <div class="tags">
   <i class="fas fa-tag"></i>
-    <a href="/tags/macos/">macos</a>
+    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
       <span class="separator">•</span>
-    <a href="/tags/persistence/">persistence</a></div>
+    <a href="https://theevilbit.github.io/tags/persistence/">persistence</a></div>
 
         </div>
       </header>
@@ -144,7 +144,7 @@ find /Applications/ -name <span style="color:#c30">&#34;*.py&#34;</span></code><
 
 <p>Although it’s probably not that common people installing Python on a macOS system, as it’s present by default, but if so, it contains the Idle.app editor. This application has a idlemain.py script in the resources folder, that is executed upon starting Idle. The app or the OS doesn’t verify if the script was tampered with.</p>
 
-<p><img src="/images/macOS_Persisting_through Application_script_files/Screenshot%202019-04-10%20at%2017.30.55.png" alt="image1" /></p>
+<p><img src="https://theevilbit.github.io/images/macOS_Persisting_through Application_script_files/Screenshot%202019-04-10%20at%2017.30.55.png" alt="image1" /></p>
 
 <p>I have two problems with this, one is that finding this app somewhere is very unlikely, the second is that as you have to install this, the folder permissions are set for root access only. Even if you persist, you will only maintain yourself as the user and not as root. So it’s not that ideal, but it works if really needed.</p>
 
@@ -238,11 +238,11 @@ Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;licen
 <span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">main</span>():
 	<span style="color:#069;font-weight:bold">if</span> (<span style="color:#366">len</span>(sys<span style="color:#555">.</span>argv) <span style="color:#555">&lt;</span> <span style="color:#f60">2</span>):
 		<span style="color:#069;font-weight:bold">print</span> <span style="color:#c30">&#34;[-] no folder specified, useage: </span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30"> find_discrepancy.py /path/to/app&#34;</span>
-		sys<span style="color:#555">.</span>exit(<span style="color:#555">-</span><span style="color:#f60">1</span>)
+		sys<span style="color:#555">.</span><span style="color:#366">exit</span>(<span style="color:#555">-</span><span style="color:#f60">1</span>)
 	<span style="color:#366">dir</span> <span style="color:#555">=</span> sys<span style="color:#555">.</span>argv[<span style="color:#f60">1</span>]
 	<span style="color:#069;font-weight:bold">if</span>(<span style="color:#000;font-weight:bold">not</span> os<span style="color:#555">.</span>path<span style="color:#555">.</span>isdir(<span style="color:#366">dir</span>)):
 		<span style="color:#069;font-weight:bold">print</span> <span style="color:#c30">&#34;[-] This is not a directory&#34;</span>
-		sys<span style="color:#555">.</span>exit(<span style="color:#555">-</span><span style="color:#f60">1</span>)
+		sys<span style="color:#555">.</span><span style="color:#366">exit</span>(<span style="color:#555">-</span><span style="color:#f60">1</span>)
 	all_files <span style="color:#555">=</span> find_timestamps(<span style="color:#366">dir</span>)
 	t <span style="color:#555">=</span> <span style="color:#c30">&#39;&#39;</span>
 	<span style="color:#069;font-weight:bold">for</span> f <span style="color:#000;font-weight:bold">in</span> all_files:
@@ -276,7 +276,7 @@ Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;licen
       <footer class="footer">
   <section class="container">
     
-     © 2019
+     © 2020
     
        · 
       Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.

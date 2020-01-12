@@ -460,26 +460,24 @@ NSLog(<span style="color:#c30">@&#34;Done&#34;</span>);</code></pre></div>
 
 <p>I will repeat this in every bog post I write on this topic, spoiling also the coming ones, but I think it&rsquo;s important.</p>
 
-<ol>
-<li>The client process verification in the <code>shouldAcceptNewConnection</code> call should verify the the following:</li>
-</ol>
-
-<p>a. The connecting process is signed by Apple
-b. The connecting process is signed by your team ID
-c. The connecting process is identified by your bundle ID
-d. The connecting process has a minimum software version, where the fix has been implemented</p>
-
-<p>somehow like here:
-<a href="[https://github.com/objective-see/LuLu/blob/10e7f719caf0b618b99fceef1a366617662d3b25/launchDaemon/launchDaemon/XPCListener.m](https://github.com/objective-see/LuLu/blob/10e7f719caf0b618b99fceef1a366617662d3b25/launchDaemon/launchDaemon/XPCListener.m)">LuLu/XPCListener.m at 10e7f719caf0b618b99fceef1a366617662d3b25 · objective-see/LuLu · GitHub</a></p>
+<ul>
+<li><p>The client process verification in the <code>shouldAcceptNewConnection</code> call should verify the the following:</p>
 
 <ol>
+<li>The connecting process is signed by Apple</li>
+<li>The connecting process is signed by your team ID</li>
+<li>The connecting process is identified by your bundle ID</li>
+<li>The connecting process has a minimum software version, where the fix has been implemented
+somehow like here: <a href="https://github.com/objective-see/LuLu/blob/10e7f719caf0b618b99fceef1a366617662d3b25/launchDaemon/launchDaemon/XPCListener.m">LuLu/XPCListener.m · objective-see/LuLu · GitHub</a></li>
+</ol></li>
+
 <li><p>Beyond that the client which is allowed to connect has to be run with hardened runtime, without allowing the following:</p>
 
 <pre><code>com.apple.security.cs.allow-dyld-environment-variables
 com.apple.security.cs.disable-library-validation
 com.apple.security.get-task-allow
 </code></pre></li>
-</ol>
+</ul>
 
 <p>as any of these entitlements would allow another process to inject code into the app, and thus allowing it to talk to the helper tool.</p>
 

@@ -5,10 +5,19 @@
     <link>https://theevilbit.github.io/posts/</link>
     <description>Recent content in Posts on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 04 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 12 Jan 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://theevilbit.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Secure coding PrivilegedHelperTools - Part 1 - Why EvenBetterAuthorization is not enough?</title>
+      <link>https://theevilbit.github.io/posts/secure_coding_privilegedhelpertools_part1/</link>
+      <pubDate>Sun, 12 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/posts/secure_coding_privilegedhelpertools_part1/</guid>
+      <description>This is the first part of a blog post series I plan about PrivilegedHelperTools that exists on macOS systems. I recently took a look on a couple of these tools, and found that it&amp;rsquo;s very easy to make the code insecure, as there are many small pieces to it, and if one is done wrong, the helper tool will be open to abuse by anyone having a foothold on the system.</description>
+    </item>
     
     <item>
       <title>macOS persistence - Spotlight importers and how to create them</title>

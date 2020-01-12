@@ -19,8 +19,8 @@ Intro I’m reading Jonathan Levin’s *OS Internals Vol I. book (user mode - *O
 Intro I’m reading Jonathan Levin’s *OS Internals Vol I. book (user mode - *OS Internals: - Welcome!), and I got to the chapter where he talks about Spotlight importers, and my first thought was that it would be an awesome way to persist on macOS." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/macos_persistence_spotlight_importers/" />
-<meta property="article:published_time" content="2019-11-04T00:00:00&#43;00:00"/>
-<meta property="article:modified_time" content="2019-11-04T00:00:00&#43;00:00"/>
+<meta property="article:published_time" content="2019-11-04T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-11-04T00:00:00+00:00" />
 
 
     
@@ -55,7 +55,7 @@ Intro I’m reading Jonathan Levin’s *OS Internals Vol I. book (user mode - *O
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.54.0" />
+    <meta name="generator" content="Hugo 0.58.3" />
   </head>
 
   <body class=" ">
@@ -195,22 +195,20 @@ It’s pretty old, but works. First I just compiled it to see if this importer i
 <p>What I did after that is cleaning up the project, I removed the other targets (like Quicklook) and also cleaned up the metadata generator function. Here are the mandatory building blocks your importer will have to have, I will try to explain them to the best of my understanding, but please bear in mind that I’m a n00b for Objective-C or macOS development. If you want to follow here is the one I made / modified: <a href="https://github.com/theevilbit/macos/tree/master/PersistentImporter">macos/PersistentImporter at master · theevilbit/macos · GitHub</a></p>
 
 <ol>
-<li>schema.xml - this will contain the attributes your importer will support. The attributes are the metadata buckets your importer can extract data into, and which will be indexed by Spotlight. For the above project I actually made it mostly intact, but I could likely clean it completely.
-```xml
-&lt;?xml version=“1.0” encoding=“UTF-8”?&gt;</li>
-</ol>
+<li><p>schema.xml - this will contain the attributes your importer will support. The attributes are the metadata buckets your importer can extract data into, and which will be indexed by Spotlight. For the above project I actually made it mostly intact, but I could likely clean it completely.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#099">&lt;?xml version=“1.0” encoding=“UTF-8”?&gt;</span>
 
-<p><schema version=“1.0” xmlns=“http://www.apple.com/metadata” xmlns:xsi=“http://www.w3.org/2001/XMLSchema-instance” xsi:schemaLocation=“http://www.apple.com/metadata file:///System/Library/Frameworks/CoreServices.framework/Frameworks/Metadata.framework/Resources/MetadataSchema.xsd”></p>
+<span style="color:#309;font-weight:bold">&lt;schema</span> <span style="color:#309">version=</span><span style="color:#c30">“1.0”</span> <span style="color:#309">xmlns=</span><span style="color:#c30">“http://www.apple.com/metadata”</span> <span style="color:#309">xmlns:xsi=</span><span style="color:#c30">“http://www.w3.org/2001/XMLSchema-instance”</span> <span style="color:#309">xsi:schemaLocation=</span><span style="color:#c30">“http://www.apple.com/metadata</span> <span style="color:#a00;background-color:#faa">file:///System/Library/Frameworks/CoreServices.framework/Frameworks/Metadata.framework/Resources/MetadataSchema.xsd”</span><span style="color:#309;font-weight:bold">&gt;</span>
 
-<p>&lt;!— “attributes” element must exist in schema.xml file even if mdimporter doesn’t support any custom attributes. if it doesn’t exist, the metadata which are listed by “displayattrs” elements aren’t displayed by Finder’s “Get Info” panel (in OS X 10.10.2). —&gt;
-  <attributes>
-    <attribute name=“com_csaby_persist_mdimporter” multivalued=“false” type=“CFString”/>
-  </attributes></p>
+<span style="color:#099">&lt;!— “attributes” element must exist in schema.xml file even if mdimporter doesn’t support any custom attributes. if it doesn’t exist, the metadata which are listed by “displayattrs” elements aren’t displayed by Finder’s “Get Info” panel (in OS X 10.10.2). —&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;attributes&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;attribute</span> <span style="color:#309">name=</span><span style="color:#c30">“com_csaby_persist_mdimporter”</span> <span style="color:#309">multivalued=</span><span style="color:#c30">“false”</span> <span style="color:#309">type=</span><span style="color:#c30">“CFString”/</span><span style="color:#309;font-weight:bold">&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;/attributes&gt;</span>
 
-<p><types>
-    <type name=“org.idpf.epub-container”></p>
+<span style="color:#309;font-weight:bold">&lt;types&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;type</span> <span style="color:#309">name=</span><span style="color:#c30">“org.idpf.epub-container”</span><span style="color:#309;font-weight:bold">&gt;</span>
 
-<pre><code>  &lt;allattrs&gt;
+  <span style="color:#309;font-weight:bold">&lt;allattrs&gt;</span>
     kMDItemTitle
     kMDItemAuthors
     kMDItemKeywords
@@ -229,9 +227,9 @@ It’s pretty old, but works. First I just compiled it to see if this importer i
     kMDItemContentCreationDate
     kMDItemContentModificationDate
     com_csaby_persist_mdimporter
-  &lt;/allattrs&gt;
+  <span style="color:#309;font-weight:bold">&lt;/allattrs&gt;</span>
 
-  &lt;displayattrs&gt;
+  <span style="color:#309;font-weight:bold">&lt;displayattrs&gt;</span>
     kMDItemTitle
     kMDItemAuthors
     kMDItemContributors
@@ -245,51 +243,43 @@ It’s pretty old, but works. First I just compiled it to see if this importer i
     kMDItemContentCreationDate
     kMDItemContentModificationDate
     kMDItemDescription
-  &lt;/displayattrs&gt;
+  <span style="color:#309;font-weight:bold">&lt;/displayattrs&gt;</span>
 
-&lt;/type&gt;
-</code></pre>
+<span style="color:#309;font-weight:bold">&lt;/type&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;/types&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;/schema&gt;</span></code></pre></div></li>
 
-<p></types>
-</schema></p>
+<li><p>main.c file - This is a standard file, typically generated by Xcode, you don’t need to modify it. I will not paste it here, as it’s quite long, but you can get it from my GitHub project (link above).</p></li>
 
-<pre><code>
-2. main.c file - This is a standard file, typically generated by Xcode, you don’t need to modify it. I will not paste it here, as it’s quite long, but you can get it from my GitHub project (link above).
-3. Info.plist file - Here you must define (along some other standard things) what kind of files your importer will support. It should contain file extensions, and the [Uniform Type Identifier](https://en.wikipedia.org/wiki/Uniform_Type_Identifier). Below is the one related to epub from the Info.plist. As mentioned by Patrick you can also specify all files, but I opted to stick with epubs, I didn’t want my importer to run always, as my goal was only experimenting. 
+<li><p>Info.plist file - Here you must define (along some other standard things) what kind of files your importer will support. It should contain file extensions, and the <a href="https://en.wikipedia.org/wiki/Uniform_Type_Identifier">Uniform Type Identifier</a>. Below is the one related to epub from the Info.plist. As mentioned by Patrick you can also specify all files, but I opted to stick with epubs, I didn’t want my importer to run always, as my goal was only experimenting.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml">	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>UTImportedTypeDeclarations<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>UTTypeConformsTo<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>public.data<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>public.item<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>public.composite-content<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>public.content<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>UTTypeIdentifier<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>org.idpf.epub-container<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>UTTypeTagSpecification<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>public.filename-extension<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+					<span style="color:#309;font-weight:bold">&lt;string&gt;</span>epub<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>public.mime-type<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+					<span style="color:#309;font-weight:bold">&lt;string&gt;</span>application/epub+zip<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;/array&gt;</span></code></pre></div></li>
 
-```xml
-	&lt;key&gt;UTImportedTypeDeclarations&lt;/key&gt;
-	&lt;array&gt;
-		&lt;dict&gt;
-			&lt;key&gt;UTTypeConformsTo&lt;/key&gt;
-			&lt;array&gt;
-				&lt;string&gt;public.data&lt;/string&gt;
-				&lt;string&gt;public.item&lt;/string&gt;
-				&lt;string&gt;public.composite-content&lt;/string&gt;
-				&lt;string&gt;public.content&lt;/string&gt;
-			&lt;/array&gt;
-			&lt;key&gt;UTTypeIdentifier&lt;/key&gt;
-			&lt;string&gt;org.idpf.epub-container&lt;/string&gt;
-			&lt;key&gt;UTTypeTagSpecification&lt;/key&gt;
-			&lt;dict&gt;
-				&lt;key&gt;public.filename-extension&lt;/key&gt;
-				&lt;array&gt;
-					&lt;string&gt;epub&lt;/string&gt;
-				&lt;/array&gt;
-				&lt;key&gt;public.mime-type&lt;/key&gt;
-				&lt;array&gt;
-					&lt;string&gt;application/epub+zip&lt;/string&gt;
-				&lt;/array&gt;
-			&lt;/dict&gt;
-		&lt;/dict&gt;
-	&lt;/array&gt;
-</code></pre>
-
-<ol>
-<li>GetMetadataForFile.m file, which will be the brain of your importer, here you actually define how the content is parsed, and how metadata is extracted. For that you need to implement the following function (and eventually return true at the end):
-<code>objectivec
-Boolean GetMetadataForFile(void *thisInterface, CFMutableDictionaryRef attributes, CFStringRef contentTypeUTI, CFStringRef pathToFile)
-</code></li>
+<li><p>GetMetadataForFile.m file, which will be the brain of your importer, here you actually define how the content is parsed, and how metadata is extracted. For that you need to implement the following function (and eventually return true at the end):</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#078;font-weight:bold">Boolean</span> GetMetadataForFile(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>thisInterface, CFMutableDictionaryRef attributes, CFStringRef contentTypeUTI, CFStringRef pathToFile)</code></pre></div></li>
 </ol>
 
 <p>I started to experiment what I can do here, and it quickly turned out that this importer is heavily sandboxed. The only thing you can really do is read the actual file that Spotlight wants you to get metadata from, and write to your temp folder. That’s pretty much it, no access to any other random file, no network, can’t start other apps, so pretty much locked down. With that, my importer will copy every epub to a temp folder, I have also a network test included, just to show that it fails.</p>

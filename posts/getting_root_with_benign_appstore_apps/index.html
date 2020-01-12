@@ -17,8 +17,8 @@
 <meta property="og:description" content="This writeup is intended to be a bit of storytelling. I would like to show how I went down the rabbit hole in a quick ’research’ I wanted to do, and eventually found a local privilege escalation vulnerability in macOS. I also want to show, tell about all the obstacles and failures I run into, stuff that people don’t talk about usually, but I feel it’s part of the process all of us go through, when we try to create something." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/getting_root_with_benign_appstore_apps/" />
-<meta property="article:published_time" content="2019-06-01T00:00:00&#43;00:00"/>
-<meta property="article:modified_time" content="2019-06-01T00:00:00&#43;00:00"/>
+<meta property="article:published_time" content="2019-06-01T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-06-01T00:00:00+00:00" />
 
 
     
@@ -53,7 +53,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.54.0" />
+    <meta name="generator" content="Hugo 0.58.3" />
   </head>
 
   <body class=" ">
@@ -344,40 +344,40 @@ Essentially what we can achieve with this is to drop any files that can be found
 <h3 id="what-can-t-we-do-or-at-least-i-didn-t-find-a-way">What can’t we do? (Or at least I didn’t find a way)</h3>
 
 <ol>
-<li>Change the name of the file being dropped, or with other words, put the contents of one file into another one with different name. If we create a symlink for the actual mach-o file, like:
+<li><p>Change the name of the file being dropped, or with other words, put the contents of one file into another one with different name. If we create a symlink for the actual mach-o file, like:
 <code>ln -s /opt/myname /Applications/Example.app/Contents/MacOS/Example</code>
-What will happen is that the symlink will be overwritten, when the installd daemon moves the file from the temporary location to the final. You can find the same behaviour if you experiment with the <code>mv</code> command:
-<code>bash
-$ echo aaa &gt; a
+What will happen is that the symlink will be overwritten, when the installd daemon moves the file from the temporary location to the final. You can find the same behaviour if you experiment with the <code>mv</code> command:</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ <span style="color:#366">echo</span> aaa &gt; a
 $ ln -s a b
 $ ls -la
-total 8
-drwxr-xr-x   4 csaby  staff   128 Sep 11 16:16 .
-drwxr-xr-x+ 50 csaby  staff  1600 Sep 11 16:16 ..
--rw-r--r--   1 csaby  staff     4 Sep 11 16:16 a
-lrwxr-xr-x   1 csaby  staff     1 Sep 11 16:16 b -&gt; a
+total <span style="color:#f60">8</span>
+drwxr-xr-x   <span style="color:#f60">4</span> csaby  staff   <span style="color:#f60">128</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:16 .
+drwxr-xr-x+ <span style="color:#f60">50</span> csaby  staff  <span style="color:#f60">1600</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:16 ..
+-rw-r--r--   <span style="color:#f60">1</span> csaby  staff     <span style="color:#f60">4</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:16 a
+lrwxr-xr-x   <span style="color:#f60">1</span> csaby  staff     <span style="color:#f60">1</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:16 b -&gt; a
 $ cat b
 aaa
-$ echo bbb &gt;&gt; b
+$ <span style="color:#366">echo</span> bbb &gt;&gt; b
 $ cat b
 aaa
 bbb
 $ touch c
 $ ls -l
-total 8
--rw-r--r--  1 csaby  staff  8 Sep 11 16:16 a
-lrwxr-xr-x  1 csaby  staff  1 Sep 11 16:16 b -&gt; a
--rw-r--r--  1 csaby  staff  0 Sep 11 16:25 c
+total <span style="color:#f60">8</span>
+-rw-r--r--  <span style="color:#f60">1</span> csaby  staff  <span style="color:#f60">8</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:16 a
+lrwxr-xr-x  <span style="color:#f60">1</span> csaby  staff  <span style="color:#f60">1</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:16 b -&gt; a
+-rw-r--r--  <span style="color:#f60">1</span> csaby  staff  <span style="color:#f60">0</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:25 c
 $ mv c b
 $ ls -la
-total 8
-drwxr-xr-x   4 csaby  staff   128 Sep 11 16:25 .
-drwxr-xr-x+ 50 csaby  staff  1600 Sep 11 16:16 ..
--rw-r--r--   1 csaby  staff     8 Sep 11 16:16 a
--rw-r--r--   1 csaby  staff     0 Sep 11 16:25 b
-</code></li>
-<li>Even if we create a hardlink instead of symlink, that will be overwritten like in the 1st case.</li>
-<li>As noted earlier we can’t write to folder protected by SIP.</li>
+total <span style="color:#f60">8</span>
+drwxr-xr-x   <span style="color:#f60">4</span> csaby  staff   <span style="color:#f60">128</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:25 .
+drwxr-xr-x+ <span style="color:#f60">50</span> csaby  staff  <span style="color:#f60">1600</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:16 ..
+-rw-r--r--   <span style="color:#f60">1</span> csaby  staff     <span style="color:#f60">8</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:16 a
+-rw-r--r--   <span style="color:#f60">1</span> csaby  staff     <span style="color:#f60">0</span> Sep <span style="color:#f60">11</span> <span style="color:#f60">16</span>:25 b</code></pre></div></li>
+
+<li><p>Even if we create a hardlink instead of symlink, that will be overwritten like in the 1st case.</p></li>
+
+<li><p>As noted earlier we can’t write to folder protected by SIP.</p></li>
 </ol>
 
 <h3 id="ideas-for-using-this-for-privilege-escalation">Ideas for using this for privilege escalation</h3>
@@ -497,16 +497,18 @@ mas install <span style="color:#f60">1438725196</span></code></pre></div>
 <code>pkgutil --expand example.pkg myfolder</code></li>
 <li>Enter the folder, and decompress the embedded Payload (inside the embedded pkg folder):
 <code>tar xvf embedded.pkg/Payload</code></li>
-<li>Embedded your file (it can be anywhere and anything):
-<code>bash
-$ mkdir Example.app/Contents/test
-$ echo aaaa &gt; Example.app/Contents/test/a
-</code></li>
-<li>Recompress the app:
-<code>find ./Example.app | cpio -o --format odc | gzip -c &gt; Payload</code></li>
-<li>Delete unnecessary files, and move the Payload to the embedded pkg folder.</li>
-<li>Repack the pkg
-<code>pkgutil --flatten myfolder/ mypackage.pkg</code></li>
+
+<li><p>Embedded your file (it can be anywhere and anything):</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ mkdir Example.app/Contents/test
+$ <span style="color:#366">echo</span> aaaa &gt; Example.app/Contents/test/a</code></pre></div></li>
+
+<li><p>Recompress the app:
+<code>find ./Example.app | cpio -o --format odc | gzip -c &gt; Payload</code></p></li>
+
+<li><p>Delete unnecessary files, and move the Payload to the embedded pkg folder.</p></li>
+
+<li><p>Repack the pkg
+<code>pkgutil --flatten myfolder/ mypackage.pkg</code></p></li>
 </ol>
 
 <p>The package’s digital signature will be lost, so you will need a method to bypass Gatekeeper. The embedded App’s signature will be also broken, as these days every single file inside an .app bundle must be digitally signed. Typically the main mach-o file is signed, and it has the hash of the _CodeSignatures plist file. The file will contain all the hashes for the other files. If you place a new file inside the .app bundle that will invalidate the signature. However this is not a problem here, as if you can bypass Gatekeeper for the .pkg file, the installed Application will not be subject to Gatekeeper’s verification.</p>

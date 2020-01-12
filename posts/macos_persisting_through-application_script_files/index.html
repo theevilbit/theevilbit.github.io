@@ -17,8 +17,8 @@
 <meta property="og:description" content="I started to explore to possibility of persisting on macOS through script files contained in an application. The basic idea is that if we find a script file, which is being executed by a given application, we can edit that script file, put our code inside, and wait for an execution. Such technique is highly dependent on the applications the user has installed, so I looked through first how rare / frequent is having such scripts inside applications." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/macos_persisting_through-application_script_files/" />
-<meta property="article:published_time" content="2019-04-23T00:00:00&#43;00:00"/>
-<meta property="article:modified_time" content="2019-04-23T00:00:00&#43;00:00"/>
+<meta property="article:published_time" content="2019-04-23T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-04-23T00:00:00+00:00" />
 
 
     
@@ -53,7 +53,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.54.0" />
+    <meta name="generator" content="Hugo 0.58.3" />
   </head>
 
   <body class=" ">
@@ -238,11 +238,11 @@ Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;licen
 <span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">main</span>():
 	<span style="color:#069;font-weight:bold">if</span> (<span style="color:#366">len</span>(sys<span style="color:#555">.</span>argv) <span style="color:#555">&lt;</span> <span style="color:#f60">2</span>):
 		<span style="color:#069;font-weight:bold">print</span> <span style="color:#c30">&#34;[-] no folder specified, useage: </span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30"> find_discrepancy.py /path/to/app&#34;</span>
-		sys<span style="color:#555">.</span><span style="color:#366">exit</span>(<span style="color:#555">-</span><span style="color:#f60">1</span>)
+		sys<span style="color:#555">.</span>exit(<span style="color:#555">-</span><span style="color:#f60">1</span>)
 	<span style="color:#366">dir</span> <span style="color:#555">=</span> sys<span style="color:#555">.</span>argv[<span style="color:#f60">1</span>]
 	<span style="color:#069;font-weight:bold">if</span>(<span style="color:#000;font-weight:bold">not</span> os<span style="color:#555">.</span>path<span style="color:#555">.</span>isdir(<span style="color:#366">dir</span>)):
 		<span style="color:#069;font-weight:bold">print</span> <span style="color:#c30">&#34;[-] This is not a directory&#34;</span>
-		sys<span style="color:#555">.</span><span style="color:#366">exit</span>(<span style="color:#555">-</span><span style="color:#f60">1</span>)
+		sys<span style="color:#555">.</span>exit(<span style="color:#555">-</span><span style="color:#f60">1</span>)
 	all_files <span style="color:#555">=</span> find_timestamps(<span style="color:#366">dir</span>)
 	t <span style="color:#555">=</span> <span style="color:#c30">&#39;&#39;</span>
 	<span style="color:#069;font-weight:bold">for</span> f <span style="color:#000;font-weight:bold">in</span> all_files:

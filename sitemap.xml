@@ -4,32 +4,67 @@
   
   <url>
     <loc>https://theevilbit.github.io/year/2020/</loc>
-    <lastmod>2020-01-12T00:00:00+00:00</lastmod>
+    <lastmod>2020-03-18T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://theevilbit.github.io/categories/blog/</loc>
-    <lastmod>2020-01-12T00:00:00+00:00</lastmod>
+    <lastmod>2020-03-18T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://theevilbit.github.io/categories/</loc>
-    <lastmod>2020-01-12T00:00:00+00:00</lastmod>
+    <lastmod>2020-03-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/conference/</loc>
+    <lastmod>2020-03-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/cve/</loc>
+    <lastmod>2020-03-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/posts/exploiting_directory_permissions_on_macos/</loc>
+    <lastmod>2020-03-18T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://theevilbit.github.io/tags/lpe/</loc>
-    <lastmod>2020-01-12T00:00:00+00:00</lastmod>
+    <lastmod>2020-03-18T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://theevilbit.github.io/tags/macos/</loc>
-    <lastmod>2020-01-12T00:00:00+00:00</lastmod>
+    <lastmod>2020-03-18T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://theevilbit.github.io/posts/</loc>
-    <lastmod>2020-01-12T00:00:00+00:00</lastmod>
+    <lastmod>2020-03-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/</loc>
+    <lastmod>2020-03-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/</loc>
+    <lastmod>2020-03-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/vulnerability/</loc>
+    <lastmod>2020-03-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/year/</loc>
+    <lastmod>2020-03-18T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -39,21 +74,6 @@
   
   <url>
     <loc>https://theevilbit.github.io/posts/secure_coding_privilegedhelpertools_part1/</loc>
-    <lastmod>2020-01-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://theevilbit.github.io/tags/</loc>
-    <lastmod>2020-01-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://theevilbit.github.io/</loc>
-    <lastmod>2020-01-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://theevilbit.github.io/year/</loc>
     <lastmod>2020-01-12T00:00:00+00:00</lastmod>
   </url>
   
@@ -84,11 +104,6 @@
   
   <url>
     <loc>https://theevilbit.github.io/posts/iobit_unlocker_lpe/</loc>
-    <lastmod>2019-10-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://theevilbit.github.io/tags/vulnerability/</loc>
     <lastmod>2019-10-12T00:00:00+00:00</lastmod>
   </url>
   

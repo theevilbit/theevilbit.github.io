@@ -5,10 +5,19 @@
     <link>https://theevilbit.github.io/tags/macos/</link>
     <description>Recent content in macos on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 12 Jan 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 18 Mar 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://theevilbit.github.io/tags/macos/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Exploiting directory permissions on macOS</title>
+      <link>https://theevilbit.github.io/posts/exploiting_directory_permissions_on_macos/</link>
+      <pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/posts/exploiting_directory_permissions_on_macos/</guid>
+      <description>This research started around summer time in 2019, when everything settled down after my talk in 2019, where I detailed how did I gained root privileges via a benign App Store application, that I developed. That exploit used a symlink to achieve this, so I though I will make a more general approach and see if this type of vulnerability exists in other places as well on macOS systems. As it turns out it does exists, and not just on macOS directly but also on other apps, it appears to be a very fruitful of issue, without too much effort I found 5 exploitable bugs on macOS, 3 in Adobe installers, and also a bypass for OverSight, which is a free security tool.</description>
+    </item>
     
     <item>
       <title>Secure coding PrivilegedHelperTools - Part 1 - Why EvenBetterAuthorization is not enough?</title>

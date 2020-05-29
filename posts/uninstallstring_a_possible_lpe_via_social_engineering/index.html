@@ -55,7 +55,7 @@ In case an application is installed for the current user and not for all user, t
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.58.3" />
+    <meta name="generator" content="Hugo 0.71.0" />
   </head>
 
   <body class=" ">
@@ -130,30 +130,18 @@ In case an application is installed for the current user and not for all user, t
       <div>
         <p>Whenever you install an application on Windows, typically through MSI, there is a registry key created, with plenty of information for uninstallation, like the uninstaller location, install date, publisher, etc… you can find all of the options here:
 <a href="https://nsis.sourceforge.io/Add_uninstall_information_to_Add/Remove_Programs">Add uninstall information to Add/Remove Programs - NSIS</a></p>
-
 <p>In case an application is installed for the current user and not for all user, the Installation/Uninstallation details will go to the <code>Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\</code> registry key instead of the <code>HKLM</code> hive. For example OneDrive has all the information under the following registry key: <code>Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\OneDriveSetup.exe</code></p>
-
 <p>Under this key we can find the following values, that could point to an executable:</p>
-
 <pre><code>UninstallString
 QuiteUninstallString
 ModifyPath
-</code></pre>
-
-<p>As these settings are under the user’s registry hive he/she has the rights to modify it and set a custom value. Setting a custom executable here could result in a privilege escalation scenario if the person (likely an administrator) running the uninstaller, and entering his / her creds is unaware of the change. This happens because <code>Apps &amp; Features</code> behaves differently from <code>Control Panel</code>. For example, let’s set it to cmd.exe with OneDriveSetup.exe (which exists normally by default on most installations):</p>
-
-<p><img src="https://theevilbit.github.io/images/UninstallString_a_possible_LPE_via_Social_Engineering/Screenshot%202019-07-17%20at%2018.04.31.png" alt="image" /></p>
-
+</code></pre><p>As these settings are under the user’s registry hive he/she has the rights to modify it and set a custom value. Setting a custom executable here could result in a privilege escalation scenario if the person (likely an administrator) running the uninstaller, and entering his / her creds is unaware of the change. This happens because <code>Apps &amp; Features</code> behaves differently from <code>Control Panel</code>. For example, let’s set it to cmd.exe with OneDriveSetup.exe (which exists normally by default on most installations):</p>
+<p><img src="https://theevilbit.github.io/images/UninstallString_a_possible_LPE_via_Social_Engineering/Screenshot%202019-07-17%20at%2018.04.31.png" alt="image"></p>
 <p>If we run the uninstall through the Control Panel, it will execute the process with the current user’s rights. So in the above case we get a command prompt running as the user. If the application we choose has the <code>requireAdministrator</code> set in its manifest, it will still prompt for password, but Control Panel - more precisely <code>appwiz.cpl</code> will only try to elevate the rights before execution if the registry value is taken from the HKLM hive. In other words, if you uninstall something, where the settings are coming from <code>HKLM</code> Control Panel will try to elevate the rights, otherwise not. This is good.</p>
-
 <p>However if we try to uninstall this app from the System Settings -&gt; Apps &amp; Features, it will try to execute the referred application with admin rights.</p>
-
-<p><img src="https://theevilbit.github.io/images/UninstallString_a_possible_LPE_via_Social_Engineering/Screenshot%202019-07-17%20at%2018.09.42.png" alt="image" /></p>
-
+<p><img src="https://theevilbit.github.io/images/UninstallString_a_possible_LPE_via_Social_Engineering/Screenshot%202019-07-17%20at%2018.09.42.png" alt="image"></p>
 <p>The user will get a UAC prompt upon clicking <code>Uninstall</code>. The prompt will mark what is executed (like in the case of cmd.exe it will show that it’s trying to execute the Windows Command Processor), however before that there is no indication what will be executed (as we can see above). The same behaviour is observed if we set the <code>ModifyPath</code> value.</p>
-
 <p>I think this behaviour is inconsistent, and if the user has the rights to set an executable path, later on it shouldn’t be tried to be executed with admin rights. Yes, the user will get a prompt to enter an administrator password, however it makes it very easy to trick someone.</p>
-
 <p>I contacted MSRC about this, and they said that the observation is valid, however they don’t consider it as a security bug, however they might fix this in the future.</p>
 
       </div>

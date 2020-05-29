@@ -53,7 +53,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.58.3" />
+    <meta name="generator" content="Hugo 0.71.0" />
   </head>
 
   <body class=" ">
@@ -126,42 +126,31 @@
       </header>
 
       <div>
-        
-
-<p>I started to explore to possibility of persisting on macOS through script files contained in an application. The basic idea is that if we find a script file, which is being executed by a given application, we can edit that script file, put our code inside, and wait for an execution. Such technique is highly dependent on the applications the user has installed, so I looked through first how rare / frequent is having such scripts inside applications. I started with the below searches:</p>
+        <p>I started to explore to possibility of persisting on macOS through script files contained in an application. The basic idea is that if we find a script file, which is being executed by a given application, we can edit that script file, put our code inside, and wait for an execution. Such technique is highly dependent on the applications the user has installed, so I looked through first how rare / frequent is having such scripts inside applications. I started with the below searches:</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">find /Applications/ -name <span style="color:#c30">&#34;*.sh&#34;</span>
-find /Applications/ -name <span style="color:#c30">&#34;*.py&#34;</span></code></pre></div>
-<p>I have two Macs, one I use for private stuff and one for work, the second has significantly lower number of apps installed, only those I really need. First I checked my work MacBook as it has a much lower ‘attack surface’ and it turns out that these scripts files are not that rare at all, but they are also not everywhere. There is a common pattern of apps using scripts for specific purpose, at least based on the name, a few examples:</p>
+find /Applications/ -name <span style="color:#c30">&#34;*.py&#34;</span>
+</code></pre></div><p>I have two Macs, one I use for private stuff and one for work, the second has significantly lower number of apps installed, only those I really need. First I checked my work MacBook as it has a much lower ‘attack surface’ and it turns out that these scripts files are not that rare at all, but they are also not everywhere. There is a common pattern of apps using scripts for specific purpose, at least based on the name, a few examples:</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/Applications//Bear.app/Contents/Resources/Custom Tag Keywords/keywordsplist_to_csv.py
 /Applications//Hopper Disassembler v4.app/Contents/Resources/script_disassemble.py
 /Applications//BBEdit.app/Contents/PlugIns/Language Modules/Python.bblm/Contents/SharedSupport/py_check_syntax.py
 
 /Applications//VMware Fusion.app/Contents/Library/shares/adduser.sh
-/Applications//BBEdit.app/Contents/PlugIns/Language Modules/ManPage.bblm/Contents/Resources/man2html.sh</code></pre></div>
-<p>Xcode is also full of such scripts. The problem with these that we don’t know when they will be called, possibly it’s not so frequent, so they are not ideal for persistence, as we want something that is always invoked when an applications starts. There is a chance that you can find a frequently run script somewhere, but those would require a check one by one, which I didn’t do. You could also go about infecting every possible script you find, increasing the chances of being executed. The question is if there are any other scripts that will always run, and the answer is yes.</p>
-
-<h2 id="python3-idle-app">Python3 Idle.app</h2>
-
+/Applications//BBEdit.app/Contents/PlugIns/Language Modules/ManPage.bblm/Contents/Resources/man2html.sh
+</code></pre></div><p>Xcode is also full of such scripts. The problem with these that we don’t know when they will be called, possibly it’s not so frequent, so they are not ideal for persistence, as we want something that is always invoked when an applications starts. There is a chance that you can find a frequently run script somewhere, but those would require a check one by one, which I didn’t do. You could also go about infecting every possible script you find, increasing the chances of being executed. The question is if there are any other scripts that will always run, and the answer is yes.</p>
+<h2 id="python3-idleapp">Python3 Idle.app</h2>
 <p>Although it’s probably not that common people installing Python on a macOS system, as it’s present by default, but if so, it contains the Idle.app editor. This application has a idlemain.py script in the resources folder, that is executed upon starting Idle. The app or the OS doesn’t verify if the script was tampered with.</p>
-
-<p><img src="https://theevilbit.github.io/images/macOS_Persisting_through Application_script_files/Screenshot%202019-04-10%20at%2017.30.55.png" alt="image1" /></p>
-
+<p>![image1](/images/macOS_Persisting_through Application_script_files/Screenshot%202019-04-10%20at%2017.30.55.png)</p>
 <p>I have two problems with this, one is that finding this app somewhere is very unlikely, the second is that as you have to install this, the folder permissions are set for root access only. Even if you persist, you will only maintain yourself as the user and not as root. So it’s not that ideal, but it works if really needed.</p>
-
 <h2 id="sublime-text">Sublime Text</h2>
-
 <p>This one is much more promising. This is a very popular text editor application, so you are likely to find it somewhere. Second, you install it by drag &amp; drop to the application folder, so the user has the rights to edit the script file. If we edit the following file:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/Applications//Sublime<span style="color:#c30;font-weight:bold">\ </span>Text.app/Contents/MacOS/sublime.py </code></pre></div>
-<p>It will be executed every time you start up Sublime Text. That’s awesome! I used the following POC code:</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/Applications//Sublime<span style="color:#c30;font-weight:bold">\ </span>Text.app/Contents/MacOS/sublime.py 
+</code></pre></div><p>It will be executed every time you start up Sublime Text. That’s awesome! I used the following POC code:</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">os</span>
-os<span style="color:#555">.</span>system(<span style="color:#c30">&#34;osascript -e &#39;Tell application </span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">System Events</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30"> to display dialog </span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30"> Message </span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">&#39;&#34;</span>)</code></pre></div>
-<p>You will get a prompt on Mojave to grant access, but you can add other code, which would do something else to avoid this prompt, and even if you get it, an average user will just grant access.</p>
-
+os<span style="color:#555">.</span>system(<span style="color:#c30">&#34;osascript -e &#39;Tell application </span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">System Events</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30"> to display dialog </span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30"> Message </span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">&#39;&#34;</span>)
+</code></pre></div><p>You will get a prompt on Mojave to grant access, but you can add other code, which would do something else to avoid this prompt, and even if you get it, an average user will just grant access.</p>
 <p>Sublime has a code signature and hash for this script, the reason macOS will not block tampering with the script, was covered by Thomas Reed in his talk about “Code Signing flaw in macOS“: <a href="https://objectivebythesea.com/v1/talks/OBTS_v1_Reed.pdf">https://objectivebythesea.com/v1/talks/OBTS_v1_Reed.pdf</a>
 In short macOS will only verify code signature upon first execution, anything changes after that will be undetected.</p>
-
 <h2 id="gog-launchers">GOG launchers</h2>
-
 <p>If I run the same search on my private MacBook there are a whole lot of other apps that has scripts inside, and I found one particularly funny. I used to buy games from <a href="https://gog.com">https://gog.com</a> I like that they are DRM free, I can backup the game, don’t need to rely on online connectivity, etc… It turns out that they have very interesting script in one of the main packages to launch games:</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#099">#!/bin/bash
 </span><span style="color:#099"></span><span style="color:#09f;font-style:italic"># GOG.com (www.gog.com)</span>
@@ -169,50 +158,32 @@ In short macOS will only verify code signature upon first execution, anything ch
 
 <span style="color:#033">FIND_GAME</span><span style="color:#555">=</span><span style="color:#c30">`</span>find game/ -type d -maxdepth <span style="color:#f60">1</span> -name <span style="color:#c30">&#34;*.app&#34;</span><span style="color:#c30">`</span>
 xattr -r -d com.apple.quarantine <span style="color:#c30">&#34;</span><span style="color:#033">$FIND_GAME</span><span style="color:#c30">&#34;</span>
-open <span style="color:#c30">&#34;</span><span style="color:#a00">${</span><span style="color:#033">FIND_GAME</span><span style="color:#a00">}</span><span style="color:#c30">&#34;</span></code></pre></div>
-<p>Stop for a minute and let the script sink in :) Here is what does it do in human language:</p>
-
+open <span style="color:#c30">&#34;</span><span style="color:#a00">${</span><span style="color:#033">FIND_GAME</span><span style="color:#a00">}</span><span style="color:#c30">&#34;</span>
+</code></pre></div><p>Stop for a minute and let the script sink in :) Here is what does it do in human language:</p>
 <p>Upon starting the launcher script, it will look for apps in the game/ folder, remove the quarantine attribute and launch the app with the open command. The open command would invoke Gatekeeper, but only if the attribute is not removed! What this means, that you can replace the game-to-be-launched with anything you want (!!!) and it will be executed, even if it has a quarantine flag set. This is a signed launcher, which will launch code embedded within the app. BUT! There is always a BUT! It is not as good as it looks for first sight.
 It will only do this if the application was already run once, if not then the entire package, including the embedded game’s file hashes will be verified, because there is a list of all files in the <code>Contents/_CodeSignature/CodeResources</code> file, which can’t be altered, although this is an XML plist file as its hash is in the app’s signature. See the above talk again. This means that you can’t use this launcher to bypass Gatekeeper in a generic way. (Yes I spent some time to explore this option :)).</p>
-
 <p>Some good resources I found on code signing:
 <a href="https://www.objc.io/issues/17-security/inside-code-signing/">Inside Code Signing · objc.io</a>
 <a href="http://www.newosxbook.com/articles/CodeSigning.pdf">http://www.newosxbook.com/articles/CodeSigning.pdf</a></p>
-
 <p>This was a side track, but going back to original question, about using scripts, you can find many of those in GOG games, which you can expect users running, also they have a user permission set, so you can edit them.</p>
-
 <h2 id="the-library-folder">The /Library folder</h2>
-
 <p>Another place to look for files is the <code>/Library</code> folder or the <code>~/Library</code> folder. The first one can contain exessive amount of files, so we might want to limit our search, where the user has write access to, using this syntax:</p>
-
 <pre><code>find /Library/ -name &quot;*.sh&quot; -perm +0200 -user username
 find /Library/ -name &quot;*.py&quot; -perm -u+w -user username
-</code></pre>
-
-<p>There can be some gems as well, like this:</p>
-
+</code></pre><p>There can be some gems as well, like this:</p>
 <pre><code>/Library//Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/
-</code></pre>
-
-<p>Here you can ‘infect’ many of the installed modules, so whenever they are imported you got code execution, you can expect these to be run more frequently.</p>
-
+</code></pre><p>Here you can ‘infect’ many of the installed modules, so whenever they are imported you got code execution, you can expect these to be run more frequently.</p>
 <h2 id="python-import-hijacking">Python import hijacking</h2>
-
 <p>If we talk about scripts, I have to mention this technique. It’s well documented in many blog posts, talks, so won’t go into too many details, but here is the TL;DR version:
 If you import a module in Python it will first look in the current folder for that PY script, and then on the other folders, where PYTHONPATH points to. We can get this list from Python, on my machine it looks like this:</p>
-
 <pre><code>Python 2.7.11 (v2.7.11:6d1b6a68f775, Dec  5 2015, 12:54:16) 
 [GCC 4.2.1 (Apple Inc. build 5666) (dot 3)] on darwin
 Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
 &gt;&gt;&gt; import sys
 &gt;&gt;&gt; print sys.path
 ['', '/Library/Frameworks/Python.framework/Versions/2.7/lib/python27.zip', '/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7', '/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/plat-darwin', '/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/plat-mac', '/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/plat-mac/lib-scriptpackages', '/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/lib-tk', '/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/lib-old', '/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/lib-dynload', '/Users/csaby/Library/Python/2.7/lib/python/site-packages', '/usr/local/lib/python2.7/site-packages', '/usr/local/Cellar/numpy/1.16.1/libexec/nose/lib/python2.7/site-packages', '/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages', '/Library/Python/2.7/site-packages', '/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python', '/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/PyObjC']
-</code></pre>
-
-<p>Interestingly the 3rd path in the list <code>/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7</code> is writeable by the group where my account belongs to, so I can just persist there by injecting my code into one of the frequently used libraries, like <code>os</code> or <code>system</code>. The 2nd entry in the list <code>/Library/Frameworks/Python.framework/Versions/2.7/lib/python27.zip</code> doesn’t exists so it’s good to go.</p>
-
+</code></pre><p>Interestingly the 3rd path in the list <code>/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7</code> is writeable by the group where my account belongs to, so I can just persist there by injecting my code into one of the frequently used libraries, like <code>os</code> or <code>system</code>. The 2nd entry in the list <code>/Library/Frameworks/Python.framework/Versions/2.7/lib/python27.zip</code> doesn’t exists so it’s good to go.</p>
 <h2 id="detection">Detection</h2>
-
 <p>I think this is something very hard to detect, especially if someone backdoors the Python libraries, however one potential solution would be to compare the timestamps of the files of a given application. They should be the same or at least pretty close. I did a few checks and the actual hour/minute value can differ, so you can go for the date. This is a quick and dirty python script to do that:</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">os</span>
 <span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">time</span>
@@ -253,9 +224,8 @@ Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;licen
 				<span style="color:#069;font-weight:bold">print</span> <span style="color:#c30">&#34;[!] The file </span><span style="color:#a00">%s</span><span style="color:#c30"> timestamp is different form the rest, file: </span><span style="color:#a00">%s</span><span style="color:#c30">, rest: </span><span style="color:#a00">%s</span><span style="color:#c30"> - potential backdoor&#34;</span> <span style="color:#555">%</span> (f[<span style="color:#f60">0</span>], f[<span style="color:#f60">1</span>], t)
 				
 <span style="color:#069;font-weight:bold">if</span> __name__<span style="color:#555">==</span> <span style="color:#c30">&#34;__main__&#34;</span>:
-	main()</code></pre></div>
-<p>You could also monitor the hashes of all the files, and alert on changes. Here you will need to deal with updates, etc…</p>
-
+	main()
+</code></pre></div><p>You could also monitor the hashes of all the files, and alert on changes. Here you will need to deal with updates, etc…</p>
 <p>The same persistence idea is valid for Windows and Linux as well.</p>
 
       </div>

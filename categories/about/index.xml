@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>about on theevilbit blog</title>
@@ -17,8 +17,8 @@
       
       <guid>https://theevilbit.github.io/about/</guid>
       <description>My name is Csaba Fitzl or also known as &amp;ldquo;theevilbit&amp;rdquo;, which comes from RFC 3514. I currently work as a red teamer at a Big Oil company, but I also worked 5 years as blue teamer, and also spent 6 years building network infrastructure, and mostly having fun with BGP.
-This is the new place for my blog, the old one is here: https://theevilbit.blogspot.com/
-Other places where you can find me:</description>
+  This is the new place for my blog, the old one is here: https://theevilbit.blogspot.com/
+  Other places where you can find me:</description>
     </item>
     
   </channel>

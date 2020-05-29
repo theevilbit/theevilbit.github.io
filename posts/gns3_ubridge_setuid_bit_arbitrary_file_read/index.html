@@ -55,7 +55,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.58.3" />
+    <meta name="generator" content="Hugo 0.71.0" />
   </head>
 
   <body class=" ">
@@ -129,11 +129,11 @@
 
       <div>
         <p>A couple of weeks ago, I had the idea of scanning my Mac for files that has the SUID bit set, I wanted to see if there is anything interesting showing up. You can do it this way:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/usr/bin/sudo find / -perm -4000 -exec /bin/ls -ldb <span style="color:#555">{}</span> <span style="color:#c30;font-weight:bold">\;</span> &gt; suidfilelist</code></pre></div>
-<p>There was one item that caught my attention, and that was a file called <code>ubridge</code> inside GNS3. I used to be a network guy, and GNS3 is a great tool to emulate real network gear, practice configuration, etc.. I highly recommend for anyone who learns networking. This was the file:</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/usr/bin/sudo find / -perm -4000 -exec /bin/ls -ldb <span style="color:#555">{}</span> <span style="color:#c30;font-weight:bold">\;</span> &gt; suidfilelist
+</code></pre></div><p>There was one item that caught my attention, and that was a file called <code>ubridge</code> inside GNS3. I used to be a network guy, and GNS3 is a great tool to emulate real network gear, practice configuration, etc.. I highly recommend for anyone who learns networking. This was the file:</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ls -l /Applications/GNS3.app/Contents/Resources/ubridge
--rwsr-x---@ <span style="color:#f60">1</span> root  admin  <span style="color:#f60">61932</span> Apr <span style="color:#f60">15</span> <span style="color:#f60">07</span>:17 /Applications/GNS3.app/Contents/Resources/ubridge</code></pre></div>
-<p>I didn’t really had the idea what it does, so I took a look at the help:</p>
+-rwsr-x---@ <span style="color:#f60">1</span> root  admin  <span style="color:#f60">61932</span> Apr <span style="color:#f60">15</span> 07:17 /Applications/GNS3.app/Contents/Resources/ubridge
+</code></pre></div><p>I didn’t really had the idea what it does, so I took a look at the help:</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/Applications/GNS3.app/Contents/Resources/ubridge -h
 Usage: /Applications/GNS3.app/Contents/Resources/ubridge <span style="color:#555">[</span>OPTION<span style="color:#555">]</span>
 
@@ -143,17 +143,16 @@ Options:
   -H <span style="color:#555">[</span>&lt;ip_address&gt;:<span style="color:#555">]</span>&lt;tcp_port&gt; : Run in hypervisor mode
   -e                           : Display all available network devices and <span style="color:#366">exit</span>
   -d &lt;level&gt;                   : Debug level
-  -v                           : Print version and exit</code></pre></div>
-<p>The most interesting for first sight was that it can read a file, considering that it will run as root, it should be able to read in any file. The question is if we can display it or not. Very quickly it turned out that yes, in case you supply a non INI file, it will cause a parsing error, and will print every single line.</p>
-
+  -v                           : Print version and <span style="color:#366">exit</span>
+</code></pre></div><p>The most interesting for first sight was that it can read a file, considering that it will run as root, it should be able to read in any file. The question is if we can display it or not. Very quickly it turned out that yes, in case you supply a non INI file, it will cause a parsing error, and will print every single line.</p>
 <p>Since the SUID flag is set for <code>ubridge</code>, it allows someone to read arbitrary files on the system.</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#09f;font-style:italic">#show current ID</span>
 id
-<span style="color:#033">uid</span><span style="color:#555">=</span><span style="color:#f60">501</span><span style="color:#555">(</span>csaby<span style="color:#555">)</span> <span style="color:#033">gid</span><span style="color:#555">=</span><span style="color:#f60">20</span><span style="color:#555">(</span>staff<span style="color:#555">)</span> <span style="color:#033">groups</span><span style="color:#555">=</span><span style="color:#f60">20</span><span style="color:#555">(</span>staff<span style="color:#555">)</span>,501<span style="color:#555">(</span>access_bpf<span style="color:#555">)</span>,12<span style="color:#555">(</span>everyone<span style="color:#555">)</span>,61<span style="color:#555">(</span>localaccounts<span style="color:#555">)</span>,79<span style="color:#555">(</span>_appserverusr<span style="color:#555">)</span>,80<span style="color:#555">(</span>admin<span style="color:#555">)</span>,81<span style="color:#555">(</span>_appserveradm<span style="color:#555">)</span>,98<span style="color:#555">(</span>_lpadmin<span style="color:#555">)</span>,701<span style="color:#555">(</span>com.apple.sharepoint.group.1<span style="color:#555">)</span>,703<span style="color:#555">(</span>com.apple.sharepoint.group.2<span style="color:#555">)</span>,33<span style="color:#555">(</span>_appstore<span style="color:#555">)</span>,100<span style="color:#555">(</span>_lpoperator<span style="color:#555">)</span>,204<span style="color:#555">(</span>_developer<span style="color:#555">)</span>,250<span style="color:#555">(</span>_analyticsusers<span style="color:#555">)</span>,395<span style="color:#555">(</span>com.apple.access_ftp<span style="color:#555">)</span>,398<span style="color:#555">(</span>com.apple.access_screensharing<span style="color:#555">)</span>,399<span style="color:#555">(</span>com.apple.access_ssh<span style="color:#555">)</span>
+<span style="color:#033">uid</span><span style="color:#555">=</span>501<span style="color:#555">(</span>csaby<span style="color:#555">)</span> <span style="color:#033">gid</span><span style="color:#555">=</span>20<span style="color:#555">(</span>staff<span style="color:#555">)</span> <span style="color:#033">groups</span><span style="color:#555">=</span>20<span style="color:#555">(</span>staff<span style="color:#555">)</span>,501<span style="color:#555">(</span>access_bpf<span style="color:#555">)</span>,12<span style="color:#555">(</span>everyone<span style="color:#555">)</span>,61<span style="color:#555">(</span>localaccounts<span style="color:#555">)</span>,79<span style="color:#555">(</span>_appserverusr<span style="color:#555">)</span>,80<span style="color:#555">(</span>admin<span style="color:#555">)</span>,81<span style="color:#555">(</span>_appserveradm<span style="color:#555">)</span>,98<span style="color:#555">(</span>_lpadmin<span style="color:#555">)</span>,701<span style="color:#555">(</span>com.apple.sharepoint.group.1<span style="color:#555">)</span>,703<span style="color:#555">(</span>com.apple.sharepoint.group.2<span style="color:#555">)</span>,33<span style="color:#555">(</span>_appstore<span style="color:#555">)</span>,100<span style="color:#555">(</span>_lpoperator<span style="color:#555">)</span>,204<span style="color:#555">(</span>_developer<span style="color:#555">)</span>,250<span style="color:#555">(</span>_analyticsusers<span style="color:#555">)</span>,395<span style="color:#555">(</span>com.apple.access_ftp<span style="color:#555">)</span>,398<span style="color:#555">(</span>com.apple.access_screensharing<span style="color:#555">)</span>,399<span style="color:#555">(</span>com.apple.access_ssh<span style="color:#555">)</span>
 
 <span style="color:#09f;font-style:italic">#show permission for a.txt, only root can read it</span>
 ls -l a.txt 
--rw-------  <span style="color:#f60">1</span> root  staff  <span style="color:#f60">2</span> May  <span style="color:#f60">8</span> <span style="color:#f60">15</span>:12 a.txt
+-rw-------  <span style="color:#f60">1</span> root  staff  <span style="color:#f60">2</span> May  <span style="color:#f60">8</span> 15:12 a.txt
 
 <span style="color:#09f;font-style:italic">#try to read it as normal user</span>
 cat a.txt 
@@ -161,7 +160,7 @@ cat: a.txt: Permission denied
 
 <span style="color:#09f;font-style:italic">#show SUID flag for ubridge</span>
 ls -l /Applications/GNS3.app/Contents/Resources/ubridge
--rwsr-x---@ <span style="color:#f60">1</span> root  admin  <span style="color:#f60">61932</span> Apr <span style="color:#f60">15</span> <span style="color:#f60">07</span>:17 /Applications/GNS3.app/Contents/Resources/ubridge
+-rwsr-x---@ <span style="color:#f60">1</span> root  admin  <span style="color:#f60">61932</span> Apr <span style="color:#f60">15</span> 07:17 /Applications/GNS3.app/Contents/Resources/ubridge
 
 <span style="color:#09f;font-style:italic">#read file with sudo</span>
 sudo cat a.txt 
@@ -170,35 +169,26 @@ a
 
 <span style="color:#09f;font-style:italic">#read file with ubridge</span>
 /Applications/GNS3.app/Contents/Resources/ubridge -f a.txt 
-uBridge version <span style="color:#f60">0</span>.9.13 running with libpcap version <span style="color:#f60">1</span>.8.1 -- Apple version <span style="color:#f60">79</span>.250.1
-iniparser: syntax error in a.txt <span style="color:#555">(</span><span style="color:#f60">1</span><span style="color:#555">)</span>:
--&gt; a</code></pre></div>
-<p>This is an open source project, so we can check the source code what causes this. It can be found here: <a href="https://github.com/GNS3/ubridge">GitHub - GNS3/ubridge: Bridge for UDP tunnels, Ethernet, TAP and VMnet interfaces.</a></p>
-
+uBridge version 0.9.13 running with libpcap version 1.8.1 -- Apple version 79.250.1
+iniparser: syntax error in a.txt <span style="color:#555">(</span>1<span style="color:#555">)</span>:
+-&gt; a
+</code></pre></div><p>This is an open source project, so we can check the source code what causes this. It can be found here: <a href="https://github.com/GNS3/ubridge">GitHub - GNS3/ubridge: Bridge for UDP tunnels, Ethernet, TAP and VMnet interfaces.</a></p>
 <p>The following lines in the <code>iniparser.c</code> code causing this behaviour, in case it cannot parse the supplied file, it will print out every single line:</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">fprintf(stderr, <span style="color:#c30">&#34;iniparser: syntax error in %s (%d):</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>,
                     ininame,
                     lineno);
-fprintf(stderr, <span style="color:#c30">&#34;-&gt; %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, line);</code></pre></div>
-<p>I did run a Google search to see if it’s known to the community or not. It turned out that it’s not, however <a href="https://twitter.com/hackerfantastic">Hacker Fantastic (@hackerfantastic) | Twitter</a> also reported an issue a while ago, that was a true privilege escalation:</p>
-
+fprintf(stderr, <span style="color:#c30">&#34;-&gt; %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, line);
+</code></pre></div><p>I did run a Google search to see if it’s known to the community or not. It turned out that it’s not, however <a href="https://twitter.com/hackerfantastic">Hacker Fantastic (@hackerfantastic) | Twitter</a> also reported an issue a while ago, that was a true privilege escalation:</p>
 <p><a href="https://gns3.com/discussions/gns3-local-privilege-escalation-">https://gns3.com/discussions/gns3-local-privilege-escalation-</a>
 That exploit is still available at:
 <a href="https://github.com/offensive-security/exploitdb/blob/master/exploits/osx/local/41873.sh">exploitdb/41873.sh at master · offensive-security/exploitdb · GitHub</a></p>
-
 <p>So I sent an email to the developers ( <a href="mailto:developers@gns3.net">developers@gns3.net</a> ) detailing the problem. A couple of hours after reporting it, they actually pushed a fix to the GitHub repo:
 <a href="https://github.com/GNS3/ubridge/commit/2eb0d1dab6a6de76cf3556130a2d52af101077db">Hide errored line content during parsing configuration INI file on de… · GNS3/ubridge@2eb0d1d · GitHub</a></p>
-
 <p>Essentially the fix is to eliminate printing out the error details.</p>
-
-<p><img src="https://theevilbit.github.io/images/GNS3_ubridge_SETUID_bit_arbitrary_file_read/Screenshot%202019-05-09%20at%209.56.35.png" alt="image1" /></p>
-
-<p><img src="https://theevilbit.github.io/images/GNS3_ubridge_SETUID_bit_arbitrary_file_read/Screenshot%202019-05-09%20at%209.56.47.png" alt="image2" /></p>
-
-<p><img src="https://theevilbit.github.io/images/GNS3_ubridge_SETUID_bit_arbitrary_file_read/Screenshot%202019-05-09%20at%209.56.56.png" alt="image3" /></p>
-
+<p><img src="https://theevilbit.github.io/images/GNS3_ubridge_SETUID_bit_arbitrary_file_read/Screenshot%202019-05-09%20at%209.56.35.png" alt="image1"></p>
+<p><img src="https://theevilbit.github.io/images/GNS3_ubridge_SETUID_bit_arbitrary_file_read/Screenshot%202019-05-09%20at%209.56.47.png" alt="image2"></p>
+<p><img src="https://theevilbit.github.io/images/GNS3_ubridge_SETUID_bit_arbitrary_file_read/Screenshot%202019-05-09%20at%209.56.56.png" alt="image3"></p>
 <p>Kudos to the team for the quick fix!</p>
-
 <p>They confirmed the issue and it has been fixed in GNS 2.1.17.</p>
 
       </div>

@@ -59,7 +59,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.58.3" />
+    <meta name="generator" content="Hugo 0.71.0" />
   </head>
 
   <body class=" ">
@@ -132,115 +132,87 @@
       </header>
 
       <div>
-        
-
-<p>IOBit’s Unlocker program is advertised to solve the following issues:</p>
-
+        <p>IOBit’s Unlocker program is advertised to solve the following issues:</p>
 <blockquote>
 <p>IObit Unlocker performs well in solving “cannot delete files”, “access is denied”, “The file is in use by another program or user”, or “There has been a sharing violation” problems. With IObit Unlocker, you can manage all your files the way you want.</p>
 </blockquote>
-
 <p>and even:</p>
-
 <blockquote>
 <p>With “Unlock &amp; Delete”, “Unlock &amp; Rename”, “Unlock &amp; Move”, and “Unlock &amp; Copy”, IObit Unlocker offers easier ways to unlock and manage the files and folders to keep them safe and available.</p>
 </blockquote>
-
 <p>It can be downloaded from here: <a href="https://www.iobit.com/en/iobit-unlocker.php">IObit Unlocker, Solution for “undelete files or folders” Problems on Windows 8, 7, Vista, XP, 10 - IObit</a>. Right now the latest version is 1.1.2.</p>
-
 <h2 id="overview">Overview</h2>
-
-<p>The IOBitUnlocker driver contains 2 major vulnerabilities:
-1. The IOCTL code 0x222124 in the IOBitUnlocker driver allows a low privileged user to unlock a file - kill processes that holds a handle to the process, even if they are running with SYSTEM privileges
-2. The IOCTL code 0x222124 in the IOBitUnlocker driver allows a low privileged user to delete, move or copy any file on the system</p>
-
+<p>The IOBitUnlocker driver contains 2 major vulnerabilities:</p>
+<ol>
+<li>The IOCTL code 0x222124 in the IOBitUnlocker driver allows a low privileged user to unlock a file - kill processes that holds a handle to the process, even if they are running with SYSTEM privileges</li>
+<li>The IOCTL code 0x222124 in the IOBitUnlocker driver allows a low privileged user to delete, move or copy any file on the system</li>
+</ol>
 <h2 id="vulnerability-details">Vulnerability Details</h2>
-
 <p>The application installs a helper driver that will perform the above actions. If we examine the permissions of the device in OSR’s Device Tree, we can see that everyone has full access to the driver:</p>
-
-<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2015.56.38.png" alt="" /></p>
-
+<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2015.56.38.png" alt=""></p>
 <p>Interestingly, when we start up the client application it will prompt for elevated access:</p>
-
-<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2015.53.11.png" alt="" /></p>
-
+<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2015.53.11.png" alt=""></p>
 <p>To see what the client does, or how does it perform the actions, we can go with reversing the driver, but it’s easier to use @zodiacon’s <a href="https://github.com/zodiacon/DriverMon">DriverMon</a> tool, which can monitor IOCTL requests for us, and also show the data going on.</p>
-
 <p>As we add files, we can see that there is an IOCTL code that seemingly seems to query information about the file - if any process is using it or not. This uses IOCTL code <code>0x222128</code>.</p>
-
-<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.04.14.png" alt="" /></p>
-
+<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.04.14.png" alt=""></p>
 <p>If yes, we will get back the PID of the process using the file:</p>
-
-<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.05.14.png" alt="" /></p>
-
+<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.05.14.png" alt=""></p>
 <p>If we click unlock, we will see a slightly different request, using IOCTL <code>0x222124</code>, again passing the filename and also number 3 at offset 0x424:</p>
-
-<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.10.06.png" alt="" /></p>
-
+<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.10.06.png" alt=""></p>
 <p>If we look at the driver file in IDA, we will see that these are the two IOCTL code it will support.</p>
-
-<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.12.57.png" alt="" /></p>
-
+<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.12.57.png" alt=""></p>
 <p>Playing around with the other option, this is what we can see in the requests in the relevant offsets:</p>
-
 <ol>
 <li>Unlock:
-
 <ol>
 <li>0x0: filename in unicode</li>
 <li>0x424: byte 0x3</li>
-</ol></li>
+</ol>
+</li>
 <li>Unlock and Delete:
-
 <ol>
 <li>0x0: filename in unicode</li>
 <li>0x420: byte 0x1</li>
 <li>0x424: byte 0x3</li>
-</ol></li>
+</ol>
+</li>
 <li>Unlock and rename:
-
 <ol>
 <li>0x0: filename</li>
 <li>0x210: new filename</li>
 <li>0x420: byte 0x2</li>
 <li>0x424: byte 0x3</li>
-</ol></li>
+</ol>
+</li>
 <li>Unlock and move:
-
 <ol>
 <li>0x0: filename</li>
 <li>0x210: new filename with full path</li>
 <li>0x420: byte 0x3</li>
 <li>0x424: byte 0x3</li>
-</ol></li>
+</ol>
+</li>
 <li>Unlock and copy:
-
 <ol>
 <li>0x0: filename</li>
 <li>0x210: new filename with full path</li>
 <li>0x420: byte 0x4</li>
 <li>0x424: byte 0x3</li>
-</ol></li>
 </ol>
-
+</li>
+</ol>
 <p>This is the input of a file rename operation:</p>
-
-<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2023.53.48.png" alt="" /></p>
-
+<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2023.53.48.png" alt=""></p>
 <p>If we click <code>Force mode</code> the byte at offset 0x424 is set to 0x7. All the other bytes are 0 in the request. We can also conclude that the tool doesn’t support file paths over 256 bytes, which is the typical MAX_PATH value.
 I believe the 4 byte return value is the NTSTATUS code. If we select a folder instead of a file, we got the same input values.</p>
-
-<p>Considering that the access to the driver is full access to everyone, we can reimplement the same functionality in a code. This is a clear privilege escalation vulnerability as we can:
-1. delete, copy, move any file in the system
-2. kill any process (the unlock feature will terminate processes holding handles to the file) - almost any, if we look at the code, we can see that there is a whitelist for critical system processes:</p>
-
-<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.31.17.png" alt="" /></p>
-
+<p>Considering that the access to the driver is full access to everyone, we can reimplement the same functionality in a code. This is a clear privilege escalation vulnerability as we can:</p>
+<ol>
+<li>delete, copy, move any file in the system</li>
+<li>kill any process (the unlock feature will terminate processes holding handles to the file) - almost any, if we look at the code, we can see that there is a whitelist for critical system processes:</li>
+</ol>
+<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.31.17.png" alt=""></p>
 <p>The possibilities are endless with these capabilities. For example we can easily replace any binary running as SYSTEM, or copy a DLL to a location where it will be loaded as SYSTEM.</p>
-
 <p>The only item that doesn’t work is renaming the file, for some reason if the user doesn’t have rights, the driver can’t rename it. All other items work.</p>
-
 <p>Proof-of-concept C code:</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#09f;font-style:italic">// UnlockExploit.cpp : This file contains the &#39;main&#39; function. Program execution begins and ends there.
 </span><span style="color:#09f;font-style:italic">//
@@ -404,20 +376,14 @@ BOOL <span style="color:#c0f">FileExists</span>(LPCWSTR szPath)
 	}
 	CloseHandle(hDriver);
 	ExitProcess(<span style="color:#f60">0</span>);
-}</code></pre></div>
-<p>Testing:</p>
-
+}
+</code></pre></div><p>Testing:</p>
 <p>The driver is normally started only if we start the main application, and once we exit it will be terminated and disabled. If we want to start it manually for the testing, we need to start it by our own:</p>
-
 <pre><code>sc config iobitunlocker start= demand
 sc start iobitunlocker
-</code></pre>
-
-<p>POC code available at:
+</code></pre><p>POC code available at:
 <a href="https://github.com/theevilbit/exploits/tree/master/IOBit%20Unlocker%201.2%20LPE/UnlockExploit">IOBit Unlocker POC</a></p>
-
 <p>Contact / vendor notification:</p>
-
 <ol>
 <li>2019.07.25. - Initial contact through webform - never got response</li>
 <li>2019.07.29. - Contact CERT - CERT never got response from vendor</li>

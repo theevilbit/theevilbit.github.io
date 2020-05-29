@@ -1,37 +1,64 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on theevilbit blog</title>
     <link>https://theevilbit.github.io/tags/</link>
     <description>Recent content in Tags on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 22 Mar 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 29 May 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://theevilbit.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>lpe</title>
+      <link>https://theevilbit.github.io/tags/lpe/</link>
+      <pubDate>Fri, 29 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/tags/lpe/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>macos</title>
       <link>https://theevilbit.github.io/tags/macos/</link>
-      <pubDate>Sun, 22 Mar 2020 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 29 May 2020 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/tags/macos/</guid>
       <description></description>
     </item>
     
     <item>
+      <title>microsoft</title>
+      <link>https://theevilbit.github.io/tags/microsoft/</link>
+      <pubDate>Fri, 29 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/tags/microsoft/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>privilegedhelpertools</title>
       <link>https://theevilbit.github.io/tags/privilegedhelpertools/</link>
-      <pubDate>Sun, 22 Mar 2020 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 29 May 2020 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/tags/privilegedhelpertools/</guid>
       <description></description>
     </item>
     
     <item>
+      <title>vulnerability</title>
+      <link>https://theevilbit.github.io/tags/vulnerability/</link>
+      <pubDate>Fri, 29 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/tags/vulnerability/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>xpc</title>
       <link>https://theevilbit.github.io/tags/xpc/</link>
-      <pubDate>Sun, 22 Mar 2020 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 29 May 2020 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/tags/xpc/</guid>
       <description></description>
@@ -52,24 +79,6 @@
       <pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/tags/cve/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>lpe</title>
-      <link>https://theevilbit.github.io/tags/lpe/</link>
-      <pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://theevilbit.github.io/tags/lpe/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>vulnerability</title>
-      <link>https://theevilbit.github.io/tags/vulnerability/</link>
-      <pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://theevilbit.github.io/tags/vulnerability/</guid>
       <description></description>
     </item>
     

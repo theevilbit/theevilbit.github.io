@@ -1,14 +1,23 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>privilegedhelpertools on theevilbit blog</title>
     <link>https://theevilbit.github.io/tags/privilegedhelpertools/</link>
     <description>Recent content in privilegedhelpertools on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 22 Mar 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 29 May 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://theevilbit.github.io/tags/privilegedhelpertools/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Secure coding PrivilegedHelperTools - Part 3 - Incorrect client verification</title>
+      <link>https://theevilbit.github.io/posts/secure_coding_privilegedhelpertools_part3/</link>
+      <pubDate>Fri, 29 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/posts/secure_coding_privilegedhelpertools_part3/</guid>
+      <description>Microsoft AutoUpdate macOS privilege escalation vulnerability (CVE-2020-0984) Introduction This is the third post in my series which is trying to help Apple developers to avoid typical insecure coding practices. This one will highlight why XPC client hardening and proper verification is extremely important when we use XPC messaging on macOS between clients that run as a normal user and services that run as root. If this validation is not right, it opens up the possibility for an attacker to run privileged commands or worse case, achieve full privilege escalation on the system.</description>
+    </item>
     
     <item>
       <title>Secure coding PrivilegedHelperTools - Part 2 - Checking CS (CodeSigning) flags of the client</title>

@@ -11,29 +11,29 @@
     
     
     <item>
-      <title>Secure coding PrivilegedHelperTools - Part 3 - Incorrect client verification</title>
-      <link>https://theevilbit.github.io/posts/secure_coding_privilegedhelpertools_part3/</link>
+      <title>Secure coding XPC Services - Part 3 - Incorrect client verification</title>
+      <link>https://theevilbit.github.io/posts/secure_coding_xpc_part3/</link>
       <pubDate>Fri, 29 May 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://theevilbit.github.io/posts/secure_coding_privilegedhelpertools_part3/</guid>
+      <guid>https://theevilbit.github.io/posts/secure_coding_xpc_part3/</guid>
       <description>Microsoft AutoUpdate macOS privilege escalation vulnerability (CVE-2020-0984) Introduction This is the third post in my series which is trying to help Apple developers to avoid typical insecure coding practices. This one will highlight why XPC client hardening and proper verification is extremely important when we use XPC messaging on macOS between clients that run as a normal user and services that run as root. If this validation is not right, it opens up the possibility for an attacker to run privileged commands or worse case, achieve full privilege escalation on the system.</description>
     </item>
     
     <item>
-      <title>Secure coding PrivilegedHelperTools - Part 2 - Checking CS (CodeSigning) flags of the client</title>
-      <link>https://theevilbit.github.io/posts/secure_coding_privilegedhelpertools_part2/</link>
+      <title>Secure coding XPC Services - Part 2 - Checking CS (CodeSigning) flags of the client</title>
+      <link>https://theevilbit.github.io/posts/secure_coding_xpc_part2/</link>
       <pubDate>Sun, 22 Mar 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://theevilbit.github.io/posts/secure_coding_privilegedhelpertools_part2/</guid>
+      <guid>https://theevilbit.github.io/posts/secure_coding_xpc_part2/</guid>
       <description>I&amp;rsquo;m still waiting for some bug fixes to release the previously planned posts, and in the meantime I continue to poke at other PrivilegedHelperTools. This post born because I actually failed to exploit an XPC service, and I learned something new in regards, of how to securely write such a service. One application that came to my sight is Viscosity. This tool was already in Tyler Bohan&amp;rsquo;s list, where his team looked on exploiting such services: GitHub - blankwall/Offensive-Con: Talk and materials for Offensive Con presentation - Privileged Helper Tools.</description>
     </item>
     
     <item>
-      <title>Secure coding PrivilegedHelperTools - Part 1 - Why EvenBetterAuthorization is not enough?</title>
-      <link>https://theevilbit.github.io/posts/secure_coding_privilegedhelpertools_part1/</link>
+      <title>Secure coding XPC services - Part 1 - Why EvenBetterAuthorization is not enough?</title>
+      <link>https://theevilbit.github.io/posts/secure_coding_xpc_part1/</link>
       <pubDate>Sun, 12 Jan 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://theevilbit.github.io/posts/secure_coding_privilegedhelpertools_part1/</guid>
+      <guid>https://theevilbit.github.io/posts/secure_coding_xpc_part1/</guid>
       <description>This is the first part of a blog post series I plan about PrivilegedHelperTools that exists on macOS systems. I recently took a look on a couple of these tools, and found that it&amp;rsquo;s very easy to make the code insecure, as there are many small pieces to it, and if one is done wrong, the helper tool will be open to abuse by anyone having a foothold on the system.</description>
     </item>
     

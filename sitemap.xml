@@ -4,36 +4,81 @@
   
   <url>
     <loc>https://theevilbit.github.io/year/2020/</loc>
-    <lastmod>2020-05-29T00:00:00+00:00</lastmod>
+    <lastmod>2020-06-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://theevilbit.github.io/categories/blog/</loc>
-    <lastmod>2020-05-29T00:00:00+00:00</lastmod>
+    <lastmod>2020-06-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://theevilbit.github.io/categories/</loc>
-    <lastmod>2020-05-29T00:00:00+00:00</lastmod>
+    <lastmod>2020-06-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/f-secure/</loc>
+    <lastmod>2020-06-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://theevilbit.github.io/tags/lpe/</loc>
-    <lastmod>2020-05-29T00:00:00+00:00</lastmod>
+    <lastmod>2020-06-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://theevilbit.github.io/tags/macos/</loc>
-    <lastmod>2020-05-29T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://theevilbit.github.io/tags/microsoft/</loc>
-    <lastmod>2020-05-29T00:00:00+00:00</lastmod>
+    <lastmod>2020-06-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://theevilbit.github.io/posts/</loc>
+    <lastmod>2020-06-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/posts/secure_coding_xpc_part4/</loc>
+    <lastmod>2020-06-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/</loc>
+    <lastmod>2020-06-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/vulnerability/</loc>
+    <lastmod>2020-06-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/xpc/</loc>
+    <lastmod>2020-06-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/year/</loc>
+    <lastmod>2020-06-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/amfi/</loc>
+    <lastmod>2020-06-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/internals/</loc>
+    <lastmod>2020-06-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/posts/amfi_syscall/</loc>
+    <lastmod>2020-06-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/microsoft/</loc>
     <lastmod>2020-05-29T00:00:00+00:00</lastmod>
   </url>
   
@@ -43,32 +88,22 @@
   </url>
   
   <url>
-    <loc>https://theevilbit.github.io/posts/secure_coding_privilegedhelpertools_part3/</loc>
+    <loc>https://theevilbit.github.io/posts/secure_coding_xpc_part3/</loc>
     <lastmod>2020-05-29T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://theevilbit.github.io/tags/</loc>
-    <lastmod>2020-05-29T00:00:00+00:00</lastmod>
+    <loc>https://theevilbit.github.io/tags/kernel/</loc>
+    <lastmod>2020-05-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://theevilbit.github.io/tags/vulnerability/</loc>
-    <lastmod>2020-05-29T00:00:00+00:00</lastmod>
+    <loc>https://theevilbit.github.io/posts/kernel_debugging_with_sip/</loc>
+    <lastmod>2020-05-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://theevilbit.github.io/tags/xpc/</loc>
-    <lastmod>2020-05-29T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://theevilbit.github.io/year/</loc>
-    <lastmod>2020-05-29T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://theevilbit.github.io/posts/secure_coding_privilegedhelpertools_part2/</loc>
+    <loc>https://theevilbit.github.io/posts/secure_coding_xpc_part2/</loc>
     <lastmod>2020-03-22T00:00:00+00:00</lastmod>
   </url>
   
@@ -88,7 +123,7 @@
   </url>
   
   <url>
-    <loc>https://theevilbit.github.io/posts/secure_coding_privilegedhelpertools_part1/</loc>
+    <loc>https://theevilbit.github.io/posts/secure_coding_xpc_part1/</loc>
     <lastmod>2020-01-12T00:00:00+00:00</lastmod>
   </url>
   

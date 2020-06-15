@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>internals on theevilbit blog</title>
+    <link>https://theevilbit.github.io/tags/internals/</link>
+    <description>Recent content in internals on theevilbit blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Tue, 09 Jun 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://theevilbit.github.io/tags/internals/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>The AMFI MACF policy system call</title>
+      <link>https://theevilbit.github.io/posts/amfi_syscall/</link>
+      <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/posts/amfi_syscall/</guid>
+      <description>On macOS, one popular technique to inject code into other applications is leveraging the DYLD_INSERT_LIBRARIES environment variable, which I wrote about in 2019 DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX. This variable can store a colon-separated list of dynamic libraries to load before the ones specified in the target process.
+Several limitations apply to when this injection technique can be used and when it cannot, which I also discussed. I revisited this topic, not only because things might have changed since then but also to ensure that I didn’t miss anything.</description>
+    </item>
+    
+    <item>
+      <title>Kernel Debugging macOS with SIP</title>
+      <link>https://theevilbit.github.io/posts/kernel_debugging_with_sip/</link>
+      <pubDate>Tue, 12 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/posts/kernel_debugging_with_sip/</guid>
+      <description>As security researchers, we often find ourselves needing to look deep into various kernels to fully understand our target and accomplish our goals. Doing so on the Windows platform is no mystery, as there have been countless well-written posts about kernel debugging setups. For macOS, however, the situation is slightly different.
+There are many great posts describing how to set up kernel debugging between two machines, but all of them suggest that SIP (System Integrity Protection) should be disabled for kernel debugging.</description>
+    </item>
+    
+  </channel>
+</rss>

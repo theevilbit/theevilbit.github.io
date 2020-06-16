@@ -285,8 +285,10 @@ The root cause The XPC services of F-Secure SAFE use the process ID (PID) to ver
     auditToken <span style="color:#555">=</span> ((ExtendedNSXPCConnection<span style="color:#555">*</span>)newConnection).auditToken;
 (...)
 }
-</code></pre></div><h2 id="further-resources">Further resources</h2>
-<p>If you are interested reading more about XPC attacks I recommend three talks:</p>
+</code></pre></div><h2 id="conclusion">Conclusion</h2>
+<p>This concludes my series I planned in XPC exploitation and secure coding, I hope these posts find their way to developers, as in my experience most of the applications are not done right. Unfortunately the only one to blame for this is Apple, as they don&rsquo;t provide clear best practices for developers, neither secure public APIs. I hope this will change in the future.</p>
+<h2 id="further-resources">Further resources</h2>
+<p>If you are interested reading more about XPC attacks I recommend four talks:</p>
 <ol>
 <li>Wojciech Reguła ( <a href="https://twitter.com/_r3ggi">@_r3ggi</a> ): Abusing and Securing XPC in macOS Apps <a href="https://objectivebythesea.com/v3/content.html">Objective by the Sea v3</a></li>
 <li>Julia Vashchenko ( <a href="https://twitter.com/iaronskaya">@iaronskaya</a> ): Job(s) Bless Us! Privileged Operations on macOS <a href="https://objectivebythesea.com/v3/content.html">Objective by the Sea v3</a></li>

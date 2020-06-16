@@ -5,10 +5,20 @@
     <link>https://theevilbit.github.io/categories/blog/</link>
     <description>Recent content in BLOG on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 12 Jun 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 16 Jun 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://theevilbit.github.io/categories/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Secure coding XPC Services - Part 5 - PID reuse attacks</title>
+      <link>https://theevilbit.github.io/posts/secure_coding_xpc_part5/</link>
+      <pubDate>Tue, 16 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/posts/secure_coding_xpc_part5/</guid>
+      <description>In the last post of the series we will see another typical issue, where XPC services using the connecting process&amp;rsquo;s ID (PID) to verify the client instead of the audit token. We will use F-Secure SAFE again for our case study, the vulnerability was fixed in 17.8.
+The root cause The XPC services of F-Secure SAFE use the process ID (PID) to verify the client&amp;rsquo;s signature, as can be seen in the code below.</description>
+    </item>
     
     <item>
       <title>Secure coding XPC Services - Part 4 - Improved client authorization</title>

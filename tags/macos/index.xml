@@ -11,22 +11,22 @@
     
     
     <item>
-      <title>Secure coding XPC Services - Part 5 - PID reuse attacks</title>
+      <title>Secure coding XPC Services - Part 5 - PID reuse attacks (CVE-2020-14977)</title>
       <link>https://theevilbit.github.io/posts/secure_coding_xpc_part5/</link>
       <pubDate>Tue, 16 Jun 2020 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/posts/secure_coding_xpc_part5/</guid>
-      <description>In the last post of the series we will see another typical issue, where XPC services using the connecting process&amp;rsquo;s ID (PID) to verify the client instead of the audit token. We will use F-Secure SAFE again for our case study, the vulnerability was fixed in 17.8.
+      <description>In the last post of the series we will see another typical issue, where XPC services using the connecting process&amp;rsquo;s ID (PID) to verify the client instead of the audit token. We will use F-Secure SAFE again for our case study, the vulnerability was fixed in 17.8 and it was assigned CVE-2020-14977.
 The root cause The XPC services of F-Secure SAFE use the process ID (PID) to verify the client&amp;rsquo;s signature, as can be seen in the code below.</description>
     </item>
     
     <item>
-      <title>Secure coding XPC Services - Part 4 - Improved client authorization</title>
+      <title>Secure coding XPC Services - Part 4 - Improved client authorization (CVE-2020-14978)</title>
       <link>https://theevilbit.github.io/posts/secure_coding_xpc_part4/</link>
       <pubDate>Fri, 12 Jun 2020 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/posts/secure_coding_xpc_part4/</guid>
-      <description>F-Secure SAFE XPC service exploitation Intro In this post we will look into an other case study which will show us (again) why XPC client verification is crucial in XPC security, and how added authorization checks can slightly improve (but not fix) the problem. The F-Secure SAFE XPC services installed on macOS were not sufficiently hardened, and a malicious actor had the ability to interact with them. The vulnerability was fixed in version 17.</description>
+      <description>F-Secure SAFE XPC service exploitation (CVE-2020-14978) Intro In this post we will look into an other case study which will show us (again) why XPC client verification is crucial in XPC security, and how added authorization checks can slightly improve (but not fix) the problem. The F-Secure SAFE XPC services installed on macOS were not sufficiently hardened, and a malicious actor had the ability to interact with them. The vulnerability was fixed in version 17.</description>
     </item>
     
     <item>
@@ -40,7 +40,7 @@ Several limitations apply to when this injection technique can be used and when 
     </item>
     
     <item>
-      <title>Secure coding XPC Services - Part 3 - Incorrect client verification</title>
+      <title>Secure coding XPC Services - Part 3 - Incorrect client verification (CVE-2020-0984)</title>
       <link>https://theevilbit.github.io/posts/secure_coding_xpc_part3/</link>
       <pubDate>Fri, 29 May 2020 00:00:00 +0000</pubDate>
       
@@ -77,7 +77,7 @@ There are many great posts describing how to set up kernel debugging between two
     </item>
     
     <item>
-      <title>Secure coding XPC services - Part 1 - Why EvenBetterAuthorization is not enough?</title>
+      <title>Secure coding XPC services - Part 1 - Why EvenBetterAuthorization is not enough? (CVE-2019-20057)</title>
       <link>https://theevilbit.github.io/posts/secure_coding_xpc_part1/</link>
       <pubDate>Sun, 12 Jan 2020 00:00:00 +0000</pubDate>
       
@@ -135,7 +135,7 @@ The idea I recently came across a very good blog post about an RCE vulnerability
     </item>
     
     <item>
-      <title>GNS3 ubridge SETUID bit - arbitrary file read</title>
+      <title>GNS3 ubridge SETUID bit - arbitrary file read (CVE-2020-14976)</title>
       <link>https://theevilbit.github.io/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/</link>
       <pubDate>Tue, 28 May 2019 00:00:00 +0000</pubDate>
       

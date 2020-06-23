@@ -10,11 +10,11 @@
     
 
     <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Secure coding XPC Services - Part 4 - Improved client authorization"/>
-<meta name="twitter:description" content="F-Secure SAFE XPC service exploitation Intro In this post we will look into an other case study which will show us (again) why XPC client verification is crucial in XPC security, and how added authorization checks can slightly improve (but not fix) the problem. The F-Secure SAFE XPC services installed on macOS were not sufficiently hardened, and a malicious actor had the ability to interact with them. The vulnerability was fixed in version 17."/>
+<meta name="twitter:title" content="Secure coding XPC Services - Part 4 - Improved client authorization (CVE-2020-14978)"/>
+<meta name="twitter:description" content="F-Secure SAFE XPC service exploitation (CVE-2020-14978) Intro In this post we will look into an other case study which will show us (again) why XPC client verification is crucial in XPC security, and how added authorization checks can slightly improve (but not fix) the problem. The F-Secure SAFE XPC services installed on macOS were not sufficiently hardened, and a malicious actor had the ability to interact with them. The vulnerability was fixed in version 17."/>
 
-    <meta property="og:title" content="Secure coding XPC Services - Part 4 - Improved client authorization" />
-<meta property="og:description" content="F-Secure SAFE XPC service exploitation Intro In this post we will look into an other case study which will show us (again) why XPC client verification is crucial in XPC security, and how added authorization checks can slightly improve (but not fix) the problem. The F-Secure SAFE XPC services installed on macOS were not sufficiently hardened, and a malicious actor had the ability to interact with them. The vulnerability was fixed in version 17." />
+    <meta property="og:title" content="Secure coding XPC Services - Part 4 - Improved client authorization (CVE-2020-14978)" />
+<meta property="og:description" content="F-Secure SAFE XPC service exploitation (CVE-2020-14978) Intro In this post we will look into an other case study which will show us (again) why XPC client verification is crucial in XPC security, and how added authorization checks can slightly improve (but not fix) the problem. The F-Secure SAFE XPC services installed on macOS were not sufficiently hardened, and a malicious actor had the ability to interact with them. The vulnerability was fixed in version 17." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/secure_coding_xpc_part4/" />
 <meta property="article:published_time" content="2020-06-12T00:00:00+00:00" />
@@ -25,7 +25,7 @@
       <base href="https://theevilbit.github.io/posts/secure_coding_xpc_part4/">
     
     <title>
-  Secure coding XPC Services - Part 4 - Improved client authorization · theevilbit blog
+  Secure coding XPC Services - Part 4 - Improved client authorization (CVE-2020-14978) · theevilbit blog
 </title>
 
     
@@ -97,7 +97,7 @@
     <article>
       <header>
         <div class="post-title">
-          <h1 class="title">Secure coding XPC Services - Part 4 - Improved client authorization</h1>
+          <h1 class="title">Secure coding XPC Services - Part 4 - Improved client authorization (CVE-2020-14978)</h1>
         </div>
         <div class="post-meta">
           <div class="date">
@@ -132,7 +132,7 @@
       </header>
 
       <div>
-        <h1 id="f-secure-safe-xpc-service-exploitation">F-Secure SAFE XPC service exploitation</h1>
+        <h1 id="f-secure-safe-xpc-service-exploitation-cve-2020-14978">F-Secure SAFE XPC service exploitation (CVE-2020-14978)</h1>
 <h2 id="intro">Intro</h2>
 <p>In this post we will look into an other case study which will show us (again) why XPC client verification is crucial in XPC security, and how added authorization checks can slightly improve (but not fix) the problem. The F-Secure SAFE XPC services installed on macOS were not sufficiently hardened, and a malicious actor had the ability to interact with them. The vulnerability was fixed in version 17.8, it allowed an attacker to query specific settings, or if authorization used, it could prompt a user for password on behalf of F-Secure and ask for permissions to change settings.</p>
 <h2 id="root-cause-analysis">Root cause analysis</h2>

@@ -10,12 +10,12 @@
     
 
     <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Secure coding XPC Services - Part 5 - PID reuse attacks"/>
-<meta name="twitter:description" content="In the last post of the series we will see another typical issue, where XPC services using the connecting process&rsquo;s ID (PID) to verify the client instead of the audit token. We will use F-Secure SAFE again for our case study, the vulnerability was fixed in 17.8.
+<meta name="twitter:title" content="Secure coding XPC Services - Part 5 - PID reuse attacks (CVE-2020-14977)"/>
+<meta name="twitter:description" content="In the last post of the series we will see another typical issue, where XPC services using the connecting process&rsquo;s ID (PID) to verify the client instead of the audit token. We will use F-Secure SAFE again for our case study, the vulnerability was fixed in 17.8 and it was assigned CVE-2020-14977.
 The root cause The XPC services of F-Secure SAFE use the process ID (PID) to verify the client&rsquo;s signature, as can be seen in the code below."/>
 
-    <meta property="og:title" content="Secure coding XPC Services - Part 5 - PID reuse attacks" />
-<meta property="og:description" content="In the last post of the series we will see another typical issue, where XPC services using the connecting process&rsquo;s ID (PID) to verify the client instead of the audit token. We will use F-Secure SAFE again for our case study, the vulnerability was fixed in 17.8.
+    <meta property="og:title" content="Secure coding XPC Services - Part 5 - PID reuse attacks (CVE-2020-14977)" />
+<meta property="og:description" content="In the last post of the series we will see another typical issue, where XPC services using the connecting process&rsquo;s ID (PID) to verify the client instead of the audit token. We will use F-Secure SAFE again for our case study, the vulnerability was fixed in 17.8 and it was assigned CVE-2020-14977.
 The root cause The XPC services of F-Secure SAFE use the process ID (PID) to verify the client&rsquo;s signature, as can be seen in the code below." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/secure_coding_xpc_part5/" />
@@ -27,7 +27,7 @@ The root cause The XPC services of F-Secure SAFE use the process ID (PID) to ver
       <base href="https://theevilbit.github.io/posts/secure_coding_xpc_part5/">
     
     <title>
-  Secure coding XPC Services - Part 5 - PID reuse attacks · theevilbit blog
+  Secure coding XPC Services - Part 5 - PID reuse attacks (CVE-2020-14977) · theevilbit blog
 </title>
 
     
@@ -99,7 +99,7 @@ The root cause The XPC services of F-Secure SAFE use the process ID (PID) to ver
     <article>
       <header>
         <div class="post-title">
-          <h1 class="title">Secure coding XPC Services - Part 5 - PID reuse attacks</h1>
+          <h1 class="title">Secure coding XPC Services - Part 5 - PID reuse attacks (CVE-2020-14977)</h1>
         </div>
         <div class="post-meta">
           <div class="date">
@@ -134,7 +134,7 @@ The root cause The XPC services of F-Secure SAFE use the process ID (PID) to ver
       </header>
 
       <div>
-        <p>In the last post of the series we will see another typical issue, where XPC services using the connecting process&rsquo;s ID (PID) to verify the client instead of the audit token. We will use F-Secure SAFE again for our case study, the vulnerability was fixed in 17.8.</p>
+        <p>In the last post of the series we will see another typical issue, where XPC services using the connecting process&rsquo;s ID (PID) to verify the client instead of the audit token. We will use F-Secure SAFE again for our case study, the vulnerability was fixed in 17.8 and it was assigned CVE-2020-14977.</p>
 <h2 id="the-root-cause">The root cause</h2>
 <p>The XPC services of F-Secure SAFE use the process ID (PID) to verify the client&rsquo;s signature, as can be seen in the code below.</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">+(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#c0f">verifyPid:</span>(<span style="color:#078;font-weight:bold">int</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">codesignatureAgainstRequirements:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg3</span> {

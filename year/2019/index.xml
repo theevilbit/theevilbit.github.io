@@ -30,7 +30,7 @@ Intro I’m reading Jonathan Levin’s *OS Internals Vol I. book (user mode - *O
     </item>
     
     <item>
-      <title>IOBit Unlocker 1.1.2 - Local Privilege Escalation</title>
+      <title>IOBit Unlocker 1.1.2 - Local Privilege Escalation (CVE-2020-14974 &amp; CVE-2020-14975)</title>
       <link>https://theevilbit.github.io/posts/iobit_unlocker_lpe/</link>
       <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
       
@@ -92,7 +92,7 @@ What is HMValidateHandle? HMValidateHandle is an internal, unexported function o
     </item>
     
     <item>
-      <title>GNS3 ubridge SETUID bit - arbitrary file read</title>
+      <title>GNS3 ubridge SETUID bit - arbitrary file read (CVE-2020-14976)</title>
       <link>https://theevilbit.github.io/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/</link>
       <pubDate>Tue, 28 May 2019 00:00:00 +0000</pubDate>
       

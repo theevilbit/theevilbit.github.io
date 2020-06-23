@@ -10,13 +10,13 @@
     
 
     <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="IOBit Unlocker 1.1.2 - Local Privilege Escalation"/>
+<meta name="twitter:title" content="IOBit Unlocker 1.1.2 - Local Privilege Escalation (CVE-2020-14974 &amp; CVE-2020-14975)"/>
 <meta name="twitter:description" content="IOBit’s Unlocker program is advertised to solve the following issues:
  IObit Unlocker performs well in solving “cannot delete files”, “access is denied”, “The file is in use by another program or user”, or “There has been a sharing violation” problems. With IObit Unlocker, you can manage all your files the way you want.
  and even:
  With “Unlock &amp; Delete”, “Unlock &amp; Rename”, “Unlock &amp; Move”, and “Unlock &amp; Copy”, IObit Unlocker offers easier ways to unlock and manage the files and folders to keep them safe and available."/>
 
-    <meta property="og:title" content="IOBit Unlocker 1.1.2 - Local Privilege Escalation" />
+    <meta property="og:title" content="IOBit Unlocker 1.1.2 - Local Privilege Escalation (CVE-2020-14974 &amp; CVE-2020-14975)" />
 <meta property="og:description" content="IOBit’s Unlocker program is advertised to solve the following issues:
  IObit Unlocker performs well in solving “cannot delete files”, “access is denied”, “The file is in use by another program or user”, or “There has been a sharing violation” problems. With IObit Unlocker, you can manage all your files the way you want.
  and even:
@@ -31,7 +31,7 @@
       <base href="https://theevilbit.github.io/posts/iobit_unlocker_lpe/">
     
     <title>
-  IOBit Unlocker 1.1.2 - Local Privilege Escalation · theevilbit blog
+  IOBit Unlocker 1.1.2 - Local Privilege Escalation (CVE-2020-14974 &amp; CVE-2020-14975) · theevilbit blog
 </title>
 
     
@@ -103,7 +103,7 @@
     <article>
       <header>
         <div class="post-title">
-          <h1 class="title">IOBit Unlocker 1.1.2 - Local Privilege Escalation</h1>
+          <h1 class="title">IOBit Unlocker 1.1.2 - Local Privilege Escalation (CVE-2020-14974 &amp; CVE-2020-14975)</h1>
         </div>
         <div class="post-meta">
           <div class="date">
@@ -144,8 +144,8 @@
 <h2 id="overview">Overview</h2>
 <p>The IOBitUnlocker driver contains 2 major vulnerabilities:</p>
 <ol>
-<li>The IOCTL code 0x222124 in the IOBitUnlocker driver allows a low privileged user to unlock a file - kill processes that holds a handle to the process, even if they are running with SYSTEM privileges</li>
-<li>The IOCTL code 0x222124 in the IOBitUnlocker driver allows a low privileged user to delete, move or copy any file on the system</li>
+<li>The IOCTL code 0x222124 in the IOBitUnlocker driver allows a low privileged user to unlock a file - kill processes that holds a handle to the process, even if they are running with SYSTEM privileges (CVE-2020-14974)</li>
+<li>The IOCTL code 0x222124 in the IOBitUnlocker driver allows a low privileged user to delete, move or copy any file on the system (CVE-2020-14975)</li>
 </ol>
 <h2 id="vulnerability-details">Vulnerability Details</h2>
 <p>The application installs a helper driver that will perform the above actions. If we examine the permissions of the device in OSR’s Device Tree, we can see that everyone has full access to the driver:</p>

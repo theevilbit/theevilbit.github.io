@@ -11,6 +11,16 @@
     
     
     <item>
+      <title>CVE-2020-9771 - mount_apfs TCC bypass and privilege escalation</title>
+      <link>https://theevilbit.github.io/posts/cve_2020_9771/</link>
+      <pubDate>Fri, 03 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/posts/cve_2020_9771/</guid>
+      <description>TL;DR We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc&amp;hellip;) of every user on the system, including those protected by Apple&amp;rsquo;s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
+This could be achieved with a single command, for example: mount_apfs -o noowners -s http://com.</description>
+    </item>
+    
+    <item>
       <title>Secure coding XPC Services - Part 5 - PID reuse attacks (CVE-2020-14977)</title>
       <link>https://theevilbit.github.io/posts/secure_coding_xpc_part5/</link>
       <pubDate>Tue, 16 Jun 2020 00:00:00 +0000</pubDate>

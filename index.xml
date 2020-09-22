@@ -5,7 +5,7 @@
     <link>https://theevilbit.github.io/</link>
     <description>Recent content on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 31 Mar 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 03 Jul 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://theevilbit.github.io/index.xml" rel="self" type="application/rss+xml" />
     
@@ -134,6 +134,16 @@ Intro I’m reading Jonathan Levin’s *OS Internals Vol I. book (user mode - *O
       <guid>https://theevilbit.github.io/posts/few_click_rce_via_github_desktop_macos_client_with_gatekeeper_bypass_and_custom_url_handlers/</guid>
       <description>TL;DR The GitHub Desktop app doesn’t add the quarantine extended attribute to files downloaded from the web, and this along with macOS’s URL handler auto-registration feature allows an attacker to execute arbitrary, even unsigned code on a macOS system. If we don’t count the clicks required to open the GitHub App, and cloning an external repository, then this is a 2 click RCE.
 The idea I recently came across a very good blog post about an RCE vulnerability on GitHub Desktop: GitHub Desktop RCE (OSX) - André Baptista via its custom URL handlers.</description>
+    </item>
+    
+    <item>
+      <title>Shield - An app to protect against process injection on macOS</title>
+      <link>https://theevilbit.github.io/shield/</link>
+      <pubDate>Sun, 22 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/shield/</guid>
+      <description>TL;DR I made an app based on Apple&amp;rsquo;s Endpoint Security framework, that can protect against some of the process injection techniques on macOS. I still didn&amp;rsquo;t receive my production endpoint security entitlement, so I can&amp;rsquo;t release a signed version. If you want to use it, you need to get a development endpoint security entitlement at minimum.
+The motivation In the past 2 years I started to dig into macOS security research, and along the way it became pretty clear that beyond memory corruption issues the alpha and omega of macOS exploits is to run code in the context of other applications.</description>
     </item>
     
     <item>

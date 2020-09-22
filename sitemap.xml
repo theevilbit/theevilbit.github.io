@@ -53,6 +53,11 @@
   </url>
   
   <url>
+    <loc>https://theevilbit.github.io/</loc>
+    <lastmod>2020-07-03T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://theevilbit.github.io/tags/vulnerability/</loc>
     <lastmod>2020-07-03T00:00:00+00:00</lastmod>
   </url>
@@ -178,6 +183,16 @@
   </url>
   
   <url>
+    <loc>https://theevilbit.github.io/categories/shield/</loc>
+    <lastmod>2019-09-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/shield/</loc>
+    <lastmod>2019-09-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://theevilbit.github.io/posts/uninstallstring_a_possible_lpe_via_social_engineering/</loc>
     <lastmod>2019-08-09T00:00:00+00:00</lastmod>
   </url>
@@ -244,11 +259,6 @@
   
   <url>
     <loc>https://theevilbit.github.io/tags/rest-api/</loc>
-    <lastmod>2019-03-31T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://theevilbit.github.io/</loc>
     <lastmod>2019-03-31T00:00:00+00:00</lastmod>
   </url>
   

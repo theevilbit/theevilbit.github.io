@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>shield on theevilbit blog</title>
+    <link>https://theevilbit.github.io/categories/shield/</link>
+    <description>Recent content in shield on theevilbit blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sun, 22 Sep 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://theevilbit.github.io/categories/shield/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Shield - An app to protect against process injection on macOS</title>
+      <link>https://theevilbit.github.io/shield/</link>
+      <pubDate>Sun, 22 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/shield/</guid>
+      <description>TL;DR I made an app based on Apple&amp;rsquo;s Endpoint Security framework, that can protect against some of the process injection techniques on macOS. I still didn&amp;rsquo;t receive my production endpoint security entitlement, so I can&amp;rsquo;t release a signed version. If you want to use it, you need to get a development endpoint security entitlement at minimum.
+The motivation In the past 2 years I started to dig into macOS security research, and along the way it became pretty clear that beyond memory corruption issues the alpha and omega of macOS exploits is to run code in the context of other applications.</description>
+    </item>
+    
+  </channel>
+</rss>

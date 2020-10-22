@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Csaba Fitzl">
+    
+    
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Shield - An app to protect against process injection on macOS"/>
+<meta name="twitter:description" content="TL;DR I made an app based on Apple&rsquo;s Endpoint Security framework, that can protect against some of the process injection techniques on macOS. I still didn&rsquo;t receive my production endpoint security entitlement, so I can&rsquo;t release a signed version. If you want to use it, you need to get a development endpoint security entitlement at minimum.
+The motivation In the past 2 years I started to dig into macOS security research, and along the way it became pretty clear that beyond memory corruption issues the alpha and omega of macOS exploits is to run code in the context of other applications."/>
+
+    <meta property="og:title" content="Shield - An app to protect against process injection on macOS" />
+<meta property="og:description" content="TL;DR I made an app based on Apple&rsquo;s Endpoint Security framework, that can protect against some of the process injection techniques on macOS. I still didn&rsquo;t receive my production endpoint security entitlement, so I can&rsquo;t release a signed version. If you want to use it, you need to get a development endpoint security entitlement at minimum.
+The motivation In the past 2 years I started to dig into macOS security research, and along the way it became pretty clear that beyond memory corruption issues the alpha and omega of macOS exploits is to run code in the context of other applications." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://theevilbit.github.io/shield/" />
+<meta property="article:published_time" content="2019-09-22T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-09-22T00:00:00+00:00" />
+
+
+    
+      <base href="https://theevilbit.github.io/shield/">
+    
+    <title>
+  Shield - An app to protect against process injection on macOS · theevilbit blog
+</title>
+
+    
+      <link rel="canonical" href="https://theevilbit.github.io/shield/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+
+    
+    
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.74.3" />
+  </head>
+
+  <body class=" ">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://theevilbit.github.io/">
+      theevilbit blog
+    </a>
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/categories/">Categories</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+          </li>
+        
+      
+      
+    </ul>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container page">
+  <article>
+    <header>
+      <h1>Shield - An app to protect against process injection on macOS</h1>
+    </header>
+
+    <h2 id="tldr">TL;DR</h2>
+<p>I made an app based on Apple&rsquo;s Endpoint Security framework, that can protect against some of the process injection techniques on macOS.
+I still didn&rsquo;t receive my production endpoint security entitlement, so I can&rsquo;t release a signed version. If you want to use it, you need to get a development endpoint security entitlement at minimum.</p>
+<h2 id="the-motivation">The motivation</h2>
+<p>In the past 2 years I started to dig into macOS security research, and along the way it became pretty clear that beyond memory corruption issues the alpha and omega of macOS exploits is to run code in the context of other applications. The reason for this lies within the security model of macOS (and in fact *OS as well). Each application has a list of entitlements that grants the application various rights. If we take only 3rd party applications it&rsquo;s mostly around what it can do if it&rsquo;s sandboxed (e.g.: access the network) or if not sandboxed, which privacy (TCC) protected areas can it access, like camera, microphone, messages, etc&hellip; In case of TCC, if we don&rsquo;t hold these entitlements, we can&rsquo;t access those resources or location even if we run as root.</p>
+<p>For Apple binaries there are hundreds of different Apple private entitlements, which no 3rd party app can have, for example these can control access to SIP protected areas, or the ability to load kernel extensions.</p>
+<p>To add to this list, one of the fundamental protections of XPC cross process communication, especially where one of the process is privileged, is the ability to control who can talk to a specific XPC service. In the case of Apple this is typically done by entitlements, and in case of 3rd parties, it&rsquo;s done by code signature verification. In both cases if we can run code on behalf of the XPC client, we will have the ability to talk to a privileged XPC service.</p>
+<p>The list can go on and on, Keychain sometimes also controls access based on code signatures.</p>
+<p>This ultimately means that if we can inject code to an application, we can gain its rights. This is why process injection capabilities are very tightly controlled on macOS. Apple does a good job on protecting their own apps, although sometimes they also fail to do it. (e.g.: <a href="https://knight.sc/reverse%20engineering/2019/10/31/macos-catalina-privilege-escalation.html">CVE-2019-8805</a>)</p>
+<p>Unfortunately third party apps are not in a very good shape. This opens up the road to plenty of XPC vulnerabilities, which will typically allow users to escalate their privileges to <code>root</code>. TCC bypasses are also common, which will allow users to access sensitive locations. (e.g.: <a href="https://theevilbit.github.io/posts/secure_coding_xpc_part3/">LPE in Microsoft AutoUpdate</a> or <a href="https://objective-see.com/blog/blog_0x56.html">TCC bypass with Zoom</a>)</p>
+<p>Process injection typically comes down to the following 3 main scenarios:</p>
+<ol>
+<li>dylib injection via environment variables</li>
+<li>dylib hijacking (or proxying)</li>
+<li>shell code injection through task ports</li>
+</ol>
+<ul>
+<li>
+<ul>
+<li>in case of Electron apps which become very popular on macOS, someone can inject code through <a href="https://medium.com/@metnew/why-electron-apps-cant-store-your-secrets-confidentially-inspect-option-a49950d6d51f">running Electron apps in debug mode</a> or using <a href="https://www.trustedsec.com/blog/macos-injection-via-third-party-frameworks">Electron specific environment variables</a>.</li>
+</ul>
+</li>
+</ul>
+<p>Seeing how commonly someone can perform the above, and being uncomfortable with it, as I&rsquo;m also a Mac user, I decided to write a small app that can prevent these attacks.</p>
+<h2 id="development-of-shield">Development of Shield</h2>
+<p>With KEXTs going away I decided to try my luck with the new Endpoint Security framework. I must start with admitting, that I don&rsquo;t consider myself as a developer, and I never really done development work so I probably write poor code, but I tried my best to make a solid app with security in mind, although I&rsquo;m sure the code can be optimized.</p>
+<p>With that I greatly relied on code which was developed by <a href="https://twitter.com/patrickwardle">Patrick Wardle</a> and open sourced as part of his <a href="https://github.com/objective-see">Objective-See</a> tools. In fact, with some modification, I reuse his process monitoring library, and some code from LuLu. His work is much-much appreciated! I can&rsquo;t be thankful enough. It helped a lot to understand how we create an ES (Endpoint Security) agent, and how everything comes together.</p>
+<p>I also spent time looking into <a href="https://twitter.com/SuprHackerSteve">Stephen Davis</a>&rsquo;s <a href="https://github.com/SuprHackerSteve/Crescendo">Crescendo</a> codebase. Although it&rsquo;s written in Swift, and I wrote Shield in Objective-C, it helped me to understand other aspects of ES, like talking to the agent, and how to install it, if we don&rsquo;t run it as a daemon, but a system extension. Again, big thanks also to him!</p>
+<p>After many nights spent coding, I arrived to a stage that I&rsquo;m satisfied enough with the results to release it to the public. I can&rsquo;t tell how much I learned about Objective-C, coding, making projects in Xcode, structuring apps in Xcode, etc&hellip; From my original plans of running Shield as a ES daemon, now it runs as a System Extension (SE), which contains the main application logic, and that is where the protection is happening, there is a Helper Tool to autorun it in the menubar and the main app to control the SE.</p>
+<p>For now I treat it as a beta, as it was only me who tested it, and although I didn&rsquo;t run into any issues in the past 3 months (beyond blocking my own exploits 🙃), I&rsquo;m still only a single user, and as our professor said in the university, &ldquo;One measurement is not measurement&rdquo;.</p>
+<p>At this point I successfully implemented #1 and #3 from the code injection techniques, the dylib hijacking is still on my todo list. Beyond these the app can also protect against some Electron specific injections.</p>
+<p>Although I tried to place many comments, later on I will make a document for the code so others can more easily contribute. Now, let&rsquo;s see how we can use it, and what it does.</p>
+<h2 id="using-shield">Using Shield</h2>
+<p>The application doesn&rsquo;t have a normal window mode app, it&rsquo;s menubar only. When we start it, we will see a new menubar icon, in a form of a dot showing up.</p>
+<p><img src="https://theevilbit.github.io/images/shield/shield1.png" alt=""></p>
+<p>Clicking on it, brings up some basic controls, as shown below.</p>
+<p><img src="https://theevilbit.github.io/images/shield/shield2.png" alt=""></p>
+<p>Before we can really do anything, we need to install the system extension. When we click on the related menu item, we will need to approve it in <strong>Security and Privacy</strong> just like, when we install a new kernel extension. Once it&rsquo;s approved it will be loaded, however as of now, I don&rsquo;t autostart the ES client, so by default it will be stopped.</p>
+<p>If we want to uninstall the agent, we need to click on the related menu option. Note that it doesn&rsquo;t delete the app, it will just uninstall the SE. For that to fully complete we need to reboot macOS, as in Catalina macOS can&rsquo;t fully remove an SE without a reboot.</p>
+<p>Once the SE is installed we can start the Endpoint Security client, by either clicking &ldquo;Start&rdquo; or opening preferences, and toggling &ldquo;start / stop&rdquo;. The state of the buttons is refreshed from the SE, and I rarely run into that it&rsquo;s not done properly, but reopening preferences helps :) bug #1.</p>
+<p><img src="https://theevilbit.github.io/images/shield/shield3.png" alt=""></p>
+<p>There are not many options, so I will cover them one by one.</p>
+<p>Blocking mode means that if it detects an injection attempt, that is configured next, it will block it. In case of environment variables, which is typically happening at the time of the process starting up, it will mean that the process that is the target of the injection can&rsquo;t start, it will be blocked. If there is an injection attempt we will get a notification, and it will be also logged to <code>/Library/Application Support/Shield/shield.log</code>. If we switch this option OFF, we will still get alerts, and logs, but they will be allowed.</p>
+<p>The next option is the ability to monitor Apple binaries. For now this is unchangeable, platform binaries are ignored. The main reason for this is that they do extreme amount of <code>task_for_pid</code> calls, and just handling of those without any action causes 20% CPU usage. Right now, these processes are pruned very early, and thus we get a nice 0% CPU utilization. I have a todo here to improve the logic, so system binaries can be monitored as well. I think it&rsquo;s not that a huge issue for now, because as noted earlier, generally platform binaries are very well protected against these attacks.</p>
+<p>Next we can enable or disable specific protections.</p>
+<p>The environment variable injection is monitoring the presence of any of the following three as of the time of writing: <code>DYLD_INSERT_LIBRARIES</code>, <code>CFNETWORK_LIBRARY_PATH</code>, <code>RAWCAMERA_BUNDLE_PATH</code> and <code>ELECTRON_RUN_AS_NODE</code>. If any of these present, the app will not launch. I figured out this can cause issues with Firefox.</p>
+<p>The next setting is for <code>task_for_pid</code> calls, when one process wants to get the task port of another. This will block debugging, as a debugger will perform this call. So if you need to debug, you may want to switch this off temporary.</p>
+<p>The last one is specific to Electron apps. Typically someone can use <code>--inspect</code> command line argument to start an Electron app in debugging mode, and thus inject code to it. Here I simply check if this argument is present and if yes, the app will be blocked.</p>
+<p>Finally there is a switch to autostart the Shield main app (menu item) upon startup. This will install and uninstall a standard Login item.</p>
+<p>I would like to highlight that at this point I consider this tool as BETA if not ALPHA, and thus purposefully I didn&rsquo;t implement the ability to auto run the Endpoint Security client. So even if the main app starts after boot, you need to explicitly start the ES client. Once I get enough user feedback, I will add this option.</p>
+<p>All of the preferences that are configured, are saved into <code>/Library/Application Support/Shield/com.csaba.fitzl.shield.preferences.plist</code>.</p>
+<h2 id="contribute">Contribute</h2>
+<p>The code for the application is hosted on <a href="https://github.com/theevilbit/Shield">GitHub</a>, please contribute, or if you run into bugs, please report or simply submit feature requests. It will take some to implement or fix items, as I mostly do this in my free time, next to a full time job, family and other hobbies, like yoga and hiking :)</p>
+
+  </article>
+</section>
+
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+     © 2020
+    
+       · 
+      Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-151008930-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+  </body>
+
+</html>

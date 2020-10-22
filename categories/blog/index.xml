@@ -5,10 +5,20 @@
     <link>https://theevilbit.github.io/categories/blog/</link>
     <description>Recent content in BLOG on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 03 Jul 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 22 Oct 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://theevilbit.github.io/categories/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Let&#39;s talk macOS Authorization</title>
+      <link>https://theevilbit.github.io/posts/macos_authorization/</link>
+      <pubDate>Thu, 22 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/posts/macos_authorization/</guid>
+      <description>This is a blog post I wanted to write for a while now, but somehow never got the time for it, and I also knew that it will require lots of time, so I kept delaying it. I finally kicked my ass, sat down, and wrote it.
+The goal of the post is to cover many aspects of authorization, which I found interesting from security perspective. Honestly, partially for selfish reasons so I will have a goto summary when I need to lookup something later instead of browsing through 8-10 different articles.</description>
+    </item>
     
     <item>
       <title>CVE-2020-9771 - mount_apfs TCC bypass and privilege escalation</title>

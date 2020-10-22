@@ -68,7 +68,16 @@
   </url>
   
   <url>
+<<<<<<< HEAD
     <loc>https://theevilbit.github.io/tags/lpe/</loc>
+=======
+    <loc>https://theevilbit.github.io/</loc>
+    <lastmod>2020-07-03T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/vulnerability/</loc>
+>>>>>>> 845c74b7b0610ba230b72de4e10c94fb0e2c11c4
     <lastmod>2020-07-03T00:00:00+00:00</lastmod>
   </url>
   

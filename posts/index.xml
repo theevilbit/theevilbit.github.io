@@ -5,7 +5,7 @@
     <link>https://theevilbit.github.io/posts/</link>
     <description>Recent content in Posts on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 24 Oct 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 26 Oct 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://theevilbit.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
@@ -13,7 +13,7 @@
     <item>
       <title>Getting started in macOS security</title>
       <link>https://theevilbit.github.io/posts/getting_started_in_macos_security/</link>
-      <pubDate>Sat, 24 Oct 2020 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 26 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/posts/getting_started_in_macos_security/</guid>
       <description>Many people used to ask me where to start learning about macOS security or exploitation, what are the trainings or books out there that can help with this topic. Surprisingly there is great coverage for macOS internals and defense, which are even recent vs exploitation, where everything is 9+ years old. If you are interested in offensive macOS research, you are stuck with blog posts and conference talks.

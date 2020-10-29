@@ -5,11 +5,7 @@
     <link>https://theevilbit.github.io/tags/windows/</link>
     <description>Recent content in windows on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 09 Aug 2019 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://theevilbit.github.io/tags/windows/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Fri, 09 Aug 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/windows/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>UninstallString - a possible LPE via Social Engineering</title>
       <link>https://theevilbit.github.io/posts/uninstallstring_a_possible_lpe_via_social_engineering/</link>

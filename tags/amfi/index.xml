@@ -5,11 +5,7 @@
     <link>https://theevilbit.github.io/tags/amfi/</link>
     <description>Recent content in amfi on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 09 Jun 2020 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://theevilbit.github.io/tags/amfi/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Tue, 09 Jun 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/amfi/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>The AMFI MACF policy system call</title>
       <link>https://theevilbit.github.io/posts/amfi_syscall/</link>

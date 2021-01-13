@@ -177,8 +177,8 @@ The idea I recently came across a very good blog post about an RCE vulnerability
       <pubDate>Sun, 22 Sep 2019 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/shield/</guid>
-      <description>TL;DR I made an app based on Apple&amp;rsquo;s Endpoint Security framework, that can protect against some of the process injection techniques on macOS. I still didn&amp;rsquo;t receive my production endpoint security entitlement, so I can&amp;rsquo;t release a signed version. If you want to use it, you need to get a development endpoint security entitlement at minimum.
-The motivation In the past 2 years I started to dig into macOS security research, and along the way it became pretty clear that beyond memory corruption issues the alpha and omega of macOS exploits is to run code in the context of other applications.</description>
+      <description>TL;DR I made an app based on Apple&amp;rsquo;s Endpoint Security framework, that can protect against some of the process injection techniques on macOS.
+The motivation In the past 2 years I started to dig into macOS security research, and along the way it became pretty clear that beyond memory corruption issues the alpha and omega of macOS exploits is to run code in the context of other applications. The reason for this lies within the security model of macOS (and in fact *OS as well).</description>
     </item>
     
     <item>

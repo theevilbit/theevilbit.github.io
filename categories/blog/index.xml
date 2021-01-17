@@ -5,7 +5,17 @@
     <link>https://theevilbit.github.io/categories/blog/</link>
     <description>Recent content in BLOG on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 13 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/categories/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 17 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/categories/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Divide and Conquer - A technique to bypass NextGen AV</title>
+      <link>https://theevilbit.github.io/posts/divide_and_conquer/</link>
+      <pubDate>Sun, 17 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/posts/divide_and_conquer/</guid>
+      <description>TL;DR This blog post describes a generic technique I called internally on our red team assessment &amp;ldquo;Divide and Conquer&amp;rdquo;, which can be used to bypass behavioral based NextGen AV detection. It works by splitting malicious actions and API calls into distinct processes.
+Intro Back in 2019 I was part of a red team, where our daily activity was to bypass a specific NextGen AV. I had this idea I called &amp;ldquo;divide and conquer&amp;rdquo;.</description>
+    </item>
+    
     <item>
       <title>Reversing engineering the fix of CVE-2020-9771</title>
       <link>https://theevilbit.github.io/posts/reversing_cve_2020_9771/</link>

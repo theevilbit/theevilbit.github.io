@@ -5,7 +5,27 @@
     <link>https://theevilbit.github.io/tags/macos/</link>
     <description>Recent content in macos on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 19 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/macos/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 14 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/macos/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 1 - shell startup files</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0001/</link>
+      <pubDate>Sun, 14 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0001/</guid>
+      <description>Shell startup files are executed when our shell environment like zsh or bash is starting up. macOS defaults to /bin/zsh these days, and whenever we open Terminal or SSH into the device, this is the shell environment we are placed into. bash and sh are still available, however they have to be specifically started.
+When we start zsh it checks number of files, and if there is an environment variable or command inside, it will be set or executed.</description>
+    </item>
+    
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - Introduction</title>
+      <link>https://theevilbit.github.io/beyond/beyond_intro/</link>
+      <pubDate>Sun, 14 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_intro/</guid>
+      <description>I was always amazed by @Hexacorn&amp;rsquo;s Beyond good ol&#39; Run key blog post series, which collects various persistence methods on Windows. It&amp;rsquo;s an awesome series, which has 133 parts at the time of this writing. I find them pretty cool, and if you are doing either offensive or defensive work on Windows, this is a must read and follow blog.
+In the past years as my interest in macOS grew, and now that I&amp;rsquo;m mostly doing only macOS related research and studies I started to came across many - many tricks, which allows someone to do persistence on macOS beyond just the LaunchDaemons or LaunchAgents directories, which is used to store the launchd startup files.</description>
+    </item>
+    
     <item>
       <title>About com.apple.private.security.clear-library-validation</title>
       <link>https://theevilbit.github.io/posts/com.apple.private.security.clear-library-validation/</link>

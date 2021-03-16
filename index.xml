@@ -5,7 +5,18 @@
     <link>https://theevilbit.github.io/</link>
     <description>Recent content on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 14 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 16 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 2 - iTerm2 startup command</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0002/</link>
+      <pubDate>Tue, 16 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0002/</guid>
+      <description>If the first part was about Terminal and shell profiles, it&amp;rsquo;s worth to mention iTerm2, which is a popular Terminal alternative on macOS. It&amp;rsquo;s being used by many people, especially power users.
+When we start iTerm2 it starts the same shell environment as Terminal, and thus the same startup files apply here as well. However this application has an additional way to execute code.
+In the Profile settings, there is an option, which is Send text at start.</description>
+    </item>
+    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 1 - shell startup files</title>
       <link>https://theevilbit.github.io/beyond/beyond_0001/</link>

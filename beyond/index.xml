@@ -5,7 +5,19 @@
     <link>https://theevilbit.github.io/beyond/</link>
     <description>Recent content in Beyonds on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 16 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/beyond/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 17 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/beyond/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 3 - Login Items</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0003/</link>
+      <pubDate>Wed, 17 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0003/</guid>
+      <description>To clear up some expectations. The below tweet is not about this method, that is deferred for now. :)
+Login items are probably one of the most well documented methods to persist on macOS. It&amp;rsquo;s widely used by various application to launch themselves upon user login. These applications show up in the menubar most of the time.
+There are two ways of setting up Login Items.
+Launch Services Framework The first method is using the Launch Services Framework, to which the API reference can be found here.</description>
+    </item>
+    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 2 - iTerm2 startup command</title>
       <link>https://theevilbit.github.io/beyond/beyond_0002/</link>

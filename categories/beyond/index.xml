@@ -5,7 +5,18 @@
     <link>https://theevilbit.github.io/categories/beyond/</link>
     <description>Recent content in beyond on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 17 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/categories/beyond/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 18 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/categories/beyond/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 4 - cron jobs</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0004/</link>
+      <pubDate>Thu, 18 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0004/</guid>
+      <description>cron is probably one of the most well known persistence mechanisms for macOS and basically any *nix operating system. It was originally developed for Unix back in 1975, and made its way to most platforms, which has Unix origins, like Linux, FreeBSD and thus macOS.
+We can use the crontab utility to manage our cron jobs. The -l option will list our currently scheduled jobs.
+csaby@mac ~ % crontab -l * * * * * /bin/bash -c &amp;quot;touch /tmp/cron2&amp;quot; The output above show that we have a bash script to run every minute.</description>
+    </item>
+    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 3 - Login Items</title>
       <link>https://theevilbit.github.io/beyond/beyond_0003/</link>

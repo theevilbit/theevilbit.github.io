@@ -149,7 +149,7 @@ cp -R ~/Library/Messages /tmp/
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0001_1.png" alt="Execution of commands from .zshrc"></p>
 <p>It will result in accessing messages as shown above.</p>
 <p>Beyond that Terminal runs outside the sandbox, thus if we can place anything inside these script files, we can escape the sandbox.</p>
-<p>Another related command to watch for, is <code>chsh</code>, which can change the shel environment for a user.</p>
+<p>Another related command to watch for, is <code>chsh</code>, which can change the shell environment for a user.</p>
 <pre><code>chsh -s /bin/bash
 </code></pre><p>As defenders it&rsquo;s a good practice to monitor for the occurrence of these files, and if they exists, then analyze their content.</p>
 

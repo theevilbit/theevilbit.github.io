@@ -10,12 +10,12 @@
     
 
     <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 2 - iTerm2 startup command"/>
+<meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 2 - iTerm2 startup"/>
 <meta name="twitter:description" content="If the first part was about Terminal and shell profiles, it&rsquo;s worth to mention iTerm2, which is a popular Terminal alternative on macOS. It&rsquo;s being used by many people, especially power users.
 When we start iTerm2 it starts the same shell environment as Terminal, and thus the same startup files apply here as well. However this application has an additional way to execute code.
 In the Profile settings, there is an option, which is Send text at start."/>
 
-    <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 2 - iTerm2 startup command" />
+    <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 2 - iTerm2 startup" />
 <meta property="og:description" content="If the first part was about Terminal and shell profiles, it&rsquo;s worth to mention iTerm2, which is a popular Terminal alternative on macOS. It&rsquo;s being used by many people, especially power users.
 When we start iTerm2 it starts the same shell environment as Terminal, and thus the same startup files apply here as well. However this application has an additional way to execute code.
 In the Profile settings, there is an option, which is Send text at start." />
@@ -29,7 +29,7 @@ In the Profile settings, there is an option, which is Send text at start." />
       <base href="https://theevilbit.github.io/beyond/beyond_0002/">
     
     <title>
-  Beyond the good ol&#39; LaunchAgents - 2 - iTerm2 startup command · theevilbit blog
+  Beyond the good ol&#39; LaunchAgents - 2 - iTerm2 startup · theevilbit blog
 </title>
 
     
@@ -108,7 +108,7 @@ In the Profile settings, there is an option, which is Send text at start." />
   <section class="container page">
   <article>
     <header>
-      <h1>Beyond the good ol&#39; LaunchAgents - 2 - iTerm2 startup command</h1>
+      <h1>Beyond the good ol&#39; LaunchAgents - 2 - iTerm2 startup</h1>
     </header>
 
     <p>If the first part was about <code>Terminal</code> and shell profiles, it&rsquo;s worth to mention <a href="https://iterm2.com/">iTerm2</a>, which is a popular Terminal alternative on macOS. It&rsquo;s being used by many people, especially power users.</p>
@@ -161,6 +161,9 @@ Internal requirements count=1 size=216
 &lt;/dict&gt;
 &lt;/plist&gt;
 </code></pre><p>As we can find in its entitlements, it can have access to camera, microphone, and several sensitive folders. Thus if access was granted by the user, we could access the same information with our persisted command.</p>
+<p>Beyond this iTerm2 supports various auto launch scripts.</p>
+<p>Scripts placed inside <code>~/Library/Application Support/iTerm2/Scripts/AutoLaunch</code> will be automatically launched upon starting iTerm. More information: <a href="https://iterm2.com/python-api/tutorial/daemons.html">Daemons — iTerm2 Python API 0.26 documentation</a></p>
+<p>The file <code>~/Library/Application Support/iTerm2/Scripts/AutoLaunch.scpt</code> is also checked at startup, and it will be executed. This should be an Apple Script. More information: <a href="https://iterm2.com/documentation-scripting.html">Scripting - Documentation - iTerm2 - macOS Terminal Replacement</a></p>
 
   </article>
 </section>

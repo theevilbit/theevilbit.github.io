@@ -5,7 +5,17 @@
     <link>https://theevilbit.github.io/tags/persistence/</link>
     <description>Recent content in persistence on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 18 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/persistence/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 22 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/persistence/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 5 - Pluggable Authentication Modules (PAM)</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0005/</link>
+      <pubDate>Mon, 22 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0005/</guid>
+      <description>PAM originated from Red Hat Linux, but made its way to most *nix based system, including macOS. It&amp;rsquo;s a modular system, that allows third party additions to various authentication related operations. I highly recommend checking out the FreeBSD documentation to get a full picture.
+PAM has four facilities concerning authentication, auth, account, session and password. These are related to authentication, account management, session management and password management respectively. I will focus here on auth which is responsible for user authentication.</description>
+    </item>
+    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 4 - cron jobs</title>
       <link>https://theevilbit.github.io/beyond/beyond_0004/</link>

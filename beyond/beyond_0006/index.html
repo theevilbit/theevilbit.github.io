@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Csaba Fitzl">
+    
+    
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 6 - SSHRC"/>
+<meta name="twitter:description" content="I learned about this trick from @0xdade when he posted it on Twitter.
+If we create a file in the user&rsquo;s HOME directory at ~/.ssh/rc it will be executed prior to the user&rsquo;s login shell becomes available. The man page of sshd describes this in more detail.
+ If ~/.ssh/rc exists and the sshd_config(5) PermitUserRC option is set, runs it; else if /etc/ssh/sshrc exists, runs it; otherwise runs xauth. The ``rc&#39;&#39; files are given the X11 authenti-cation protocol and cookie in standard input."/>
+
+    <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 6 - SSHRC" />
+<meta property="og:description" content="I learned about this trick from @0xdade when he posted it on Twitter.
+If we create a file in the user&rsquo;s HOME directory at ~/.ssh/rc it will be executed prior to the user&rsquo;s login shell becomes available. The man page of sshd describes this in more detail.
+ If ~/.ssh/rc exists and the sshd_config(5) PermitUserRC option is set, runs it; else if /etc/ssh/sshrc exists, runs it; otherwise runs xauth. The ``rc&#39;&#39; files are given the X11 authenti-cation protocol and cookie in standard input." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0006/" />
+<meta property="article:published_time" content="2021-03-23T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-03-23T00:00:00+00:00" />
+
+
+    
+      <base href="https://theevilbit.github.io/beyond/beyond_0006/">
+    
+    <title>
+  Beyond the good ol&#39; LaunchAgents - 6 - SSHRC · theevilbit blog
+</title>
+
+    
+      <link rel="canonical" href="https://theevilbit.github.io/beyond/beyond_0006/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+
+    
+    
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.78.2" />
+  </head>
+
+  <body class=" ">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://theevilbit.github.io/">
+      theevilbit blog
+    </a>
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/categories/">Categories</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+          </li>
+        
+      
+      
+    </ul>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container page">
+  <article>
+    <header>
+      <h1>Beyond the good ol&#39; LaunchAgents - 6 - SSHRC</h1>
+    </header>
+
+    <p>I learned about this trick from <a href="https://twitter.com/0xdade">@0xdade</a> when he <a href="https://twitter.com/0xdade/status/1373145566943711235">posted</a> it on Twitter.</p>
+<p>If we create a file in the user&rsquo;s HOME directory at <code>~/.ssh/rc</code> it will be executed prior to the user&rsquo;s login shell becomes available. The man page of <code>sshd</code> describes this in more detail.</p>
+<pre><code> If ~/.ssh/rc exists and the sshd_config(5) PermitUserRC option is set, runs it; else if /etc/ssh/sshrc exists, runs it; otherwise runs xauth.  The ``rc'' files are given the X11 authenti-cation protocol and cookie in standard input.  See SSHRC, below.
+</code></pre><p>and some more.</p>
+<pre><code>SSHRC
+     If the file ~/.ssh/rc exists, sh(1) runs it after reading the environment files but before starting the user's shell or command.  It must not produce any output on stdout; stderr must be used
+     instead.  If X11 forwarding is in use, it will receive the &quot;proto cookie&quot; pair in its standard input (and DISPLAY in its environment).  The script must call xauth(1) because sshd will not run xauth
+     automatically to add X11 cookies.
+
+     The primary purpose of this file is to run any initialization routines which may be needed before the user's home directory becomes accessible; AFS is a particular example of such an environment.
+
+     This file will probably contain some initialization code followed by something similar to:
+
+        if read proto cookie &amp;&amp; [ -n &quot;$DISPLAY&quot; ]; then
+                if [ `echo $DISPLAY | cut -c1-10` = 'localhost:' ]; then
+                        # X11UseLocalhost=yes
+                        echo add unix:`echo $DISPLAY |
+                            cut -c11-` $proto $cookie
+                else
+                        # X11UseLocalhost=no
+                        echo add $DISPLAY $proto $cookie
+                fi | xauth -q -
+        fi
+
+     If this file does not exist, /etc/ssh/sshrc is run, and if that does not exist either, xauth is used to add the cookie.
+</code></pre><p>If we have root access we can also create <code>/etc/ssh/sshrc</code>.</p>
+<p>We can disable it by setting <code>PermitUserRC no</code> in <code>/etc/ssh/sshd_config</code>.</p>
+
+  </article>
+</section>
+
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+     © 2021
+    
+       · 
+      Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-151008930-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+  </body>
+
+</html>

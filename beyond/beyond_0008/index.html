@@ -119,6 +119,35 @@ csaby@bigsur ~ % cat hs.txt
 uid=501(csaby) gid=20(staff) groups=20(staff),12(everyone),61(localaccounts),79(_appserverusr),80(admin),81(_appserveradm),98(_lpadmin),701(com.apple.sharepoint.group.1),33(_appstore),100(_lpoperator),204(_developer),250(_analyticsusers),395(com.apple.access_ftp),398(com.apple.access_screensharing),399(com.apple.access_ssh),400(com.apple.access_remote_ae)
 csaby@bigsur ~ % cat ~/.hammerspoon/init.lua
 hs.execute(&quot;id &gt; ~/hs.txt&quot;)
+</code></pre><p>Beyond that Hammerspoon has some really nice entitlements, so we get access to these privacy resources as well if it was ever approved for the app.</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;
+&lt;plist version=&quot;1.0&quot;&gt;
+&lt;dict&gt;
+	&lt;key&gt;com.apple.security.automation.apple-events&lt;/key&gt;
+	&lt;true/&gt;
+	&lt;key&gt;com.apple.security.cs.allow-jit&lt;/key&gt;
+	&lt;true/&gt;
+	&lt;key&gt;com.apple.security.cs.allow-unsigned-executable-memory&lt;/key&gt;
+	&lt;true/&gt;
+	&lt;key&gt;com.apple.security.cs.disable-executable-page-protection&lt;/key&gt;
+	&lt;true/&gt;
+	&lt;key&gt;com.apple.security.cs.disable-library-validation&lt;/key&gt;
+	&lt;true/&gt;
+	&lt;key&gt;com.apple.security.device.audio-input&lt;/key&gt;
+	&lt;true/&gt;
+	&lt;key&gt;com.apple.security.device.camera&lt;/key&gt;
+	&lt;true/&gt;
+	&lt;key&gt;com.apple.security.personal-information.addressbook&lt;/key&gt;
+	&lt;true/&gt;
+	&lt;key&gt;com.apple.security.personal-information.calendars&lt;/key&gt;
+	&lt;true/&gt;
+	&lt;key&gt;com.apple.security.personal-information.location&lt;/key&gt;
+	&lt;true/&gt;
+	&lt;key&gt;com.apple.security.personal-information.photos-library&lt;/key&gt;
+	&lt;true/&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;
 </code></pre>
   </article>
 </section>

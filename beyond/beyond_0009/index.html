@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Csaba Fitzl">
+    
+    
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 9 - Preference Pane"/>
+<meta name="twitter:description" content="Preference panes on macOS are plugins to the System Prefernces.app. These panes can extend the functionality of the app, and typically allow you to modify configuration settings for your app. These admins are loaded when the user selects them, so they are not perfect from persistence point of view, as it requires user interaction, but can still be a thing.
+Preference panes are located in:
+ /System/Library/PreferencePanes - This folder contains the default macOS panes /Library/PreferencePanes - Here we fine the panes that are installed for all users."/>
+
+    <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 9 - Preference Pane" />
+<meta property="og:description" content="Preference panes on macOS are plugins to the System Prefernces.app. These panes can extend the functionality of the app, and typically allow you to modify configuration settings for your app. These admins are loaded when the user selects them, so they are not perfect from persistence point of view, as it requires user interaction, but can still be a thing.
+Preference panes are located in:
+ /System/Library/PreferencePanes - This folder contains the default macOS panes /Library/PreferencePanes - Here we fine the panes that are installed for all users." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0009/" />
+<meta property="article:published_time" content="2021-03-25T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-03-25T00:00:00+00:00" />
+
+
+    
+      <base href="https://theevilbit.github.io/beyond/beyond_0009/">
+    
+    <title>
+  Beyond the good ol&#39; LaunchAgents - 9 - Preference Pane · theevilbit blog
+</title>
+
+    
+      <link rel="canonical" href="https://theevilbit.github.io/beyond/beyond_0009/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+
+    
+    
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.78.2" />
+  </head>
+
+  <body class=" ">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://theevilbit.github.io/">
+      theevilbit blog
+    </a>
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/categories/">Categories</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+          </li>
+        
+      
+      
+    </ul>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container page">
+  <article>
+    <header>
+      <h1>Beyond the good ol&#39; LaunchAgents - 9 - Preference Pane</h1>
+    </header>
+
+    <p>Preference panes on macOS are plugins to the <code>System Prefernces.app</code>. These panes can extend the functionality of the app, and typically allow you to modify configuration settings for your app. These admins are loaded when the user selects them, so they are not perfect from persistence point of view, as it requires user interaction, but can still be a thing.</p>
+<p>Preference panes are located in:</p>
+<ul>
+<li><code>/System/Library/PreferencePanes</code> - This folder contains the default macOS panes</li>
+<li><code>/Library/PreferencePanes</code> - Here we fine the panes that are installed for all users. Note that these will still run as the logged in user, when opened, and not as root.</li>
+<li><code>~/Library/PreferencePanes</code> - Finally here we can find the per-user installed preference panes.</li>
+</ul>
+<p>Let&rsquo;s see how we can create one. Apple has a very detailed documentation about Preference Panes, which we can find <a href="https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PreferencePanes/PreferencePanes.html">here</a>. It has a section called &ldquo;Implementing a Simple Preference Pane&rdquo;, which can be used to create one from scratch.</p>
+<p>The easier method if we just want to experiment with it is to download their sample code, <a href="https://developer.apple.com/library/archive/samplecode/PrefsPane/Introduction/Intro.html">PrefsPane</a>. This is an old code that was created for OS X 10.6, so we would get a few alerts, but essentially it compiles easily. I did some changes to this project, giving a new name, new icon, fixed some alerts, and uploaded it on <a href="https://github.com/theevilbit/macos">GitHub - theevilbit/macos</a>. It&rsquo;s called <code>Persistent Worm</code>.</p>
+<p>There are multiple methods in the code, the one that will be called when loaded is <code>initWithBundle:</code>.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">-(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#c0f">initWithBundle:</span>(NSBundle<span style="color:#555">*</span>)<span style="color:#033">bundle</span>
+{
+	<span style="color:#069;font-weight:bold">if</span> ((<span style="color:#366">self</span> <span style="color:#555">=</span> [<span style="color:#366">super</span> <span style="color:#99f">initWithBundle</span>:bundle]) <span style="color:#555">!=</span> <span style="color:#366">nil</span>)
+	{
+		<span style="color:#09f;font-style:italic">// do more initialization here
+</span><span style="color:#09f;font-style:italic"></span>	}
+    NSLog(<span style="color:#c30">@&#34;PersistentWorm&#34;</span>);
+	<span style="color:#069;font-weight:bold">return</span> <span style="color:#366">self</span>;
+}
+</code></pre></div><p>I added some logging to it for tracking.</p>
+<p>Once we compile the bundle will be copied into <code>~/Library/PreferencePanes</code>. Then we can go ahead and open <code>System Preferences.app</code>.</p>
+<p><img src="https://theevilbit.github.io/images/beyond/beyond_0009_0.png" alt="System Preferences"></p>
+<p>The new entry with the name <code>Persistent Worm</code> is the one we created, and it has an apple logo with a worm. We can open it.</p>
+<p><img src="https://theevilbit.github.io/images/beyond/beyond_0009_1.png" alt="Persistent Worm"></p>
+<p>It will display the window setup in the code.</p>
+<p>Let&rsquo;s check who loads this.</p>
+<pre><code>csaby@mac ~ % log show --predicate &quot;eventMessage contains[c] 'Worm'&quot; --last 5m
+Filtering the log data using &quot;composedMessage CONTAINS[c] &quot;Worm&quot;&quot;
+Skipping info and debug messages, pass --info and/or --debug to include.
+Timestamp                       Thread     Type        Activity             PID    TTL  
+2021-03-25 09:56:37.466027+0100 0x5e6f0a   Default     0xc09cb5             16414  0    legacyLoader-x86_64: (PrefsPane) PersistentWorm
+--------------------------------------------------------------------------------------------------------------------
+Log      - Default:          1, Info:                0, Debug:             0, Error:          0, Fault:          0
+Activity - Create:           0, Transition:          0, Actions:           0
+</code></pre><p>If we search for our <code>Worm</code> log with the <code>log</code> utility we will see that the process loading the binary is <code>legacyLoader-x86_64</code>, at least on Big Sur 11.2. This is an XPC service used by <code>System Prefrences</code> and can be found at <code>/System/Library/Frameworks/PreferencePanes.framework/Versions/A/XPCServices/legacyLoader-x86_64.xpc/Contents/MacOS/legacyLoader-x86_64</code>.</p>
+<p>If we check its code signing properties we will see that it allows the load of third party code due to the <code>com.apple.security.cs.disable-library-validation</code> entitlement.</p>
+<pre><code>Executable=/System/Library/Frameworks/PreferencePanes.framework/Versions/A/XPCServices/legacyLoader-x86_64.xpc/Contents/MacOS/legacyLoader-x86_64
+Identifier=com.apple.systempreferences.legacyLoader.x86_64
+Format=bundle with Mach-O thin (x86_64)
+CodeDirectory v=20100 size=672 flags=0x0(none) hashes=13+5 location=embedded
+Platform identifier=11
+Signature size=4577
+Signed Time=2020. Dec 22. 1:26:09
+Info.plist entries=23
+TeamIdentifier=not set
+Sealed Resources version=2 rules=2 files=0
+Internal requirements count=1 size=96
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;
+&lt;plist version=&quot;1.0&quot;&gt;
+&lt;dict&gt;
+	&lt;key&gt;com.apple.security.cs.disable-library-validation&lt;/key&gt;
+	&lt;true/&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;
+</code></pre><p>On macOS Catalina the loader was <code>/System/Library/Frameworks/PreferencePanes.framework/Versions/A/XPCServices/legacyLoader.xpc/Contents/MacOS/legacyLoader</code> with the entitlement <code>com.apple.security.cs.disable-library-validation</code>.</p>
+
+  </article>
+</section>
+
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+     © 2021
+    
+       · 
+      Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-151008930-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+  </body>
+
+</html>

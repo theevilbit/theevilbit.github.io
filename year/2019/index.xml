@@ -5,17 +5,7 @@
     <link>https://theevilbit.github.io/year/2019/</link>
     <description>Recent content in 2019 on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 04 Nov 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/year/2019/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>macOS persistence - Spotlight importers and how to create them</title>
-      <link>https://theevilbit.github.io/posts/macos_persistence_spotlight_importers/</link>
-      <pubDate>Mon, 04 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://theevilbit.github.io/posts/macos_persistence_spotlight_importers/</guid>
-      <description>TL;DR It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware.
-Intro I’m reading Jonathan Levin’s *OS Internals Vol I. book (user mode - *OS Internals: - Welcome!), and I got to the chapter where he talks about Spotlight importers, and my first thought was that it would be an awesome way to persist on macOS.</description>
-    </item>
-    
+    <lastBuildDate>Fri, 25 Oct 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/year/2019/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>GateKeeper - Bypass or not bypass?</title>
       <link>https://theevilbit.github.io/posts/gatekeeper_bypass_or_not_bypass/</link>
@@ -95,15 +85,6 @@ What is HMValidateHandle? HMValidateHandle is an internal, unexported function o
       <guid>https://theevilbit.github.io/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/</guid>
       <description>A couple of weeks ago, I had the idea of scanning my Mac for files that has the SUID bit set, I wanted to see if there is anything interesting showing up. You can do it this way:
 /usr/bin/sudo find / -perm -4000 -exec /bin/ls -ldb {} \; &amp;gt; suidfilelist There was one item that caught my attention, and that was a file called ubridge inside GNS3. I used to be a network guy, and GNS3 is a great tool to emulate real network gear, practice configuration, etc.</description>
-    </item>
-    
-    <item>
-      <title>macOS - Persisting through Application script files</title>
-      <link>https://theevilbit.github.io/posts/macos_persisting_through-application_script_files/</link>
-      <pubDate>Tue, 23 Apr 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://theevilbit.github.io/posts/macos_persisting_through-application_script_files/</guid>
-      <description>I started to explore to possibility of persisting on macOS through script files contained in an application. The basic idea is that if we find a script file, which is being executed by a given application, we can edit that script file, put our code inside, and wait for an execution. Such technique is highly dependent on the applications the user has installed, so I looked through first how rare / frequent is having such scripts inside applications.</description>
     </item>
     
     <item>

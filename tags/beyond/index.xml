@@ -5,7 +5,26 @@
     <link>https://theevilbit.github.io/tags/beyond/</link>
     <description>Recent content in beyond on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 25 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/beyond/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 03 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/beyond/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 11 - Spotlight Importers</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0011/</link>
+      <pubDate>Sat, 03 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0011/</guid>
+      <description>TL;DR It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware.
+Intro I’m reading Jonathan Levin’s *OS Internals Vol I. book (user mode - *OS Internals: - Welcome!), and I got to the chapter where he talks about Spotlight importers, and my first thought was that it would be an awesome way to persist on macOS.</description>
+    </item>
+    
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 10 - Application script files</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0010/</link>
+      <pubDate>Fri, 02 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0010/</guid>
+      <description>I started to explore to possibility of persisting on macOS through script files contained in an application. The basic idea is that if we find a script file, which is being executed by a given application, we can edit that script file, put our code inside, and wait for an execution. Such technique is highly dependent on the applications the user has installed, so I looked through first how rare / frequent is having such scripts inside applications.</description>
+    </item>
+    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 9 - Preference Pane</title>
       <link>https://theevilbit.github.io/beyond/beyond_0009/</link>
@@ -15,28 +34,6 @@
       <description>Preference panes on macOS are plugins to the System Preferences.app. These panes can extend the functionality of the app, and typically allow you to modify configuration settings for your app. These admins are loaded when the user selects them, so they are not perfect from persistence point of view, as it requires user interaction, but can still be a thing.
 Preference panes are located in:
  /System/Library/PreferencePanes - This folder contains the default macOS panes /Library/PreferencePanes - Here we fine the panes that are installed for all users.</description>
-    </item>
-    
-    <item>
-      <title>Beyond the good ol&#39; LaunchAgents - 6 - SSHRC</title>
-      <link>https://theevilbit.github.io/beyond/beyond_0006/</link>
-      <pubDate>Tue, 23 Mar 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://theevilbit.github.io/beyond/beyond_0006/</guid>
-      <description>I learned about this trick from @0xdade when he posted it on Twitter.
-If we create a file in the user&amp;rsquo;s HOME directory at ~/.ssh/rc it will be executed prior to the user&amp;rsquo;s login shell becomes available. The man page of sshd describes this in more detail.
- If ~/.ssh/rc exists and the sshd_config(5) PermitUserRC option is set, runs it; else if /etc/ssh/sshrc exists, runs it; otherwise runs xauth. The ``rc&#39;&#39; files are given the X11 authenti-cation protocol and cookie in standard input.</description>
-    </item>
-    
-    <item>
-      <title>Beyond the good ol&#39; LaunchAgents - 7 - xbar plugins</title>
-      <link>https://theevilbit.github.io/beyond/beyond_0007/</link>
-      <pubDate>Tue, 23 Mar 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://theevilbit.github.io/beyond/beyond_0007/</guid>
-      <description>This technique came from @bradleyjkemp in one of his Twitter posts.
-xbar is an application that can put the output of a script into the menubar. The scripts should be placed in ~/Library/Application\ Support/xbar/plugins/. Standard shell scripts are supported, and so I tried the one listed on their GitHub page as an example.
-#!/bin/bash # the current date and time date # the current username echo $USER # the current user id id -u I created a script called script.</description>
     </item>
     
     <item>
@@ -50,9 +47,31 @@ The app looks for a single file, ~/.hammerspoon/init.lua, and when started the s
     </item>
     
     <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 7 - xbar plugins</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0007/</link>
+      <pubDate>Mon, 22 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0007/</guid>
+      <description>This technique came from @bradleyjkemp in one of his Twitter posts.
+xbar is an application that can put the output of a script into the menubar. The scripts should be placed in ~/Library/Application\ Support/xbar/plugins/. Standard shell scripts are supported, and so I tried the one listed on their GitHub page as an example.
+#!/bin/bash # the current date and time date # the current username echo $USER # the current user id id -u I created a script called script.</description>
+    </item>
+    
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 6 - SSHRC</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0006/</link>
+      <pubDate>Sun, 21 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0006/</guid>
+      <description>I learned about this trick from @0xdade when he posted it on Twitter.
+If we create a file in the user&amp;rsquo;s HOME directory at ~/.ssh/rc it will be executed prior to the user&amp;rsquo;s login shell becomes available. The man page of sshd describes this in more detail.
+ If ~/.ssh/rc exists and the sshd_config(5) PermitUserRC option is set, runs it; else if /etc/ssh/sshrc exists, runs it; otherwise runs xauth. The ``rc&#39;&#39; files are given the X11 authenti-cation protocol and cookie in standard input.</description>
+    </item>
+    
+    <item>
       <title>Beyond the good ol&#39; LaunchAgents - 5 - Pluggable Authentication Modules (PAM)</title>
       <link>https://theevilbit.github.io/beyond/beyond_0005/</link>
-      <pubDate>Mon, 22 Mar 2021 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 20 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0005/</guid>
       <description>PAM originated from Red Hat Linux, but made its way to most *nix based system, including macOS. It&amp;rsquo;s a modular system, that allows third party additions to various authentication related operations. I highly recommend checking out the FreeBSD documentation to get a full picture.

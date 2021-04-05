@@ -5,15 +5,26 @@
     <link>https://theevilbit.github.io/tags/persistence/</link>
     <description>Recent content in persistence on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 03 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/persistence/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 05 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/persistence/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 12 - QuickLook Plugins</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0012/</link>
+      <pubDate>Mon, 05 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0012/</guid>
+      <description>This is part 12 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ TL;DR This technique is very similarly to Spotlight Importers, but heavily sandboxed. It’s even more limited as the user need to specifically want to preview the file.
+Intro This will be a short post and it goes hand in hand with my previous one that detailed the use of Spotlight Importers for persistence.</description>
+    </item>
+    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 11 - Spotlight Importers</title>
       <link>https://theevilbit.github.io/beyond/beyond_0011/</link>
       <pubDate>Sat, 03 Apr 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0011/</guid>
-      <description>TL;DR It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware.
-Intro I’m reading Jonathan Levin’s *OS Internals Vol I. book (user mode - *OS Internals: - Welcome!), and I got to the chapter where he talks about Spotlight importers, and my first thought was that it would be an awesome way to persist on macOS.</description>
+      <description>This is part 11 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ TL;DR It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware.</description>
     </item>
     
     <item>
@@ -22,7 +33,8 @@ Intro I’m reading Jonathan Levin’s *OS Internals Vol I. book (user mode - *O
       <pubDate>Fri, 02 Apr 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0010/</guid>
-      <description>I started to explore to possibility of persisting on macOS through script files contained in an application. The basic idea is that if we find a script file, which is being executed by a given application, we can edit that script file, put our code inside, and wait for an execution. Such technique is highly dependent on the applications the user has installed, so I looked through first how rare / frequent is having such scripts inside applications.</description>
+      <description>This is part 10 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ I started to explore to possibility of persisting on macOS through script files contained in an application. The basic idea is that if we find a script file, which is being executed by a given application, we can edit that script file, put our code inside, and wait for an execution.</description>
     </item>
     
     <item>
@@ -31,9 +43,8 @@ Intro I’m reading Jonathan Levin’s *OS Internals Vol I. book (user mode - *O
       <pubDate>Thu, 25 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0009/</guid>
-      <description>Preference panes on macOS are plugins to the System Preferences.app. These panes can extend the functionality of the app, and typically allow you to modify configuration settings for your app. These admins are loaded when the user selects them, so they are not perfect from persistence point of view, as it requires user interaction, but can still be a thing.
-Preference panes are located in:
- /System/Library/PreferencePanes - This folder contains the default macOS panes /Library/PreferencePanes - Here we fine the panes that are installed for all users.</description>
+      <description>This is part 9 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ Preference panes on macOS are plugins to the System Preferences.app. These panes can extend the functionality of the app, and typically allow you to modify configuration settings for your app. These admins are loaded when the user selects them, so they are not perfect from persistence point of view, as it requires user interaction, but can still be a thing.</description>
     </item>
     
     <item>
@@ -42,8 +53,8 @@ Preference panes are located in:
       <pubDate>Tue, 23 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0008/</guid>
-      <description>This idea came from my colleague @dejandayoff. It&amp;rsquo;s another application specific persistence option, related to Hammerspoon. The app is an automation tool, that allows macOS scripting through LUA scripting language. We can even embed full AppleScript code as well as run shell scripts.
-The app looks for a single file, ~/.hammerspoon/init.lua, and when started the script will be executed. They have plenty of examples on their Getting Started page, and an extensive API documentation.</description>
+      <description>This is part 8 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ This idea came from my colleague @dejandayoff. It&amp;rsquo;s another application specific persistence option, related to Hammerspoon. The app is an automation tool, that allows macOS scripting through LUA scripting language. We can even embed full AppleScript code as well as run shell scripts.</description>
     </item>
     
     <item>
@@ -52,9 +63,9 @@ The app looks for a single file, ~/.hammerspoon/init.lua, and when started the s
       <pubDate>Mon, 22 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0007/</guid>
-      <description>This technique came from @bradleyjkemp in one of his Twitter posts.
-xbar is an application that can put the output of a script into the menubar. The scripts should be placed in ~/Library/Application\ Support/xbar/plugins/. Standard shell scripts are supported, and so I tried the one listed on their GitHub page as an example.
-#!/bin/bash # the current date and time date # the current username echo $USER # the current user id id -u I created a script called script.</description>
+      <description>This is part 7 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ This technique came from @bradleyjkemp in one of his Twitter posts.
+xbar is an application that can put the output of a script into the menubar. The scripts should be placed in ~/Library/Application\ Support/xbar/plugins/. Standard shell scripts are supported, and so I tried the one listed on their GitHub page as an example.</description>
     </item>
     
     <item>
@@ -63,9 +74,9 @@ xbar is an application that can put the output of a script into the menubar. The
       <pubDate>Sun, 21 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0006/</guid>
-      <description>I learned about this trick from @0xdade when he posted it on Twitter.
-If we create a file in the user&amp;rsquo;s HOME directory at ~/.ssh/rc it will be executed prior to the user&amp;rsquo;s login shell becomes available. The man page of sshd describes this in more detail.
- If ~/.ssh/rc exists and the sshd_config(5) PermitUserRC option is set, runs it; else if /etc/ssh/sshrc exists, runs it; otherwise runs xauth. The ``rc&#39;&#39; files are given the X11 authenti-cation protocol and cookie in standard input.</description>
+      <description>This is part 6 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ I learned about this trick from @0xdade when he posted it on Twitter.
+If we create a file in the user&amp;rsquo;s HOME directory at ~/.ssh/rc it will be executed prior to the user&amp;rsquo;s login shell becomes available. The man page of sshd describes this in more detail.</description>
     </item>
     
     <item>
@@ -74,8 +85,8 @@ If we create a file in the user&amp;rsquo;s HOME directory at ~/.ssh/rc it will 
       <pubDate>Sat, 20 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0005/</guid>
-      <description>PAM originated from Red Hat Linux, but made its way to most *nix based system, including macOS. It&amp;rsquo;s a modular system, that allows third party additions to various authentication related operations. I highly recommend checking out the FreeBSD documentation to get a full picture.
-PAM has four facilities concerning authentication, auth, account, session and password. These are related to authentication, account management, session management and password management respectively. I will focus here on auth which is responsible for user authentication.</description>
+      <description>This is part 5 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ PAM originated from Red Hat Linux, but made its way to most *nix based system, including macOS. It&amp;rsquo;s a modular system, that allows third party additions to various authentication related operations. I highly recommend checking out the FreeBSD documentation to get a full picture.</description>
     </item>
     
     <item>
@@ -84,9 +95,8 @@ PAM has four facilities concerning authentication, auth, account, session and pa
       <pubDate>Thu, 18 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0004/</guid>
-      <description>cron is probably one of the most well known persistence mechanisms for macOS and basically any *nix operating system. It was originally developed for Unix back in 1975, and made its way to most platforms, which has Unix origins, like Linux, FreeBSD and thus macOS.
-We can use the crontab utility to manage our cron jobs. The -l option will list our currently scheduled jobs.
-csaby@mac ~ % crontab -l * * * * * /bin/bash -c &amp;quot;touch /tmp/cron2&amp;quot; The output above show that we have a bash script to run every minute.</description>
+      <description>This is part 4 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ cron is probably one of the most well known persistence mechanisms for macOS and basically any *nix operating system. It was originally developed for Unix back in 1975, and made its way to most platforms, which has Unix origins, like Linux, FreeBSD and thus macOS.</description>
     </item>
     
     <item>
@@ -95,10 +105,9 @@ csaby@mac ~ % crontab -l * * * * * /bin/bash -c &amp;quot;touch /tmp/cron2&amp;q
       <pubDate>Wed, 17 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0003/</guid>
-      <description>To clear up some expectations. The below tweet is not about this method, that is deferred for now. :)
-Login items are probably one of the most well documented methods to persist on macOS. It&amp;rsquo;s widely used by various application to launch themselves upon user login. These applications show up in the menubar most of the time.
-There are two ways of setting up Login Items.
-Launch Services Framework The first method is using the Launch Services Framework, to which the API reference can be found here.</description>
+      <description>This is part 3 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ To clear up some expectations. The below tweet is not about this method, that is deferred for now. :)
+Login items are probably one of the most well documented methods to persist on macOS. It&amp;rsquo;s widely used by various application to launch themselves upon user login.</description>
     </item>
     
     <item>
@@ -107,9 +116,9 @@ Launch Services Framework The first method is using the Launch Services Framewor
       <pubDate>Tue, 16 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0002/</guid>
-      <description>If the first part was about Terminal and shell profiles, it&amp;rsquo;s worth to mention iTerm2, which is a popular Terminal alternative on macOS. It&amp;rsquo;s being used by many people, especially power users.
-When we start iTerm2 it starts the same shell environment as Terminal, and thus the same startup files apply here as well. However this application has an additional way to execute code.
-In the Profile settings, there is an option, which is Send text at start.</description>
+      <description>This is part 2 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ If the first part was about Terminal and shell profiles, it&amp;rsquo;s worth to mention iTerm2, which is a popular Terminal alternative on macOS. It&amp;rsquo;s being used by many people, especially power users.
+When we start iTerm2 it starts the same shell environment as Terminal, and thus the same startup files apply here as well.</description>
     </item>
     
     <item>
@@ -118,8 +127,8 @@ In the Profile settings, there is an option, which is Send text at start.</descr
       <pubDate>Sun, 14 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0001/</guid>
-      <description>Shell startup files are executed when our shell environment like zsh or bash is starting up. macOS defaults to /bin/zsh these days, and whenever we open Terminal or SSH into the device, this is the shell environment we are placed into. bash and sh are still available, however they have to be specifically started.
-When we start zsh it checks number of files, and if there is an environment variable or command inside, it will be set or executed.</description>
+      <description>This is part 1 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ Shell startup files are executed when our shell environment like zsh or bash is starting up. macOS defaults to /bin/zsh these days, and whenever we open Terminal or SSH into the device, this is the shell environment we are placed into.</description>
     </item>
     
     <item>

@@ -11,12 +11,12 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 11 - Spotlight Importers"/>
-<meta name="twitter:description" content="TL;DR It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware.
-Intro I’m reading Jonathan Levin’s *OS Internals Vol I. book (user mode - *OS Internals: - Welcome!), and I got to the chapter where he talks about Spotlight importers, and my first thought was that it would be an awesome way to persist on macOS."/>
+<meta name="twitter:description" content="This is part 11 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ TL;DR It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware."/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 11 - Spotlight Importers" />
-<meta property="og:description" content="TL;DR It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware.
-Intro I’m reading Jonathan Levin’s *OS Internals Vol I. book (user mode - *OS Internals: - Welcome!), and I got to the chapter where he talks about Spotlight importers, and my first thought was that it would be an awesome way to persist on macOS." />
+<meta property="og:description" content="This is part 11 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ TL;DR It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0011/" />
 <meta property="article:published_time" content="2021-04-03T00:00:00+00:00" />
@@ -103,13 +103,47 @@ Intro I’m reading Jonathan Levin’s *OS Internals Vol I. book (user mode - *O
 
       <div class="content">
         
-  <section class="container page">
-  <article>
-    <header>
-      <h1>Beyond the good ol&#39; LaunchAgents - 11 - Spotlight Importers</h1>
-    </header>
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Beyond the good ol&#39; LaunchAgents - 11 - Spotlight Importers</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2021-04-03T00:00:00Z'>
+                April 3, 2021
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              10 minutes read
+            </span>
+          </div>
+          <div class="categories">
+  <i class="fas fa-folder"></i>
+    <a href="https://theevilbit.github.io/categories/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/categories/beyond/">beyond</a></div>
 
-    <h2 id="tldr">TL;DR</h2>
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/beyond/">beyond</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        <blockquote>
+<p>This is part 11 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+</blockquote>
+<h2 id="tldr">TL;DR</h2>
 <p>It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware.</p>
 <h2 id="intro">Intro</h2>
 <p>I’m reading Jonathan Levin’s *OS Internals Vol I. book (user mode - <a href="http://newosxbook.com/index.php">*OS Internals: - Welcome!</a>), and I got to the chapter where he talks about Spotlight importers, and my first thought was that it would be an awesome way to persist on macOS. Typically there is nothing new in InfoSec, so after a quick Google search I found that Patrick Wardle already mentioned this in his BlackHat USA / Immunity talk back in 2015.
@@ -335,9 +369,18 @@ Add your importer below.
 <h2 id="closing-thoughts">Closing thoughts</h2>
 <p>I think plugins, like this is a bit unexplored space for persisting on macOS systems, there might be more similar ones. For example you could also use a Spotlight Quicklook plugin which is invoked, whenever someone hits the spacebar on a file in <code>Finder.app</code> for a quick preview of the file. Likely it would have the same level of access, and it’s much more limited cause you need the user to preview something, but it could still work.</p>
 
-  </article>
-</section>
+      </div>
 
+      <footer>
+        
+
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
 
       </div>
 
@@ -347,7 +390,7 @@ Add your importer below.
      © 2021
     
        · 
-      Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+      Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.
     
     
   </section>

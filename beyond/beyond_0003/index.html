@@ -11,16 +11,14 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 3 - Login Items"/>
-<meta name="twitter:description" content="To clear up some expectations. The below tweet is not about this method, that is deferred for now. :)
-Login items are probably one of the most well documented methods to persist on macOS. It&rsquo;s widely used by various application to launch themselves upon user login. These applications show up in the menubar most of the time.
-There are two ways of setting up Login Items.
-Launch Services Framework The first method is using the Launch Services Framework, to which the API reference can be found here."/>
+<meta name="twitter:description" content="This is part 3 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ To clear up some expectations. The below tweet is not about this method, that is deferred for now. :)
+Login items are probably one of the most well documented methods to persist on macOS. It&rsquo;s widely used by various application to launch themselves upon user login."/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 3 - Login Items" />
-<meta property="og:description" content="To clear up some expectations. The below tweet is not about this method, that is deferred for now. :)
-Login items are probably one of the most well documented methods to persist on macOS. It&rsquo;s widely used by various application to launch themselves upon user login. These applications show up in the menubar most of the time.
-There are two ways of setting up Login Items.
-Launch Services Framework The first method is using the Launch Services Framework, to which the API reference can be found here." />
+<meta property="og:description" content="This is part 3 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ To clear up some expectations. The below tweet is not about this method, that is deferred for now. :)
+Login items are probably one of the most well documented methods to persist on macOS. It&rsquo;s widely used by various application to launch themselves upon user login." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0003/" />
 <meta property="article:published_time" content="2021-03-17T00:00:00+00:00" />
@@ -107,13 +105,47 @@ Launch Services Framework The first method is using the Launch Services Framewor
 
       <div class="content">
         
-  <section class="container page">
-  <article>
-    <header>
-      <h1>Beyond the good ol&#39; LaunchAgents - 3 - Login Items</h1>
-    </header>
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Beyond the good ol&#39; LaunchAgents - 3 - Login Items</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2021-03-17T00:00:00Z'>
+                March 17, 2021
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              3 minutes read
+            </span>
+          </div>
+          <div class="categories">
+  <i class="fas fa-folder"></i>
+    <a href="https://theevilbit.github.io/categories/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/categories/beyond/">beyond</a></div>
 
-    <p>To clear up some expectations. The below tweet is not about this method, that is deferred for now. :)</p>
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/beyond/">beyond</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        <blockquote>
+<p>This is part 3 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+</blockquote>
+<p>To clear up some expectations. The below tweet is not about this method, that is deferred for now. :)</p>
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0003_0.png" alt="Twitter"></p>
 <p>Login items are probably one of the most well documented methods to persist on macOS. It&rsquo;s widely used by various application to launch themselves upon user login. These applications show up in the menubar most of the time.</p>
 <p>There are two ways of setting up Login Items.</p>
@@ -159,9 +191,18 @@ drwxr-xr-x  2 root  wheel   64 Jan  1  2020 config
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0003_2.png" alt="Using KnockKnock to detect Login Items"></p>
 <p>As we can see it does find all Login Items, not just those visible at <em>System Preferences</em>. Its source code is open, so you can check how it does it: <a href="https://github.com/objective-see/KnockKnock/blob/main/Plugins/LoginItems.m">KnockKnock/LoginItems.m</a></p>
 
-  </article>
-</section>
+      </div>
 
+      <footer>
+        
+
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
 
       </div>
 
@@ -171,7 +212,7 @@ drwxr-xr-x  2 root  wheel   64 Jan  1  2020 config
      © 2021
     
        · 
-      Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+      Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.
     
     
   </section>

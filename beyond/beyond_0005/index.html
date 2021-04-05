@@ -11,12 +11,12 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 5 - Pluggable Authentication Modules (PAM)"/>
-<meta name="twitter:description" content="PAM originated from Red Hat Linux, but made its way to most *nix based system, including macOS. It&rsquo;s a modular system, that allows third party additions to various authentication related operations. I highly recommend checking out the FreeBSD documentation to get a full picture.
-PAM has four facilities concerning authentication, auth, account, session and password. These are related to authentication, account management, session management and password management respectively. I will focus here on auth which is responsible for user authentication."/>
+<meta name="twitter:description" content="This is part 5 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ PAM originated from Red Hat Linux, but made its way to most *nix based system, including macOS. It&rsquo;s a modular system, that allows third party additions to various authentication related operations. I highly recommend checking out the FreeBSD documentation to get a full picture."/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 5 - Pluggable Authentication Modules (PAM)" />
-<meta property="og:description" content="PAM originated from Red Hat Linux, but made its way to most *nix based system, including macOS. It&rsquo;s a modular system, that allows third party additions to various authentication related operations. I highly recommend checking out the FreeBSD documentation to get a full picture.
-PAM has four facilities concerning authentication, auth, account, session and password. These are related to authentication, account management, session management and password management respectively. I will focus here on auth which is responsible for user authentication." />
+<meta property="og:description" content="This is part 5 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ PAM originated from Red Hat Linux, but made its way to most *nix based system, including macOS. It&rsquo;s a modular system, that allows third party additions to various authentication related operations. I highly recommend checking out the FreeBSD documentation to get a full picture." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0005/" />
 <meta property="article:published_time" content="2021-03-20T00:00:00+00:00" />
@@ -103,13 +103,47 @@ PAM has four facilities concerning authentication, auth, account, session and pa
 
       <div class="content">
         
-  <section class="container page">
-  <article>
-    <header>
-      <h1>Beyond the good ol&#39; LaunchAgents - 5 - Pluggable Authentication Modules (PAM)</h1>
-    </header>
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Beyond the good ol&#39; LaunchAgents - 5 - Pluggable Authentication Modules (PAM)</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2021-03-20T00:00:00Z'>
+                March 20, 2021
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              4 minutes read
+            </span>
+          </div>
+          <div class="categories">
+  <i class="fas fa-folder"></i>
+    <a href="https://theevilbit.github.io/categories/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/categories/beyond/">beyond</a></div>
 
-    <p><a href="https://en.wikipedia.org/wiki/Pluggable_authentication_module">PAM</a> originated from Red Hat Linux, but made its way to most *nix based system, including macOS. It&rsquo;s a modular system, that allows third party additions to various authentication related operations. I highly recommend checking out the <a href="https://docs.freebsd.org/en/articles/pam/">FreeBSD documentation</a> to get a full picture.</p>
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/beyond/">beyond</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        <blockquote>
+<p>This is part 5 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+</blockquote>
+<p><a href="https://en.wikipedia.org/wiki/Pluggable_authentication_module">PAM</a> originated from Red Hat Linux, but made its way to most *nix based system, including macOS. It&rsquo;s a modular system, that allows third party additions to various authentication related operations. I highly recommend checking out the <a href="https://docs.freebsd.org/en/articles/pam/">FreeBSD documentation</a> to get a full picture.</p>
 <p>PAM has four facilities concerning authentication, <em>auth</em>, <em>account</em>, <em>session</em> and <em>password</em>. These are related to authentication, account management, session management and password management respectively. I will focus here on <em>auth</em> which is responsible for user authentication.</p>
 <p>Each service that uses PAM, has a configuration file, where the various facilities, the responsible modules and their policy in the chain of modules is defined. On macOS the PAM configuration files can be found in <code>/etc/pam.d/</code>. Let&rsquo;s take a look at <code>sshd</code>, which configures authentication for the <code>sshd</code> service.</p>
 <pre><code>csaby@mac ~ % cat /etc/pam.d/sshd 
@@ -189,9 +223,18 @@ Internal requirements count=1 size=64
 </code></pre><p>It has the <code>com.apple.private.security.clear-library-validation</code> entitlement, which allows the load of external libraries.</p>
 <p>All of the above requires root level access, as without that we can&rsquo;t modify these files, but if we have that, it&rsquo;s very nice.</p>
 
-  </article>
-</section>
+      </div>
 
+      <footer>
+        
+
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
 
       </div>
 
@@ -201,7 +244,7 @@ Internal requirements count=1 size=64
      © 2021
     
        · 
-      Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+      Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.
     
     
   </section>

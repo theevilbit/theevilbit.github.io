@@ -11,14 +11,14 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 2 - iTerm2 startup"/>
-<meta name="twitter:description" content="If the first part was about Terminal and shell profiles, it&rsquo;s worth to mention iTerm2, which is a popular Terminal alternative on macOS. It&rsquo;s being used by many people, especially power users.
-When we start iTerm2 it starts the same shell environment as Terminal, and thus the same startup files apply here as well. However this application has an additional way to execute code.
-In the Profile settings, there is an option, which is Send text at start."/>
+<meta name="twitter:description" content="This is part 2 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ If the first part was about Terminal and shell profiles, it&rsquo;s worth to mention iTerm2, which is a popular Terminal alternative on macOS. It&rsquo;s being used by many people, especially power users.
+When we start iTerm2 it starts the same shell environment as Terminal, and thus the same startup files apply here as well."/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 2 - iTerm2 startup" />
-<meta property="og:description" content="If the first part was about Terminal and shell profiles, it&rsquo;s worth to mention iTerm2, which is a popular Terminal alternative on macOS. It&rsquo;s being used by many people, especially power users.
-When we start iTerm2 it starts the same shell environment as Terminal, and thus the same startup files apply here as well. However this application has an additional way to execute code.
-In the Profile settings, there is an option, which is Send text at start." />
+<meta property="og:description" content="This is part 2 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ If the first part was about Terminal and shell profiles, it&rsquo;s worth to mention iTerm2, which is a popular Terminal alternative on macOS. It&rsquo;s being used by many people, especially power users.
+When we start iTerm2 it starts the same shell environment as Terminal, and thus the same startup files apply here as well." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0002/" />
 <meta property="article:published_time" content="2021-03-16T00:00:00+00:00" />
@@ -105,13 +105,47 @@ In the Profile settings, there is an option, which is Send text at start." />
 
       <div class="content">
         
-  <section class="container page">
-  <article>
-    <header>
-      <h1>Beyond the good ol&#39; LaunchAgents - 2 - iTerm2 startup</h1>
-    </header>
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Beyond the good ol&#39; LaunchAgents - 2 - iTerm2 startup</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2021-03-16T00:00:00Z'>
+                March 16, 2021
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              2 minutes read
+            </span>
+          </div>
+          <div class="categories">
+  <i class="fas fa-folder"></i>
+    <a href="https://theevilbit.github.io/categories/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/categories/beyond/">beyond</a></div>
 
-    <p>If the first part was about <code>Terminal</code> and shell profiles, it&rsquo;s worth to mention <a href="https://iterm2.com/">iTerm2</a>, which is a popular Terminal alternative on macOS. It&rsquo;s being used by many people, especially power users.</p>
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/beyond/">beyond</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        <blockquote>
+<p>This is part 2 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+</blockquote>
+<p>If the first part was about <code>Terminal</code> and shell profiles, it&rsquo;s worth to mention <a href="https://iterm2.com/">iTerm2</a>, which is a popular Terminal alternative on macOS. It&rsquo;s being used by many people, especially power users.</p>
 <p>When we start <code>iTerm2</code> it starts the same shell environment as <code>Terminal</code>,  and thus the same startup files apply here as well. However this application has an additional way to execute code.</p>
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0002_0.png" alt="iTerm2 Profile Preferences"></p>
 <p>In the Profile settings, there is an option, which is <strong>Send text at start</strong>. This is essentially a command we can run when someone starts up iTerm2. This is saved in iTerm2&rsquo;s preferences, which can be found at <code>~/Library/Preferences/com.googlecode.iterm2.plist</code>.</p>
@@ -165,9 +199,18 @@ Internal requirements count=1 size=216
 <p>Scripts placed inside <code>~/Library/Application Support/iTerm2/Scripts/AutoLaunch</code> will be automatically launched upon starting iTerm. More information: <a href="https://iterm2.com/python-api/tutorial/daemons.html">Daemons — iTerm2 Python API 0.26 documentation</a></p>
 <p>The file <code>~/Library/Application Support/iTerm2/Scripts/AutoLaunch.scpt</code> is also checked at startup, and it will be executed. This should be an Apple Script. More information: <a href="https://iterm2.com/documentation-scripting.html">Scripting - Documentation - iTerm2 - macOS Terminal Replacement</a></p>
 
-  </article>
-</section>
+      </div>
 
+      <footer>
+        
+
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
 
       </div>
 
@@ -177,7 +220,7 @@ Internal requirements count=1 size=216
      © 2021
     
        · 
-      Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+      Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.
     
     
   </section>

@@ -11,14 +11,14 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 7 - xbar plugins"/>
-<meta name="twitter:description" content="This technique came from @bradleyjkemp in one of his Twitter posts.
-xbar is an application that can put the output of a script into the menubar. The scripts should be placed in ~/Library/Application\ Support/xbar/plugins/. Standard shell scripts are supported, and so I tried the one listed on their GitHub page as an example.
-#!/bin/bash # the current date and time date # the current username echo $USER # the current user id id -u I created a script called script."/>
+<meta name="twitter:description" content="This is part 7 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ This technique came from @bradleyjkemp in one of his Twitter posts.
+xbar is an application that can put the output of a script into the menubar. The scripts should be placed in ~/Library/Application\ Support/xbar/plugins/. Standard shell scripts are supported, and so I tried the one listed on their GitHub page as an example."/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 7 - xbar plugins" />
-<meta property="og:description" content="This technique came from @bradleyjkemp in one of his Twitter posts.
-xbar is an application that can put the output of a script into the menubar. The scripts should be placed in ~/Library/Application\ Support/xbar/plugins/. Standard shell scripts are supported, and so I tried the one listed on their GitHub page as an example.
-#!/bin/bash # the current date and time date # the current username echo $USER # the current user id id -u I created a script called script." />
+<meta property="og:description" content="This is part 7 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ This technique came from @bradleyjkemp in one of his Twitter posts.
+xbar is an application that can put the output of a script into the menubar. The scripts should be placed in ~/Library/Application\ Support/xbar/plugins/. Standard shell scripts are supported, and so I tried the one listed on their GitHub page as an example." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0007/" />
 <meta property="article:published_time" content="2021-03-22T00:00:00+00:00" />
@@ -105,13 +105,47 @@ xbar is an application that can put the output of a script into the menubar. The
 
       <div class="content">
         
-  <section class="container page">
-  <article>
-    <header>
-      <h1>Beyond the good ol&#39; LaunchAgents - 7 - xbar plugins</h1>
-    </header>
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Beyond the good ol&#39; LaunchAgents - 7 - xbar plugins</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2021-03-22T00:00:00Z'>
+                March 22, 2021
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              One minute read
+            </span>
+          </div>
+          <div class="categories">
+  <i class="fas fa-folder"></i>
+    <a href="https://theevilbit.github.io/categories/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/categories/beyond/">beyond</a></div>
 
-    <p>This technique came from <a href="https://twitter.com/bradleyjkemp">@bradleyjkemp</a> in one of his Twitter <a href="https://twitter.com/bradleyjkemp/status/13743463128759787550">posts</a>.</p>
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/beyond/">beyond</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        <blockquote>
+<p>This is part 7 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+</blockquote>
+<p>This technique came from <a href="https://twitter.com/bradleyjkemp">@bradleyjkemp</a> in one of his Twitter <a href="https://twitter.com/bradleyjkemp/status/13743463128759787550">posts</a>.</p>
 <p><a href="https://github.com/matryer/xbar">xbar</a> is an application that can put the output of a script into the menubar. The scripts should be placed in <code>~/Library/Application\ Support/xbar/plugins/</code>. Standard shell scripts are supported, and so I tried the one listed on their GitHub page as an example.</p>
 <pre><code>#!/bin/bash
 
@@ -127,9 +161,18 @@ id -u
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0007_0.gif" alt="Alternating Menubar"></p>
 <p>It does update the menubar as shown in the gif above, with alternating text.</p>
 
-  </article>
-</section>
+      </div>
 
+      <footer>
+        
+
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
 
       </div>
 
@@ -139,7 +182,7 @@ id -u
      © 2021
     
        · 
-      Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+      Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.
     
     
   </section>

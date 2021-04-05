@@ -11,14 +11,12 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 9 - Preference Pane"/>
-<meta name="twitter:description" content="Preference panes on macOS are plugins to the System Preferences.app. These panes can extend the functionality of the app, and typically allow you to modify configuration settings for your app. These admins are loaded when the user selects them, so they are not perfect from persistence point of view, as it requires user interaction, but can still be a thing.
-Preference panes are located in:
- /System/Library/PreferencePanes - This folder contains the default macOS panes /Library/PreferencePanes - Here we fine the panes that are installed for all users."/>
+<meta name="twitter:description" content="This is part 9 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ Preference panes on macOS are plugins to the System Preferences.app. These panes can extend the functionality of the app, and typically allow you to modify configuration settings for your app. These admins are loaded when the user selects them, so they are not perfect from persistence point of view, as it requires user interaction, but can still be a thing."/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 9 - Preference Pane" />
-<meta property="og:description" content="Preference panes on macOS are plugins to the System Preferences.app. These panes can extend the functionality of the app, and typically allow you to modify configuration settings for your app. These admins are loaded when the user selects them, so they are not perfect from persistence point of view, as it requires user interaction, but can still be a thing.
-Preference panes are located in:
- /System/Library/PreferencePanes - This folder contains the default macOS panes /Library/PreferencePanes - Here we fine the panes that are installed for all users." />
+<meta property="og:description" content="This is part 9 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ Preference panes on macOS are plugins to the System Preferences.app. These panes can extend the functionality of the app, and typically allow you to modify configuration settings for your app. These admins are loaded when the user selects them, so they are not perfect from persistence point of view, as it requires user interaction, but can still be a thing." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0009/" />
 <meta property="article:published_time" content="2021-03-25T00:00:00+00:00" />
@@ -105,13 +103,47 @@ Preference panes are located in:
 
       <div class="content">
         
-  <section class="container page">
-  <article>
-    <header>
-      <h1>Beyond the good ol&#39; LaunchAgents - 9 - Preference Pane</h1>
-    </header>
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Beyond the good ol&#39; LaunchAgents - 9 - Preference Pane</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2021-03-25T00:00:00Z'>
+                March 25, 2021
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              3 minutes read
+            </span>
+          </div>
+          <div class="categories">
+  <i class="fas fa-folder"></i>
+    <a href="https://theevilbit.github.io/categories/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/categories/beyond/">beyond</a></div>
 
-    <p>Preference panes on macOS are plugins to the <code>System Preferences.app</code>. These panes can extend the functionality of the app, and typically allow you to modify configuration settings for your app. These admins are loaded when the user selects them, so they are not perfect from persistence point of view, as it requires user interaction, but can still be a thing.</p>
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/beyond/">beyond</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        <blockquote>
+<p>This is part 9 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+</blockquote>
+<p>Preference panes on macOS are plugins to the <code>System Preferences.app</code>. These panes can extend the functionality of the app, and typically allow you to modify configuration settings for your app. These admins are loaded when the user selects them, so they are not perfect from persistence point of view, as it requires user interaction, but can still be a thing.</p>
 <p>Preference panes are located in:</p>
 <ul>
 <li><code>/System/Library/PreferencePanes</code> - This folder contains the default macOS panes</li>
@@ -168,9 +200,18 @@ Internal requirements count=1 size=96
 &lt;/plist&gt;
 </code></pre><p>On macOS Catalina the loader was <code>/System/Library/Frameworks/PreferencePanes.framework/Versions/A/XPCServices/legacyLoader.xpc/Contents/MacOS/legacyLoader</code> with the entitlement <code>com.apple.security.cs.disable-library-validation</code>.</p>
 
-  </article>
-</section>
+      </div>
 
+      <footer>
+        
+
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
 
       </div>
 
@@ -180,7 +221,7 @@ Internal requirements count=1 size=96
      © 2021
     
        · 
-      Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+      Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.
     
     
   </section>

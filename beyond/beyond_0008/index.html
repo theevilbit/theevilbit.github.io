@@ -11,12 +11,12 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 8 - Hammerspoon"/>
-<meta name="twitter:description" content="This idea came from my colleague @dejandayoff. It&rsquo;s another application specific persistence option, related to Hammerspoon. The app is an automation tool, that allows macOS scripting through LUA scripting language. We can even embed full AppleScript code as well as run shell scripts.
-The app looks for a single file, ~/.hammerspoon/init.lua, and when started the script will be executed. They have plenty of examples on their Getting Started page, and an extensive API documentation."/>
+<meta name="twitter:description" content="This is part 8 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ This idea came from my colleague @dejandayoff. It&rsquo;s another application specific persistence option, related to Hammerspoon. The app is an automation tool, that allows macOS scripting through LUA scripting language. We can even embed full AppleScript code as well as run shell scripts."/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 8 - Hammerspoon" />
-<meta property="og:description" content="This idea came from my colleague @dejandayoff. It&rsquo;s another application specific persistence option, related to Hammerspoon. The app is an automation tool, that allows macOS scripting through LUA scripting language. We can even embed full AppleScript code as well as run shell scripts.
-The app looks for a single file, ~/.hammerspoon/init.lua, and when started the script will be executed. They have plenty of examples on their Getting Started page, and an extensive API documentation." />
+<meta property="og:description" content="This is part 8 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ This idea came from my colleague @dejandayoff. It&rsquo;s another application specific persistence option, related to Hammerspoon. The app is an automation tool, that allows macOS scripting through LUA scripting language. We can even embed full AppleScript code as well as run shell scripts." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0008/" />
 <meta property="article:published_time" content="2021-03-23T00:00:00+00:00" />
@@ -103,13 +103,47 @@ The app looks for a single file, ~/.hammerspoon/init.lua, and when started the s
 
       <div class="content">
         
-  <section class="container page">
-  <article>
-    <header>
-      <h1>Beyond the good ol&#39; LaunchAgents - 8 - Hammerspoon</h1>
-    </header>
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Beyond the good ol&#39; LaunchAgents - 8 - Hammerspoon</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2021-03-23T00:00:00Z'>
+                March 23, 2021
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              2 minutes read
+            </span>
+          </div>
+          <div class="categories">
+  <i class="fas fa-folder"></i>
+    <a href="https://theevilbit.github.io/categories/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/categories/beyond/">beyond</a></div>
 
-    <p>This idea came from my colleague <a href="https://twitter.com/dejandayoff">@dejandayoff</a>. It&rsquo;s another application specific persistence option, related to <a href="https://www.hammerspoon.org/">Hammerspoon</a>. The app is an automation tool, that allows macOS scripting through LUA scripting language. We can even embed full AppleScript code as well as run shell scripts.</p>
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/beyond/">beyond</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        <blockquote>
+<p>This is part 8 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+</blockquote>
+<p>This idea came from my colleague <a href="https://twitter.com/dejandayoff">@dejandayoff</a>. It&rsquo;s another application specific persistence option, related to <a href="https://www.hammerspoon.org/">Hammerspoon</a>. The app is an automation tool, that allows macOS scripting through LUA scripting language. We can even embed full AppleScript code as well as run shell scripts.</p>
 <p>The app looks for a single file, <code>~/.hammerspoon/init.lua</code>, and when started the script will be executed. They have plenty of examples on their <a href="https://www.hammerspoon.org/go/#imessagesms">Getting Started</a> page, and an extensive API <a href="https://www.hammerspoon.org/docs/index.html">documentation</a>.</p>
 <p>I tried the following simple script.</p>
 <pre><code>hs.execute(&quot;id &gt; ~/hs.txt&quot;)
@@ -149,9 +183,18 @@ hs.execute(&quot;id &gt; ~/hs.txt&quot;)
 &lt;/dict&gt;
 &lt;/plist&gt;
 </code></pre>
-  </article>
-</section>
+      </div>
 
+      <footer>
+        
+
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
 
       </div>
 
@@ -161,7 +204,7 @@ hs.execute(&quot;id &gt; ~/hs.txt&quot;)
      © 2021
     
        · 
-      Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+      Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.
     
     
   </section>

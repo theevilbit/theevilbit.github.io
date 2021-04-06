@@ -199,6 +199,11 @@ Internal requirements count=1 size=96
 &lt;/dict&gt;
 &lt;/plist&gt;
 </code></pre><p>On macOS Catalina the loader was <code>/System/Library/Frameworks/PreferencePanes.framework/Versions/A/XPCServices/legacyLoader.xpc/Contents/MacOS/legacyLoader</code> with the entitlement <code>com.apple.security.cs.disable-library-validation</code>.</p>
+<h4 id="update-20210406">Update 2021.04.06.</h4>
+<p>As suggested by <a href="https://twitter.com/xnyhps">@xnyhps</a> we can enable the auto-loading of our preference pane with registering an alert for it.</p>
+<pre><code>csaby@mac ~ % defaults delete com.apple.systempreferences DidShowPrefBundleIDs                                         
+csaby@mac ~ % defaults write com.apple.systempreferences AttentionPrefBundleIDs -dict 'com.yourcompany.Persistent-Worm' 1
+</code></pre><p>In the above listing we register an alert for our pane by bundle ID. We also clear the status if it has been showed before. This will result in our preference pane loading, when the user opens <code>System Preferences</code>.</p>
 
       </div>
 

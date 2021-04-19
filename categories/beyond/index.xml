@@ -5,7 +5,17 @@
     <link>https://theevilbit.github.io/categories/beyond/</link>
     <description>Recent content in beyond on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 05 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/categories/beyond/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 19 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/categories/beyond/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 13 - Audio Plugins</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0013/</link>
+      <pubDate>Mon, 19 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0013/</guid>
+      <description>This is another one of my favorites for some reason. macOS being a popular audio editing device, supports external audio drivers and plugins. @xorrior wrote a very extensive blog post about these at his website, here: Audio Unit Plug-ins. Legitimate Un-signed Code Execution | by Christopher Ross | Posts By SpecterOps Team Members
+It is pretty amazing, and I don&amp;rsquo;t plan to repeat what it&amp;rsquo;s there but show another way of implementing a plugin.</description>
+    </item>
+    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 12 - QuickLook Plugins</title>
       <link>https://theevilbit.github.io/beyond/beyond_0012/</link>

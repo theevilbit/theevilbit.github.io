@@ -5,7 +5,17 @@
     <link>https://theevilbit.github.io/</link>
     <description>Recent content on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 20 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 23 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Experiences with Apple Security Bounty</title>
+      <link>https://theevilbit.github.io/posts/experiences_with_asb/</link>
+      <pubDate>Fri, 23 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/posts/experiences_with_asb/</guid>
+      <description>Since Apple started their Apple Security Bounty program I have submitted around 50 cases to their product security team. I thought I will share my experiences working with Apple in the past 2 years. This will be useful to anyone thinking about participating in the program, and will help setting up expectations.
+Beyond Apple I do bug bounties also in other programs, like HackerOne, BugCrowd, VCP, ZDI or sometimes just working directly with vendors, so I have a good pool of other cases I can compare to.</description>
+    </item>
+    
     <item>
       <title>CVE-2020-9900 &amp; CVE-2021-1786 - Abusing macOS Crash Reporter</title>
       <link>https://theevilbit.github.io/posts/macos_crashreporter/</link>

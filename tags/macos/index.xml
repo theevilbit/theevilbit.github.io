@@ -5,7 +5,18 @@
     <link>https://theevilbit.github.io/tags/macos/</link>
     <description>Recent content in macos on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 23 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/macos/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 27 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/macos/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 14 - atrun</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0014/</link>
+      <pubDate>Tue, 27 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0014/</guid>
+      <description>The at command set is a heritage *nix job scheduler on macOS. Although it&amp;rsquo;s slowly being deprecated, it&amp;rsquo;s still available on Big Sur, although disabled by default.
+Enabling atrun As described by atrun&amp;rsquo;s man page, the scheduler can be enabled using the following command:
+sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.atrun.plist What is not mentioned, is that in order it to work, it needs Full Disk Access rights granted under privacy setting.</description>
+    </item>
+    
     <item>
       <title>Experiences with Apple Security Bounty</title>
       <link>https://theevilbit.github.io/posts/experiences_with_asb/</link>

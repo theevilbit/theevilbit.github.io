@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Csaba Fitzl">
+    
+    
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 14 - atrun"/>
+<meta name="twitter:description" content="The at command set is a heritage *nix job scheduler on macOS. Although it&rsquo;s slowly being deprecated, it&rsquo;s still available on Big Sur, although disabled by default.
+Enabling atrun As described by atrun&rsquo;s man page, the scheduler can be enabled using the following command:
+sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.atrun.plist What is not mentioned, is that in order it to work, it needs Full Disk Access rights granted under privacy setting."/>
+
+    <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 14 - atrun" />
+<meta property="og:description" content="The at command set is a heritage *nix job scheduler on macOS. Although it&rsquo;s slowly being deprecated, it&rsquo;s still available on Big Sur, although disabled by default.
+Enabling atrun As described by atrun&rsquo;s man page, the scheduler can be enabled using the following command:
+sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.atrun.plist What is not mentioned, is that in order it to work, it needs Full Disk Access rights granted under privacy setting." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0014/" />
+<meta property="article:published_time" content="2021-04-27T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-04-27T00:00:00+00:00" />
+
+
+    
+      <base href="https://theevilbit.github.io/beyond/beyond_0014/">
+    
+    <title>
+  Beyond the good ol&#39; LaunchAgents - 14 - atrun · theevilbit blog
+</title>
+
+    
+      <link rel="canonical" href="https://theevilbit.github.io/beyond/beyond_0014/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+
+    
+    
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.78.2" />
+  </head>
+
+  <body class=" ">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://theevilbit.github.io/">
+      theevilbit blog
+    </a>
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/categories/">Categories</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+          </li>
+        
+      
+      
+    </ul>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Beyond the good ol&#39; LaunchAgents - 14 - atrun</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2021-04-27T00:00:00Z'>
+                April 27, 2021
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              3 minutes read
+            </span>
+          </div>
+          <div class="categories">
+  <i class="fas fa-folder"></i>
+    <a href="https://theevilbit.github.io/categories/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/categories/beyond/">beyond</a></div>
+
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/beyond/">beyond</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        <p>The <code>at</code> command set is a heritage *nix job scheduler on macOS. Although it&rsquo;s slowly being deprecated, it&rsquo;s still available on Big Sur, although disabled by default.</p>
+<h2 id="enabling-atrun">Enabling atrun</h2>
+<p>As described by <code>atrun</code>&rsquo;s man page, the scheduler can be enabled using the following command:</p>
+<pre><code>sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.atrun.plist
+</code></pre><p>What is not mentioned, is that in order it to work, it needs Full Disk Access rights granted under privacy setting.</p>
+<p><img src="https://theevilbit.github.io/images/beyond/beyond_0014_1.png" alt="Grant FDA for atrun"></p>
+<p>Because of all of these prerequisites (being root, and FDA access), this might not be a very attractive persistence method for attackers, however I think this is a commonly missed persistence, and could help staying under the radar.</p>
+<p>If all of this was done, we can start using it.</p>
+<h2 id="scheduling-jobs">Scheduling jobs</h2>
+<p>We can schedule jobs using the <code>at</code> command.</p>
+<pre><code>sh-3.2# echo &quot;echo 11 &gt; /tmp/at.txt&quot; | at now+1
+job 26 at Tue Apr 27 00:46:36 2021
+</code></pre><p>The above will schedule a job in 1 minute, and will execute the command <code>echo 11 &gt; /tmp/at.txt</code>. It got the job number 26.</p>
+<p>We can check the job queue using <code>atq</code>.</p>
+<pre><code>sh-3.2# atq
+26	Tue Apr 27 00:46:00 2021
+22	Wed Apr 28 00:29:00 2021
+</code></pre><p>Above we can see two jobs scheduled. We can print the details of the job using <code>at -c JOBNUMBER</code></p>
+<pre><code>sh-3.2# at -c 26
+#!/bin/sh
+# atrun uid=0 gid=0
+# mail csaby 0
+umask 22
+SHELL=/bin/sh; export SHELL
+TERM=xterm-256color; export TERM
+USER=root; export USER
+SUDO_USER=csaby; export SUDO_USER
+SUDO_UID=501; export SUDO_UID
+SSH_AUTH_SOCK=/private/tmp/com.apple.launchd.co51iLHIjf/Listeners; export SSH_AUTH_SOCK
+__CF_USER_TEXT_ENCODING=0x0:0:0; export __CF_USER_TEXT_ENCODING
+MAIL=/var/mail/root; export MAIL
+PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin; export PATH
+PWD=/Users/csaby; export PWD
+SHLVL=1; export SHLVL
+SUDO_COMMAND=/usr/bin/su; export SUDO_COMMAND
+HOME=/var/root; export HOME
+LOGNAME=root; export LOGNAME
+LC_CTYPE=UTF-8; export LC_CTYPE
+SUDO_GID=20; export SUDO_GID
+_=/usr/bin/at; export _
+cd /Users/csaby || {
+	 echo 'Execution directory inaccessible' &gt;&amp;2
+	 exit 1
+}
+unset OLDPWD
+echo 11 &gt; /tmp/at.txt
+</code></pre><p>At the bottom we will find the command that will be run, and at the top we will find under which user the command will run, in this case root (<code>atrun uid=0 gid=0</code>).</p>
+<p>In order to schedule a job we need to have Full Disk Access, otherwise we will receive the following prompt.</p>
+<p><img src="https://theevilbit.github.io/images/beyond/beyond_0014_0.png" alt="User alert when scheduling jobs"></p>
+<h2 id="job-files">Job files</h2>
+<p>The job files can be found at <code>/private/var/at/jobs/</code></p>
+<pre><code>sh-3.2# ls -l /private/var/at/jobs/
+total 32
+-rw-r--r--  1 root  wheel    6 Apr 27 00:46 .SEQ
+-rw-------  1 root  wheel    0 Apr 26 23:17 .lockfile
+-r--------  1 root  wheel  803 Apr 27 00:46 a00019019bdcd2
+-rwx------  1 root  wheel  803 Apr 27 00:46 a0001a019bdcd2
+</code></pre><p>The filename contains the queue, the job number, and the time it&rsquo;s scheduled to run. For example let&rsquo;s take a loot at <code>a0001a019bdcd2</code>.</p>
+<ul>
+<li><code>a</code> - this is the queue</li>
+<li><code>0001a</code> - job number in hex, <code>0x1a = 26</code></li>
+<li><code>019bdcd2</code> - time in hex. It represents the minutes passed since epoch. <code>0x019bdcd2</code> is <code>26991826</code> in decimal. If we multiply it by 60 we get <code>1619509560</code>, which is <code>GMT: 2021. April 27., Tuesday 7:46:00</code>.</li>
+</ul>
+<p>If we print the job file, we find that it contains the same information we got using <code>at -c</code>.</p>
+
+      </div>
+
+      <footer>
+        
+
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+     © 2021
+    
+       · 
+      Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.
+    
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-151008930-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+  </body>
+
+</html>

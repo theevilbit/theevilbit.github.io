@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Csaba Fitzl">
+    
+    
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 15 - xsanctl"/>
+<meta name="twitter:description" content="I run into this not so exciting persistent method when I was investigating xsanctl for&hellip; other&hellip; reasons&hellip; xsanctl is a &ldquo;Xsan file system control utility&rdquo;, which allows us to mount and manage Xsans.
+The xsanctl binary can be found at /System/Library/Filesystems/acfs.fs/Contents/bin/xsanctl, however when we simply run the command it is run from /usr/sbin/xsanctl. If we check, this is a symbolic link.
+csaby@mac exploits % ls -l /usr/sbin/xsanctl lrwxr-xr-x 1 root wheel 63 Jan 1 2020 /usr/sbin/xsanctl -&gt; /System/Library/Filesystems/acfs."/>
+
+    <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 15 - xsanctl" />
+<meta property="og:description" content="I run into this not so exciting persistent method when I was investigating xsanctl for&hellip; other&hellip; reasons&hellip; xsanctl is a &ldquo;Xsan file system control utility&rdquo;, which allows us to mount and manage Xsans.
+The xsanctl binary can be found at /System/Library/Filesystems/acfs.fs/Contents/bin/xsanctl, however when we simply run the command it is run from /usr/sbin/xsanctl. If we check, this is a symbolic link.
+csaby@mac exploits % ls -l /usr/sbin/xsanctl lrwxr-xr-x 1 root wheel 63 Jan 1 2020 /usr/sbin/xsanctl -&gt; /System/Library/Filesystems/acfs." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0015/" />
+<meta property="article:published_time" content="2021-05-12T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-05-12T00:00:00+00:00" />
+
+
+    
+      <base href="https://theevilbit.github.io/beyond/beyond_0015/">
+    
+    <title>
+  Beyond the good ol&#39; LaunchAgents - 15 - xsanctl · theevilbit blog
+</title>
+
+    
+      <link rel="canonical" href="https://theevilbit.github.io/beyond/beyond_0015/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+
+    
+    
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.78.2" />
+  </head>
+
+  <body class=" ">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://theevilbit.github.io/">
+      theevilbit blog
+    </a>
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/categories/">Categories</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+          </li>
+        
+      
+      
+    </ul>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Beyond the good ol&#39; LaunchAgents - 15 - xsanctl</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2021-05-12T00:00:00Z'>
+                May 12, 2021
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              One minute read
+            </span>
+          </div>
+          <div class="categories">
+  <i class="fas fa-folder"></i>
+    <a href="https://theevilbit.github.io/categories/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/categories/beyond/">beyond</a></div>
+
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/beyond/">beyond</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        <p>I run into this not so exciting persistent method when I was investigating <code>xsanctl</code> for&hellip; other&hellip; reasons&hellip; <code>xsanctl</code> is a &ldquo;Xsan file system control utility&rdquo;, which allows us to mount and manage Xsans.</p>
+<p>The <code>xsanctl</code> binary can be found at <code>/System/Library/Filesystems/acfs.fs/Contents/bin/xsanctl</code>, however when we simply run the command it is run from <code>/usr/sbin/xsanctl</code>. If we check, this is a symbolic link.</p>
+<pre><code>csaby@mac exploits % ls -l /usr/sbin/xsanctl
+lrwxr-xr-x  1 root  wheel  63 Jan  1  2020 /usr/sbin/xsanctl -&gt; /System/Library/Filesystems/acfs.fs/Contents/bin/redirection.sh
+</code></pre><p>Interestingly the link points to a script and not the actual binary.</p>
+<p>The script is very short.</p>
+<pre><code>#!/bin/sh
+if [ -r /Library/Preferences/Xsan/.xsanrc ]
+then
+    . /Library/Preferences/Xsan/.xsanrc
+fi
+if [ x&quot;${XSAN_ALT_BINDIR}&quot; == x ]
+then
+    XSAN_ALT_BINDIR=/System/Library/Filesystems/acfs.fs/Contents/bin
+fi
+COMMAND=`basename $0`
+${XSAN_ALT_BINDIR}/${COMMAND} &quot;$@&quot;
+</code></pre><p>It will execute the file <code>/Library/Preferences/Xsan/.xsanrc</code> if exists. Moreover it will also look for the <code>xsanctl</code> binary in different location if the <code>XSAN_ALT_BINDIR</code> environment variable is defined, which allows further redirection.</p>
+<p>Essentially we can persist in the <code>/Library/Preferences/Xsan/.xsanrc</code> script. Unfortunately this location requires root access, and this utility likely also not frequently run, especially by non-enterprise users.</p>
+<p>So it&rsquo;s not super useful, but thought it would worth a quick post.</p>
+
+      </div>
+
+      <footer>
+        
+
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+     © 2021
+    
+       · 
+      Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.
+    
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-151008930-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+  </body>
+
+</html>

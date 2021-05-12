@@ -5,7 +5,18 @@
     <link>https://theevilbit.github.io/tags/beyond/</link>
     <description>Recent content in beyond on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 27 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/beyond/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 12 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/beyond/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 15 - xsanctl</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0015/</link>
+      <pubDate>Wed, 12 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0015/</guid>
+      <description>I run into this not so exciting persistent method when I was investigating xsanctl for&amp;hellip; other&amp;hellip; reasons&amp;hellip; xsanctl is a &amp;ldquo;Xsan file system control utility&amp;rdquo;, which allows us to mount and manage Xsans.
+The xsanctl binary can be found at /System/Library/Filesystems/acfs.fs/Contents/bin/xsanctl, however when we simply run the command it is run from /usr/sbin/xsanctl. If we check, this is a symbolic link.
+csaby@mac exploits % ls -l /usr/sbin/xsanctl lrwxr-xr-x 1 root wheel 63 Jan 1 2020 /usr/sbin/xsanctl -&amp;gt; /System/Library/Filesystems/acfs.</description>
+    </item>
+    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 14 - atrun</title>
       <link>https://theevilbit.github.io/beyond/beyond_0014/</link>

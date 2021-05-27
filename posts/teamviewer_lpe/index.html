@@ -12,11 +12,11 @@
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="TeamViewer Local Privilege Escalation Vulnerability"/>
 <meta name="twitter:description" content="Intro This is a rather old vulnerability I found in TeamViewer back in 2020, and reported it through VCP/iDefense. TeamViewer fixed the vulnerability last November, but somehow I missed it, and became aware of it only recently. Their advisory can be found here: November updates - Security patches — TeamViewer Support
-The TeamViewer macOS client uses a PrivilegedHelperTool named com.teamviewer.Helper to perform specific tasks that require root permissions. Back in 2020 it used a deprecate model to perform IPC communication, called Distributed Objects."/>
+The TeamViewer macOS client used a PrivilegedHelperTool named com.teamviewer.Helper to perform specific tasks that require root permissions. Back in 2020 it used a deprecate model to perform IPC communication, called Distributed Objects."/>
 
     <meta property="og:title" content="TeamViewer Local Privilege Escalation Vulnerability" />
 <meta property="og:description" content="Intro This is a rather old vulnerability I found in TeamViewer back in 2020, and reported it through VCP/iDefense. TeamViewer fixed the vulnerability last November, but somehow I missed it, and became aware of it only recently. Their advisory can be found here: November updates - Security patches — TeamViewer Support
-The TeamViewer macOS client uses a PrivilegedHelperTool named com.teamviewer.Helper to perform specific tasks that require root permissions. Back in 2020 it used a deprecate model to perform IPC communication, called Distributed Objects." />
+The TeamViewer macOS client used a PrivilegedHelperTool named com.teamviewer.Helper to perform specific tasks that require root permissions. Back in 2020 it used a deprecate model to perform IPC communication, called Distributed Objects." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/teamviewer_lpe/" />
 <meta property="article:published_time" content="2021-05-26T00:00:00+00:00" />
@@ -141,7 +141,7 @@ The TeamViewer macOS client uses a PrivilegedHelperTool named com.teamviewer.Hel
         <h2 id="intro">Intro</h2>
 <p>This is a rather old vulnerability I found in TeamViewer back in 2020, and reported it through VCP/iDefense. TeamViewer fixed the vulnerability last November, but somehow I missed it, and became aware of it only recently. Their advisory can be found here:
 <a href="https://community.teamviewer.com/English/discussion/107710/november-updates-security-patches">November updates - Security patches — TeamViewer Support</a></p>
-<p>The TeamViewer macOS client uses a PrivilegedHelperTool named <code>com.teamviewer.Helper</code> to perform specific tasks that require <code>root</code>
+<p>The TeamViewer macOS client used a PrivilegedHelperTool named <code>com.teamviewer.Helper</code> to perform specific tasks that require <code>root</code>
 permissions. Back in 2020 it used a deprecate model to perform IPC communication, called Distributed Objects. It was wide open, and any client could invoke the remote object&rsquo;s functions, and some of those lead to direct privilege escalation.</p>
 <h2 id="the-distributed-objects-interface">The Distributed Objects interface</h2>
 <p>Apple&rsquo;s developer document regarding Distributed Objects can be found here:
@@ -260,7 +260,7 @@ Ian Beer from Google Project zero also talked about these:
 <span style="color:#069;font-weight:bold">@end</span>
 </code></pre></div><p>There are quite a few interesting methods, but we will focus on <code>installRemotePrinting</code> and <code>uninstallRemotePrinting</code>. Unfortunately we don&rsquo;t get an indication of the passed arguments from the class-dump.</p>
 <h2 id="uninstallremoteprinting---arbitrary-file-deletion">uninstallRemotePrinting - Arbitrary file deletion</h2>
-<p>Let&rsquo;s inspect  <code>installRemotePrinting</code> first.</p>
+<p>Let&rsquo;s inspect  <code>uninstallRemotePrinting</code> first.</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#09f;font-style:italic">/* @class BlessedHelperDistantObject */</span>
 -(<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">uninstallRemotePrinting:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg2</span> {
     system([objc_retainAutorelease([[NSString <span style="color:#99f">stringWithFormat</span>:<span style="color:#c30">@&#34;rm -rf &#39;%@&#39;&#34;</span>, [[[[arg2 stringArguments] <span style="color:#069;font-weight:bold">retain</span>] remotePrintingPPDPath] <span style="color:#069;font-weight:bold">retain</span>]] <span style="color:#069;font-weight:bold">retain</span>]) UTF8String]);

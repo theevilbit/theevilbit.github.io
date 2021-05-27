@@ -5,7 +5,17 @@
     <link>https://theevilbit.github.io/categories/blog/</link>
     <description>Recent content in BLOG on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 23 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/categories/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 26 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/categories/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>TeamViewer Local Privilege Escalation Vulnerability</title>
+      <link>https://theevilbit.github.io/posts/teamviewer_lpe/</link>
+      <pubDate>Wed, 26 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/posts/teamviewer_lpe/</guid>
+      <description>Intro This is a rather old vulnerability I found in TeamViewer back in 2020, and reported it through VCP/iDefense. TeamViewer fixed the vulnerability last November, but somehow I missed it, and became aware of it only recently. Their advisory can be found here: November updates - Security patches — TeamViewer Support
+The TeamViewer macOS client uses a PrivilegedHelperTool named com.teamviewer.Helper to perform specific tasks that require root permissions. Back in 2020 it used a deprecate model to perform IPC communication, called Distributed Objects.</description>
+    </item>
+    
     <item>
       <title>Experiences with Apple Security Bounty</title>
       <link>https://theevilbit.github.io/posts/experiences_with_asb/</link>

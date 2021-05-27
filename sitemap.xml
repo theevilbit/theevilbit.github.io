@@ -4,7 +4,57 @@
   
   <url>
     <loc>https://theevilbit.github.io/year/2021/</loc>
-    <lastmod>2021-05-12T00:00:00+00:00</lastmod>
+    <lastmod>2021-05-26T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/categories/blog/</loc>
+    <lastmod>2021-05-26T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/categories/</loc>
+    <lastmod>2021-05-26T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/exploit/</loc>
+    <lastmod>2021-05-26T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/lpe/</loc>
+    <lastmod>2021-05-26T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/macos/</loc>
+    <lastmod>2021-05-26T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/posts/</loc>
+    <lastmod>2021-05-26T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/tags/</loc>
+    <lastmod>2021-05-26T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/posts/teamviewer_lpe/</loc>
+    <lastmod>2021-05-26T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/</loc>
+    <lastmod>2021-05-26T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://theevilbit.github.io/year/</loc>
+    <lastmod>2021-05-26T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -28,37 +78,12 @@
   </url>
   
   <url>
-    <loc>https://theevilbit.github.io/categories/</loc>
-    <lastmod>2021-05-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://theevilbit.github.io/tags/macos/</loc>
-    <lastmod>2021-05-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://theevilbit.github.io/tags/persistence/</loc>
     <lastmod>2021-05-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://theevilbit.github.io/categories/persistence/</loc>
-    <lastmod>2021-05-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://theevilbit.github.io/tags/</loc>
-    <lastmod>2021-05-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://theevilbit.github.io/</loc>
-    <lastmod>2021-05-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://theevilbit.github.io/year/</loc>
     <lastmod>2021-05-12T00:00:00+00:00</lastmod>
   </url>
   
@@ -73,17 +98,7 @@
   </url>
   
   <url>
-    <loc>https://theevilbit.github.io/categories/blog/</loc>
-    <lastmod>2021-04-23T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://theevilbit.github.io/posts/experiences_with_asb/</loc>
-    <lastmod>2021-04-23T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://theevilbit.github.io/posts/</loc>
     <lastmod>2021-04-23T00:00:00+00:00</lastmod>
   </url>
   
@@ -94,11 +109,6 @@
   
   <url>
     <loc>https://theevilbit.github.io/posts/macos_crashreporter/</loc>
-    <lastmod>2021-04-20T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://theevilbit.github.io/tags/lpe/</loc>
     <lastmod>2021-04-20T00:00:00+00:00</lastmod>
   </url>
   

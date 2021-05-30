@@ -11,14 +11,14 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 14 - atrun"/>
-<meta name="twitter:description" content="The at command set is a heritage *nix job scheduler on macOS. Although it&rsquo;s slowly being deprecated, it&rsquo;s still available on Big Sur, although disabled by default.
-Enabling atrun As described by atrun&rsquo;s man page, the scheduler can be enabled using the following command:
-sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.atrun.plist What is not mentioned, is that in order it to work, it needs Full Disk Access rights granted under privacy setting."/>
+<meta name="twitter:description" content="This is part 14 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ The at command set is a heritage *nix job scheduler on macOS. Although it&rsquo;s slowly being deprecated, it&rsquo;s still available on Big Sur, although disabled by default.
+Enabling atrun As described by atrun&rsquo;s man page, the scheduler can be enabled using the following command:"/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 14 - atrun" />
-<meta property="og:description" content="The at command set is a heritage *nix job scheduler on macOS. Although it&rsquo;s slowly being deprecated, it&rsquo;s still available on Big Sur, although disabled by default.
-Enabling atrun As described by atrun&rsquo;s man page, the scheduler can be enabled using the following command:
-sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.atrun.plist What is not mentioned, is that in order it to work, it needs Full Disk Access rights granted under privacy setting." />
+<meta property="og:description" content="This is part 14 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ The at command set is a heritage *nix job scheduler on macOS. Although it&rsquo;s slowly being deprecated, it&rsquo;s still available on Big Sur, although disabled by default.
+Enabling atrun As described by atrun&rsquo;s man page, the scheduler can be enabled using the following command:" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0014/" />
 <meta property="article:published_time" content="2021-04-27T00:00:00+00:00" />
@@ -142,7 +142,10 @@ sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.atrun.plist What 
       </header>
 
       <div>
-        <p>The <code>at</code> command set is a heritage *nix job scheduler on macOS. Although it&rsquo;s slowly being deprecated, it&rsquo;s still available on Big Sur, although disabled by default.</p>
+        <blockquote>
+<p>This is part 14 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+</blockquote>
+<p>The <code>at</code> command set is a heritage *nix job scheduler on macOS. Although it&rsquo;s slowly being deprecated, it&rsquo;s still available on Big Sur, although disabled by default.</p>
 <h2 id="enabling-atrun">Enabling atrun</h2>
 <p>As described by <code>atrun</code>&rsquo;s man page, the scheduler can be enabled using the following command:</p>
 <pre><code>sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.atrun.plist

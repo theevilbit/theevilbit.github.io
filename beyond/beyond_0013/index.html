@@ -11,12 +11,12 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 13 - Audio Plugins"/>
-<meta name="twitter:description" content="This is another one of my favorites for some reason. macOS being a popular audio editing device, supports external audio drivers and plugins. @xorrior wrote a very extensive blog post about these at his website, here: Audio Unit Plug-ins. Legitimate Un-signed Code Execution | by Christopher Ross | Posts By SpecterOps Team Members
-It is pretty amazing, and I don&rsquo;t plan to repeat what it&rsquo;s there but show another way of implementing a plugin."/>
+<meta name="twitter:description" content="This is part 13 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ This is another one of my favorites for some reason. macOS being a popular audio editing device, supports external audio drivers and plugins. @xorrior wrote a very extensive blog post about these at his website, here: Audio Unit Plug-ins. Legitimate Un-signed Code Execution | by Christopher Ross | Posts By SpecterOps Team Members"/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 13 - Audio Plugins" />
-<meta property="og:description" content="This is another one of my favorites for some reason. macOS being a popular audio editing device, supports external audio drivers and plugins. @xorrior wrote a very extensive blog post about these at his website, here: Audio Unit Plug-ins. Legitimate Un-signed Code Execution | by Christopher Ross | Posts By SpecterOps Team Members
-It is pretty amazing, and I don&rsquo;t plan to repeat what it&rsquo;s there but show another way of implementing a plugin." />
+<meta property="og:description" content="This is part 13 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ This is another one of my favorites for some reason. macOS being a popular audio editing device, supports external audio drivers and plugins. @xorrior wrote a very extensive blog post about these at his website, here: Audio Unit Plug-ins. Legitimate Un-signed Code Execution | by Christopher Ross | Posts By SpecterOps Team Members" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0013/" />
 <meta property="article:published_time" content="2021-04-19T00:00:00+00:00" />
@@ -140,7 +140,10 @@ It is pretty amazing, and I don&rsquo;t plan to repeat what it&rsquo;s there but
       </header>
 
       <div>
-        <p>This is another one of my favorites for some reason. macOS being a popular audio editing device, supports external audio drivers and plugins. <a href="https://twitter.com/xorrior">@xorrior</a> wrote a very extensive blog post about these at his website, here: <a href="https://posts.specterops.io/audio-unit-plug-ins-896d3434a882">Audio Unit Plug-ins. Legitimate Un-signed Code Execution | by Christopher Ross | Posts By SpecterOps Team Members</a></p>
+        <blockquote>
+<p>This is part 13 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+</blockquote>
+<p>This is another one of my favorites for some reason. macOS being a popular audio editing device, supports external audio drivers and plugins. <a href="https://twitter.com/xorrior">@xorrior</a> wrote a very extensive blog post about these at his website, here: <a href="https://posts.specterops.io/audio-unit-plug-ins-896d3434a882">Audio Unit Plug-ins. Legitimate Un-signed Code Execution | by Christopher Ross | Posts By SpecterOps Team Members</a></p>
 <p>It is pretty amazing, and I don&rsquo;t plan to repeat what it&rsquo;s there but show another way of implementing a plugin. I will briefly describe how to create a Hardware Abstraction Layer (HAL) Service plug-in.</p>
 <p>Apple has a nice documentation as well: <a href="https://developer.apple.com/library/archive/documentation/MusicAudio/Conceptual/CoreAudioOverview/Introduction/Introduction.html">Core Audio Overview</a></p>
 <p>HAL plugins are loaded by <code>coreaudiod</code>, which runs as root, and defined at <code>/System/Library/LaunchDaemons/com.apple.audio.coreaudiod.plist</code>. HAL plugins are located at <code>/Library/Audio/Plug-Ins/HAL</code>, which means that we require root access to install them.</p>

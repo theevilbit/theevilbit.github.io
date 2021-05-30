@@ -5,16 +5,26 @@
     <link>https://theevilbit.github.io/tags/persistence/</link>
     <description>Recent content in persistence on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 12 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/persistence/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 30 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/persistence/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 16 - Screen Saver</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0016/</link>
+      <pubDate>Sun, 30 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0016/</guid>
+      <description>This is part 16 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ Screen savers have been detailed recently by Leo Pitton his blog post: &amp;ldquo;Saving Your Access&amp;rdquo;. Considering that he already wrote most of the interesting stuff, I will try to show some new information, but there will be some overlap.</description>
+    </item>
+    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 15 - xsanctl</title>
       <link>https://theevilbit.github.io/beyond/beyond_0015/</link>
       <pubDate>Wed, 12 May 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0015/</guid>
-      <description>I run into this not so exciting persistent method when I was investigating xsanctl for&amp;hellip; other&amp;hellip; reasons&amp;hellip; xsanctl is a &amp;ldquo;Xsan file system control utility&amp;rdquo;, which allows us to mount and manage Xsans.
-The xsanctl binary can be found at /System/Library/Filesystems/acfs.fs/Contents/bin/xsanctl, however when we simply run the command it is run from /usr/sbin/xsanctl. If we check, this is a symbolic link.
-csaby@mac exploits % ls -l /usr/sbin/xsanctl lrwxr-xr-x 1 root wheel 63 Jan 1 2020 /usr/sbin/xsanctl -&amp;gt; /System/Library/Filesystems/acfs.</description>
+      <description>This is part 15 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ I run into this not so exciting persistent method when I was investigating xsanctl for&amp;hellip; other&amp;hellip; reasons&amp;hellip; xsanctl is a &amp;ldquo;Xsan file system control utility&amp;rdquo;, which allows us to mount and manage Xsans.
+The xsanctl binary can be found at /System/Library/Filesystems/acfs.</description>
     </item>
     
     <item>
@@ -23,9 +33,9 @@ csaby@mac exploits % ls -l /usr/sbin/xsanctl lrwxr-xr-x 1 root wheel 63 Jan 1 20
       <pubDate>Tue, 27 Apr 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0014/</guid>
-      <description>The at command set is a heritage *nix job scheduler on macOS. Although it&amp;rsquo;s slowly being deprecated, it&amp;rsquo;s still available on Big Sur, although disabled by default.
-Enabling atrun As described by atrun&amp;rsquo;s man page, the scheduler can be enabled using the following command:
-sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.atrun.plist What is not mentioned, is that in order it to work, it needs Full Disk Access rights granted under privacy setting.</description>
+      <description>This is part 14 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ The at command set is a heritage *nix job scheduler on macOS. Although it&amp;rsquo;s slowly being deprecated, it&amp;rsquo;s still available on Big Sur, although disabled by default.
+Enabling atrun As described by atrun&amp;rsquo;s man page, the scheduler can be enabled using the following command:</description>
     </item>
     
     <item>
@@ -34,8 +44,8 @@ sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.atrun.plist What 
       <pubDate>Mon, 19 Apr 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0013/</guid>
-      <description>This is another one of my favorites for some reason. macOS being a popular audio editing device, supports external audio drivers and plugins. @xorrior wrote a very extensive blog post about these at his website, here: Audio Unit Plug-ins. Legitimate Un-signed Code Execution | by Christopher Ross | Posts By SpecterOps Team Members
-It is pretty amazing, and I don&amp;rsquo;t plan to repeat what it&amp;rsquo;s there but show another way of implementing a plugin.</description>
+      <description>This is part 13 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ This is another one of my favorites for some reason. macOS being a popular audio editing device, supports external audio drivers and plugins. @xorrior wrote a very extensive blog post about these at his website, here: Audio Unit Plug-ins. Legitimate Un-signed Code Execution | by Christopher Ross | Posts By SpecterOps Team Members</description>
     </item>
     
     <item>

@@ -5,7 +5,16 @@
     <link>https://theevilbit.github.io/posts/</link>
     <description>Recent content in Posts on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 26 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 10 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>macOS Monterey Shortcuts - First look</title>
+      <link>https://theevilbit.github.io/posts/monterey_shortcuts/</link>
+      <pubDate>Thu, 10 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/posts/monterey_shortcuts/</guid>
+      <description>Apple announced macOS Monterey (macOS 12) this week at WWDC, and one of its new features that caught my eye is Shortcuts. It&amp;rsquo;s already available on iOS, but it made its way to macOS. My security focused brain immediately thought about how cool this feature could be for red teasers or pentesters to persist on macOS :) So I decided to take a quick look on the new functionality, focusing on how it works.</description>
+    </item>
+    
     <item>
       <title>TeamViewer Local Privilege Escalation Vulnerability</title>
       <link>https://theevilbit.github.io/posts/teamviewer_lpe/</link>

@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Tue, 16 Jun 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/f-secure/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Secure coding XPC Services - Part 5 - PID reuse attacks (CVE-2020-14977)</title>
+      <title>CVE-2020-14977 - Secure coding XPC Services - Part 5 - PID reuse attacks</title>
       <link>https://theevilbit.github.io/posts/secure_coding_xpc_part5/</link>
       <pubDate>Tue, 16 Jun 2020 00:00:00 +0000</pubDate>
       
@@ -17,7 +17,7 @@ The root cause The XPC services of F-Secure SAFE use the process ID (PID) to ver
     </item>
     
     <item>
-      <title>Secure coding XPC Services - Part 4 - Improved client authorization (CVE-2020-14978)</title>
+      <title>CVE-2020-14978 - Secure coding XPC Services - Part 4 - Improved client authorization</title>
       <link>https://theevilbit.github.io/posts/secure_coding_xpc_part4/</link>
       <pubDate>Fri, 12 Jun 2020 00:00:00 +0000</pubDate>
       

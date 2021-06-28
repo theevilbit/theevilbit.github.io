@@ -10,24 +10,25 @@
     
 
     <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Few click RCE via GitHub Desktop macOS client with Gatekeeper bypass and custom URL handlers"/>
+<meta name="twitter:title" content="NOCVE - Few click RCE via GitHub Desktop macOS client with Gatekeeper bypass and custom URL handlers"/>
 <meta name="twitter:description" content="TL;DR The GitHub Desktop app doesn’t add the quarantine extended attribute to files downloaded from the web, and this along with macOS’s URL handler auto-registration feature allows an attacker to execute arbitrary, even unsigned code on a macOS system. If we don’t count the clicks required to open the GitHub App, and cloning an external repository, then this is a 2 click RCE.
 The idea I recently came across a very good blog post about an RCE vulnerability on GitHub Desktop: GitHub Desktop RCE (OSX) - André Baptista via its custom URL handlers."/>
 
-    <meta property="og:title" content="Few click RCE via GitHub Desktop macOS client with Gatekeeper bypass and custom URL handlers" />
+    <meta property="og:title" content="NOCVE - Few click RCE via GitHub Desktop macOS client with Gatekeeper bypass and custom URL handlers" />
 <meta property="og:description" content="TL;DR The GitHub Desktop app doesn’t add the quarantine extended attribute to files downloaded from the web, and this along with macOS’s URL handler auto-registration feature allows an attacker to execute arbitrary, even unsigned code on a macOS system. If we don’t count the clicks required to open the GitHub App, and cloning an external repository, then this is a 2 click RCE.
 The idea I recently came across a very good blog post about an RCE vulnerability on GitHub Desktop: GitHub Desktop RCE (OSX) - André Baptista via its custom URL handlers." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://theevilbit.github.io/posts/few_click_rce_via_github_desktop_macos_client_with_gatekeeper_bypass_and_custom_url_handlers/" />
-<meta property="article:published_time" content="2019-10-05T00:00:00+00:00" />
-<meta property="article:modified_time" content="2019-10-05T00:00:00+00:00" />
+<meta property="og:url" content="https://theevilbit.github.io/posts/few_click_rce_via_github_desktop_macos_client_with_gatekeeper_bypass_and_custom_url_handlers/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2019-10-05T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2019-10-05T00:00:00&#43;00:00" />
+
 
 
     
       <base href="https://theevilbit.github.io/posts/few_click_rce_via_github_desktop_macos_client_with_gatekeeper_bypass_and_custom_url_handlers/">
     
     <title>
-  Few click RCE via GitHub Desktop macOS client with Gatekeeper bypass and custom URL handlers · theevilbit blog
+  NOCVE - Few click RCE via GitHub Desktop macOS client with Gatekeeper bypass and custom URL handlers · theevilbit blog
 </title>
 
     
@@ -55,7 +56,7 @@ The idea I recently came across a very good blog post about an RCE vulnerability
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.78.2" />
+    <meta name="generator" content="Hugo 0.84.1" />
   </head>
 
   <body class=" ">
@@ -107,7 +108,7 @@ The idea I recently came across a very good blog post about an RCE vulnerability
     <article>
       <header>
         <div class="post-title">
-          <h1 class="title">Few click RCE via GitHub Desktop macOS client with Gatekeeper bypass and custom URL handlers</h1>
+          <h1 class="title">NOCVE - Few click RCE via GitHub Desktop macOS client with Gatekeeper bypass and custom URL handlers</h1>
         </div>
         <div class="post-meta">
           <div class="date">
@@ -321,7 +322,6 @@ if (!doNotTrack) {
 	ga('send', 'pageview');
 }
 </script>
-
 
   </body>
 

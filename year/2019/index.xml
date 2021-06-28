@@ -16,7 +16,7 @@
     </item>
     
     <item>
-      <title>IOBit Unlocker 1.1.2 - Local Privilege Escalation (CVE-2020-14974 &amp; CVE-2020-14975)</title>
+      <title>CVE-2020-14974 &amp; CVE-2020-14975 - IOBit Unlocker 1.1.2 - Local Privilege Escalation</title>
       <link>https://theevilbit.github.io/posts/iobit_unlocker_lpe/</link>
       <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
       
@@ -28,7 +28,7 @@
     </item>
     
     <item>
-      <title>Few click RCE via GitHub Desktop macOS client with Gatekeeper bypass and custom URL handlers</title>
+      <title>NOCVE - Few click RCE via GitHub Desktop macOS client with Gatekeeper bypass and custom URL handlers</title>
       <link>https://theevilbit.github.io/posts/few_click_rce_via_github_desktop_macos_client_with_gatekeeper_bypass_and_custom_url_handlers/</link>
       <pubDate>Sat, 05 Oct 2019 00:00:00 +0000</pubDate>
       
@@ -69,7 +69,7 @@ What is HMValidateHandle? HMValidateHandle is an internal, unexported function o
     </item>
     
     <item>
-      <title>macOS - Getting root with benign AppStore apps</title>
+      <title>Talk - macOS - Getting root with benign AppStore apps</title>
       <link>https://theevilbit.github.io/posts/getting_root_with_benign_appstore_apps/</link>
       <pubDate>Sat, 01 Jun 2019 00:00:00 +0000</pubDate>
       
@@ -78,7 +78,7 @@ What is HMValidateHandle? HMValidateHandle is an internal, unexported function o
     </item>
     
     <item>
-      <title>GNS3 ubridge SETUID bit - arbitrary file read (CVE-2020-14976)</title>
+      <title>CVE-2020-14976 - GNS3 ubridge SETUID bit - arbitrary file read</title>
       <link>https://theevilbit.github.io/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/</link>
       <pubDate>Tue, 28 May 2019 00:00:00 +0000</pubDate>
       
@@ -88,7 +88,7 @@ What is HMValidateHandle? HMValidateHandle is an internal, unexported function o
     </item>
     
     <item>
-      <title>VMware Fusion 11 - Guest VM RCE - CVE-2019-5514</title>
+      <title>CVE-2019-5514 - VMware Fusion 11 - Guest VM RCE</title>
       <link>https://theevilbit.github.io/posts/vmware_fusion_11_guest_vm_rce_cve-2019-5514/</link>
       <pubDate>Sun, 31 Mar 2019 00:00:00 +0000</pubDate>
       

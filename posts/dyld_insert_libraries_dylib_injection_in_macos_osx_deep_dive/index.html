@@ -20,9 +20,10 @@
  “Do you typically callout user apps that allow dyld_insert_libraries?”
  And a few similar ones, and I will be honest, I had no idea what is he talking about, if only I understood the question :D Despite the fact that my recent blog posts and talks are about macOS, I deal much more with Windows on a daily basis, probably like 95%, and macOS is still a whole new territory for me." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://theevilbit.github.io/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/" />
-<meta property="article:published_time" content="2019-07-09T00:00:00+00:00" />
-<meta property="article:modified_time" content="2019-07-09T00:00:00+00:00" />
+<meta property="og:url" content="https://theevilbit.github.io/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2019-07-09T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2019-07-09T00:00:00&#43;00:00" />
+
 
 
     
@@ -57,7 +58,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.78.2" />
+    <meta name="generator" content="Hugo 0.84.1" />
   </head>
 
   <body class=" ">
@@ -251,7 +252,7 @@ Hello from dylib!
 	
 <span style="color:#099">#if __MAC_OS_X_VERSION_MIN_REQUIRED    
 </span><span style="color:#099"></span>    <span style="color:#09f;font-style:italic">// ask kernel if code signature of program makes it restricted
-</span><span style="color:#09f;font-style:italic"></span>    uint32_t flags;
+</span><span style="color:#09f;font-style:italic"></span>    <span style="color:#078;font-weight:bold">uint32_t</span> flags;
     <span style="color:#069;font-weight:bold">if</span> ( syscall(SYS_csops <span style="color:#09f;font-style:italic">/* 169 */</span>,
                 <span style="color:#f60">0</span> <span style="color:#09f;font-style:italic">/* asking about myself */</span>,
                 CS_OPS_STATUS,
@@ -274,10 +275,10 @@ Hello from dylib!
 </span><span style="color:#09f;font-style:italic"></span><span style="color:#099">#if __MAC_OS_X_VERSION_MIN_REQUIRED
 </span><span style="color:#099"></span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">bool</span> <span style="color:#c0f">hasRestrictedSegment</span>(<span style="color:#069;font-weight:bold">const</span> macho_header<span style="color:#555">*</span> mh)
 {
-	<span style="color:#069;font-weight:bold">const</span> uint32_t cmd_count <span style="color:#555">=</span> mh<span style="color:#555">-&gt;</span>ncmds;
+	<span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">uint32_t</span> cmd_count <span style="color:#555">=</span> mh<span style="color:#555">-&gt;</span>ncmds;
 	<span style="color:#069;font-weight:bold">const</span> <span style="color:#069;font-weight:bold">struct</span> load_command<span style="color:#555">*</span> <span style="color:#069;font-weight:bold">const</span> cmds <span style="color:#555">=</span> (<span style="color:#069;font-weight:bold">struct</span> load_command<span style="color:#555">*</span>)(((<span style="color:#078;font-weight:bold">char</span><span style="color:#555">*</span>)mh)<span style="color:#555">+</span><span style="color:#069;font-weight:bold">sizeof</span>(macho_header));
 	<span style="color:#069;font-weight:bold">const</span> <span style="color:#069;font-weight:bold">struct</span> load_command<span style="color:#555">*</span> cmd <span style="color:#555">=</span> cmds;
-	<span style="color:#069;font-weight:bold">for</span> (uint32_t i <span style="color:#555">=</span> <span style="color:#f60">0</span>; i <span style="color:#555">&lt;</span> cmd_count; <span style="color:#555">++</span>i) {
+	<span style="color:#069;font-weight:bold">for</span> (<span style="color:#078;font-weight:bold">uint32_t</span> i <span style="color:#555">=</span> <span style="color:#f60">0</span>; i <span style="color:#555">&lt;</span> cmd_count; <span style="color:#555">++</span>i) {
 		<span style="color:#069;font-weight:bold">switch</span> (cmd<span style="color:#555">-&gt;</span>cmd) {
 			<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">LC_SEGMENT_COMMAND</span>:
 			{
@@ -304,7 +305,7 @@ Hello from dylib!
 </span></code></pre></div><p>Now, the above is the old source code, that was referred in the article above - since then it has evolved. The latest available code is <a href="https://opensource.apple.com/source/dyld/dyld-635.2/src/dyld.cpp.auto.html">dyld.cpp</a> looks slightly more complicated,  but essentially the same idea.  Here is the relevant code segment, that sets the restriction, and the one that returns it (<code>configureProcessRestrictions , processIsRestricted </code>):</p>
 <div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">configureProcessRestrictions</span>(<span style="color:#069;font-weight:bold">const</span> macho_header<span style="color:#555">*</span> mainExecutableMH)
 {
-	uint64_t amfiInputFlags <span style="color:#555">=</span> <span style="color:#f60">0</span>;
+	<span style="color:#078;font-weight:bold">uint64_t</span> amfiInputFlags <span style="color:#555">=</span> <span style="color:#f60">0</span>;
 <span style="color:#099">#if TARGET_IPHONE_SIMULATOR
 </span><span style="color:#099"></span>	amfiInputFlags <span style="color:#555">|=</span> AMFI_DYLD_INPUT_PROC_IN_SIMULATOR;
 <span style="color:#099">#elif __MAC_OS_X_VERSION_MIN_REQUIRED
@@ -314,7 +315,7 @@ Hello from dylib!
 </span><span style="color:#099"></span>	<span style="color:#069;font-weight:bold">if</span> ( isFairPlayEncrypted(mainExecutableMH) )
 		amfiInputFlags <span style="color:#555">|=</span> AMFI_DYLD_INPUT_PROC_IS_ENCRYPTED;
 <span style="color:#099">#endif
-</span><span style="color:#099"></span>	uint64_t amfiOutputFlags <span style="color:#555">=</span> <span style="color:#f60">0</span>;
+</span><span style="color:#099"></span>	<span style="color:#078;font-weight:bold">uint64_t</span> amfiOutputFlags <span style="color:#555">=</span> <span style="color:#f60">0</span>;
 	<span style="color:#069;font-weight:bold">if</span> ( amfi_check_dyld_policy_self(amfiInputFlags, <span style="color:#555">&amp;</span>amfiOutputFlags) <span style="color:#555">==</span> <span style="color:#f60">0</span> ) {
 		gLinkContext.allowAtPaths 				<span style="color:#555">=</span> (amfiOutputFlags <span style="color:#555">&amp;</span> AMFI_DYLD_OUTPUT_ALLOW_AT_PATH);
 		gLinkContext.allowEnvVarsPrint			<span style="color:#555">=</span> (amfiOutputFlags <span style="color:#555">&amp;</span> AMFI_DYLD_OUTPUT_ALLOW_PRINT_VARS);
@@ -333,7 +334,7 @@ Hello from dylib!
 			isRestricted <span style="color:#555">=</span> <span style="color:#366">true</span>;
 		}
 		<span style="color:#078;font-weight:bold">bool</span> usingSIP <span style="color:#555">=</span> (csr_check(CSR_ALLOW_TASK_FOR_PID) <span style="color:#555">!=</span> <span style="color:#f60">0</span>);
-		uint32_t flags;
+		<span style="color:#078;font-weight:bold">uint32_t</span> flags;
 		<span style="color:#069;font-weight:bold">if</span> ( csops(<span style="color:#f60">0</span>, CS_OPS_STATUS, <span style="color:#555">&amp;</span>flags, <span style="color:#069;font-weight:bold">sizeof</span>(flags)) <span style="color:#555">!=</span> <span style="color:#555">-</span><span style="color:#f60">1</span> ) {
 			<span style="color:#09f;font-style:italic">// On OS X CS_RESTRICT means the program was signed with entitlements
 </span><span style="color:#09f;font-style:italic"></span>			<span style="color:#069;font-weight:bold">if</span> ( ((flags <span style="color:#555">&amp;</span> CS_RESTRICT) <span style="color:#555">==</span> CS_RESTRICT) <span style="color:#555">&amp;&amp;</span> usingSIP ) {
@@ -599,8 +600,8 @@ username <span style="color:#555">=</span> getpass<span style="color:#555">.</sp
 				<span style="color:#069;font-weight:bold">if</span> <span style="color:#366">int</span>(specialPermission) <span style="color:#555">&gt;=</span> <span style="color:#f60">4</span>:
 					p <span style="color:#555">=</span> Path(os<span style="color:#555">.</span>path<span style="color:#555">.</span>abspath(os<span style="color:#555">.</span>path<span style="color:#555">.</span>join(absPath, os<span style="color:#555">.</span>pardir)))
 					<span style="color:#069;font-weight:bold">if</span> p<span style="color:#555">.</span>owner() <span style="color:#555">==</span> username:
-						<span style="color:#069;font-weight:bold">print</span>(<span style="color:#c30">&#34;Potential issue found, owner of parent folder is:&#34;</span>, username)
-						<span style="color:#069;font-weight:bold">print</span>(permission , absPath)
+						<span style="color:#366">print</span>(<span style="color:#c30">&#34;Potential issue found, owner of parent folder is:&#34;</span>, username)
+						<span style="color:#366">print</span>(permission , absPath)
 			<span style="color:#069;font-weight:bold">except</span>:
 				<span style="color:#069;font-weight:bold">pass</span>
 </code></pre></div><p>One last thought on this topic is GateKeeper. You can inject quarantine flagged binaries in Mojave, which in fact is pretty much expected.</p>
@@ -672,7 +673,6 @@ if (!doNotTrack) {
 	ga('send', 'pageview');
 }
 </script>
-
 
   </body>
 

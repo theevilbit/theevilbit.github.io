@@ -26,7 +26,7 @@ This could be achieved with a single command, for example: mount_apfs -o noowner
     </item>
     
     <item>
-      <title>Exploiting directory permissions on macOS</title>
+      <title>TALK - Exploiting directory permissions on macOS</title>
       <link>https://theevilbit.github.io/posts/exploiting_directory_permissions_on_macos/</link>
       <pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate>
       

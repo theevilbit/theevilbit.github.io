@@ -18,9 +18,10 @@ What is HMValidateHandle? HMValidateHandle is an internal, unexported function o
 <meta property="og:description" content="In the recent days I was reading technical analysis of win32k exploits from recent years, and it caught my eyes, that the HMValidateHandle technique is very heavily used almost everywhere. Then I had an idea how to protect against this family of exploits, which I think is very simple. This post will be about that.
 What is HMValidateHandle? HMValidateHandle is an internal, unexported function of user32.dll. It takes a handle and a handle type as arguments, and by looking up the handle table, if the handle is matching with the type it will copy the object to user memory." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://theevilbit.github.io/posts/a_simple_protection_against_hmvalidatehandle_technique/" />
-<meta property="article:published_time" content="2019-07-31T00:00:00+00:00" />
-<meta property="article:modified_time" content="2019-07-31T00:00:00+00:00" />
+<meta property="og:url" content="https://theevilbit.github.io/posts/a_simple_protection_against_hmvalidatehandle_technique/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2019-07-31T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2019-07-31T00:00:00&#43;00:00" />
+
 
 
     
@@ -55,7 +56,7 @@ What is HMValidateHandle? HMValidateHandle is an internal, unexported function o
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.78.2" />
+    <meta name="generator" content="Hugo 0.84.1" />
   </head>
 
   <body class=" ">
@@ -326,7 +327,6 @@ if (!doNotTrack) {
 	ga('send', 'pageview');
 }
 </script>
-
 
   </body>
 

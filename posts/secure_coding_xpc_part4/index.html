@@ -10,22 +10,23 @@
     
 
     <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Secure coding XPC Services - Part 4 - Improved client authorization (CVE-2020-14978)"/>
+<meta name="twitter:title" content="CVE-2020-14978 - Secure coding XPC Services - Part 4 - Improved client authorization"/>
 <meta name="twitter:description" content="F-Secure SAFE XPC service exploitation (CVE-2020-14978) Intro In this post we will look into an other case study which will show us (again) why XPC client verification is crucial in XPC security, and how added authorization checks can slightly improve (but not fix) the problem. The F-Secure SAFE XPC services installed on macOS were not sufficiently hardened, and a malicious actor had the ability to interact with them. The vulnerability was fixed in version 17."/>
 
-    <meta property="og:title" content="Secure coding XPC Services - Part 4 - Improved client authorization (CVE-2020-14978)" />
+    <meta property="og:title" content="CVE-2020-14978 - Secure coding XPC Services - Part 4 - Improved client authorization" />
 <meta property="og:description" content="F-Secure SAFE XPC service exploitation (CVE-2020-14978) Intro In this post we will look into an other case study which will show us (again) why XPC client verification is crucial in XPC security, and how added authorization checks can slightly improve (but not fix) the problem. The F-Secure SAFE XPC services installed on macOS were not sufficiently hardened, and a malicious actor had the ability to interact with them. The vulnerability was fixed in version 17." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://theevilbit.github.io/posts/secure_coding_xpc_part4/" />
-<meta property="article:published_time" content="2020-06-12T00:00:00+00:00" />
-<meta property="article:modified_time" content="2020-06-12T00:00:00+00:00" />
+<meta property="og:url" content="https://theevilbit.github.io/posts/secure_coding_xpc_part4/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-06-12T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2020-06-12T00:00:00&#43;00:00" />
+
 
 
     
       <base href="https://theevilbit.github.io/posts/secure_coding_xpc_part4/">
     
     <title>
-  Secure coding XPC Services - Part 4 - Improved client authorization (CVE-2020-14978) · theevilbit blog
+  CVE-2020-14978 - Secure coding XPC Services - Part 4 - Improved client authorization · theevilbit blog
 </title>
 
     
@@ -53,7 +54,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.78.2" />
+    <meta name="generator" content="Hugo 0.84.1" />
   </head>
 
   <body class=" ">
@@ -105,7 +106,7 @@
     <article>
       <header>
         <div class="post-title">
-          <h1 class="title">Secure coding XPC Services - Part 4 - Improved client authorization (CVE-2020-14978)</h1>
+          <h1 class="title">CVE-2020-14978 - Secure coding XPC Services - Part 4 - Improved client authorization</h1>
         </div>
         <div class="post-meta">
           <div class="date">
@@ -390,7 +391,6 @@ if (!doNotTrack) {
 	ga('send', 'pageview');
 }
 </script>
-
 
   </body>
 

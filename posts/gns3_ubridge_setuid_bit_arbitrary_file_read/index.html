@@ -10,24 +10,25 @@
     
 
     <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="GNS3 ubridge SETUID bit - arbitrary file read (CVE-2020-14976)"/>
+<meta name="twitter:title" content="CVE-2020-14976 - GNS3 ubridge SETUID bit - arbitrary file read"/>
 <meta name="twitter:description" content="A couple of weeks ago, I had the idea of scanning my Mac for files that has the SUID bit set, I wanted to see if there is anything interesting showing up. You can do it this way:
 /usr/bin/sudo find / -perm -4000 -exec /bin/ls -ldb {} \; &gt; suidfilelist There was one item that caught my attention, and that was a file called ubridge inside GNS3. I used to be a network guy, and GNS3 is a great tool to emulate real network gear, practice configuration, etc."/>
 
-    <meta property="og:title" content="GNS3 ubridge SETUID bit - arbitrary file read (CVE-2020-14976)" />
+    <meta property="og:title" content="CVE-2020-14976 - GNS3 ubridge SETUID bit - arbitrary file read" />
 <meta property="og:description" content="A couple of weeks ago, I had the idea of scanning my Mac for files that has the SUID bit set, I wanted to see if there is anything interesting showing up. You can do it this way:
 /usr/bin/sudo find / -perm -4000 -exec /bin/ls -ldb {} \; &gt; suidfilelist There was one item that caught my attention, and that was a file called ubridge inside GNS3. I used to be a network guy, and GNS3 is a great tool to emulate real network gear, practice configuration, etc." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://theevilbit.github.io/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/" />
-<meta property="article:published_time" content="2019-05-28T00:00:00+00:00" />
-<meta property="article:modified_time" content="2019-05-28T00:00:00+00:00" />
+<meta property="og:url" content="https://theevilbit.github.io/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2019-05-28T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2019-05-28T00:00:00&#43;00:00" />
+
 
 
     
       <base href="https://theevilbit.github.io/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/">
     
     <title>
-  GNS3 ubridge SETUID bit - arbitrary file read (CVE-2020-14976) · theevilbit blog
+  CVE-2020-14976 - GNS3 ubridge SETUID bit - arbitrary file read · theevilbit blog
 </title>
 
     
@@ -55,7 +56,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.78.2" />
+    <meta name="generator" content="Hugo 0.84.1" />
   </head>
 
   <body class=" ">
@@ -107,7 +108,7 @@
     <article>
       <header>
         <div class="post-title">
-          <h1 class="title">GNS3 ubridge SETUID bit - arbitrary file read (CVE-2020-14976)</h1>
+          <h1 class="title">CVE-2020-14976 - GNS3 ubridge SETUID bit - arbitrary file read</h1>
         </div>
         <div class="post-meta">
           <div class="date">
@@ -241,7 +242,6 @@ if (!doNotTrack) {
 	ga('send', 'pageview');
 }
 </script>
-
 
   </body>
 

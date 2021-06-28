@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Csaba Fitzl">
+    
+    
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 18 - X11 and XQuartz"/>
+<meta name="twitter:description" content="This is part 18 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ I learned about XQuartz while reading Armin Briegel&rsquo;s ‎macOS Terminal and shell book. It&rsquo;s one of the alternative third party terminals we can install on macOS. As most terminals, this one also offers unique options to persist on the system."/>
+
+    <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 18 - X11 and XQuartz" />
+<meta property="og:description" content="This is part 18 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ I learned about XQuartz while reading Armin Briegel&rsquo;s ‎macOS Terminal and shell book. It&rsquo;s one of the alternative third party terminals we can install on macOS. As most terminals, this one also offers unique options to persist on the system." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0018/" />
+<meta property="article:published_time" content="2021-06-28T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-06-28T00:00:00+00:00" />
+
+
+    
+      <base href="https://theevilbit.github.io/beyond/beyond_0018/">
+    
+    <title>
+  Beyond the good ol&#39; LaunchAgents - 18 - X11 and XQuartz · theevilbit blog
+</title>
+
+    
+      <link rel="canonical" href="https://theevilbit.github.io/beyond/beyond_0018/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+
+    
+    
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.78.2" />
+  </head>
+
+  <body class=" ">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://theevilbit.github.io/">
+      theevilbit blog
+    </a>
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/categories/">Categories</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+          </li>
+        
+      
+      
+    </ul>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Beyond the good ol&#39; LaunchAgents - 18 - X11 and XQuartz</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2021-06-28T00:00:00Z'>
+                June 28, 2021
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              3 minutes read
+            </span>
+          </div>
+          <div class="categories">
+  <i class="fas fa-folder"></i>
+    <a href="https://theevilbit.github.io/categories/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/categories/beyond/">beyond</a></div>
+
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/beyond/">beyond</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        <blockquote>
+<p>This is part 18 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+</blockquote>
+<p>I learned about <a href="https://www.xquartz.org/">XQuartz</a> while reading Armin Briegel&rsquo;s <a href="https://books.apple.com/hu/book/macos-terminal-and-shell/id1550617226">‎macOS Terminal and shell</a> book. It&rsquo;s one of the alternative third party terminals we can install on macOS. As most terminals, this one also offers unique options to persist on the system.</p>
+<p>X11 used to be part of OS X, till 10.7, and it was open source, which we can find <a href="https://opensource.apple.com/source/X11server/X11server-106.7/">here</a>.</p>
+<blockquote>
+<p>The XQuartz project is an open-source effort to develop a version of the  <a href="https://www.x.org/">X.Org X Window System</a>  that runs on macOS.</p>
+</blockquote>
+<p>This X window environment supports various initialization script. They can be found under the <code>/opt/X11/etc/X11/xinit</code> directory.</p>
+<pre><code>csaby@bigsur ~ % ls -lR /opt/X11/etc/X11/xinit         
+total 8
+drwxr-xr-x  5 root  wheel  160 Jun 26 12:50 privileged_startx.d
+-rw-r--r--  1 root  wheel  957 Apr 25 15:08 xinitrc
+drwxr-xr-x  5 root  wheel  160 Apr  7 23:31 xinitrc.d
+
+/opt/X11/etc/X11/xinit/privileged_startx.d:
+total 24
+-rwxr-xr-x  1 root  wheel  2263 Apr 25 15:08 10-tmpdirs
+-rwxr-xr-x  1 root  wheel  1561 Apr 25 15:08 20-font_cache
+-rwxr-xr-x  1 root  wheel    32 Jun 26 12:52 x.sh
+
+/opt/X11/etc/X11/xinit/xinitrc.d:
+total 24
+-rwxr-xr-x  1 root  wheel  638 Apr  7 23:31 10-fontdir.sh
+-rwxr-xr-x  1 root  wheel  157 Jan  9 14:57 98-user.sh
+-rwxr-xr-x  1 root  wheel  297 Jan  9 14:57 99-quartz-wm.sh
+</code></pre><p>The <code>xinitrc</code> script is similar to the other shell startup files I discussed in my previous <a href="https://theevilbit.github.io/beyond/beyond_0001/">post</a>. It&rsquo;s owned by root, but we can make a copy of it to our HOME directory, name it <code>.xinitrc</code> and it will be executed upon opening <code>xterm</code>.</p>
+<p><code>.xserverrc</code> is another similar file, that will be consumed by this environment.</p>
+<p>The <code>/opt/X11/etc/X11/xinit/xinitrc.d</code> directory contains other scripts.</p>
+<p>If we create a script here, it will be executed upon starting xterm.</p>
+<pre><code>csaby@bigsur xinitrc.d % pwd
+/opt/X11/etc/X11/xinit/xinitrc.d
+
+csaby@bigsur xinitrc.d % cat 11-touch.sh 
+touch ~/x11.txt
+</code></pre><p>Above we have a script which creates a file <code>x11.txt</code> in the user&rsquo;s HOME folder upon starting <code>xterm</code>. This is shown below.</p>
+<p><img src="https://theevilbit.github.io/images/beyond/beyond_0018_0.png" alt=""></p>
+<p>The last directory to explore is <code>/opt/X11/etc/X11/xinit/privileged_startx.d</code>. It also contains scripts, and whatever we put here, will be executed by the <code>privileged_startx</code> process as root. This process is defined in <code>/Library/LaunchDaemons/org.xquartz.privileged_startx.plist</code> as follows.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+<span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>Label<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>org.xquartz.privileged_startx<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>ProgramArguments<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/opt/X11/libexec/privileged_startx<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>-d<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/opt/X11/etc/X11/xinit/privileged_startx.d<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>MachServices<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>org.xquartz.privileged_startx<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>TimeOut<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>120<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>EnableTransactions<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
+</code></pre></div><p>If we check Apple&rsquo;s source code <a href="https://opensource.apple.com/source/X11server/X11server-106.7/xinit/xinit-1.3.0/privileged_startx/server.c.auto.html">server.c</a> we can find the related code that runs these files.</p>
+<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">kern_return_t <span style="color:#c0f">do_privileged_startx</span>(mach_port_t test_port __attribute__((unused))) {
+...
+    <span style="color:#09f;font-style:italic">/* Itterate over these files in alphabetical order */</span>
+    <span style="color:#069;font-weight:bold">for</span>(; ftsent; ftsent <span style="color:#555">=</span> ftsent<span style="color:#555">-&gt;</span>fts_link) {
+        <span style="color:#09f;font-style:italic">/* We only source regular files that are executable */</span>
+        <span style="color:#09f;font-style:italic">/* Note: This assumes we own them, which should always be the case */</span>
+        <span style="color:#069;font-weight:bold">if</span>((ftsent<span style="color:#555">-&gt;</span>fts_statp<span style="color:#555">-&gt;</span>st_mode <span style="color:#555">&amp;</span> S_IFREG) <span style="color:#555">&amp;&amp;</span>
+           (ftsent<span style="color:#555">-&gt;</span>fts_statp<span style="color:#555">-&gt;</span>st_mode <span style="color:#555">&amp;</span> S_IXUSR)) {
+
+            <span style="color:#09f;font-style:italic">/* Complete the full path filename in fn_buf */</span>
+            strcpy(s, ftsent<span style="color:#555">-&gt;</span>fts_name);
+
+            <span style="color:#09f;font-style:italic">/* Run it */</span>
+            error_code <span style="color:#555">=</span> system(fn_buf);
+            <span style="color:#069;font-weight:bold">if</span>(error_code <span style="color:#555">!=</span> <span style="color:#f60">0</span>) {
+                asl_log(<span style="color:#366">NULL</span>, <span style="color:#366">NULL</span>, ASL_LEVEL_ERR,
+                        <span style="color:#c30">&#34;do_privileged_startx: %s: exited with status %d</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>,
+                        fn_buf, error_code);
+                retval <span style="color:#555">=</span> KERN_FAILURE;
+            }
+        }
+    }
+
+</code></pre></div><p>This is a nice place to persist as root. Since Xquartz is not sandboxed (as shown below) it&rsquo;s even better.</p>
+<pre><code>csaby@bigsur ~ % codesign -dv --entitlements :- /Applications/Utilities/XQuartz.app          
+Executable=/Applications/Utilities/XQuartz.app/Contents/MacOS/X11
+Identifier=org.xquartz.X11
+Format=app bundle with Mach-O universal (x86_64 arm64)
+CodeDirectory v=20500 size=507 flags=0x10000(runtime) hashes=9+3 location=embedded
+Signature size=9072
+Timestamp=2021. Apr 25. 15:38:28
+Info.plist entries=20
+TeamIdentifier=NA574AWV7E
+Runtime Version=11.4.0
+Sealed Resources version=2 rules=13 files=96
+Internal requirements count=1 size=176
+</code></pre>
+      </div>
+
+      <footer>
+        
+
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+     © 2021
+    
+       · 
+      Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.
+    
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-151008930-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+  </body>
+
+</html>

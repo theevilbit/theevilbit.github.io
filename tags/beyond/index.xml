@@ -5,7 +5,17 @@
     <link>https://theevilbit.github.io/tags/beyond/</link>
     <description>Recent content in beyond on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 31 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/beyond/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 28 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/beyond/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 18 - X11 and XQuartz</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0018/</link>
+      <pubDate>Mon, 28 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0018/</guid>
+      <description>This is part 18 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ I learned about XQuartz while reading Armin Briegel&amp;rsquo;s ‎macOS Terminal and shell book. It&amp;rsquo;s one of the alternative third party terminals we can install on macOS. As most terminals, this one also offers unique options to persist on the system.</description>
+    </item>
+    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 17 - Color Pickers</title>
       <link>https://theevilbit.github.io/beyond/beyond_0017/</link>

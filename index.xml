@@ -5,7 +5,17 @@
     <link>https://theevilbit.github.io/</link>
     <description>Recent content on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 28 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 29 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>GateKeeper - Not a Bypass (Again)</title>
+      <link>https://theevilbit.github.io/posts/gatekeeper_not_a_bypass/</link>
+      <pubDate>Tue, 29 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/posts/gatekeeper_not_a_bypass/</guid>
+      <description>This post is about two techniques that can be useful for someone to evade GateKeeper in a red team engagement or pentest. According to Apple these are not considered bypasses, and everything works as expected.
+mmap Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel extension. It uses the MAC policy framework to insert hooks on the system on various points. These functions are named as hook*. Let&amp;rsquo;s take a look on what is implemented.</description>
+    </item>
+    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 18 - X11 and XQuartz</title>
       <link>https://theevilbit.github.io/beyond/beyond_0018/</link>

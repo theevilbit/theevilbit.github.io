@@ -5,22 +5,40 @@
     <link>https://theevilbit.github.io/tags/</link>
     <description>Recent content in Tags on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 28 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 29 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>beyond</title>
-      <link>https://theevilbit.github.io/tags/beyond/</link>
-      <pubDate>Mon, 28 Jun 2021 00:00:00 +0000</pubDate>
+      <title>gatekeeper</title>
+      <link>https://theevilbit.github.io/tags/gatekeeper/</link>
+      <pubDate>Tue, 29 Jun 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://theevilbit.github.io/tags/beyond/</guid>
+      <guid>https://theevilbit.github.io/tags/gatekeeper/</guid>
       <description></description>
     </item>
     
     <item>
       <title>macos</title>
       <link>https://theevilbit.github.io/tags/macos/</link>
-      <pubDate>Mon, 28 Jun 2021 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 29 Jun 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/tags/macos/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>redteam</title>
+      <link>https://theevilbit.github.io/tags/redteam/</link>
+      <pubDate>Tue, 29 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/tags/redteam/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>beyond</title>
+      <link>https://theevilbit.github.io/tags/beyond/</link>
+      <pubDate>Mon, 28 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/tags/beyond/</guid>
       <description></description>
     </item>
     
@@ -237,15 +255,6 @@
       <pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/tags/conference/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>gatekeeper</title>
-      <link>https://theevilbit.github.io/tags/gatekeeper/</link>
-      <pubDate>Fri, 25 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://theevilbit.github.io/tags/gatekeeper/</guid>
       <description></description>
     </item>
     

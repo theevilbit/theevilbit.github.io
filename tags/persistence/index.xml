@@ -5,7 +5,18 @@
     <link>https://theevilbit.github.io/tags/persistence/</link>
     <description>Recent content in persistence on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 28 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/persistence/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 06 Aug 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/persistence/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 19 - Periodic Scripts</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0019/</link>
+      <pubDate>Fri, 06 Aug 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0019/</guid>
+      <description>This is part 19 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ This post has been long due, as it&amp;rsquo;s one of my favorite persistence tricks. Up until Big Sur 11.5 you could also exploit it for privilege escalation if Homebrew was installed on the system.
+Periodic scripts have a FreeBSD origin.</description>
+    </item>
+    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 18 - X11 and XQuartz</title>
       <link>https://theevilbit.github.io/beyond/beyond_0018/</link>

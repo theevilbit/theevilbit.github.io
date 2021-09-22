@@ -5,7 +5,18 @@
     <link>https://theevilbit.github.io/beyond/</link>
     <description>Recent content in Beyonds on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 06 Aug 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/beyond/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 22 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/beyond/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 20 - Terminal Preferences</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0020/</link>
+      <pubDate>Wed, 22 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0020/</guid>
+      <description>This is part 20 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ This is another application specific persistence method, related to the Terminal application.
+In the Terminal Preferences, under the Profiles tab, we can set a command that will be executed upon Terminal&amp;rsquo;s startup. This is shown in the screen below.</description>
+    </item>
+    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 19 - Periodic Scripts</title>
       <link>https://theevilbit.github.io/beyond/beyond_0019/</link>

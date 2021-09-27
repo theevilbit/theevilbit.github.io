@@ -5,7 +5,17 @@
     <link>https://theevilbit.github.io/year/2021/</link>
     <description>Recent content in 2021 on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 22 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/year/2021/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 27 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/year/2021/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Getting started in macOS security</title>
+      <link>https://theevilbit.github.io/posts/getting_started_in_macos_security/</link>
+      <pubDate>Mon, 27 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/posts/getting_started_in_macos_security/</guid>
+      <description>Many people used to ask me where to start learning about macOS security or exploitation, what are the trainings or books out there that can help with this topic. Nowadays there are a few trainings, which can get you started. Other great resources for macOS security are blog posts and conference talks.
+I thought I will try to collect some resources that can help people to get started in this field.</description>
+    </item>
+    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 20 - Terminal Preferences</title>
       <link>https://theevilbit.github.io/beyond/beyond_0020/</link>

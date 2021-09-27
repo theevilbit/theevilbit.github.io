@@ -11,16 +11,16 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Getting started in macOS security"/>
-<meta name="twitter:description" content="Many people used to ask me where to start learning about macOS security or exploitation, what are the trainings or books out there that can help with this topic. Surprisingly there is great coverage for macOS internals and defense, which are even recent vs exploitation, where everything is 9&#43; years old. If you are interested in offensive macOS research, you are stuck with blog posts and conference talks.
+<meta name="twitter:description" content="Many people used to ask me where to start learning about macOS security or exploitation, what are the trainings or books out there that can help with this topic. Nowadays there are a few trainings, which can get you started. Other great resources for macOS security are blog posts and conference talks.
 I thought I will try to collect some resources that can help people to get started in this field."/>
 
     <meta property="og:title" content="Getting started in macOS security" />
-<meta property="og:description" content="Many people used to ask me where to start learning about macOS security or exploitation, what are the trainings or books out there that can help with this topic. Surprisingly there is great coverage for macOS internals and defense, which are even recent vs exploitation, where everything is 9&#43; years old. If you are interested in offensive macOS research, you are stuck with blog posts and conference talks.
+<meta property="og:description" content="Many people used to ask me where to start learning about macOS security or exploitation, what are the trainings or books out there that can help with this topic. Nowadays there are a few trainings, which can get you started. Other great resources for macOS security are blog posts and conference talks.
 I thought I will try to collect some resources that can help people to get started in this field." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/getting_started_in_macos_security/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2020-10-26T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2020-10-26T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2021-09-27T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-09-27T00:00:00&#43;00:00" />
 
 
 
@@ -114,13 +114,13 @@ I thought I will try to collect some resources that can help people to get start
           <div class="date">
             <span class="posted-on">
               <i class="fas fa-calendar"></i>
-              <time datetime='2020-10-26T00:00:00Z'>
-                October 26, 2020
+              <time datetime='2021-09-27T00:00:00Z'>
+                September 27, 2021
               </time>
             </span>
             <span class="reading-time">
               <i class="fas fa-clock"></i>
-              5 minutes read
+              6 minutes read
             </span>
           </div>
           <div class="categories">
@@ -137,23 +137,46 @@ I thought I will try to collect some resources that can help people to get start
       </header>
 
       <div>
-        <p>Many people used to ask me where to start learning about macOS security or exploitation, what are the trainings or books out there that can help with this topic. Surprisingly there is great coverage for macOS internals and defense, which are even recent vs exploitation, where everything is 9+ years old. If you are interested in offensive macOS research, you are stuck with blog posts and conference talks.</p>
+        <p>Many people used to ask me where to start learning about macOS security or exploitation, what are the trainings or books out there that can help with this topic. Nowadays there are a few trainings, which can get you started. Other great resources for macOS security are blog posts and conference talks.</p>
 <p>I thought I will try to collect some resources that can help people to get started in this field.</p>
 <h2 id="training">Training</h2>
-<p>There are two different classes for macOS internals and one for forensics.</p>
-<p>One is offered by <a href="https://twitter.com/i0n1c">Stefan Esser</a>, and it&rsquo;s called <a href="https://www.antid0te.com/stories/training.html">iOS and MacOS Kernel Internals for Security Researchers</a>, this one focuses on macOS kernel internals as the name suggests.</p>
-<p>The other is created by <a href="https://twitter.com/Technologeeks">Jonathan Levin / Technologeeks</a>, and is more broadly about <a href="http://technologeeks.com/courses.jl">OSX and iOS internals and security</a>. Although it&rsquo;s not offered live anymore, an online version should come out shortly.</p>
-<p>SANS has a <a href="https://www.sans.org/cyber-security-courses/mac-and-ios-forensic-analysis-and-incident-response/">Mac &amp; IOS Forensic Analysis &amp; Incident Response Training | SANS FOR518</a>, which is created by Sarah Edwards.</p>
+<p>There are quite a few trainings as of 2021, this wasn&rsquo;t the case in the past, but as the popularity of macOS is growing, so the training offerings.</p>
+<h3 id="internals">Internals</h3>
+<ul>
+<li>
+<p><a href="https://twitter.com/i0n1c">Stefan Esser</a> created <a href="https://www.antid0te.com/stories/training.html">iOS and MacOS Kernel Internals for Security Researchers</a>, this one focuses on macOS kernel internals as the name suggests.</p>
+</li>
+<li>
+<p>The other is created by <a href="https://twitter.com/Technologeeks">Jonathan Levin / Technologeeks</a>, and is more broadly about <a href="http://technologeeks.com/courses.jl">OSX and iOS internals and security</a>. Although it&rsquo;s not offered live anymore, an online version should come out&hellip; but no one knows when, it&rsquo;s being promised for to years now.</p>
+</li>
+</ul>
+<h3 id="offense">Offense</h3>
+<ul>
+<li>
+<p><a href="https://www.offensive-security.com/">Offensive Security</a> offers now a full blown course, which covers macOS internals basics, vulnerability research, exploitation and pentesting macOS machines. It&rsquo;s called <a href="https://www.offensive-security.com/exp312-osmr/">macOS Control Bypasses</a>, and was created by myself.</p>
+</li>
+<li>
+<p><a href="https://specterops.io/">SpecterOps</a> offers <a href="https://specterops.io/how-we-help/training-offerings/adversary-tactics-mac-tradecraft">Adversary Tactics: Mac Tradecraft</a> and it&rsquo;s focused on Red Teaming specifically vs exploitation. It&rsquo;s only offered live, and it&rsquo;s 2 day long.</p>
+</li>
+<li>
+<p><a href="https://www.mdsec.co.uk/">MDSec Labs</a> covers macOS in their 4-day <a href="https://www.mdsec.co.uk/training/adversary-simulation-red-team-tactics/">Adversary Simulation and Red Team Tactics</a> training. It&rsquo;s limited to the last day, when Linux is also covered, and just like SpecterOps it&rsquo;s focusing on Red Teaming.</p>
+</li>
+</ul>
+<h3 id="defense">Defense</h3>
+<ul>
+<li><a href="https://www.sans.org/">SANS</a> has a <a href="https://www.sans.org/cyber-security-courses/mac-and-ios-forensic-analysis-and-incident-response/">Mac &amp; IOS Forensic Analysis &amp; Incident Response Training | SANS FOR518</a>, which is created by <a href="https://twitter.com/iamevltwin">Sarah Edwards</a>.</li>
+</ul>
 <h2 id="books">Books</h2>
 <p>Similarly to the trainings there are not really books about macOS exploitation. There are two, but they are rather dated. The rest are mostly programming guides, or covering macOS internals.  All of them, expect Levin&rsquo;s new series are dated, but it doesn&rsquo;t mean there is no useful information in them.</p>
 <p>When it comes to defense, there are two <strong>free</strong> ebooks about macOS malware, which are up-to-date! This is pretty good considering how everything else is so much old.</p>
 <p>Here follows a list, that I think can be useful for security:</p>
-<h3 id="internals">Internals</h3>
+<h3 id="internals-1">Internals</h3>
 <ul>
 <li><a href="amazon.com/Mac-OS-Internals-Systems-Approach/dp/0321278542/">Amit Singh - Mac OS X Internals: A Systems Approach</a> - The first(?) book about OSX internals, it was released in 2006. It&rsquo;s rather old, however some old items which can be still relevant today are still documented here. It also contains many source code samples, so can be a useful go-to resource.</li>
 <li><a href="https://www.amazon.com/Mac-OS-iOS-Internals-Apples/dp/1118057651">Jonathan Levin - Mac OS X and iOS Internals: To the Apple&rsquo;s Core</a> - The first book of Jonathan Levin about *OS internals. It&rsquo;s also dated, but sometimes still relevant and some items better explained here as in the new books, or at least I found it easier to read sometimes. It&rsquo;s available for <strong>free</strong> from the author&rsquo;s website: <a href="http://newosxbook.com/MOXiI.pdf">MOXiI.pdf</a></li>
 <li><a href="http://newosxbook.com/index.php">Jonathan Levin - *OS Internals Vol I-II-III</a> - The most current books about *OS internals, and it&rsquo;s up-to-date till macOS Catalina. This is a must have series for anyone who is serious about the subject.</li>
-<li><a href="https://support.apple.com/guide/security/welcome/1/web">Apple Platform Security</a> - Apple&rsquo;s own page about the security of their platform</li>
+<li><a href="https://support.apple.com/guide/security/welcome/1/web">Apple Platform Security</a> - Apple&rsquo;s own page about the security of their platform.</li>
+<li><a href="https://www.peachpit.com/store/macos-support-essentials-11-apple-pro-training-series-9780137345953">macOS Support Essentials 11 - Apple Pro Training Series: Supporting and Troubleshooting macOS Big Sur</a> - This book is targeted for macadmins, however it contains a great deal of macOS internals as well.</li>
 </ul>
 <h3 id="exploitation">Exploitation</h3>
 <ul>

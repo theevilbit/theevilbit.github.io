@@ -5,22 +5,31 @@
     <link>https://theevilbit.github.io/tags/</link>
     <description>Recent content in Tags on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 22 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 27 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>macos</title>
+      <link>https://theevilbit.github.io/tags/macos/</link>
+      <pubDate>Mon, 27 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/tags/macos/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>training</title>
+      <link>https://theevilbit.github.io/tags/training/</link>
+      <pubDate>Mon, 27 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/tags/training/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>beyond</title>
       <link>https://theevilbit.github.io/tags/beyond/</link>
       <pubDate>Wed, 22 Sep 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/tags/beyond/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>macos</title>
-      <link>https://theevilbit.github.io/tags/macos/</link>
-      <pubDate>Wed, 22 Sep 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://theevilbit.github.io/tags/macos/</guid>
       <description></description>
     </item>
     
@@ -183,15 +192,6 @@
       <pubDate>Tue, 17 Nov 2020 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/tags/xpc/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>training</title>
-      <link>https://theevilbit.github.io/tags/training/</link>
-      <pubDate>Mon, 26 Oct 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://theevilbit.github.io/tags/training/</guid>
       <description></description>
     </item>
     

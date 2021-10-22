@@ -5,7 +5,16 @@
     <link>https://theevilbit.github.io/</link>
     <description>Recent content on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 12 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 22 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>About</title>
+      <link>https://theevilbit.github.io/about/</link>
+      <pubDate>Fri, 22 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/about/</guid>
+      <description>My name is Csaba Fitzl or also known as &amp;ldquo;theevilbit&amp;rdquo;, which comes from RFC 3514. I graduated in 2006 as a computer engineer. I have worked for 6 years as a network engineer, troubleshooting and designing big networks. After that, I have worked for 8 years as a blue and red teamer focusing on network forensics, malware analysis, adversary simulation, and defense bypasses. Currently, I&amp;rsquo;m working as a content developer at Offensive Security.</description>
+    </item>
+    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 21 - Re-opened Applications</title>
       <link>https://theevilbit.github.io/beyond/beyond_0021/</link>
@@ -519,15 +528,6 @@ What is HMValidateHandle? HMValidateHandle is an internal, unexported function o
       <guid>https://theevilbit.github.io/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/</guid>
       <description>A couple of weeks ago, I had the idea of scanning my Mac for files that has the SUID bit set, I wanted to see if there is anything interesting showing up. You can do it this way:
 /usr/bin/sudo find / -perm -4000 -exec /bin/ls -ldb {} \; &amp;gt; suidfilelist There was one item that caught my attention, and that was a file called ubridge inside GNS3. I used to be a network guy, and GNS3 is a great tool to emulate real network gear, practice configuration, etc.</description>
-    </item>
-    
-    <item>
-      <title>About</title>
-      <link>https://theevilbit.github.io/about/</link>
-      <pubDate>Sun, 31 Mar 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://theevilbit.github.io/about/</guid>
-      <description>My name is Csaba Fitzl or also known as &amp;ldquo;theevilbit&amp;rdquo;, which comes from RFC 3514. I graduated in 2006 as a computer engineer. I have worked for 6 years as a network engineer, troubleshooting and designing big networks. After that, I have worked for 8 years as a blue and red teamer focusing on network forensics, malware analysis, adversary simulation, and defense bypasses. Currently, I&amp;rsquo;m working as a content developer at Offensive Security.</description>
     </item>
     
     <item>

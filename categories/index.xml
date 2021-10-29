@@ -5,7 +5,16 @@
     <link>https://theevilbit.github.io/categories/</link>
     <description>Recent content in Categories on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 22 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 29 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>BLOG</title>
+      <link>https://theevilbit.github.io/categories/blog/</link>
+      <pubDate>Fri, 29 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/categories/blog/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>about</title>
       <link>https://theevilbit.github.io/categories/about/</link>
@@ -30,15 +39,6 @@
       <pubDate>Tue, 12 Oct 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/categories/persistence/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>BLOG</title>
-      <link>https://theevilbit.github.io/categories/blog/</link>
-      <pubDate>Mon, 27 Sep 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://theevilbit.github.io/categories/blog/</guid>
       <description></description>
     </item>
     

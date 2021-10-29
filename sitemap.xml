@@ -2,20 +2,50 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://theevilbit.github.io/year/2021/</loc>
+    <lastmod>2021-10-29T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/categories/blog/</loc>
+    <lastmod>2021-10-29T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/categories/</loc>
+    <lastmod>2021-10-29T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/tags/cve/</loc>
+    <lastmod>2021-10-29T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/posts/cve_2021_30920/</loc>
+    <lastmod>2021-10-29T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/tags/lpe/</loc>
+    <lastmod>2021-10-29T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/tags/macos/</loc>
+    <lastmod>2021-10-29T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/posts/</loc>
+    <lastmod>2021-10-29T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/tags/</loc>
+    <lastmod>2021-10-29T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/tags/tcc/</loc>
+    <lastmod>2021-10-29T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/</loc>
+    <lastmod>2021-10-29T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/tags/vulnerability/</loc>
+    <lastmod>2021-10-29T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/year/</loc>
+    <lastmod>2021-10-29T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://theevilbit.github.io/about/</loc>
     <lastmod>2021-10-22T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/categories/about/</loc>
     <lastmod>2021-10-22T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/categories/</loc>
-    <lastmod>2021-10-22T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/</loc>
-    <lastmod>2021-10-22T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/year/2021/</loc>
-    <lastmod>2021-10-12T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/tags/beyond/</loc>
     <lastmod>2021-10-12T00:00:00+00:00</lastmod>
@@ -29,28 +59,13 @@
     <loc>https://theevilbit.github.io/beyond/</loc>
     <lastmod>2021-10-12T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://theevilbit.github.io/tags/macos/</loc>
-    <lastmod>2021-10-12T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://theevilbit.github.io/tags/persistence/</loc>
     <lastmod>2021-10-12T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/categories/persistence/</loc>
     <lastmod>2021-10-12T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://theevilbit.github.io/tags/</loc>
-    <lastmod>2021-10-12T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/year/</loc>
-    <lastmod>2021-10-12T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/categories/blog/</loc>
-    <lastmod>2021-09-27T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://theevilbit.github.io/posts/getting_started_in_macos_security/</loc>
-    <lastmod>2021-09-27T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/posts/</loc>
     <lastmod>2021-09-27T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/tags/training/</loc>
@@ -92,9 +107,6 @@
     <loc>https://theevilbit.github.io/tags/exploit/</loc>
     <lastmod>2021-05-26T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://theevilbit.github.io/tags/lpe/</loc>
-    <lastmod>2021-05-26T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://theevilbit.github.io/posts/teamviewer_lpe/</loc>
     <lastmod>2021-05-26T00:00:00+00:00</lastmod>
   </url><url>
@@ -109,9 +121,6 @@
   </url><url>
     <loc>https://theevilbit.github.io/posts/experiences_with_asb/</loc>
     <lastmod>2021-04-23T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/tags/cve/</loc>
-    <lastmod>2021-04-20T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/posts/macos_crashreporter/</loc>
     <lastmod>2021-04-20T00:00:00+00:00</lastmod>
@@ -188,9 +197,6 @@
     <loc>https://theevilbit.github.io/tags/reverse-engineering/</loc>
     <lastmod>2020-12-13T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://theevilbit.github.io/tags/vulnerability/</loc>
-    <lastmod>2020-12-13T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://theevilbit.github.io/tags/microsoft/</loc>
     <lastmod>2020-11-17T00:00:00+00:00</lastmod>
   </url><url>
@@ -207,9 +213,6 @@
     <lastmod>2020-10-22T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/posts/cve_2020_9771/</loc>
-    <lastmod>2020-07-03T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/tags/tcc/</loc>
     <lastmod>2020-07-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/posts/secure_coding_xpc_part5/</loc>

@@ -5,7 +5,17 @@
     <link>https://theevilbit.github.io/</link>
     <description>Recent content on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 22 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 29 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CVE-2021-30920 - CVE-2021-1784 strikes back - TCC bypass via mounting</title>
+      <link>https://theevilbit.github.io/posts/cve_2021_30920/</link>
+      <pubDate>Fri, 29 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/posts/cve_2021_30920/</guid>
+      <description>Intro CVE-2021-1784 was a vulnerability that allowed an attacker to bypass TCC by mounting over the ~/Library/Application Support/com.apple.TCC directory and providing a new TCC database. We covered this with Wojciech Regula in or 20+ ways to bypass your mac os privacy mechanisms BlackHat USA talk. This was properly fixed in Big Sur.
+The Vulnerability I don&amp;rsquo;t know why but I started to experiment with it again in the very first version of Monterey beta, and found that although the exploit doesn&amp;rsquo;t work, we can mount over the ~/Library directory.</description>
+    </item>
+    
     <item>
       <title>About</title>
       <link>https://theevilbit.github.io/about/</link>

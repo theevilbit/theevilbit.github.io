@@ -21,8 +21,8 @@ To my surprise we can install our own color pickers on the system, and add custo
 To my surprise we can install our own color pickers on the system, and add custom ones. There are quite a few of these, some are even open source, like this: GitHub - viktorstrate/color-picker-plus: An Improved Color Picker for macOS." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0017/" /><meta property="article:section" content="beyond" />
-<meta property="article:published_time" content="2021-05-31T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2021-05-31T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2021-05-31T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-05-31T00:00:00+00:00" />
 
 
 
@@ -58,7 +58,7 @@ To my surprise we can install our own color pickers on the system, and add custo
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -157,11 +157,11 @@ To my surprise we can install our own color pickers on the system, and add custo
 <p>Similarly to screen savers, color pickers are just bundles with the <code>.colorPicker</code> extension. Xcode doesn&rsquo;t have a template for it, but we can simply create an empty bundle with the right extension and add a constructor function.</p>
 <p>Once we place it in the right directory, if we run anything that loads a color picker, our code will be loaded. I find it really useful, as we don&rsquo;t rely on any plist files, and we can expect it to run frequently. For example simply creating a new document in Pages will trigger it.</p>
 <p>Then our log message comes:</p>
-<pre><code>csaby@mac ~ % log stream | grep hello_color   
+<pre tabindex="0"><code>csaby@mac ~ % log stream | grep hello_color   
 2021-05-28 22:57:43.718561+0200 0x1077d4   Default     0x0                  32246  0    LegacyExternalColorPickerService-x86_64: (DemoColor) hello_color void custom(int, const char **)
 </code></pre><p>Color picker plugins are loaded by the process <code>/System/Library/Frameworks/AppKit.framework/Versions/C/XPCServices/LegacyExternalColorPickerService-x86_64.xpc/Contents/MacOS/LegacyExternalColorPickerService-x86_64</code>.</p>
 <p>Let&rsquo;s take a look at the process entitlements:</p>
-<pre><code>Executable=/System/Library/Frameworks/AppKit.framework/Versions/C/XPCServices/LegacyExternalColorPickerService-x86_64.xpc/Contents/MacOS/LegacyExternalColorPickerService-x86_64
+<pre tabindex="0"><code>Executable=/System/Library/Frameworks/AppKit.framework/Versions/C/XPCServices/LegacyExternalColorPickerService-x86_64.xpc/Contents/MacOS/LegacyExternalColorPickerService-x86_64
 Identifier=com.apple.appkit.xpc.LegacyExternalColorPickerService.x86_64
 Format=bundle with Mach-O thin (x86_64)
 CodeDirectory v=20400 size=789 flags=0x0(none) hashes=13+7 location=embedded

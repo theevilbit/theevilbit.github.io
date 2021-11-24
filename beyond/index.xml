@@ -5,7 +5,18 @@
     <link>https://theevilbit.github.io/beyond/</link>
     <description>Recent content in Beyonds on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 12 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/beyond/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 24 Nov 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/beyond/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 22 - LoginHook and LogoutHook</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0022/</link>
+      <pubDate>Wed, 24 Nov 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0022/</guid>
+      <description>This is part 22 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ This method is considered deprecated by Apple, yet it still works.
+LoginHooks and LogoutHooks have been widely documented by many people, so this post is mostly for completeness. The official, Apple documentation can be found here: Customizing Login and Logout</description>
+    </item>
+    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 21 - Re-opened Applications</title>
       <link>https://theevilbit.github.io/beyond/beyond_0021/</link>

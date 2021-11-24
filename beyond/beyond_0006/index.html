@@ -21,8 +21,8 @@ If we create a file in the user&rsquo;s HOME directory at ~/.ssh/rc it will be e
 If we create a file in the user&rsquo;s HOME directory at ~/.ssh/rc it will be executed prior to the user&rsquo;s login shell becomes available. The man page of sshd describes this in more detail." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0006/" /><meta property="article:section" content="beyond" />
-<meta property="article:published_time" content="2021-03-21T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2021-03-21T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2021-03-21T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-03-21T00:00:00+00:00" />
 
 
 
@@ -58,7 +58,7 @@ If we create a file in the user&rsquo;s HOME directory at ~/.ssh/rc it will be e
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -148,9 +148,9 @@ If we create a file in the user&rsquo;s HOME directory at ~/.ssh/rc it will be e
 </blockquote>
 <p>I learned about this trick from <a href="https://twitter.com/0xdade">@0xdade</a> when he <a href="https://twitter.com/0xdade/status/1373145566943711235">posted</a> it on Twitter.</p>
 <p>If we create a file in the user&rsquo;s HOME directory at <code>~/.ssh/rc</code> it will be executed prior to the user&rsquo;s login shell becomes available. The man page of <code>sshd</code> describes this in more detail.</p>
-<pre><code> If ~/.ssh/rc exists and the sshd_config(5) PermitUserRC option is set, runs it; else if /etc/ssh/sshrc exists, runs it; otherwise runs xauth.  The ``rc'' files are given the X11 authenti-cation protocol and cookie in standard input.  See SSHRC, below.
+<pre tabindex="0"><code> If ~/.ssh/rc exists and the sshd_config(5) PermitUserRC option is set, runs it; else if /etc/ssh/sshrc exists, runs it; otherwise runs xauth.  The ``rc'' files are given the X11 authenti-cation protocol and cookie in standard input.  See SSHRC, below.
 </code></pre><p>and some more.</p>
-<pre><code>SSHRC
+<pre tabindex="0"><code>SSHRC
      If the file ~/.ssh/rc exists, sh(1) runs it after reading the environment files but before starting the user's shell or command.  It must not produce any output on stdout; stderr must be used
      instead.  If X11 forwarding is in use, it will receive the &quot;proto cookie&quot; pair in its standard input (and DISPLAY in its environment).  The script must call xauth(1) because sshd will not run xauth
      automatically to add X11 cookies.

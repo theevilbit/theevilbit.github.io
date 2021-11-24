@@ -19,8 +19,8 @@
  This idea came from my colleague @dejandayoff. It&rsquo;s another application specific persistence option, related to Hammerspoon. The app is an automation tool, that allows macOS scripting through LUA scripting language. We can even embed full AppleScript code as well as run shell scripts." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0008/" /><meta property="article:section" content="beyond" />
-<meta property="article:published_time" content="2021-03-23T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2021-03-23T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2021-03-23T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-03-23T00:00:00+00:00" />
 
 
 
@@ -56,7 +56,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -147,15 +147,15 @@
 <p>This idea came from my colleague <a href="https://twitter.com/dejandayoff">@dejandayoff</a>. It&rsquo;s another application specific persistence option, related to <a href="https://www.hammerspoon.org/">Hammerspoon</a>. The app is an automation tool, that allows macOS scripting through LUA scripting language. We can even embed full AppleScript code as well as run shell scripts.</p>
 <p>The app looks for a single file, <code>~/.hammerspoon/init.lua</code>, and when started the script will be executed. They have plenty of examples on their <a href="https://www.hammerspoon.org/go/#imessagesms">Getting Started</a> page, and an extensive API <a href="https://www.hammerspoon.org/docs/index.html">documentation</a>.</p>
 <p>I tried the following simple script.</p>
-<pre><code>hs.execute(&quot;id &gt; ~/hs.txt&quot;)
+<pre tabindex="0"><code>hs.execute(&quot;id &gt; ~/hs.txt&quot;)
 </code></pre><p>It runs <code>id</code> and redirects its output to a file. Indeed, when the app is started, this file is created with the expected output.</p>
-<pre><code>csaby@bigsur ~ % open /Applications/Hammerspoon.app
+<pre tabindex="0"><code>csaby@bigsur ~ % open /Applications/Hammerspoon.app
 csaby@bigsur ~ % cat hs.txt                        
 uid=501(csaby) gid=20(staff) groups=20(staff),12(everyone),61(localaccounts),79(_appserverusr),80(admin),81(_appserveradm),98(_lpadmin),701(com.apple.sharepoint.group.1),33(_appstore),100(_lpoperator),204(_developer),250(_analyticsusers),395(com.apple.access_ftp),398(com.apple.access_screensharing),399(com.apple.access_ssh),400(com.apple.access_remote_ae)
 csaby@bigsur ~ % cat ~/.hammerspoon/init.lua
 hs.execute(&quot;id &gt; ~/hs.txt&quot;)
 </code></pre><p>Beyond that Hammerspoon has some really nice entitlements, so we get access to these privacy resources as well if it was ever approved for the app.</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+<pre tabindex="0"><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;
 &lt;plist version=&quot;1.0&quot;&gt;
 &lt;dict&gt;

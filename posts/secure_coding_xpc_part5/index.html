@@ -19,8 +19,8 @@ The root cause The XPC services of F-Secure SAFE use the process ID (PID) to ver
 The root cause The XPC services of F-Secure SAFE use the process ID (PID) to verify the client&rsquo;s signature, as can be seen in the code below." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/secure_coding_xpc_part5/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2020-06-16T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2020-06-16T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2020-06-16T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-06-16T00:00:00+00:00" />
 
 
 
@@ -56,7 +56,7 @@ The root cause The XPC services of F-Secure SAFE use the process ID (PID) to ver
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -146,7 +146,7 @@ The root cause The XPC services of F-Secure SAFE use the process ID (PID) to ver
         <p>In the last post of the series we will see another typical issue, where XPC services using the connecting process&rsquo;s ID (PID) to verify the client instead of the audit token. We will use F-Secure SAFE again for our case study, the vulnerability was fixed in 17.8 and it was assigned CVE-2020-14977.</p>
 <h2 id="the-root-cause">The root cause</h2>
 <p>The XPC services of F-Secure SAFE use the process ID (PID) to verify the client&rsquo;s signature, as can be seen in the code below.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">+(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#c0f">verifyPid:</span>(<span style="color:#078;font-weight:bold">int</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">codesignatureAgainstRequirements:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg3</span> {
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">+(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#c0f">verifyPid:</span>(<span style="color:#078;font-weight:bold">int</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">codesignatureAgainstRequirements:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg3</span> {
     var_44 <span style="color:#555">=</span> arg2;
     r14 <span style="color:#555">=</span> [arg3 <span style="color:#069;font-weight:bold">retain</span>];
     r15 <span style="color:#555">=</span> [SignatureVerificationResult new];
@@ -157,7 +157,7 @@ The root cause The XPC services of F-Secure SAFE use the process ID (PID) to ver
 </code></pre></div><p>The problem with this approach is that on macOS, PIDs can be reused. We can even replace current executable to a different process with <code>posix_spawn()</code> while keeping the old PID, and this is the technique we will use in our exploit later on. The flags <code>POSIX_SPAWN_SETEXEC | POSIX_SPAWN_START_SUSPENDED</code> passed to <code>posix_spawn</code> will result in starting the process in a suspended mode, and keeping the same PID (the old process is replaced by the new one, keeping the PID). Our exploit will fork 10 processes, each of them sending a message to the XPC service, and each forked process will replace itself with a valid F-Secure client. This way when the XPC service verifies the code signature of the connecting client, it will see the spawned process (this is where we have a race condition), and once its verified it will consume the XPC message sent earlier. With a loop for about 10 times we can easily win the race condition, sometimes even 1 or 2 spawns are enough. The POC keeps track of the child processes, and kills them at the end.</p>
 <p>Note: the forked processes will have 10 different PIDs, but when they spawn a new process with <code>exec</code> method, that is the point where the PID is retained.</p>
 <h2 id="poc">POC</h2>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#099">#import &lt;Foundation/Foundation.h&gt;
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#099">#import &lt;Foundation/Foundation.h&gt;
 </span><span style="color:#099">#include</span> <span style="color:#099">&lt;spawn.h&gt;</span><span style="color:#099">
 </span><span style="color:#099">#include</span> <span style="color:#099">&lt;signal.h&gt;</span><span style="color:#099">
 </span><span style="color:#099"></span>
@@ -249,11 +249,11 @@ The root cause The XPC services of F-Secure SAFE use the process ID (PID) to ver
     }
 }
 </code></pre></div><p>We compile the code with:</p>
-<pre><code>gcc -framework Foundation -framework Security fsecurepid.m -o fsecurepid
+<pre tabindex="0"><code>gcc -framework Foundation -framework Security fsecurepid.m -o fsecurepid
 </code></pre><p>If we run it, we can see that the <code>fscsafeadmind</code> process will accept the connecting PID.</p>
 <p><img src="https://theevilbit.github.io/images/Secure_coding_XPC_Part5/f-secure_accept1.png" alt=""></p>
 <p>This is from this code:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#09f;font-style:italic">/* @class FCSServiceDelegate */</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#09f;font-style:italic">/* @class FCSServiceDelegate */</span>
 -(<span style="color:#078;font-weight:bold">char</span>)<span style="color:#c0f">listener:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">shouldAcceptNewConnection:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg3</span> {
 (...)
 <span style="color:#99f">loc_100012e26</span>:
@@ -274,7 +274,7 @@ The root cause The XPC services of F-Secure SAFE use the process ID (PID) to ver
 <p>Patrick Wardle has a solution how to still use this, documented in his blog post:
 <a href="https://objective-see.com/blog.html#blogEntry7">Objective-See</a></p>
 <p>Essentially we need to create an extended class for <code>NSXPCConnection</code>, and in the <code>shouldAcceptNewConnection</code> callback we simply typecast the connection to this class, and we will be able to access the audit token.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#069;font-weight:bold">@interface</span> <span style="color:#0a8;font-weight:bold">ExtendedNSXPCConnection</span> : <span style="color:#0a8;font-weight:bold">NSXPCConnection</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#069;font-weight:bold">@interface</span> <span style="color:#0a8;font-weight:bold">ExtendedNSXPCConnection</span> : <span style="color:#0a8;font-weight:bold">NSXPCConnection</span>
 {
    audit_token_t auditToken;
 }

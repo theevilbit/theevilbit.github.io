@@ -19,8 +19,8 @@ The idea I recently came across a very good blog post about an RCE vulnerability
 The idea I recently came across a very good blog post about an RCE vulnerability on GitHub Desktop: GitHub Desktop RCE (OSX) - André Baptista via its custom URL handlers." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/few_click_rce_via_github_desktop_macos_client_with_gatekeeper_bypass_and_custom_url_handlers/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2019-10-05T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2019-10-05T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2019-10-05T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-10-05T00:00:00+00:00" />
 
 
 
@@ -56,7 +56,7 @@ The idea I recently came across a very good blog post about an RCE vulnerability
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -161,7 +161,7 @@ In short upon download of the application launch services daemon (<code>lsd</cod
 </ol>
 <h3 id="poc">POC</h3>
 <p>As noted above, I created an app, which will launch Calculator, and do nothing else, the URL handler it will use is <code>evilapp://</code> its source is very simple:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#09f;font-style:italic">//
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#09f;font-style:italic">//
 </span><span style="color:#09f;font-style:italic">//  AppDelegate.m
 </span><span style="color:#09f;font-style:italic">//  Github Desktop
 </span><span style="color:#09f;font-style:italic">//
@@ -201,7 +201,7 @@ In short upon download of the application launch services daemon (<code>lsd</cod
 <span style="color:#069;font-weight:bold">@end</span>
 </code></pre></div><p>The compiled application is hosted here, along with the full Xcode project: <a href="https://github.com/theevilbit/githubpoc">GitHub - theevilbit/githubpoc</a> The name of the app is <code>Github Desktop</code> (lower case ‘h’!). The reason for this is when it’s triggered the user will see a popup saying that the page wants to execute <code>Github Desktop.app</code>, this will lower the victim suspicion, as it’s something expected, and more likely to click.</p>
 <p>I created a simple HTML page that has a link to this repo, and it also has a JavaScript, which will add an <code>iframe</code> to the page’s DOM, with a link to <code>evilapp://</code>to trigger the downloaded application, the page will be refreshed every 10 seconds. The page source is:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html"><span style="color:#099">&lt;!doctype html&gt;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html"><span style="color:#099">&lt;!doctype html&gt;</span>
 &lt;<span style="color:#309;font-weight:bold">html</span> <span style="color:#309">lang</span><span style="color:#555">=</span><span style="color:#c30">&#34;en&#34;</span> <span style="color:#309">class</span><span style="color:#555">=</span><span style="color:#c30">&#34;windows&#34;</span>&gt;
   &lt;<span style="color:#309;font-weight:bold">head</span>&gt;
   &lt;<span style="color:#309;font-weight:bold">meta</span> <span style="color:#309">charset</span><span style="color:#555">=</span><span style="color:#c30">&#34;utf-8&#34;</span>&gt;
@@ -275,9 +275,9 @@ In short upon download of the application launch services daemon (<code>lsd</cod
 </code></pre></div><p>I made a video showing the entire chain in action:</p>
 <!-- raw HTML omitted -->
 <p>To show the extended attributes of a file, run:</p>
-<pre><code>$ xattr -l ~/Documents/DEV/GitHub/githubpoc/Github\ Desktop.app/Contents/MacOS/Github\ Desktop
+<pre tabindex="0"><code>$ xattr -l ~/Documents/DEV/GitHub/githubpoc/Github\ Desktop.app/Contents/MacOS/Github\ Desktop
 </code></pre><p>To clear a registered URL handle run:</p>
-<pre><code>$ /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -u [full path to the application]
+<pre tabindex="0"><code>$ /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -u [full path to the application]
 </code></pre><p>I reported this to GiHub via H1 but they said that it’s unlikely user interaction so they won’t deal with it, so I decided to blog about it. IMO, it’s not that unlikely.</p>
 
       </div>

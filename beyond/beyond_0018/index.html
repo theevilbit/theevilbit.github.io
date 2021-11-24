@@ -19,8 +19,8 @@
  I learned about XQuartz while reading Armin Briegel&rsquo;s ‎macOS Terminal and shell book. It&rsquo;s one of the alternative third party terminals we can install on macOS. As most terminals, this one also offers unique options to persist on the system." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0018/" /><meta property="article:section" content="beyond" />
-<meta property="article:published_time" content="2021-06-28T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2021-06-28T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2021-06-28T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-06-28T00:00:00+00:00" />
 
 
 
@@ -56,7 +56,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -150,7 +150,7 @@
 <p>The XQuartz project is an open-source effort to develop a version of the  <a href="https://www.x.org/">X.Org X Window System</a>  that runs on macOS.</p>
 </blockquote>
 <p>This X window environment supports various initialization script. They can be found under the <code>/opt/X11/etc/X11/xinit</code> directory.</p>
-<pre><code>csaby@bigsur ~ % ls -lR /opt/X11/etc/X11/xinit         
+<pre tabindex="0"><code>csaby@bigsur ~ % ls -lR /opt/X11/etc/X11/xinit         
 total 8
 drwxr-xr-x  5 root  wheel  160 Jun 26 12:50 privileged_startx.d
 -rw-r--r--  1 root  wheel  957 Apr 25 15:08 xinitrc
@@ -171,7 +171,7 @@ total 24
 <p><code>.xserverrc</code> is another similar file, that will be consumed by this environment.</p>
 <p>The <code>/opt/X11/etc/X11/xinit/xinitrc.d</code> directory contains other scripts.</p>
 <p>If we create a script here, it will be executed upon starting xterm.</p>
-<pre><code>csaby@bigsur xinitrc.d % pwd
+<pre tabindex="0"><code>csaby@bigsur xinitrc.d % pwd
 /opt/X11/etc/X11/xinit/xinitrc.d
 
 csaby@bigsur xinitrc.d % cat 11-touch.sh 
@@ -179,7 +179,7 @@ touch ~/x11.txt
 </code></pre><p>Above we have a script which creates a file <code>x11.txt</code> in the user&rsquo;s HOME folder upon starting <code>xterm</code>. This is shown below.</p>
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0018_0.png" alt=""></p>
 <p>The last directory to explore is <code>/opt/X11/etc/X11/xinit/privileged_startx.d</code>. It also contains scripts, and whatever we put here, will be executed by the <code>privileged_startx</code> process as root. This process is defined in <code>/Library/LaunchDaemons/org.xquartz.privileged_startx.plist</code> as follows.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
 <span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
 <span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
 <span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
@@ -203,7 +203,7 @@ touch ~/x11.txt
 <span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
 <span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
 </code></pre></div><p>If we check Apple&rsquo;s source code <a href="https://opensource.apple.com/source/X11server/X11server-106.7/xinit/xinit-1.3.0/privileged_startx/server.c.auto.html">server.c</a> we can find the related code that runs these files.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">kern_return_t <span style="color:#c0f">do_privileged_startx</span>(mach_port_t test_port __attribute__((unused))) {
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">kern_return_t <span style="color:#c0f">do_privileged_startx</span>(mach_port_t test_port __attribute__((unused))) {
 ...
     <span style="color:#09f;font-style:italic">/* Itterate over these files in alphabetical order */</span>
     <span style="color:#069;font-weight:bold">for</span>(; ftsent; ftsent <span style="color:#555">=</span> ftsent<span style="color:#555">-&gt;</span>fts_link) {
@@ -227,7 +227,7 @@ touch ~/x11.txt
     }
 
 </code></pre></div><p>This is a nice place to persist as root. Since Xquartz is not sandboxed (as shown below) it&rsquo;s even better.</p>
-<pre><code>csaby@bigsur ~ % codesign -dv --entitlements :- /Applications/Utilities/XQuartz.app          
+<pre tabindex="0"><code>csaby@bigsur ~ % codesign -dv --entitlements :- /Applications/Utilities/XQuartz.app          
 Executable=/Applications/Utilities/XQuartz.app/Contents/MacOS/X11
 Identifier=org.xquartz.X11
 Format=app bundle with Mach-O universal (x86_64 arm64)

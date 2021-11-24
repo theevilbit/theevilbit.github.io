@@ -21,8 +21,8 @@
  And a few similar ones, and I will be honest, I had no idea what is he talking about, if only I understood the question :D Despite the fact that my recent blog posts and talks are about macOS, I deal much more with Windows on a daily basis, probably like 95%, and macOS is still a whole new territory for me." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2019-07-09T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2019-07-09T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2019-07-09T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-07-09T00:00:00+00:00" />
 
 
 
@@ -58,7 +58,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -147,7 +147,7 @@
 </blockquote>
 <p>And a few similar ones, and I will be honest, I had no idea what is he talking about, if only I understood the question :D Despite the fact that my recent blog posts and talks are about macOS, I deal much more with Windows on a daily basis, probably like 95%, and macOS is still a whole new territory for me. So I decided to dig into the question and learn a bit more about this.</p>
 <p>As it turns out there is a very well known injection technique for macOS utilizing <code>DYLD_INSERT_LIBRARIES</code> environment variable. Here is the description of the variable from the <a href="https://web.archive.org/web/20160409091449/https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/dyld.1.html">dyld man document</a>:</p>
-<pre><code>DYLD_INSERT_LIBRARIES
+<pre tabindex="0"><code>DYLD_INSERT_LIBRARIES
               This  is  a colon separated list of dynamic libraries to load before the ones specified in the
               program.  This lets you test new modules of existing dynamic shared libraries that are used in
               flat-namespace images by loading a temporary dynamic shared library with just the new modules.
@@ -155,7 +155,7 @@
               shared library unless DYLD_FORCE_FLAT_NAMESPACE is also used.
 
 </code></pre><p>In short, it will load any dylibs  you specify in this variable before the program loads, essentially injecting a dylib into the application. Let’s try it! I took my previous dylib code I used when playing with dylib hijacking:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
 </span><span style="color:#099">#include</span> <span style="color:#099">&lt;syslog.h&gt;</span><span style="color:#099">
 </span><span style="color:#099"></span>
 __attribute__((constructor))
@@ -165,15 +165,15 @@ __attribute__((constructor))
      syslog(LOG_ERR, <span style="color:#c30">&#34;Dylib injection successful in %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, argv[<span style="color:#f60">0</span>]);
 }
 </code></pre></div><p>Compile:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gcc -dynamiclib inject.c -o inject.dylib
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gcc -dynamiclib inject.c -o inject.dylib
 </code></pre></div><p>For a quick test I made a sophisticated hello world C code, and tried it with that. In order to set the environment variable for the application to be executed, you need to specify <code>DYLD_INSERT_LIBRARIES=[path to your dylib]</code> in the command line. Here is how it looks like:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ./test 
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ./test 
 Hello world
 $ <span style="color:#033">DYLD_INSERT_LIBRARIES</span><span style="color:#555">=</span>inject.dylib ./test
 Hello from dylib!
 Hello world
 </code></pre></div><p>Executing my favourite note taker application, Bear (where I’m writing this right now) is also affected:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ <span style="color:#033">DYLD_INSERT_LIBRARIES</span><span style="color:#555">=</span>inject.dylib /Applications/Bear.app/Contents/MacOS/Bear 
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ <span style="color:#033">DYLD_INSERT_LIBRARIES</span><span style="color:#555">=</span>inject.dylib /Applications/Bear.app/Contents/MacOS/Bear 
 Hello from dylib!
 </code></pre></div><p>We can also see all these events in the log (as our dylib puts there a message):</p>
 <p><img src="https://theevilbit.github.io/images/DYLD_INSERT_LIBRARIES_DYLIB_injection_in_macOS_OSX_deep_dive/Screenshot%202019-07-08%20at%2016.53.29.png" alt="image"></p>
@@ -189,7 +189,7 @@ Hello from dylib!
 </ol>
 <p>We can actually see this in the source code of dyld - this is an older version, but it’s also more readable: <a href="https://opensource.apple.com/source/dyld/dyld-210.2.3/src/dyld.cpp">https://opensource.apple.com/source/dyld/dyld-210.2.3/src/dyld.cpp</a></p>
 <p>The function <code>pruneEnvironmentVariables</code> will remove the environment variables:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">pruneEnvironmentVariables</span>(<span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span><span style="color:#555">*</span> envp[], <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span><span style="color:#555">***</span> applep)
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">pruneEnvironmentVariables</span>(<span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span><span style="color:#555">*</span> envp[], <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span><span style="color:#555">***</span> applep)
 {
 	<span style="color:#09f;font-style:italic">// delete all DYLD_* and LD_LIBRARY_PATH environment variables
 </span><span style="color:#09f;font-style:italic"></span>	<span style="color:#078;font-weight:bold">int</span> removedCount <span style="color:#555">=</span> <span style="color:#f60">0</span>;
@@ -235,7 +235,7 @@ Hello from dylib!
 	sEnv.DYLD_FALLBACK_LIBRARY_PATH <span style="color:#555">=</span> <span style="color:#366">NULL</span>;
 }
 </code></pre></div><p>If we search where the variable <code>sRestrictedReason</code> is set, we arrive to the function <code>processRestricted</code>:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">bool</span> <span style="color:#c0f">processRestricted</span>(<span style="color:#069;font-weight:bold">const</span> macho_header<span style="color:#555">*</span> mainExecutableMH)
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">bool</span> <span style="color:#c0f">processRestricted</span>(<span style="color:#069;font-weight:bold">const</span> macho_header<span style="color:#555">*</span> mainExecutableMH)
 {
     <span style="color:#09f;font-style:italic">// all processes with setuid or setgid bit set are restricted
 </span><span style="color:#09f;font-style:italic"></span>    <span style="color:#069;font-weight:bold">if</span> ( issetugid() ) {
@@ -267,7 +267,7 @@ Hello from dylib!
 </span><span style="color:#099"></span>    <span style="color:#069;font-weight:bold">return</span> <span style="color:#366">false</span>;
 }
 </code></pre></div><p>This is the code segment that will identify the restricted segment:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#09f;font-style:italic">//
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#09f;font-style:italic">//
 </span><span style="color:#09f;font-style:italic">// Look for a special segment in the mach header. 
 </span><span style="color:#09f;font-style:italic">// Its presences means that the binary wants to have DYLD ignore
 </span><span style="color:#09f;font-style:italic">// DYLD_ environment variables.
@@ -303,7 +303,7 @@ Hello from dylib!
 }
 <span style="color:#099">#endif
 </span></code></pre></div><p>Now, the above is the old source code, that was referred in the article above - since then it has evolved. The latest available code is <a href="https://opensource.apple.com/source/dyld/dyld-635.2/src/dyld.cpp.auto.html">dyld.cpp</a> looks slightly more complicated,  but essentially the same idea.  Here is the relevant code segment, that sets the restriction, and the one that returns it (<code>configureProcessRestrictions , processIsRestricted </code>):</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">configureProcessRestrictions</span>(<span style="color:#069;font-weight:bold">const</span> macho_header<span style="color:#555">*</span> mainExecutableMH)
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">configureProcessRestrictions</span>(<span style="color:#069;font-weight:bold">const</span> macho_header<span style="color:#555">*</span> mainExecutableMH)
 {
 	<span style="color:#078;font-weight:bold">uint64_t</span> amfiInputFlags <span style="color:#555">=</span> <span style="color:#f60">0</span>;
 <span style="color:#099">#if TARGET_IPHONE_SIMULATOR
@@ -375,11 +375,11 @@ Hello from dylib!
 <p>But! It’s unset if <code>CS_REQUIRE_LV</code> is set. What this flag does? If it’s set for the main binary, it means that the loader will verify every single dylib loaded into the application, if they were signed with the same key as the main executable. If we think about this it kinda makes sense, as you can only inject a dylib to the application that was developed by the same person. You can only abuse this if you have access to that code signing certificate - or not, more on that later ;).</p>
 <p>There is another option to protect the application, and it’s enabling <a href="https://developer.apple.com/documentation/security/hardened_runtime_entitlements">Hardened Runtime</a>. Then if you want, you can specifically enable DYLD environment variables: <a href="https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_security_cs_allow-dyld-environment-variables">Allow DYLD Environment Variables Entitlement - Entitlements</a>. The above source code seems to be dated back to 2013, and this option is only available since Mojave (10.14), which was released last year (2018), probably this is why we don’t see anything about this in the source code.</p>
 <p>For the record, these are the values of the CS flags, taken from <a href="https://opensource.apple.com/source/xnu/xnu-4903.221.2/osfmk/kern/cs_blobs.h.auto.html">cs_blobs.h</a></p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#define CS_RESTRICT		0x0000800	</span><span style="color:#09f;font-style:italic">/* tell dyld to treat restricted */</span><span style="color:#099">
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#define CS_RESTRICT		0x0000800	</span><span style="color:#09f;font-style:italic">/* tell dyld to treat restricted */</span><span style="color:#099">
 </span><span style="color:#099">#define CS_REQUIRE_LV		0x0002000	</span><span style="color:#09f;font-style:italic">/* require library validation */</span><span style="color:#099">
 </span><span style="color:#099">#define CS_RUNTIME		0x00010000  </span><span style="color:#09f;font-style:italic">/* Apply hardened runtime policies */</span><span style="color:#099">
 </span></code></pre></div><p>This was the theory, let’s see all of these in practice, if they indeed work as advertised. I will create an Xcode project and modify the configuration as needed. Before that we can use our original code for the SUID bit testing, and as we can see it works as expected:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#09f;font-style:italic">#setting ownership</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#09f;font-style:italic">#setting ownership</span>
 $ sudo chown root <span style="color:#366">test</span>
 $ ls -l <span style="color:#366">test</span>
 -rwxr-xr-x  <span style="color:#f60">1</span> root  staff  <span style="color:#f60">8432</span> Jul  <span style="color:#f60">8</span> 16:46 <span style="color:#366">test</span>
@@ -403,17 +403,17 @@ Hello world
 </code></pre></div><p>Interestingly, in the past, there was an LPE bug from incorrectly handling one of the environment variables, and with SUID files, you could achieve privilege escalation, here you can read the details:
 <a href="https://www.sektioneins.de/blog/15-07-07-dyld_print_to_file_lpe.html">OS X 10.10 DYLD_PRINT_TO_FILE Local Privilege Escalation Vulnerability | SektionEins GmbH</a></p>
 <p>I created a complete blank Cocoa App for testing the other stuff. I also export the environment variable, so we don’t need to specify it always:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#366">export</span> <span style="color:#033">DYLD_INSERT_LIBRARIES</span><span style="color:#555">=</span>inject.dylib
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#366">export</span> <span style="color:#033">DYLD_INSERT_LIBRARIES</span><span style="color:#555">=</span>inject.dylib
 </code></pre></div><p>If we compile it, and run as default, we can see that dylib is injected:</p>
-<pre><code>$ ./HelloWorldCocoa.app/Contents/MacOS/HelloWorldCocoa 
+<pre tabindex="0"><code>$ ./HelloWorldCocoa.app/Contents/MacOS/HelloWorldCocoa 
 Hello from dylib!
 </code></pre><p>To have a restricted section, on the <code>Build Settings -&gt; Linking -&gt; Other linker flags</code> let’s set this value:</p>
-<pre><code>-Wl,-sectcreate,__RESTRICT,__restrict,/dev/null
+<pre tabindex="0"><code>-Wl,-sectcreate,__RESTRICT,__restrict,/dev/null
 </code></pre><p>If we recompile, we will see a whole bunch of errors, that dylibs are being ignored, like these:</p>
-<pre><code>dyld: warning, LC_RPATH @executable_path/../Frameworks in /Users/csaby/Library/Developer/Xcode/DerivedData/HelloWorldCocoa-apovdjtqwdvhlzddnqghiknptqqb/Build/Products/Debug/HelloWorldCocoa.app/Contents/MacOS/HelloWorldCocoa being ignored in restricted program because of @executable_path
+<pre tabindex="0"><code>dyld: warning, LC_RPATH @executable_path/../Frameworks in /Users/csaby/Library/Developer/Xcode/DerivedData/HelloWorldCocoa-apovdjtqwdvhlzddnqghiknptqqb/Build/Products/Debug/HelloWorldCocoa.app/Contents/MacOS/HelloWorldCocoa being ignored in restricted program because of @executable_path
 dyld: warning, LC_RPATH @executable_path/../Frameworks in /Users/csaby/Library/Developer/Xcode/DerivedData/HelloWorldCocoa-apovdjtqwdvhlzddnqghiknptqqb/Build/Products/Debug/HelloWorldCocoa.app/Contents/MacOS/HelloWorldCocoa being ignored in restricted program because of @executable_path
 </code></pre><p>Our dylib is also not loaded, so indeed it works as expected. We can verify the segment being present with the size command, and indeed we can see it there:</p>
-<pre><code>$ size -x -l -m HelloWorldCocoa.app/Contents/MacOS/HelloWorldCocoa
+<pre tabindex="0"><code>$ size -x -l -m HelloWorldCocoa.app/Contents/MacOS/HelloWorldCocoa
 Segment __PAGEZERO: 0x100000000 (vmaddr 0x0 fileoff 0)
 Segment __TEXT: 0x2000 (vmaddr 0x100000000 fileoff 0)
 	Section __text: 0x15c (addr 0x1000012b0 offset 4784)
@@ -443,12 +443,12 @@ Segment __LINKEDIT: 0x6000 (vmaddr 0x100003000 fileoff 12288)
 total 0x100009000
 </code></pre><p>Alternatively we can use the <code>otool -l [path to the binary]</code> command for the same purpose, the output will be slightly different.</p>
 <p>Next one is setting the app to have  ( <a href="https://developer.apple.com/documentation/security/hardened_runtime_entitlements">hardened runtime</a> ), we can do this at the <code>Build Settings -&gt; Signing -&gt; Enable Hardened Runtime</code> or at the Capabilities section. If we do this and rebuild the app, and try to run it, we get the following error:</p>
-<pre><code>dyld: warning: could not load inserted library 'inject.dylib' into hardened process because no suitable image found.  Did find:
+<pre tabindex="0"><code>dyld: warning: could not load inserted library 'inject.dylib' into hardened process because no suitable image found.  Did find:
 	inject.dylib: code signature in (inject.dylib) not valid for use in process using Library Validation: mapped file has no cdhash, completely unsigned? Code has to be at least ad-hoc signed.
 	inject.dylib: stat() failed with errno=1
 </code></pre><p>If I code sign my dylib using the same certificate the dylib will be loaded:</p>
-<pre><code>codesign -s &quot;Mac Developer: fitzl.csaba.dev@gmail.com (RQGUDM4LR2)&quot; inject.dylib
-</code></pre><pre><code>$ codesign -dvvv inject.dylib 
+<pre tabindex="0"><code>codesign -s &quot;Mac Developer: fitzl.csaba.dev@gmail.com (RQGUDM4LR2)&quot; inject.dylib
+</code></pre><pre tabindex="0"><code>$ codesign -dvvv inject.dylib 
 Executable=inject.dylib
 Identifier=inject
 Format=Mach-O thin (x86_64)
@@ -470,7 +470,7 @@ Internal requirements count=1 size=180
 $ /HelloWorldCocoa.app/Contents/MacOS/HelloWorldCocoa 
 Hello from dylib!
 </code></pre><p>If I use another certificate for code signing, it won’t be loaded as you can see below. I want to highlight that this verification is always being done, it’s not a Gatekeeper thing.</p>
-<pre><code>$ codesign -f -s &quot;Mac Developer: fitzl.csaba@gmail.com (M9UN3Y3UDG)&quot; inject.dylib 
+<pre tabindex="0"><code>$ codesign -f -s &quot;Mac Developer: fitzl.csaba@gmail.com (M9UN3Y3UDG)&quot; inject.dylib 
 inject.dylib: replacing existing signature
 
 $ codesign -dvvv inject.dylib 
@@ -499,17 +499,17 @@ dyld: warning: could not load inserted library 'inject.dylib' into hardened proc
 </code></pre><p>Interestingly, even if I set the <code>com.apple.security.cs.allow-dyld-environment-variables</code> entitlement at the capabilities page, I can’t load a dylib with other signature. Not sure what I’m doing wrong.</p>
 <p><img src="https://theevilbit.github.io/images/DYLD_INSERT_LIBRARIES_DYLIB_injection_in_macOS_OSX_deep_dive/Screenshot%202019-07-09%20at%2012.54.44.png" alt="image"></p>
 <p>To move on, let’s set the library validation (<code>CS_REQUIRE_LV</code>) requirement for the application. It can be done, by going to <code>Build Settings -&gt; Signing -&gt; Other Code Signing Flags</code> and set it to <code>-o library</code>. If we recompile and check the code signature for our binary, we can see it enabled:</p>
-<pre><code>$ codesign -dvvv /HelloWorldCocoa.app/Contents/MacOS/HelloWorldCocoa 
+<pre tabindex="0"><code>$ codesign -dvvv /HelloWorldCocoa.app/Contents/MacOS/HelloWorldCocoa 
 Executable=/HelloWorldCocoa.app/Contents/MacOS/HelloWorldCocoa
 (...)
 CodeDirectory v=20200 size=377 flags=0x2000(library-validation) hashes=4+5 location=embedded
 (...)
 </code></pre><p>And we get the same error message as with the hardened runtime if we try to load a dylib with different signer.</p>
-<pre><code>dyld: warning: could not load inserted library 'inject.dylib' into hardened process because no suitable image found.  Did find:
+<pre tabindex="0"><code>dyld: warning: could not load inserted library 'inject.dylib' into hardened process because no suitable image found.  Did find:
 	inject.dylib: code signature in (inject.dylib) not valid for use in process using Library Validation: mapping process and mapped file (non-platform) have different Team IDs
 	inject.dylib: stat() failed with errno=1
 </code></pre><p>The last item to try would be to set the <code>CS_RESTRICT</code> flag, but the only thing I found about this is that it’s a special flag only set for Apple binaries. If anyone can give more background, let me know, I’m curious. The only thing I could do to verify it, is trying to inject to an Apple binary, which doesn’t have the previous flags set, not a suid file neither has a RESTRICTED segment. Interestingly the <code>CS_RESTRICT</code> flag is not reflected by the code signing utility. I picked up Disk Utility. Indeed our dylib is not loaded:</p>
-<pre><code>$ codesign -dvvv /Applications/Utilities/Disk\ Utility.app/Contents/MacOS/Disk\ Utility 
+<pre tabindex="0"><code>$ codesign -dvvv /Applications/Utilities/Disk\ Utility.app/Contents/MacOS/Disk\ Utility 
 Executable=/Applications/Utilities/Disk Utility.app/Contents/MacOS/Disk Utility
 Identifier=com.apple.DiskUtility
 Format=app bundle with Mach-O thin (x86_64)
@@ -530,7 +530,7 @@ Internal requirements count=1 size=72
 
 $ DYLD_INSERT_LIBRARIES=inject.dylib /Applications/Utilities/Disk\ Utility.app/Contents/MacOS/Disk\ Utility 
 </code></pre><p>I would say that’s all, but no. Let’s go back to the fact that you can inject a dylib even to SUID files if the <code>CS_REQUIRE_LV</code> flag is set. (In fact probably also to files with the <code>CS_RUNTIME</code> flag). Yes, only dylibs with the same signature, but there is a potential (although small) for privilege escalation. To show, I modified my dylib:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
 </span><span style="color:#099">#include</span> <span style="color:#099">&lt;syslog.h&gt;</span><span style="color:#099">
 </span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdlib.h&gt;</span><span style="color:#099">
 </span><span style="color:#099"></span>
@@ -543,7 +543,7 @@ __attribute__((constructor))
 	syslog(LOG_ERR, <span style="color:#c30">&#34;Dylib injection successful in %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, argv[<span style="color:#f60">0</span>]);
 }
 </code></pre></div><p>Let’s sign this, and the test program with the same certificate and set the SUID bit for the test binary and run it. As we can see we can inject a dylib as expected and indeed it will run as root.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gcc -dynamiclib inject.c -o inject.dylib
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gcc -dynamiclib inject.c -o inject.dylib
 codesign -f -s <span style="color:#c30">&#34;Mac Developer: fitzl.csaba@gmail.com (M9UN3Y3UDG)&#34;</span> inject.dylib
 codesign -f -s <span style="color:#c30">&#34;Mac Developer: fitzl.csaba@gmail.com (M9UN3Y3UDG)&#34;</span> -o library <span style="color:#366">test</span>
 sudo chown root <span style="color:#366">test</span>
@@ -581,7 +581,7 @@ Hello world
 <li>Have write access to the folder, where the file with SUID bit present -&gt; in this case you can sign the file with your own certificate (code sign will replace the file you sign, so it will delete the original and create a new - this is possible because on *nix systems you can delete files from directories, where you are the owner even if the file is owned by root), wait for the SUID bit to be restored (fingers crossed) and finally inject your own dylib. You would think that such scenario wouldn’t exist, but I did find an example for it.</li>
 </ol>
 <p>Here is a quick and dirty python script to find #2 items, mostly put together from StackOverflow :D</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#09f;font-style:italic">#!/usr/bin/python3</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#09f;font-style:italic">#!/usr/bin/python3</span>
 
 <span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">os</span>
 <span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">getpass</span>
@@ -605,7 +605,7 @@ username <span style="color:#555">=</span> getpass<span style="color:#555">.</sp
 			<span style="color:#069;font-weight:bold">except</span>:
 				<span style="color:#069;font-weight:bold">pass</span>
 </code></pre></div><p>One last thought on this topic is GateKeeper. You can inject quarantine flagged binaries in Mojave, which in fact is pretty much expected.</p>
-<pre><code>$ ./test 
+<pre tabindex="0"><code>$ ./test 
 uid=0(root) gid=0(wheel) egid=20(staff) groups=0(wheel),1(daemon),2(kmem),3(sys),4(tty),5(operator),8(procview),9(procmod),12(everyone),20(staff),29(certusers),61(localaccounts),80(admin),702(com.apple.sharepoint.group.2),701(com.apple.sharepoint.group.1),33(_appstore),98(_lpadmin),100(_lpoperator),204(_developer),250(_analyticsusers),395(com.apple.access_ftp),398(com.apple.access_screensharing),399(com.apple.access_ssh)
 Hello from dylib!
 Hello world
@@ -624,7 +624,7 @@ com.apple.quarantine: 0081;5d248e35;Chrome;CE4482F1-0AD8-4387-ABF6-C05A4443CAF4
 </code></pre><p>However it doesn’t work anymore on Catalina, which is also expected with the introduced changes:</p>
 <p><img src="https://theevilbit.github.io/images/DYLD_INSERT_LIBRARIES_DYLIB_injection_in_macOS_OSX_deep_dive/Screenshot%202019-07-09%20at%2019.04.04.png" alt="image"></p>
 <p>We got a very similar error message as before:</p>
-<pre><code>dyld: could not load inserted library 'inject.dylib' because no suitable image found.  Did find:
+<pre tabindex="0"><code>dyld: could not load inserted library 'inject.dylib' because no suitable image found.  Did find:
 	inject.dylib: code signature in (inject.dylib) not valid for use in process using Library Validation: Library load disallowed by System Policy
 	inject.dylib: stat() failed with errno=1
 </code></pre><p>I think applications should protect themselves against this type of dylib injection, and as it stands, it’s pretty easy to do, you have a handful of options, so there is really no reason not to do so. As Apple is moving towards notarization hardened runtime will be enabled slowly for most/all applications (it is mandatory for notarised apps), so hopefully this injection technique will fade away slowly. If you develop an app where you set the SUID bit, be sure to properly set permissions for the parent folder.</p>

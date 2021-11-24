@@ -21,8 +21,8 @@ Login items are probably one of the most well documented methods to persist on m
 Login items are probably one of the most well documented methods to persist on macOS. It&rsquo;s widely used by various application to launch themselves upon user login." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0003/" /><meta property="article:section" content="beyond" />
-<meta property="article:published_time" content="2021-03-17T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2021-03-17T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2021-03-17T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-03-17T00:00:00+00:00" />
 
 
 
@@ -58,7 +58,7 @@ Login items are probably one of the most well documented methods to persist on m
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -155,7 +155,7 @@ Login items are probably one of the most well documented methods to persist on m
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0003_1.png" alt="Login Items in System Preferences"></p>
 <p>Login Items installed via the LS framework typically show up under <em>System Preferences</em> -&gt; <em>Users &amp; Groups</em> -&gt; <em>Login Items</em>. We can use this menu to either add or remove something from the list.</p>
 <p>We can also use some scripting to get the same information.</p>
-<pre><code>csaby@mac ~ % osascript -e 'tell application &quot;System Events&quot; to get count of login items'
+<pre tabindex="0"><code>csaby@mac ~ % osascript -e 'tell application &quot;System Events&quot; to get count of login items'
 6
 csaby@mac ~ % osascript -e 'tell application &quot;System Events&quot; to get the name of every login item'
 Do Not Disturb Helper, Backup and sync from Google, LuLu, BlockBlock Helper, OverSight Helper, ReiKey Helper
@@ -168,7 +168,7 @@ Do Not Disturb Helper, Backup and sync from Google, LuLu, BlockBlock Helper, Ove
 <p>Login items installed using the Service Management framework are not visible in System Preferences and can only be removed by the application that installed them.</p>
 </blockquote>
 <p>This confirms why Shield is not visible. This is also interesting, especially for an attacker or malware, as it doesn&rsquo;t leave an obvious visual trace. But we can still find these login items.</p>
-<pre><code>csaby@mac ~ % ls -l /var/db/com.apple.xpc.launchd 
+<pre tabindex="0"><code>csaby@mac ~ % ls -l /var/db/com.apple.xpc.launchd 
 total 32
 drwxr-xr-x  2 root  wheel   64 Jan  1  2020 config
 -rw-r--r--  1 root  wheel  181 Apr 20  2020 disabled.248.plist
@@ -177,7 +177,7 @@ drwxr-xr-x  2 root  wheel   64 Jan  1  2020 config
 -rw-r--r--@ 1 root  wheel  730 Mar 17 05:59 disabled.plist
 -rw-r--r--  1 root  wheel  561 Dec 16 21:39 loginitems.501.plist
 </code></pre><p>These items will be available under <code>/var/db/com.apple.xpc.launchd</code> in the <code>loginitems.[userid].plist</code> files. Let&rsquo;s open <code>loginitems.501.plist</code>.</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+<pre tabindex="0"><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;
 &lt;plist version=&quot;1.0&quot;&gt;
 &lt;dict&gt;

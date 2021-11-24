@@ -21,8 +21,8 @@ When we start iTerm2 it starts the same shell environment as Terminal, and thus 
 When we start iTerm2 it starts the same shell environment as Terminal, and thus the same startup files apply here as well." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0002/" /><meta property="article:section" content="beyond" />
-<meta property="article:published_time" content="2021-03-16T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2021-03-16T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2021-03-16T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-03-16T00:00:00+00:00" />
 
 
 
@@ -58,7 +58,7 @@ When we start iTerm2 it starts the same shell environment as Terminal, and thus 
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -151,18 +151,18 @@ When we start iTerm2 it starts the same shell environment as Terminal, and thus 
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0002_0.png" alt="iTerm2 Profile Preferences"></p>
 <p>In the Profile settings, there is an option, which is <strong>Send text at start</strong>. This is essentially a command we can run when someone starts up iTerm2. This is saved in iTerm2&rsquo;s preferences, which can be found at <code>~/Library/Preferences/com.googlecode.iterm2.plist</code>.</p>
 <p>This is a binary PLIST, and we can use <code>plutil</code> to convert it to XML format.</p>
-<pre><code>csaby@mac ~ % plutil -convert xml1 ~/Library/Preferences/com.googlecode.iterm2.plist -o - | grep -A 1 &quot;Initial Text&quot;
+<pre tabindex="0"><code>csaby@mac ~ % plutil -convert xml1 ~/Library/Preferences/com.googlecode.iterm2.plist -o - | grep -A 1 &quot;Initial Text&quot;
 			&lt;key&gt;Initial Text&lt;/key&gt;
 			&lt;string&gt;whoami&lt;/string&gt;
 --
 			&lt;key&gt;Initial Text&lt;/key&gt;
 			&lt;string&gt;uname&lt;/string&gt;
 </code></pre><p>The command is saved under the <strong>Initail Text</strong> key, and there can be multiple for different profiles. We can also use the <code>defaults</code> command to get this data.</p>
-<pre><code>csaby@mac ~ % defaults read com.googlecode.iterm2 | grep Initial
+<pre tabindex="0"><code>csaby@mac ~ % defaults read com.googlecode.iterm2 | grep Initial
             &quot;Initial Text&quot; = whoami;
             &quot;Initial Text&quot; = uname;
 </code></pre><p>Beyond persisting, <code>iTerm2</code> can have plenty of TCC exception if it receives user consent.</p>
-<pre><code>Executable=/Applications/iTerm.app/Contents/MacOS/iTerm2
+<pre tabindex="0"><code>Executable=/Applications/iTerm.app/Contents/MacOS/iTerm2
 Identifier=com.googlecode.iterm2
 Format=app bundle with Mach-O universal (x86_64 arm64)
 CodeDirectory v=20500 size=140993 flags=0x10000(runtime) hashes=4395+7 location=embedded

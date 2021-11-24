@@ -19,8 +19,8 @@ The goal of the post is to cover many aspects of authorization, which I found in
 The goal of the post is to cover many aspects of authorization, which I found interesting from security perspective. Honestly, partially for selfish reasons so I will have a goto summary when I need to lookup something later instead of browsing through 8-10 different articles." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/macos_authorization/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2020-10-22T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2020-10-22T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2020-10-22T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-10-22T00:00:00+00:00" />
 
 
 
@@ -56,7 +56,7 @@ The goal of the post is to cover many aspects of authorization, which I found in
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -158,7 +158,7 @@ The goal of the post is to cover many aspects of authorization, which I found in
 </ol>
 <p>The <code>security</code> command line tool has an <code>authorizationdb</code> argument which allows reading and writing to the DB. We can read as a normal user from the database using this tool, for any modifications we need to run it as root. Using <code>sqlite3</code> will only work if we run it as root, because of the file permissions.</p>
 <p>Let&rsquo;s review method one first. Here is an example reading out the <code>system.preferences.accounts</code> right, which is the right required to make changes to users.</p>
-<pre><code>csaby@mac ~ % security authorizationdb read system.preferences.accounts
+<pre tabindex="0"><code>csaby@mac ~ % security authorizationdb read system.preferences.accounts
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;
 &lt;plist version=&quot;1.0&quot;&gt;
@@ -192,7 +192,7 @@ The goal of the post is to cover many aspects of authorization, which I found in
 YES (0)
 </code></pre><p>We get back a typical PLIST representation. We will review some of the key parts of the entry. The <code>class</code> key is set to <code>user</code>, which means that it&rsquo;s a user based right. <code>allow-root</code> being set to <code>true</code> means that the right will be granted for root, without any further authentication. The <code>authenticate-user</code> means to authenticate the user for this right, however this will be only effective if the user is in the <code>admin</code> group as specified later under the <code>group</code> key. This means that if our user is in this group, we can be authenticated, and if that is successful the right will be granted.</p>
 <p>There is another type of <code>class</code> for authorization, and it&rsquo;s not <code>user</code>, but <code>rule</code> based. The <code>config.remove.</code> right is an example for this.</p>
-<pre><code>csaby@mac ~ % security authorizationdb read config.remove.
+<pre tabindex="0"><code>csaby@mac ~ % security authorizationdb read config.remove.
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;
 &lt;plist version=&quot;1.0&quot;&gt;
@@ -220,7 +220,7 @@ YES (0)
 </code></pre><p>Here we can see the authorization <code>class</code> is set to <code>rule</code>, and later on we have a <code>rule</code> key, which stores, well&hellip; rules. Here it&rsquo;s set to <code>is-root</code> and <code>authenticate-admin</code>. This means that the root user, and admin users after authentication can get this right.</p>
 <p>There is also a <code>k-of-n</code> key, which specifies how many of the rules specified in the army has to be satisfied for granting the rule. In this case it&rsquo;s <code>1</code>.</p>
 <p>There is another important authorization class, which is <code>allow</code>,  and the <code>config.add.</code> right is a good example for this. This class means that anyone can get the right.</p>
-<pre><code>csaby@mac ~ % security authorizationdb read config.add.   
+<pre tabindex="0"><code>csaby@mac ~ % security authorizationdb read config.add.   
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;
 &lt;plist version=&quot;1.0&quot;&gt;
@@ -241,17 +241,17 @@ YES (0)
 </code></pre><p>This specific right is required to add an entry to the authorization database.</p>
 <p>There are other classes, like <code>evaluate-mechanisms</code>, which will list several <code>mechanisms</code>, which will be handled by various authorization plugins. I won&rsquo;t discuss this topic here. For the <code>rule</code> based rights, there are many other options to specify under the key, like <code>entitled</code> or <code>entitled-admin</code>.</p>
 <p>The other way reading this database is via sqlite3, which is less convenient as the columns are not so descriptive, however it allows us an easy dump and offline review of the database. We can dump it as follows.</p>
-<pre><code>csaby@mac ~ % sudo sqlite3 /var/db/auth.db .dump &gt; auth.txt
+<pre tabindex="0"><code>csaby@mac ~ % sudo sqlite3 /var/db/auth.db .dump &gt; auth.txt
 </code></pre><p>This will contain entries like the following:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#069;font-weight:bold">INSERT</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">INTO</span><span style="color:#bbb"> </span>rules<span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">VALUES</span>(<span style="color:#f60">130</span>,<span style="color:#c30">&#39;config.add.&#39;</span>,<span style="color:#f60">1</span>,<span style="color:#f60">4</span>,<span style="color:#069;font-weight:bold">NULL</span>,<span style="color:#069;font-weight:bold">NULL</span>,<span style="color:#069;font-weight:bold">NULL</span>,<span style="color:#f60">0</span>,<span style="color:#069;font-weight:bold">NULL</span>,<span style="color:#f60">0</span>,<span style="color:#f60">609094350</span>.<span style="color:#f60">06486594677</span>,<span style="color:#f60">609094350</span>.<span style="color:#f60">06486594677</span>,<span style="color:#069;font-weight:bold">NULL</span>,<span style="color:#069;font-weight:bold">NULL</span>,<span style="color:#069;font-weight:bold">NULL</span>,<span style="color:#c30">&#39;Wildcard right for adding rights.  Anyone is allowed to add any (non-wildcard) rights.&#39;</span>);<span style="color:#bbb">
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#069;font-weight:bold">INSERT</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">INTO</span><span style="color:#bbb"> </span>rules<span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">VALUES</span>(<span style="color:#f60">130</span>,<span style="color:#c30">&#39;config.add.&#39;</span>,<span style="color:#f60">1</span>,<span style="color:#f60">4</span>,<span style="color:#069;font-weight:bold">NULL</span>,<span style="color:#069;font-weight:bold">NULL</span>,<span style="color:#069;font-weight:bold">NULL</span>,<span style="color:#f60">0</span>,<span style="color:#069;font-weight:bold">NULL</span>,<span style="color:#f60">0</span>,<span style="color:#f60">609094350</span>.<span style="color:#f60">06486594677</span>,<span style="color:#f60">609094350</span>.<span style="color:#f60">06486594677</span>,<span style="color:#069;font-weight:bold">NULL</span>,<span style="color:#069;font-weight:bold">NULL</span>,<span style="color:#069;font-weight:bold">NULL</span>,<span style="color:#c30">&#39;Wildcard right for adding rights.  Anyone is allowed to add any (non-wildcard) rights.&#39;</span>);<span style="color:#bbb">
 </span></code></pre></div><p>If we print the schema of the database, we can check what each entry means.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">sqlite<span style="color:#555">&gt;</span><span style="color:#bbb"> </span>.<span style="color:#069;font-weight:bold">schema</span><span style="color:#bbb">
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">sqlite<span style="color:#555">&gt;</span><span style="color:#bbb"> </span>.<span style="color:#069;font-weight:bold">schema</span><span style="color:#bbb">
 </span><span style="color:#bbb"></span>...<span style="color:#bbb">
 </span><span style="color:#bbb"></span><span style="color:#069;font-weight:bold">CREATE</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">TABLE</span><span style="color:#bbb"> </span>rules<span style="color:#bbb"> </span>(id<span style="color:#bbb"> </span><span style="color:#366">INTEGER</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">PRIMARY</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">KEY</span><span style="color:#bbb"> </span>AUTOINCREMENT<span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">UNIQUE</span>,name<span style="color:#bbb"> </span><span style="color:#366">TEXT</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">NOT</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">NULL</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">UNIQUE</span>,<span style="color:#069;font-weight:bold">type</span><span style="color:#bbb"> </span><span style="color:#366">INTEGER</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">CHECK</span><span style="color:#bbb"> </span>(<span style="color:#069;font-weight:bold">type</span><span style="color:#bbb"> </span><span style="color:#555">=</span><span style="color:#bbb"> </span><span style="color:#f60">1</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">OR</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">type</span><span style="color:#bbb"> </span><span style="color:#555">=</span><span style="color:#bbb"> </span><span style="color:#f60">2</span>)<span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">NOT</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">NULL</span>,<span style="color:#069;font-weight:bold">class</span><span style="color:#bbb"> </span><span style="color:#366">INTEGER</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">CHECK</span><span style="color:#bbb"> </span>(<span style="color:#069;font-weight:bold">class</span><span style="color:#bbb"> </span><span style="color:#555">&gt;</span><span style="color:#bbb"> </span><span style="color:#f60">0</span>),<span style="color:#c30">&#39;group&#39;</span><span style="color:#bbb"> </span><span style="color:#366">TEXT</span>,kofn<span style="color:#bbb"> </span><span style="color:#366">INTEGER</span>,timeout<span style="color:#bbb"> </span><span style="color:#366">INTEGER</span>,flags<span style="color:#bbb"> </span><span style="color:#366">INTEGER</span>,tries<span style="color:#bbb"> </span><span style="color:#366">INTEGER</span>,<span style="color:#069;font-weight:bold">version</span><span style="color:#bbb"> </span><span style="color:#366">INTEGER</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">NOT</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">NULL</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">DEFAULT</span><span style="color:#bbb"> </span>(<span style="color:#f60">0</span>),created<span style="color:#bbb"> </span><span style="color:#366">REAL</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">NOT</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">NULL</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">DEFAULT</span><span style="color:#bbb"> </span>(<span style="color:#f60">0</span>),modified<span style="color:#bbb"> </span><span style="color:#366">REAL</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">NOT</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">NULL</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">DEFAULT</span><span style="color:#bbb"> </span>(<span style="color:#f60">0</span>),hash<span style="color:#bbb"> </span><span style="color:#366">BLOB</span>,identifier<span style="color:#bbb"> </span><span style="color:#366">TEXT</span>,requirement<span style="color:#bbb"> </span><span style="color:#366">BLOB</span>,<span style="color:#069;font-weight:bold">comment</span><span style="color:#bbb"> </span><span style="color:#366">TEXT</span>);<span style="color:#bbb">
 </span><span style="color:#bbb"></span>...<span style="color:#bbb">
 </span></code></pre></div><p>It has one great benefit, we can list all the rule names, which is not available through the other method, so if we search for a rule where we don&rsquo;t know its name exactly, this is the way we can get to it.</p>
 <p>There is one more interesting entry in some rules, which opens up lots of confusion, and that&rsquo;s the <code>requirement</code> key. We can typically see this when third party apps, especially privilege helper tools install new rights to the database. I have Proxyman installed, which entered the right <code>com.proxyman.NSProxy.HelperTool.overrideProxySystemPreferences</code>.</p>
-<pre><code>csaby@mac ~ % security authorizationdb read com.proxyman.NSProxy.HelperTool.overrideProxySystemPreferences                                       
+<pre tabindex="0"><code>csaby@mac ~ % security authorizationdb read com.proxyman.NSProxy.HelperTool.overrideProxySystemPreferences                                       
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;
 &lt;plist version=&quot;1.0&quot;&gt;
@@ -282,7 +282,7 @@ YES (0)
 YES (0)
 </code></pre><p>As we can see, there is a <code>requirement</code> key with a long code signing blob. In fact this is the <code>csreq</code> (=code signing requirement) of the application installed this right, which is Proxyman in this case. Using common sense, one would think that only apps satisfying the code signing requirement can obtain this right, however that is not right. This requirement has nothing to do about who can obtain the right. Anyone satisfying the <code>rule</code> can get it. In this particular case it&rsquo;s set to <code>allow</code>, which means anyone asking for the right will obtain it. This false understanding lead to privilege escalation bugs in the past, like <a href="https://blog.obdev.at/what-we-have-learned-from-a-vulnerability/">CVE-2019-13013</a>.</p>
 <p>The only place where the <code>requirement</code> is (was) important is when we want to modify the rule.  We can find this in <code>Security-59306.61.1/OSX/authd/server.c</code>.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">bool</span> <span style="color:#c0f">_prompt_for_modifications</span>(process_t __unused proc, rule_t __unused rule)
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">bool</span> <span style="color:#c0f">_prompt_for_modifications</span>(process_t __unused proc, rule_t __unused rule)
 {
 <span style="color:#09f;font-style:italic">//    &lt;rdar://problem/13853228&gt; will put back it back at some later date
 </span><span style="color:#09f;font-style:italic">//    SecRequirementRef ruleReq = rule_get_requirement(rule);
@@ -309,7 +309,7 @@ YES (0)
 <p>The helper tool takes the <code>AuthorizationExternalForm</code> and converts it back to a <code>AuthorizationReference</code> and performs the authorization. If successful it will perform the privileged action.</p>
 <p>I need to highlight that the authorization which is happening at the privilege helper tool is happening on behalf of the original client based on the reference. This is important as the helper tool runs as root, and as such it could get almost any right from the system. When performing authorization it can chose again to prompt for user authentication or not. If it was done in the main app already during preauthorization, there is no need for that, otherwise yes.</p>
 <p>To give an example, let&rsquo;s examine the following logs. These are from my very first attempt to exploit F-Secure&rsquo;s XPC privileged helper tool, which I documented <a href="https://theevilbit.github.io/posts/secure_coding_xpc_part5/">here</a> in more detail.</p>
-<pre><code>info	14:57:42.800020+0100	authd	Process /usr/local/f-secure/bin/fscsafeadmind.xpc (PID 300) evaluates 1 rights with flags 00000002 (engine 82): (
+<pre tabindex="0"><code>info	14:57:42.800020+0100	authd	Process /usr/local/f-secure/bin/fscsafeadmind.xpc (PID 300) evaluates 1 rights with flags 00000002 (engine 82): (
     &quot;system.privilege.admin&quot;
 )
 debug	14:57:42.800041+0100	authd	engine 82: user not used password
@@ -326,7 +326,7 @@ error	14:57:42.801471+0100	authd	copy_rights: authorization failed
 <p>Next we will review how the Authorization API works.</p>
 <h2 id="the-authorization-api">The Authorization API</h2>
 <p>I will start with a sample code I frequently use in XPC exploits to obtain an empty authorization.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">AuthorizationExternalForm <span style="color:#c0f">create_auth</span>(AuthorizationRef authref) {
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">AuthorizationExternalForm <span style="color:#c0f">create_auth</span>(AuthorizationRef authref) {
     <span style="color:#09f;font-style:italic">//local variables
 </span><span style="color:#09f;font-style:italic"></span>    NSData                      <span style="color:#555">*</span>authorization;
     OSStatus                    err;
@@ -342,7 +342,7 @@ error	14:57:42.801471+0100	authd	copy_rights: authorization failed
 }
 </code></pre></div><p>The first function we need to start with is <a href="https://developer.apple.com/documentation/security/1397453-authorizationcreate?language=objc">AuthorizationCreate</a>. With passing <code>kAuthorizationEmptyEnvironment</code> and  <code>kAuthorizationFlagDefaults</code> it will create an empty authorization reference. If successful we can convert it to an <code>AuthorizationExternalForm</code> using <a href="https://developer.apple.com/documentation/security/1397335-authorizationmakeexternalform?language=objc">AuthorizationMakeExternalForm</a>. This operation is normally successful as anyone can get an empty right.</p>
 <p>To obtain an actual authorization right we need to use the <a href="https://developer.apple.com/documentation/security/1395770-authorizationcopyrights?language=objc">AuthorizationCopyRights</a> function, shown below.</p>
-<pre><code>AuthorizationCopyRights(
+<pre tabindex="0"><code>AuthorizationCopyRights(
                 authRef,
                 &amp;rights,
                 NULL,
@@ -354,7 +354,7 @@ error	14:57:42.801471+0100	authd	copy_rights: authorization failed
 <p>Next we will see how we can retrieve logs.</p>
 <h2 id="logs">Logs</h2>
 <p>In the past there was the <code>/var/log/authd.log</code> file, however since unified logging was introduced back in 2016, it faded away, and it doesn&rsquo;t exists anymore. If we need to read <code>authd</code> related logs we can query the <code>com.apple.Authorization</code> subsystem with the <code>log show</code> command as shown below.</p>
-<pre><code>csaby@mac ~ % log show --style syslog --predicate 'subsystem == &quot;com.apple.Authorization&quot;' --last 1h 
+<pre tabindex="0"><code>csaby@mac ~ % log show --style syslog --predicate 'subsystem == &quot;com.apple.Authorization&quot;' --last 1h 
 Filtering the log data using &quot;subsystem == &quot;com.apple.Authorization&quot;&quot;
 Skipping info and debug messages, pass --info and/or --debug to include.
 Timestamp                       (process)[PID]    

@@ -19,8 +19,8 @@
  This is another one of my favorites for some reason. macOS being a popular audio editing device, supports external audio drivers and plugins. @xorrior wrote a very extensive blog post about these at his website, here: Audio Unit Plug-ins. Legitimate Un-signed Code Execution | by Christopher Ross | Posts By SpecterOps Team Members" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0013/" /><meta property="article:section" content="beyond" />
-<meta property="article:published_time" content="2021-04-19T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2021-04-19T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2021-04-19T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-04-19T00:00:00+00:00" />
 
 
 
@@ -56,7 +56,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -149,7 +149,7 @@
 <p>Apple has a nice documentation as well: <a href="https://developer.apple.com/library/archive/documentation/MusicAudio/Conceptual/CoreAudioOverview/Introduction/Introduction.html">Core Audio Overview</a></p>
 <p>HAL plugins are loaded by <code>coreaudiod</code>, which runs as root, and defined at <code>/System/Library/LaunchDaemons/com.apple.audio.coreaudiod.plist</code>. HAL plugins are located at <code>/Library/Audio/Plug-Ins/HAL</code>, which means that we require root access to install them.</p>
 <p>We can easily create such a plugin with Xcode, by creating a new project, and selecting the type as <code>bundle</code>. For the bundle extension we need to provide <code>.driver</code>. Once the project is created we need to add a new source file.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#099">#import &lt;Foundation/Foundation.h&gt;
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#099">#import &lt;Foundation/Foundation.h&gt;
 </span><span style="color:#099"></span>
 __attribute__((constructor)) <span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">void</span> run()
 {
@@ -157,7 +157,7 @@ __attribute__((constructor)) <span style="color:#069;font-weight:bold">static</s
 }
 </code></pre></div><p>We can implement a simple <code>constructor</code> which will be loaded when the driver is loaded. We don&rsquo;t really need to do anything else. This will work just fine, and won&rsquo;t crash <code>coreaudiod</code>.</p>
 <p>In the <code>Info.plist</code> we also need to add some UUID, and default function name, but we don&rsquo;t need to implement it.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#309;font-weight:bold">&lt;key&gt;</span>CFPlugInFactories<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#309;font-weight:bold">&lt;key&gt;</span>CFPlugInFactories<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
 <span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
     <span style="color:#309;font-weight:bold">&lt;key&gt;</span>00000000-0000-0000-0000-000000000000<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
     <span style="color:#309;font-weight:bold">&lt;string&gt;</span>SomeFunction<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
@@ -171,10 +171,10 @@ __attribute__((constructor)) <span style="color:#069;font-weight:bold">static</s
 <span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
 </code></pre></div><p>Next we can simply compile it and place it in <code>/Library/Audio/Plug-Ins/HAL</code>. We will need to set folder ownership to <code>root:wheel</code>.</p>
 <p>We can then go and restart <code>coreaudiod</code>.</p>
-<pre><code>csaby@dev ~ % sudo launchctl stop com.apple.audio.coreaudiod 
+<pre tabindex="0"><code>csaby@dev ~ % sudo launchctl stop com.apple.audio.coreaudiod 
 csaby@dev ~ % sudo launchctl start com.apple.audio.coreaudiod
 </code></pre><p>Now we can query the logs.</p>
-<pre><code>csaby@dev ~ % log show --predicate 'eventMessage contains[c] &quot;MasterAudio&quot;' --last 20m
+<pre tabindex="0"><code>csaby@dev ~ % log show --predicate 'eventMessage contains[c] &quot;MasterAudio&quot;' --last 20m
 Filtering the log data using &quot;composedMessage CONTAINS[c] &quot;MasterAudio&quot;&quot;
 Skipping info and debug messages, pass --info and/or --debug to include.
 Timestamp                       Thread     Type        Activity             PID    TTL  

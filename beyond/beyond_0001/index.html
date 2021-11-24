@@ -19,8 +19,8 @@
  Shell startup files are executed when our shell environment like zsh or bash is starting up. macOS defaults to /bin/zsh these days, and whenever we open Terminal or SSH into the device, this is the shell environment we are placed into." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0001/" /><meta property="article:section" content="beyond" />
-<meta property="article:published_time" content="2021-03-14T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2021-03-14T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2021-03-14T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-03-14T00:00:00+00:00" />
 
 
 
@@ -56,7 +56,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -147,7 +147,7 @@
 <p>Shell startup files are executed when our shell environment like <code>zsh</code> or <code>bash</code> is starting up. macOS defaults to <code>/bin/zsh</code>  these days, and whenever we open <code>Terminal</code> or SSH into the device, this is the shell environment we are placed into. <code>bash</code> and <code>sh</code> are still available, however they have to be specifically started.</p>
 <p>When we start <code>zsh</code> it checks number of files, and if there is an environment variable or command inside, it will be set or executed. Probably the most common is <code>.zshrc</code>, which is used to set the shell environment and execute commands. It can be found in the user&rsquo;s home directory. <code>bash</code> has a similar one, called <code>.bashrc</code>.</p>
 <p>The man page of zsh, which we can read with <code>man zsh</code> has a long description of the startup files.</p>
-<pre><code>STARTUP/SHUTDOWN FILES
+<pre tabindex="0"><code>STARTUP/SHUTDOWN FILES
        Commands are first read from /etc/zshenv; this cannot be overridden.  Subsequent behaviour is modified by the RCS and GLOBAL_RCS options; the former
        affects  all  startup  files,  while  the second only affects global startup files (those shown here with an path starting with a /).  If one of the
        options is unset at any point, any subsequent startup file(s) of the corresponding type will not be read.  It is also possible for a file in  $ZDOT-
@@ -172,20 +172,20 @@
        file plus the .zwc extension) and it is newer than the original file, the compiled file will be used instead.
 </code></pre><p>As we can see, beyond <code>.zshrc</code> we have many other files, like <code>.zlogin</code>, <code>.zshenv</code> and a few others. Normally these files don&rsquo;t exists on macOS.</p>
 <p>Similar startup files exists for <code>bash</code> and <code>sh</code>. The latter supports far less such files, checking the man page it&rsquo;s very short.</p>
-<pre><code>$HOME/.profile
+<pre tabindex="0"><code>$HOME/.profile
 
 /etc/profile
 </code></pre><p>The benefit of these scripts, especially <code>.zshrc</code> which is used as the default shell environment, is that when Terminal is started, and it starts the shell, it will inherit Terminal&rsquo;s privacy permissions.</p>
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0001_0.png" alt="Terminal with FDA rights"></p>
 <p>Many power users will have &ldquo;Full Disk Access&rdquo; rights granted to Terminal (as shown above) and as such, it will be able to access many privacy sensitive locations. So if we place any script inside these files, it will have powerful rights. For example:</p>
-<pre><code>curl google.com
+<pre tabindex="0"><code>curl google.com
 cp -R ~/Library/Messages /tmp/
 </code></pre><p>This script will do a network connection and copy <code>Messages</code> to <code>/tmp/</code>.</p>
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0001_1.png" alt="Execution of commands from .zshrc"></p>
 <p>It will result in accessing messages as shown above.</p>
 <p>Beyond that Terminal runs outside the sandbox, thus if we can place anything inside these script files, we can escape the sandbox.</p>
 <p>Another related command to watch for, is <code>chsh</code>, which can change the shell environment for a user.</p>
-<pre><code>chsh -s /bin/bash
+<pre tabindex="0"><code>chsh -s /bin/bash
 </code></pre><p>As defenders it&rsquo;s a good practice to monitor for the occurrence of these files, and if they exists, then analyze their content.</p>
 
       </div>

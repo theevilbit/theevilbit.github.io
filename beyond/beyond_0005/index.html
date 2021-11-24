@@ -19,8 +19,8 @@
  PAM originated from Red Hat Linux, but made its way to most *nix based system, including macOS. It&rsquo;s a modular system, that allows third party additions to various authentication related operations. I highly recommend checking out the FreeBSD documentation to get a full picture." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0005/" /><meta property="article:section" content="beyond" />
-<meta property="article:published_time" content="2021-03-20T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2021-03-20T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2021-03-20T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-03-20T00:00:00+00:00" />
 
 
 
@@ -56,7 +56,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -147,7 +147,7 @@
 <p><a href="https://en.wikipedia.org/wiki/Pluggable_authentication_module">PAM</a> originated from Red Hat Linux, but made its way to most *nix based system, including macOS. It&rsquo;s a modular system, that allows third party additions to various authentication related operations. I highly recommend checking out the <a href="https://docs.freebsd.org/en/articles/pam/">FreeBSD documentation</a> to get a full picture.</p>
 <p>PAM has four facilities concerning authentication, <em>auth</em>, <em>account</em>, <em>session</em> and <em>password</em>. These are related to authentication, account management, session management and password management respectively. I will focus here on <em>auth</em> which is responsible for user authentication.</p>
 <p>Each service that uses PAM, has a configuration file, where the various facilities, the responsible modules and their policy in the chain of modules is defined. On macOS the PAM configuration files can be found in <code>/etc/pam.d/</code>. Let&rsquo;s take a look at <code>sshd</code>, which configures authentication for the <code>sshd</code> service.</p>
-<pre><code>csaby@mac ~ % cat /etc/pam.d/sshd 
+<pre tabindex="0"><code>csaby@mac ~ % cat /etc/pam.d/sshd 
 # sshd: auth account password session
 auth       optional       pam_krb5.so use_kcminit
 auth       optional       pam_ntlm.so try_first_pass
@@ -161,12 +161,12 @@ session    required       pam_launchd.so
 session    optional       pam_mount.so
 </code></pre><p>We have three columns, the first is the facility, the second is the policy and the last is the module(s). The policy will define how the result of the module should be treated. <em>optional</em> is ignored if there is a <em>required</em> in the chain. <em>required</em> means that if it&rsquo;s run and returns a failure, the overall result will be also a failure. <em>sufficient</em> means that if it results in success, subsequent modules won&rsquo;t be called, and the overall result will be success.</p>
 <p>There is a module, called <em>pam_permit.so</em>, which will return success for every request.  (Similarly there is a module called <em>pam_deny.so</em> for rejection). There is so much we can do with PAM. For example, take the following line.</p>
-<pre><code>auth       sufficient     pam_permit.so
+<pre tabindex="0"><code>auth       sufficient     pam_permit.so
 </code></pre><p>This line means that the <em>pam_permit.so</em> module is sufficient for authentication, and as it always returns true, no further check will be done. Adding the above line at the top of the <code>sshd</code> configuration, will result in permitting every SSH login. Perfect backdoor, we can always login to the machine. If we add the same line to <code>sudo</code>, we can always get root, when we run the command <code>sudo</code>. If we add it to <code>authorization</code> every authorization request will be successful, and if we reboot, we can login on the console without a password.</p>
 <p>But there is more! We can load our own module by adding it to the configuration.</p>
-<pre><code>auth       sufficient     /Users/Shared/pam.dylib
+<pre tabindex="0"><code>auth       sufficient     /Users/Shared/pam.dylib
 </code></pre><p>This will call our module whenever there is an authentication request. Here is an empty skeleton for a PAM module, I found it on <a href="https://stackoverflow.com/questions/25515077/writing-pluggable-authentication-module-pam-for-osx">Stack Overflow</a>.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#define PAM_SM_ACCOUNT
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#define PAM_SM_ACCOUNT
 </span><span style="color:#099">#define PAM_SM_AUTH
 </span><span style="color:#099">#define PAM_SM_PASSWORD
 </span><span style="color:#099">#define PAM_SM_SESSION
@@ -202,7 +202,7 @@ PAM_EXTERN <span style="color:#078;font-weight:bold">int</span> <span style="col
 }
 </code></pre></div><p>We can add our own code, and do whatever we want, although we likely want to be non-blocking, otherwise the machine could become unusable. As these services run as root, this is a very nice backdoor if we have root level access.</p>
 <p>The reason we can load our modules (by design) is because of the entitlement of these services. For example, here is <code>sshd</code>.</p>
-<pre><code>Executable=/usr/sbin/sshd
+<pre tabindex="0"><code>Executable=/usr/sbin/sshd
 Identifier=com.apple.sshd
 Format=Mach-O universal (x86_64 arm64e)
 CodeDirectory v=20100 size=17247 flags=0x0(none) hashes=532+5 location=embedded

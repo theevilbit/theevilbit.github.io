@@ -19,8 +19,8 @@
  Preference panes on macOS are plugins to the System Preferences.app. These panes can extend the functionality of the app, and typically allow you to modify configuration settings for your app. These admins are loaded when the user selects them, so they are not perfect from persistence point of view, as it requires user interaction, but can still be a thing." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0009/" /><meta property="article:section" content="beyond" />
-<meta property="article:published_time" content="2021-03-25T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2021-03-25T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2021-03-25T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-03-25T00:00:00+00:00" />
 
 
 
@@ -56,7 +56,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -154,7 +154,7 @@
 <p>Let&rsquo;s see how we can create one. Apple has a very detailed documentation about Preference Panes, which we can find <a href="https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PreferencePanes/PreferencePanes.html">here</a>. It has a section called &ldquo;Implementing a Simple Preference Pane&rdquo;, which can be used to create one from scratch.</p>
 <p>The easier method if we just want to experiment with it is to download their sample code, <a href="https://developer.apple.com/library/archive/samplecode/PrefsPane/Introduction/Intro.html">PrefsPane</a>. This is an old code that was created for OS X 10.6, so we would get a few alerts, but essentially it compiles easily. I did some changes to this project, giving a new name, new icon, fixed some alerts, and uploaded it on <a href="https://github.com/theevilbit/macos">GitHub - theevilbit/macos</a>. It&rsquo;s called <code>Persistent Worm</code>.</p>
 <p>There are multiple methods in the code, the one that will be called when loaded is <code>initWithBundle:</code>.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">-(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#c0f">initWithBundle:</span>(NSBundle<span style="color:#555">*</span>)<span style="color:#033">bundle</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">-(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#c0f">initWithBundle:</span>(NSBundle<span style="color:#555">*</span>)<span style="color:#033">bundle</span>
 {
 	<span style="color:#069;font-weight:bold">if</span> ((<span style="color:#366">self</span> <span style="color:#555">=</span> [<span style="color:#366">super</span> <span style="color:#99f">initWithBundle</span>:bundle]) <span style="color:#555">!=</span> <span style="color:#366">nil</span>)
 	{
@@ -170,7 +170,7 @@
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0009_1.png" alt="Persistent Worm"></p>
 <p>It will display the window setup in the code.</p>
 <p>Let&rsquo;s check who loads this.</p>
-<pre><code>csaby@mac ~ % log show --predicate &quot;eventMessage contains[c] 'Worm'&quot; --last 5m
+<pre tabindex="0"><code>csaby@mac ~ % log show --predicate &quot;eventMessage contains[c] 'Worm'&quot; --last 5m
 Filtering the log data using &quot;composedMessage CONTAINS[c] &quot;Worm&quot;&quot;
 Skipping info and debug messages, pass --info and/or --debug to include.
 Timestamp                       Thread     Type        Activity             PID    TTL  
@@ -180,7 +180,7 @@ Log      - Default:          1, Info:                0, Debug:             0, Er
 Activity - Create:           0, Transition:          0, Actions:           0
 </code></pre><p>If we search for our <code>Worm</code> log with the <code>log</code> utility we will see that the process loading the binary is <code>legacyLoader-x86_64</code>, at least on Big Sur 11.2. This is an XPC service used by <code>System Prefrences</code> and can be found at <code>/System/Library/Frameworks/PreferencePanes.framework/Versions/A/XPCServices/legacyLoader-x86_64.xpc/Contents/MacOS/legacyLoader-x86_64</code>.</p>
 <p>If we check its code signing properties we will see that it allows the load of third party code due to the <code>com.apple.security.cs.disable-library-validation</code> entitlement.</p>
-<pre><code>Executable=/System/Library/Frameworks/PreferencePanes.framework/Versions/A/XPCServices/legacyLoader-x86_64.xpc/Contents/MacOS/legacyLoader-x86_64
+<pre tabindex="0"><code>Executable=/System/Library/Frameworks/PreferencePanes.framework/Versions/A/XPCServices/legacyLoader-x86_64.xpc/Contents/MacOS/legacyLoader-x86_64
 Identifier=com.apple.systempreferences.legacyLoader.x86_64
 Format=bundle with Mach-O thin (x86_64)
 CodeDirectory v=20100 size=672 flags=0x0(none) hashes=13+5 location=embedded
@@ -202,7 +202,7 @@ Internal requirements count=1 size=96
 </code></pre><p>On macOS Catalina the loader was <code>/System/Library/Frameworks/PreferencePanes.framework/Versions/A/XPCServices/legacyLoader.xpc/Contents/MacOS/legacyLoader</code> with the entitlement <code>com.apple.security.cs.disable-library-validation</code>.</p>
 <h4 id="update-20210406">Update 2021.04.06.</h4>
 <p>As suggested by <a href="https://twitter.com/xnyhps">@xnyhps</a> we can enable the auto-loading of our preference pane with registering an alert for it.</p>
-<pre><code>csaby@mac ~ % defaults delete com.apple.systempreferences DidShowPrefBundleIDs                                         
+<pre tabindex="0"><code>csaby@mac ~ % defaults delete com.apple.systempreferences DidShowPrefBundleIDs                                         
 csaby@mac ~ % defaults write com.apple.systempreferences AttentionPrefBundleIDs -dict 'com.yourcompany.Persistent-Worm' 1
 </code></pre><p>In the above listing we register an alert for our pane by bundle ID. We also clear the status if it has been showed before. This will result in our preference pane loading, when the user opens <code>System Preferences</code>.</p>
 

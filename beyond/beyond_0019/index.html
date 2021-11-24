@@ -21,8 +21,8 @@ Periodic scripts have a FreeBSD origin."/>
 Periodic scripts have a FreeBSD origin." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0019/" /><meta property="article:section" content="beyond" />
-<meta property="article:published_time" content="2021-08-06T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2021-08-06T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2021-08-06T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-08-06T00:00:00+00:00" />
 
 
 
@@ -58,7 +58,7 @@ Periodic scripts have a FreeBSD origin." />
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -150,7 +150,7 @@ Periodic scripts have a FreeBSD origin." />
 <p>Periodic scripts have a FreeBSD origin. These scripts are doing some maintenance tasks on the system, and scheduled to be run on a daily, weekly and monthly basis.</p>
 <h2 id="scripts-execution">Scripts Execution</h2>
 <p>On macOS these tasks are scheduled by <code>launchd</code>, and as they are located inside <code>LaunchDaemons</code> they will run as root.</p>
-<pre><code>csaby@mac ~ % ls -l /System/Library/LaunchDaemons/*periodic-*
+<pre tabindex="0"><code>csaby@mac ~ % ls -l /System/Library/LaunchDaemons/*periodic-*
 -rw-r--r--  1 root  wheel  887 Jan  1  2020 /System/Library/LaunchDaemons/com.apple.periodic-daily.plist
 -rw-r--r--  1 root  wheel  895 Jan  1  2020 /System/Library/LaunchDaemons/com.apple.periodic-monthly.plist
 -rw-r--r--  1 root  wheel  891 Jan  1  2020 /System/Library/LaunchDaemons/com.apple.periodic-weekly.plist
@@ -161,11 +161,11 @@ Periodic scripts have a FreeBSD origin." />
 <p>As the periodic script are scheduled to be run as root, our script will be run as root. There were some changes at Big Sur 11.5, but more about that later.</p>
 <h2 id="the-vulnerability--the-fix">The Vulnerability &amp; The Fix</h2>
 <p>Periodic scripts have a secondary location defined in the configuration file <code>/etc/defaults/periodic.conf</code>.</p>
-<pre><code># periodic script dirs
+<pre tabindex="0"><code># periodic script dirs
 local_periodic=&quot;/usr/local/etc/periodic&quot;
 </code></pre><p>Anyone who has <a href="https://brew.sh/">Homebrew</a> installed knows that the owner of the <code>/usr/local/</code> directory is changed from root to the admin user. This means that an admin user can write to this location without further privilege elevation. Thus if we create the above folder, and drop our script inside we gain code execution as root.</p>
 <p>I reported this to Apple, and although it&rsquo;s not a default configuration they still fixed it. To my surprise they fixed it the way I recommended it. Here is a shortened version of the <code>diff</code> of the old and patched periodic bash script.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">csaby@mac ~ % diff periodic_11.4 periodic_11.5
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">csaby@mac ~ % diff periodic_11.4 periodic_11.5
 ...
 <span style="color:#033">result</span><span style="color:#555">=(</span><span style="color:#c30">`</span>/usr/bin/stat -f <span style="color:#c30">&#39;%Su %Ul&#39;</span> <span style="color:#033">$file</span><span style="color:#c30">`</span><span style="color:#555">)</span>
 <span style="color:#033">user</span><span style="color:#555">=</span><span style="color:#a00">${</span><span style="color:#033">result</span>[0]<span style="color:#a00">}</span>
@@ -181,7 +181,7 @@ local_periodic=&quot;/usr/local/etc/periodic&quot;
 <p>It was slightly different but I also utilized this weaponization trick in <a href="https://www.offensive-security.com/offsec/macos-preferences-priv-escalation/">CVE-2021-1815</a>.</p>
 <h2 id="but-not-all-is-lost">But Not All Is Lost</h2>
 <p>There is a <code>999.local</code> script for each period. The daily can be read here: <a href="https://opensource.apple.com/source/crontabs/crontabs-54/files/daily/999.local.auto.html">999.local</a> What it does is execution the script defined by the variable <code>$daily_local</code>. This is defined in <code>periodic.conf</code>.</p>
-<pre><code>csaby@mac /etc % grep .local /etc/defaults/periodic.conf         
+<pre tabindex="0"><code>csaby@mac /etc % grep .local /etc/defaults/periodic.conf         
 ...
 # 999.local
 daily_local=&quot;/etc/daily.local&quot;				# Local scripts
@@ -194,7 +194,7 @@ monthly_local=&quot;/etc/monthly.local&quot;			# Local scripts
 <p>You are welcome :)</p>
 <h2 id="further-notes">Further notes</h2>
 <p>The periodic script uses the previously mentioned configuration file to locate some of the scripts directories. This means that if we as an attacker overwrite it, we can place our scripts anywhere, so someone has to monitor for any file changes. Beyond that the config file defines other config files.</p>
-<pre><code># What files override these defaults ?
+<pre tabindex="0"><code># What files override these defaults ?
 periodic_conf_files=&quot;/etc/periodic.conf /etc/periodic.conf.local&quot;
 </code></pre>
       </div>

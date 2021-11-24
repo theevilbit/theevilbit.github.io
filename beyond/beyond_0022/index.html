@@ -10,31 +10,31 @@
     
 
     <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 15 - xsanctl"/>
-<meta name="twitter:description" content="This is part 15 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
- I run into this not so exciting persistent method when I was investigating xsanctl for&hellip; other&hellip; reasons&hellip; xsanctl is a &ldquo;Xsan file system control utility&rdquo;, which allows us to mount and manage Xsans.
-The xsanctl binary can be found at /System/Library/Filesystems/acfs."/>
+<meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 22 - LoginHook and LogoutHook"/>
+<meta name="twitter:description" content="This is part 22 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ This method is considered deprecated by Apple, yet it still works.
+LoginHooks and LogoutHooks have been widely documented by many people, so this post is mostly for completeness. The official, Apple documentation can be found here: Customizing Login and Logout"/>
 
-    <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 15 - xsanctl" />
-<meta property="og:description" content="This is part 15 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
- I run into this not so exciting persistent method when I was investigating xsanctl for&hellip; other&hellip; reasons&hellip; xsanctl is a &ldquo;Xsan file system control utility&rdquo;, which allows us to mount and manage Xsans.
-The xsanctl binary can be found at /System/Library/Filesystems/acfs." />
+    <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 22 - LoginHook and LogoutHook" />
+<meta property="og:description" content="This is part 22 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ This method is considered deprecated by Apple, yet it still works.
+LoginHooks and LogoutHooks have been widely documented by many people, so this post is mostly for completeness. The official, Apple documentation can be found here: Customizing Login and Logout" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0015/" /><meta property="article:section" content="beyond" />
-<meta property="article:published_time" content="2021-05-12T00:00:00+00:00" />
-<meta property="article:modified_time" content="2021-05-12T00:00:00+00:00" />
+<meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0022/" /><meta property="article:section" content="beyond" />
+<meta property="article:published_time" content="2021-11-24T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-11-24T00:00:00+00:00" />
 
 
 
     
-      <base href="https://theevilbit.github.io/beyond/beyond_0015/">
+      <base href="https://theevilbit.github.io/beyond/beyond_0022/">
     
     <title>
-  Beyond the good ol&#39; LaunchAgents - 15 - xsanctl · theevilbit blog
+  Beyond the good ol&#39; LaunchAgents - 22 - LoginHook and LogoutHook · theevilbit blog
 </title>
 
     
-      <link rel="canonical" href="https://theevilbit.github.io/beyond/beyond_0015/">
+      <link rel="canonical" href="https://theevilbit.github.io/beyond/beyond_0022/">
     
 
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
@@ -110,19 +110,19 @@ The xsanctl binary can be found at /System/Library/Filesystems/acfs." />
     <article>
       <header>
         <div class="post-title">
-          <h1 class="title">Beyond the good ol&#39; LaunchAgents - 15 - xsanctl</h1>
+          <h1 class="title">Beyond the good ol&#39; LaunchAgents - 22 - LoginHook and LogoutHook</h1>
         </div>
         <div class="post-meta">
           <div class="date">
             <span class="posted-on">
               <i class="fas fa-calendar"></i>
-              <time datetime='2021-05-12T00:00:00Z'>
-                May 12, 2021
+              <time datetime='2021-11-24T00:00:00Z'>
+                November 24, 2021
               </time>
             </span>
             <span class="reading-time">
               <i class="fas fa-clock"></i>
-              2 minutes read
+              One minute read
             </span>
           </div>
           <div class="categories">
@@ -144,28 +144,21 @@ The xsanctl binary can be found at /System/Library/Filesystems/acfs." />
 
       <div>
         <blockquote>
-<p>This is part 15 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+<p>This is part 22 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
 </blockquote>
-<p>I run into this not so exciting persistent method when I was investigating <code>xsanctl</code> for&hellip; other&hellip; reasons&hellip; <code>xsanctl</code> is a &ldquo;Xsan file system control utility&rdquo;, which allows us to mount and manage Xsans.</p>
-<p>The <code>xsanctl</code> binary can be found at <code>/System/Library/Filesystems/acfs.fs/Contents/bin/xsanctl</code>, however when we simply run the command it is run from <code>/usr/sbin/xsanctl</code>. If we check, this is a symbolic link.</p>
-<pre tabindex="0"><code>csaby@mac exploits % ls -l /usr/sbin/xsanctl
-lrwxr-xr-x  1 root  wheel  63 Jan  1  2020 /usr/sbin/xsanctl -&gt; /System/Library/Filesystems/acfs.fs/Contents/bin/redirection.sh
-</code></pre><p>Interestingly the link points to a script and not the actual binary.</p>
-<p>The script is very short.</p>
-<pre tabindex="0"><code>#!/bin/sh
-if [ -r /Library/Preferences/Xsan/.xsanrc ]
-then
-    . /Library/Preferences/Xsan/.xsanrc
-fi
-if [ x&quot;${XSAN_ALT_BINDIR}&quot; == x ]
-then
-    XSAN_ALT_BINDIR=/System/Library/Filesystems/acfs.fs/Contents/bin
-fi
-COMMAND=`basename $0`
-${XSAN_ALT_BINDIR}/${COMMAND} &quot;$@&quot;
-</code></pre><p>It will execute the file <code>/Library/Preferences/Xsan/.xsanrc</code> if exists. Moreover it will also look for the <code>xsanctl</code> binary in different location if the <code>XSAN_ALT_BINDIR</code> environment variable is defined, which allows further redirection.</p>
-<p>Essentially we can persist in the <code>/Library/Preferences/Xsan/.xsanrc</code> script. Unfortunately this location requires root access, and this utility likely also not frequently run, especially by non-enterprise users.</p>
-<p>So it&rsquo;s not super useful, but thought it would worth a quick post.</p>
+<p>This method is considered deprecated by Apple, yet it still works.</p>
+<p>LoginHooks and LogoutHooks have been widely documented by many people, so this post is mostly for completeness. The official, Apple documentation can be found here: <a href="https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CustomLogin.html#//apple_ref/doc/uid/10000172i-SW10-SW1">Customizing Login and Logout</a></p>
+<p>LoginHooks and LogoutHooks are executed, well&hellip; at logins and logouts just as the name suggest, and they are run as root. They are set in the preferences of the  <code>com.apple.loginwindow</code> process, and so it&rsquo;s stored in the file <code>/var/root/Library/Preferences/com.apple.loginwindow.plist</code>.</p>
+<p>We can use the <code>defaults</code> utility to add a hook, like the following:</p>
+<pre tabindex="0"><code>sudo defaults write com.apple.loginwindow LoginHook /path/to/loginscript
+</code></pre><p>Similarly we can install a <code>LogoutHook</code>:</p>
+<pre tabindex="0"><code>sudo defaults write com.apple.loginwindow LogoutHook /path/to/logoutscript
+</code></pre><p>To delete we can run the following:</p>
+<pre tabindex="0"><code>sudo defaults delete com.apple.loginwindow LoginHook
+sudo defaults delete com.apple.loginwindow LogoutHook
+</code></pre><p>As we can only list one script or file in the preferences, we can only have one <code>LoginHook</code> and <code>LogoutHook</code> systemwide.</p>
+<p>It&rsquo;s important that if we use a script, it must have the shebang at the header (e.g.: <code>!#/bin/zsh</code>).</p>
+<p>Really that&rsquo;s about it, it&rsquo;s as simple as it looks.</p>
 
       </div>
 

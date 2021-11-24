@@ -19,8 +19,8 @@ In case an application is installed for the current user and not for all user, t
 In case an application is installed for the current user and not for all user, the Installation/Uninstallation details will go to the Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\ registry key instead of the HKLM hive." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/uninstallstring_a_possible_lpe_via_social_engineering/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2019-08-09T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2019-08-09T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2019-08-09T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-08-09T00:00:00+00:00" />
 
 
 
@@ -56,7 +56,7 @@ In case an application is installed for the current user and not for all user, t
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -141,7 +141,7 @@ In case an application is installed for the current user and not for all user, t
 <a href="https://nsis.sourceforge.io/Add_uninstall_information_to_Add/Remove_Programs">Add uninstall information to Add/Remove Programs - NSIS</a></p>
 <p>In case an application is installed for the current user and not for all user, the Installation/Uninstallation details will go to the <code>Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\</code> registry key instead of the <code>HKLM</code> hive. For example OneDrive has all the information under the following registry key: <code>Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\OneDriveSetup.exe</code></p>
 <p>Under this key we can find the following values, that could point to an executable:</p>
-<pre><code>UninstallString
+<pre tabindex="0"><code>UninstallString
 QuiteUninstallString
 ModifyPath
 </code></pre><p>As these settings are under the user’s registry hive he/she has the rights to modify it and set a custom value. Setting a custom executable here could result in a privilege escalation scenario if the person (likely an administrator) running the uninstaller, and entering his / her creds is unaware of the change. This happens because <code>Apps &amp; Features</code> behaves differently from <code>Control Panel</code>. For example, let’s set it to cmd.exe with OneDriveSetup.exe (which exists normally by default on most installations):</p>

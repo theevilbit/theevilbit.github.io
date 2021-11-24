@@ -19,8 +19,8 @@ mmap Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel ex
 mmap Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel extension. It uses the MAC policy framework to insert hooks on the system on various points. These functions are named as hook*. Let&rsquo;s take a look on what is implemented." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/gatekeeper_not_a_bypass/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2021-06-29T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2021-06-29T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2021-06-29T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-06-29T00:00:00+00:00" />
 
 
 
@@ -56,7 +56,7 @@ mmap Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel ex
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -142,7 +142,7 @@ mmap Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel ex
         <p>This post is about two techniques that can be useful for someone to evade GateKeeper in a red team engagement or pentest. According to Apple these are not considered bypasses, and everything works as expected.</p>
 <h2 id="mmap">mmap</h2>
 <p>Part of GateKeeper is implemented on macOS in the <code>Quarantine.kext</code>  kernel extension. It uses the MAC policy framework to insert hooks on the system on various points. These functions are named as hook*. Let&rsquo;s take a look on what is implemented.</p>
-<pre><code>csaby@mac ~ % nm /System/Library/Extensions/Quarantine.kext/Contents/MacOS/Quarantine | grep hook 
+<pre tabindex="0"><code>csaby@mac ~ % nm /System/Library/Extensions/Quarantine.kext/Contents/MacOS/Quarantine | grep hook 
 0000000000001a4a t _hook_cred_check_label_update
 0000000000001a01 t _hook_cred_check_label_update_execve
 0000000000001a73 t _hook_cred_label_associate
@@ -194,7 +194,7 @@ mmap Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel ex
 <p>The problem is that an attacker can load a dylib through other means as well, using the deprecated <code>NSCreateObjectFileImageFromMemory</code> API.</p>
 <p>What we can do is call this API on any dynamic library outside of our bundle, which can be even unsigned and have the quarantine flag, and it will be still loaded and executed.</p>
 <p>The following code snippet does it.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">NSObjectFileImage fileImage <span style="color:#555">=</span> <span style="color:#366">NULL</span>;
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">NSObjectFileImage fileImage <span style="color:#555">=</span> <span style="color:#366">NULL</span>;
 NSModule module <span style="color:#555">=</span> <span style="color:#366">NULL</span>;
 NSSymbol symbol <span style="color:#555">=</span> <span style="color:#366">NULL</span>;
 
@@ -219,7 +219,7 @@ NSUnLinkModule(module, NSUNLINKMODULE_OPTION_NONE);
 NSDestroyObjectFileImage(fileImage);
 </code></pre></div><h3 id="not-exploitation">Not Exploitation</h3>
 <p>I developed a simple App, called QB.app, which I notarized and it will load this binary from the path above (<code>/Volumes/QB/test.bundle</code>). The app is packed inside a DMG with this <code>test.bundle</code>. The code of this binary is very simple.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
 </span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdlib.h&gt;</span><span style="color:#099">
 </span><span style="color:#099"></span>
 __attribute__((constructor))
@@ -237,7 +237,7 @@ __attribute__((constructor))
 </code></pre></div><p>It has a constructor and an execute function. Both print a message and start Calculator.</p>
 <p>If we load this from our app it will start Calculator twice (once the first is closed), because the constructor will be called and also the <code>execute</code> function.</p>
 <p>I also added a line to my app to try to do the same load with <code>dlopen</code> to show that it doesn&rsquo;t work:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">dlopen(<span style="color:#c30">&#34;/Volumes/QB/test.bundle&#34;</span>,<span style="color:#f60">1</span>);
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">dlopen(<span style="color:#c30">&#34;/Volumes/QB/test.bundle&#34;</span>,<span style="color:#f60">1</span>);
 </code></pre></div><p>When this is invoked we will get the popup shown above.</p>
 <p>However on the dynamic mapping it will be loaded and Calculator will be executed.</p>
 <p>Note, that <code>test.bundle</code> is unsigned!</p>
@@ -251,7 +251,7 @@ __attribute__((constructor))
 <p>When users download a screen saver bundle (<code>.saver</code>) and instead of double clicking the screen saver for installation, directly place it in the <code>~/Library/Screen Saver</code> directory, the system will load the screen saver if the users select it in the screen saver preferences. There is no alert that they are trying to execute an app downloaded form the Internet.</p>
 <p>The screen saver has to be notarized, or signed with an old certificate in order to avoid a prompt. Even if an app is notarized an alert should be generated at first execution by Gatekeeper.</p>
 <p>I created a simple screen saver with the following code, to see which part is executed.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#09f;font-style:italic">//
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#09f;font-style:italic">//
 </span><span style="color:#09f;font-style:italic">//  DemoScreenView.m
 </span><span style="color:#09f;font-style:italic">//  DemoScreen
 </span><span style="color:#09f;font-style:italic">//
@@ -318,7 +318,7 @@ __attribute__((constructor))
 
 <span style="color:#069;font-weight:bold">@end</span>
 </code></pre></div><p>As soon as it&rsquo;s selected it will be loaded, and run what we can see in the logs</p>
-<pre><code>csaby@bigsur ~ % log stream | grep hello_screensaver
+<pre tabindex="0"><code>csaby@bigsur ~ % log stream | grep hello_screensaver
 2021-05-28 08:43:59.329660-0700 0x1eb6     Default     0x6b54               692    0    legacyScreenSaver: (DemoScreen) hello_screensaver void custom(int, const char **)
 2021-05-28 08:43:59.329945-0700 0x1eb6     Default     0x6b54               692    0    legacyScreenSaver: (DemoScreen) hello_screensaver -[DemoScreenView initWithFrame:isPreview:]
 2021-05-28 08:43:59.330051-0700 0x1eb6     Default     0x6b54               692    0    legacyScreenSaver: (DemoScreen) hello_screensaver -[DemoScreenView hasConfigureSheet]
@@ -339,7 +339,7 @@ __attribute__((constructor))
 <p>It started to show a pattern, that every bundle which is loaded into a process gets executed, so I decided to investigate it.</p>
 <h3 id="the-root-cause">The Root Cause</h3>
 <p>To test my theory I created a dylib, which simply logs a message.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#099">#import &lt;Foundation/Foundation.h&gt;
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#099">#import &lt;Foundation/Foundation.h&gt;
 </span><span style="color:#099"></span>
 __attribute__((constructor))
 <span style="color:#078;font-weight:bold">void</span> custom(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)
@@ -347,7 +347,7 @@ __attribute__((constructor))
     NSLog(<span style="color:#c30">@&#34;hello_dylib %s&#34;</span>, __PRETTY_FUNCTION__);
 }
 </code></pre></div><p>and an executable, which loads the dylib.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#import &lt;dlfcn.h&gt;
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#import &lt;dlfcn.h&gt;
 </span><span style="color:#099"></span>
 <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">main</span>(<span style="color:#078;font-weight:bold">void</span>)
 {
@@ -355,7 +355,7 @@ __attribute__((constructor))
 }
 </code></pre></div><p>Then I notarized the dylib, and downloaded it so it got a quarantine flag. Then started the executable and the dylib was loaded without any prompts. This was really weird.</p>
 <p>Thus I decided to take a look at the GK logs from <code>syspolicyd</code>. The following shows the <code>syspolicyd</code> logs concerning the load of the <code>log.dylib</code>.</p>
-<pre><code>2021-06-01 22:47:50.789451+0200 0x1a504f   Debug       0x0                  144    0    syspolicyd: (Security) [com.apple.securityd:staticCode] performing resource validation for /Users/csaby/Downloads/log.dylib (0, 0, 0, 0, 0)
+<pre tabindex="0"><code>2021-06-01 22:47:50.789451+0200 0x1a504f   Debug       0x0                  144    0    syspolicyd: (Security) [com.apple.securityd:staticCode] performing resource validation for /Users/csaby/Downloads/log.dylib (0, 0, 0, 0, 0)
 2021-06-01 22:47:50.789676+0200 0x1a504f   Debug       0x0                  144    0    syspolicyd: (LaunchServices) [com.apple.launchservices:code-evaluation] -[LSCodeEvaluation setCompletedUnits:]: value: 68304
 2021-06-01 22:47:50.789706+0200 0x1a504f   Debug       0x0                  144    0    syspolicyd: (Security) [com.apple.securityd:staticCode] SecStaticCode network allowed: YES
 2021-06-01 22:47:50.789817+0200 0x1a504f   Debug       0x0                  144    0    syspolicyd: (Security) [com.apple.securityd:staticCode] SecStaticCode network allowed: YES
@@ -378,9 +378,9 @@ __attribute__((constructor))
 2021-06-01 22:47:50.794247+0200 0x1a513a   Debug       0x0                  144    0    syspolicyd: (LaunchServices) [com.apple.launchservices:code-evaluation] -[LSCodeEvaluation finish]: entered
 2021-06-01 22:47:50.794318+0200 0x1a513a   Debug       0x0                  144    0    syspolicyd: (Security) [com.apple.securityd:unixio] close(24) err: 0
 </code></pre><p>If yo don&rsquo;t find it, let me highlight the key part:</p>
-<pre><code>syspolicyd: [com.apple.syspolicy.exec:default] Library loads never require a first launch prompt.
+<pre tabindex="0"><code>syspolicyd: [com.apple.syspolicy.exec:default] Library loads never require a first launch prompt.
 </code></pre><p>Looks like it&rsquo;s a design decision not to generate prompt on library loads. We can find this if we reverse <code>syspolicyd</code>. <code>/usr/libexec/syspolicyd</code> has the method <code>determineGatekeeperEvaluationTypeForTarget:withResponsibleTarget:</code>:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#069;font-weight:bold">__int64</span> <span style="color:#069;font-weight:bold">__cdecl</span> <span style="color:#555">-</span>[EvaluationPolicy <span style="color:#99f">determineGatekeeperEvaluationTypeForTarget</span>:<span style="color:#99f">withResponsibleTarget</span>:](
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#069;font-weight:bold">__int64</span> <span style="color:#069;font-weight:bold">__cdecl</span> <span style="color:#555">-</span>[EvaluationPolicy <span style="color:#99f">determineGatekeeperEvaluationTypeForTarget</span>:<span style="color:#99f">withResponsibleTarget</span>:](
         EvaluationPolicy <span style="color:#555">*</span><span style="color:#366">self</span>,
         <span style="color:#078;font-weight:bold">SEL</span> a2,
         <span style="color:#078;font-weight:bold">id</span> a3,

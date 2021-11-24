@@ -21,8 +21,8 @@ Enabling atrun As described by atrun&rsquo;s man page, the scheduler can be enab
 Enabling atrun As described by atrun&rsquo;s man page, the scheduler can be enabled using the following command:" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0014/" /><meta property="article:section" content="beyond" />
-<meta property="article:published_time" content="2021-04-27T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2021-04-27T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2021-04-27T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-04-27T00:00:00+00:00" />
 
 
 
@@ -58,7 +58,7 @@ Enabling atrun As described by atrun&rsquo;s man page, the scheduler can be enab
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -149,22 +149,22 @@ Enabling atrun As described by atrun&rsquo;s man page, the scheduler can be enab
 <p>The <code>at</code> command set is a heritage *nix job scheduler on macOS. Although it&rsquo;s slowly being deprecated, it&rsquo;s still available on Big Sur, although disabled by default.</p>
 <h2 id="enabling-atrun">Enabling atrun</h2>
 <p>As described by <code>atrun</code>&rsquo;s man page, the scheduler can be enabled using the following command:</p>
-<pre><code>sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.atrun.plist
+<pre tabindex="0"><code>sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.atrun.plist
 </code></pre><p>What is not mentioned, is that in order it to work, it needs Full Disk Access rights granted under privacy setting.</p>
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0014_1.png" alt="Grant FDA for atrun"></p>
 <p>Because of all of these prerequisites (being root, and FDA access), this might not be a very attractive persistence method for attackers, however I think this is a commonly missed persistence, and could help staying under the radar.</p>
 <p>If all of this was done, we can start using it.</p>
 <h2 id="scheduling-jobs">Scheduling jobs</h2>
 <p>We can schedule jobs using the <code>at</code> command.</p>
-<pre><code>sh-3.2# echo &quot;echo 11 &gt; /tmp/at.txt&quot; | at now+1
+<pre tabindex="0"><code>sh-3.2# echo &quot;echo 11 &gt; /tmp/at.txt&quot; | at now+1
 job 26 at Tue Apr 27 00:46:36 2021
 </code></pre><p>The above will schedule a job in 1 minute, and will execute the command <code>echo 11 &gt; /tmp/at.txt</code>. It got the job number 26.</p>
 <p>We can check the job queue using <code>atq</code>.</p>
-<pre><code>sh-3.2# atq
+<pre tabindex="0"><code>sh-3.2# atq
 26	Tue Apr 27 00:46:00 2021
 22	Wed Apr 28 00:29:00 2021
 </code></pre><p>Above we can see two jobs scheduled. We can print the details of the job using <code>at -c JOBNUMBER</code></p>
-<pre><code>sh-3.2# at -c 26
+<pre tabindex="0"><code>sh-3.2# at -c 26
 #!/bin/sh
 # atrun uid=0 gid=0
 # mail csaby 0
@@ -197,7 +197,7 @@ echo 11 &gt; /tmp/at.txt
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0014_0.png" alt="User alert when scheduling jobs"></p>
 <h2 id="job-files">Job files</h2>
 <p>The job files can be found at <code>/private/var/at/jobs/</code></p>
-<pre><code>sh-3.2# ls -l /private/var/at/jobs/
+<pre tabindex="0"><code>sh-3.2# ls -l /private/var/at/jobs/
 total 32
 -rw-r--r--  1 root  wheel    6 Apr 27 00:46 .SEQ
 -rw-------  1 root  wheel    0 Apr 26 23:17 .lockfile

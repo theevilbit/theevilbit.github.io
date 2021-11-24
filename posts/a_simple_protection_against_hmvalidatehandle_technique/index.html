@@ -19,8 +19,8 @@ What is HMValidateHandle? HMValidateHandle is an internal, unexported function o
 What is HMValidateHandle? HMValidateHandle is an internal, unexported function of user32.dll. It takes a handle and a handle type as arguments, and by looking up the handle table, if the handle is matching with the type it will copy the object to user memory." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/a_simple_protection_against_hmvalidatehandle_technique/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2019-07-31T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2019-07-31T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2019-07-31T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-07-31T00:00:00+00:00" />
 
 
 
@@ -56,7 +56,7 @@ What is HMValidateHandle? HMValidateHandle is an internal, unexported function o
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -141,10 +141,10 @@ What is HMValidateHandle? HMValidateHandle is an internal, unexported function o
 There are awful lot of documentation about this, and it was widely abused in many-many Windows kernel exploits, as you could reliably leak kernel object addresses, especially useful for kernel pool spraying. Thus Microsoft decided to finally close this, and so this technique doesn’t work beyond Windows 10 RS4.</p>
 <h3 id="getting-the-address-of-hmvalidatehandle">Getting the address of HMValidateHandle</h3>
 <p>Conceptually it’s very simple. This function is frequently called from inside <code>user32.dll</code> so we just need to parse through it, and grab / calculate its address. The most common technique is locating the <code>IsMenu</code> function in <code>user32.dll</code>:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">HMODULE hUser32 <span style="color:#555">=</span> LoadLibraryA(<span style="color:#c30">&#34;user32.dll&#34;</span>);
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">HMODULE hUser32 <span style="color:#555">=</span> LoadLibraryA(<span style="color:#c30">&#34;user32.dll&#34;</span>);
 BYTE<span style="color:#555">*</span> pIsMenu <span style="color:#555">=</span> (BYTE <span style="color:#555">*</span>)GetProcAddress(hUser32, <span style="color:#c30">&#34;IsMenu&#34;</span>);
 </code></pre></div><p>Then parsing through it, and calculate the address of it. It’s being called very early in the function, and the opcode <code>E8</code> will indicate that, we can go from there.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#078;font-weight:bold">int</span> uiHMValidateHandleOffset <span style="color:#555">=</span> <span style="color:#f60">0</span>;
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#078;font-weight:bold">int</span> uiHMValidateHandleOffset <span style="color:#555">=</span> <span style="color:#f60">0</span>;
 	<span style="color:#069;font-weight:bold">for</span> (<span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#078;font-weight:bold">int</span> i <span style="color:#555">=</span> <span style="color:#f60">0</span>; i <span style="color:#555">&lt;</span> <span style="color:#f60">0x1000</span>; i<span style="color:#555">++</span>) {
 		BYTE<span style="color:#555">*</span> test <span style="color:#555">=</span> pIsMenu <span style="color:#555">+</span> i;
 		<span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">*</span>test <span style="color:#555">==</span> <span style="color:#f60">0xE8</span>) {
@@ -165,9 +165,9 @@ BYTE<span style="color:#555">*</span> pIsMenu <span style="color:#555">=</span> 
 <p>For example picking up <code>GetMenuItemCount</code> would be similarly easy:
 <img src="https://theevilbit.github.io/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.08.19.png" alt="image"></p>
 <p>Likely the only thing you would need to change is this:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">BYTE<span style="color:#555">*</span> pIsMenu <span style="color:#555">=</span> (BYTE <span style="color:#555">*</span>)GetProcAddress(hUser32, <span style="color:#c30">&#34;IsMenu&#34;</span>);
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">BYTE<span style="color:#555">*</span> pIsMenu <span style="color:#555">=</span> (BYTE <span style="color:#555">*</span>)GetProcAddress(hUser32, <span style="color:#c30">&#34;IsMenu&#34;</span>);
 </code></pre></div><p>to:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">BYTE<span style="color:#555">*</span> pGetMenuItemCount <span style="color:#555">=</span> (BYTE <span style="color:#555">*</span>)GetProcAddress(hUser32, <span style="color:#c30">&#34;GetMenuItemCount&#34;</span>);
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">BYTE<span style="color:#555">*</span> pGetMenuItemCount <span style="color:#555">=</span> (BYTE <span style="color:#555">*</span>)GetProcAddress(hUser32, <span style="color:#c30">&#34;GetMenuItemCount&#34;</span>);
 </code></pre></div><p>and maybe the offset calculation at the end because of some nops, but otherwise easy-peasy.</p>
 <p>In older versions of Windows it was a bit less used, but still pretty good, this one is from Windows 7 x86:
 <img src="https://theevilbit.github.io/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.23.05.png" alt="image"></p>
@@ -180,7 +180,7 @@ BYTE<span style="color:#555">*</span> pIsMenu <span style="color:#555">=</span> 
 This will build all the examples, create the <code>lib</code> files, etc… Now repeat the same with the x86 / x64 version of the Developer Command Prompt, in case you need both versions. Place the include and lib files to the location of your choice.</p>
 <h3 id="integrate-with-visual-studio">Integrate with Visual Studio</h3>
 <p>In you C / C++ code you need to include the header:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#include</span> <span style="color:#099">&lt;detours.h&gt;</span><span style="color:#099">
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#include</span> <span style="color:#099">&lt;detours.h&gt;</span><span style="color:#099">
 </span></code></pre></div><p>In the <code>Project -&gt; C/C++ -&gt; General -&gt; Additional Include Directories</code> add the folder where the header files present.
 <img src="https://theevilbit.github.io/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.24.53.png" alt="image"></p>
 <p>And under <code>Project -&gt; Linker -&gt; General -&gt; Additional Library Directories</code> add the folder where the compiled lib files present.
@@ -189,20 +189,20 @@ This will build all the examples, create the <code>lib</code> files, etc… Now 
 <h3 id="using-detours">Using Detours</h3>
 <p>It is super easy. I’m not a coder at all, but it was easy even for me. Essentially you can take this example from the official WiKi page: <a href="https://github.com/Microsoft/Detours/wiki/Using-Detours">Using Detours · microsoft/Detours Wiki · GitHub</a> and change it. This is what I did.
 This is how you hook:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">DetourRestoreAfterWith();
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">DetourRestoreAfterWith();
 DetourTransactionBegin();
 DetourUpdateThread(GetCurrentThread());
 DetourAttach(<span style="color:#555">&amp;</span>(PVOID<span style="color:#555">&amp;</span>)pHmValidateHandle, ProtectHMValidateHandle);
 DetourTransactionCommit();
 </code></pre></div><p>and this is how you unhook:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">DetourTransactionBegin();
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">DetourTransactionBegin();
 DetourUpdateThread(GetCurrentThread());
 DetourDetach(<span style="color:#555">&amp;</span>(PVOID<span style="color:#555">&amp;</span>)pHmValidateHandle, ProtectHMValidateHandle);
 DetourTransactionCommit();
 </code></pre></div><p><code>pHmValidateHandle</code> contains the address of the original function you want to hook and <code>ProtectHMValidateHandle</code> is my function which is implementing the alternate functionality.</p>
 <h3 id="implementing-the-protection">Implementing the protection</h3>
 <p>Again the basic idea is to verify if the call is coming from <code>user32.dll</code> vs. somewhere else. For this we need to verify the call stack. First I was afraid that I will need to do some assembly magic for that, but luckily Windows has an API to retrieve items from the stack, and the function is: <code>CaptureStackBackTrace</code>, MSDN: <a href="https://docs.microsoft.com/en-us/windows/win32/debug/capturestackbacktrace">CaptureStackBackTrace function - Windows applications | Microsoft Docs</a>. It looks like this:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">USHORT WINAPI <span style="color:#c0f">CaptureStackBackTrace</span>(
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">USHORT WINAPI <span style="color:#c0f">CaptureStackBackTrace</span>(
   _In_      ULONG  FramesToSkip,
   _In_      ULONG  FramesToCapture,
   _Out_     PVOID  <span style="color:#555">*</span>BackTrace,
@@ -216,7 +216,7 @@ DetourTransactionCommit();
 1st frame - will be the trampoline function that is present because of the hook.
 2nd frame - the original caller of the <code>HMValidateHandle</code> function.</p>
 <p>To demonstrate this here is an output from my hook:</p>
-<pre><code>[*] Code section: `.text'
+<pre tabindex="0"><code>[*] Code section: `.text'
 [*] Base address : 0x7ffe765d0000
 [*] Start address: 0x7ffe765d1000
 [*] End address  : 0x7ffe7665708d
@@ -232,7 +232,7 @@ DetourTransactionCommit();
 [  1] = 00007FF73C601278
 </code></pre><p>We can see that that the 1st frame is always pointing to the same place, the trampoline function. The 2nd frame is the original caller, in case of <code>IsMenu</code> the address falls in the range of the <code>user32.dll</code> code segment, while in the second case where I call the function directly, like you would do in an exploit, the return address is pointing to somewhere else.</p>
 <p>Essentially the entire protector function looks like this:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#ifdef _WIN64
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#ifdef _WIN64
 </span><span style="color:#099"></span>VOID<span style="color:#555">*</span> WINAPI <span style="color:#c0f">ProtectHMValidateHandle</span>(HWND h, <span style="color:#078;font-weight:bold">int</span> type)
 <span style="color:#099">#else
 </span><span style="color:#099"></span>PVOID <span style="color:#069;font-weight:bold">__fastcall</span> ProtectHMValidateHandle(HWND h, <span style="color:#078;font-weight:bold">int</span> type)
@@ -263,7 +263,7 @@ DetourTransactionCommit();
 <p>To test it with a real world exploit, not just a test app I picked up a recent exploit for <code>CVE-2019-1132</code> which can be downloaded from here:
 <a href="https://github.com/Vlad-tri/CVE-2019-1132">GitHub - Vlad-tri/CVE-2019-1132: EoP POC for CVE-2019-1132</a>
 To simulate the hook of an AV vendor I put a line to the beginning of the exploit, to load my DLL:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">LoadLibraryA(<span style="color:#c30">&#34;HookHMVH.dll&#34;</span>);
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">LoadLibraryA(<span style="color:#c30">&#34;HookHMVH.dll&#34;</span>);
 </code></pre></div><p>and compiled it again with that.
 The normal version worked as expected:
 <img src="https://theevilbit.github.io/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.54.58.png" alt="image"></p>

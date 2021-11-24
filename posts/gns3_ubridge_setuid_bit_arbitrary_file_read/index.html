@@ -19,8 +19,8 @@
 /usr/bin/sudo find / -perm -4000 -exec /bin/ls -ldb {} \; &gt; suidfilelist There was one item that caught my attention, and that was a file called ubridge inside GNS3. I used to be a network guy, and GNS3 is a great tool to emulate real network gear, practice configuration, etc." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2019-05-28T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2019-05-28T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2019-05-28T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-05-28T00:00:00+00:00" />
 
 
 
@@ -56,7 +56,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -138,12 +138,12 @@
 
       <div>
         <p>A couple of weeks ago, I had the idea of scanning my Mac for files that has the SUID bit set, I wanted to see if there is anything interesting showing up. You can do it this way:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/usr/bin/sudo find / -perm -4000 -exec /bin/ls -ldb <span style="color:#555">{}</span> <span style="color:#c30;font-weight:bold">\;</span> &gt; suidfilelist
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/usr/bin/sudo find / -perm -4000 -exec /bin/ls -ldb <span style="color:#555">{}</span> <span style="color:#c30;font-weight:bold">\;</span> &gt; suidfilelist
 </code></pre></div><p>There was one item that caught my attention, and that was a file called <code>ubridge</code> inside GNS3. I used to be a network guy, and GNS3 is a great tool to emulate real network gear, practice configuration, etc.. I highly recommend for anyone who learns networking. This was the file:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ls -l /Applications/GNS3.app/Contents/Resources/ubridge
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ls -l /Applications/GNS3.app/Contents/Resources/ubridge
 -rwsr-x---@ <span style="color:#f60">1</span> root  admin  <span style="color:#f60">61932</span> Apr <span style="color:#f60">15</span> 07:17 /Applications/GNS3.app/Contents/Resources/ubridge
 </code></pre></div><p>I didn’t really had the idea what it does, so I took a look at the help:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/Applications/GNS3.app/Contents/Resources/ubridge -h
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/Applications/GNS3.app/Contents/Resources/ubridge -h
 Usage: /Applications/GNS3.app/Contents/Resources/ubridge <span style="color:#555">[</span>OPTION<span style="color:#555">]</span>
 
 Options:
@@ -155,7 +155,7 @@ Options:
   -v                           : Print version and <span style="color:#366">exit</span>
 </code></pre></div><p>The most interesting for first sight was that it can read a file, considering that it will run as root, it should be able to read in any file. The question is if we can display it or not. Very quickly it turned out that yes, in case you supply a non INI file, it will cause a parsing error, and will print every single line.</p>
 <p>Since the SUID flag is set for <code>ubridge</code>, it allows someone to read arbitrary files on the system.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#09f;font-style:italic">#show current ID</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#09f;font-style:italic">#show current ID</span>
 id
 <span style="color:#033">uid</span><span style="color:#555">=</span>501<span style="color:#555">(</span>csaby<span style="color:#555">)</span> <span style="color:#033">gid</span><span style="color:#555">=</span>20<span style="color:#555">(</span>staff<span style="color:#555">)</span> <span style="color:#033">groups</span><span style="color:#555">=</span>20<span style="color:#555">(</span>staff<span style="color:#555">)</span>,501<span style="color:#555">(</span>access_bpf<span style="color:#555">)</span>,12<span style="color:#555">(</span>everyone<span style="color:#555">)</span>,61<span style="color:#555">(</span>localaccounts<span style="color:#555">)</span>,79<span style="color:#555">(</span>_appserverusr<span style="color:#555">)</span>,80<span style="color:#555">(</span>admin<span style="color:#555">)</span>,81<span style="color:#555">(</span>_appserveradm<span style="color:#555">)</span>,98<span style="color:#555">(</span>_lpadmin<span style="color:#555">)</span>,701<span style="color:#555">(</span>com.apple.sharepoint.group.1<span style="color:#555">)</span>,703<span style="color:#555">(</span>com.apple.sharepoint.group.2<span style="color:#555">)</span>,33<span style="color:#555">(</span>_appstore<span style="color:#555">)</span>,100<span style="color:#555">(</span>_lpoperator<span style="color:#555">)</span>,204<span style="color:#555">(</span>_developer<span style="color:#555">)</span>,250<span style="color:#555">(</span>_analyticsusers<span style="color:#555">)</span>,395<span style="color:#555">(</span>com.apple.access_ftp<span style="color:#555">)</span>,398<span style="color:#555">(</span>com.apple.access_screensharing<span style="color:#555">)</span>,399<span style="color:#555">(</span>com.apple.access_ssh<span style="color:#555">)</span>
 
@@ -183,7 +183,7 @@ iniparser: syntax error in a.txt <span style="color:#555">(</span>1<span style="
 -&gt; a
 </code></pre></div><p>This is an open source project, so we can check the source code what causes this. It can be found here: <a href="https://github.com/GNS3/ubridge">GitHub - GNS3/ubridge: Bridge for UDP tunnels, Ethernet, TAP and VMnet interfaces.</a></p>
 <p>The following lines in the <code>iniparser.c</code> code causing this behaviour, in case it cannot parse the supplied file, it will print out every single line:</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">fprintf(stderr, <span style="color:#c30">&#34;iniparser: syntax error in %s (%d):</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>,
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">fprintf(stderr, <span style="color:#c30">&#34;iniparser: syntax error in %s (%d):</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>,
                     ininame,
                     lineno);
 fprintf(stderr, <span style="color:#c30">&#34;-&gt; %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, line);

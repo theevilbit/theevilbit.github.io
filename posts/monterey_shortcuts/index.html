@@ -17,8 +17,8 @@
 <meta property="og:description" content="Apple announced macOS Monterey (macOS 12) this week at WWDC, and one of its new features that caught my eye is Shortcuts. It&rsquo;s already available on iOS, but it made its way to macOS. My security focused brain immediately thought about how cool this feature could be for red teamers or pentesters to persist on macOS :) So I decided to take a quick look on the new functionality, focusing on how it works." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/monterey_shortcuts/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2021-06-10T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2021-06-10T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2021-06-10T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-06-10T00:00:00+00:00" />
 
 
 
@@ -54,7 +54,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -143,7 +143,7 @@
 <p><img src="https://theevilbit.github.io/images/monterey_shortcuts/demo.png" alt=""></p>
 <p>I will use this example along the way, when I explore the internals of Shortcuts.</p>
 <p>Before moving on, here are the code signing properties of the application.</p>
-<pre><code>csaby@macos12 ~ % codesign -dv --entitlements :- /System/Applications/Shortcuts.app                     
+<pre tabindex="0"><code>csaby@macos12 ~ % codesign -dv --entitlements :- /System/Applications/Shortcuts.app                     
 Executable=/System/Applications/Shortcuts.app/Contents/MacOS/Shortcuts
 Identifier=com.apple.shortcuts
 Format=app bundle with Mach-O universal (x86_64 arm64e)
@@ -354,7 +354,7 @@ Internal requirements count=1 size=68
 <h2 id="shortcuts-database--configuration">Shortcuts Database &amp; Configuration</h2>
 <p>All of the Shortcuts files are stored under the user&rsquo;s HOME folder at <code>~/Library/Shortcuts</code>. This location is protected by the Sandbox (SIP), as we can&rsquo;t access it unless we have Full Disk Access permissions granted or the entitlement <code>com.apple.rootless.storage.shortcuts</code>.</p>
 <p>We find the following files in this location:</p>
-<pre><code>csaby@macos12 ~ % ls -l Library/Shortcuts
+<pre tabindex="0"><code>csaby@macos12 ~ % ls -l Library/Shortcuts
 total 4696
 -rw-r--r--@ 1 csaby  staff      237 Jun  8 22:59 SecuredPreferences.plist
 -rw-r--r--@ 1 csaby  staff   262144 Jun  8 10:04 Shortcuts.sqlite
@@ -362,7 +362,7 @@ total 4696
 -rw-r--r--@ 1 csaby  staff  1400832 Jun 10 22:20 Shortcuts.sqlite-wal
 -rw-r--r--  1 csaby  staff       60 Jun 10 22:20 Spotlight.dat
 </code></pre><p>Let&rsquo;s start with <code>SecuredPreferences.plist</code>. This file contains the &ldquo;advanced&rdquo; configuration option for Shortcuts. The file is very short.</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+<pre tabindex="0"><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;
 &lt;plist version=&quot;1.0&quot;&gt;
 &lt;dict&gt;
@@ -379,7 +379,7 @@ total 4696
 </code></pre><p>It can be mapped one-to-one to the options on the advanced configuration preferences pane.</p>
 <p><img src="https://theevilbit.github.io/images/monterey_shortcuts/settings.png" alt=""></p>
 <p>Let&rsquo;s take a look on the database. I&rsquo;m sure <a href="https://twitter.com/iamevltwin">Sarah Edwards</a> will come up with some awesome queries for her Apollo 4n6 project. :) I won&rsquo;t go too crazy here.</p>
-<pre><code>csaby@macos12 ~ % sqlite3 Library/Shortcuts/Shortcuts.sqlite
+<pre tabindex="0"><code>csaby@macos12 ~ % sqlite3 Library/Shortcuts/Shortcuts.sqlite
 SQLite version 3.35.3 2021-03-26 16:31:39
 Enter &quot;.help&quot; for usage hints.
 sqlite&gt; .tables
@@ -405,17 +405,17 @@ Z_METADATA
 Z_MODELCACHE                               
 Z_PRIMARYKEY    
 </code></pre><p>The database have quite a few tables, but what I found most interesting is <code>ZSHORTCUT</code> and <code>ZSHORTCUTACTIONS</code>. From the former we can get the shortcut names, and their description.</p>
-<pre><code>sqlite&gt; select ZNAME,ZACTIONSDESCRIPTION from ZSHORTCUT;
+<pre tabindex="0"><code>sqlite&gt; select ZNAME,ZACTIONSDESCRIPTION from ZSHORTCUT;
 ZNAME|ZACTIONSDESCRIPTION
 testcut|Run Shell Script
 </code></pre><p>There are many other metadata columns, like time creation, modification, and so on, but I don&rsquo;t show it here.</p>
 <p><code>ZSHORTCUTACTIONS</code> will contain information about the configured actions.</p>
-<pre><code>sqlite&gt; select * from ZSHORTCUTACTIONS;
+<pre tabindex="0"><code>sqlite&gt; select * from ZSHORTCUTACTIONS;
 Z_PK|Z_ENT|Z_OPT|ZSHORTCUT|ZDATA
 3|5|9|3|bplist00??_WFWorkflowActionIdentifier_WFWorkflowActionParameters_&quot;is.workflow.actions.runshellscript?   VScriptTUUID_touch /tmp/testcut_$2252E11A-5DEF-446E-BC5D-F053391273CC
 ,Insz?
 </code></pre><p>As we can find in the above query, the actions is stored as a binary plist. Unfortunatley plutil will fail converting it. :-/</p>
-<pre><code>csaby@macos12 ~ % sqlite3 Library/Shortcuts/Shortcuts.sqlite &quot;select ZDATA from ZSHORTCUTACTIONS where Z_PK=3&quot; | plutil -convert xml1 - -o -
+<pre tabindex="0"><code>csaby@macos12 ~ % sqlite3 Library/Shortcuts/Shortcuts.sqlite &quot;select ZDATA from ZSHORTCUTACTIONS where Z_PK=3&quot; | plutil -convert xml1 - -o -
 &lt;stdin&gt;: Property List error: Unexpected character b at line 1 / JSON error: JSON text did not start with array or object and option to allow fragments not set. around line 1, column 0.
 </code></pre><p>Nevertheless, we can still spot our <code>touch /tmp/testcut</code> command inside. So if ever someone wants to persist using shortcuts, this is the table to use, and cross reference entries with other tables.</p>
 <blockquote>
@@ -423,12 +423,12 @@ Z_PK|Z_ENT|Z_OPT|ZSHORTCUT|ZDATA
 </blockquote>
 <h2 id="shortcuts-cli">shortcuts CLI</h2>
 <p>Shortcuts also has a command line utility, located at <code>/usr/bin/shortcuts</code>. We can use it to list, view and execute shortcuts. Listing will display the available shortcuts.</p>
-<pre><code>csaby@macos12 ~ % shortcuts list
+<pre tabindex="0"><code>csaby@macos12 ~ % shortcuts list
 testcut
 </code></pre><p>It will only list the active ones, and omit any deleted.</p>
 <p>Viewing will simply open the main <code>Shortcuts.app</code> and load the given shortcut.</p>
 <p>Before moving moving on to execution, let&rsquo;s take a quick look at its entitlements.</p>
-<pre><code>csaby@macos12 ~ % codesign -dv --entitlements :- /usr/bin/shortcuts
+<pre tabindex="0"><code>csaby@macos12 ~ % codesign -dv --entitlements :- /usr/bin/shortcuts
 Executable=/usr/bin/shortcuts
 Identifier=com.apple.shortcuts.ShortcutsCommandLine
 Format=Mach-O universal (x86_64 arm64e)
@@ -469,7 +469,7 @@ Internal requirements count=1 size=88
 <h2 id="execution">Execution</h2>
 <p>I used Patrick Wardle&rsquo;s <a href="https://objective-see.com/products/utilities.html#ProcessMonitor">ProcessMonitor</a> to watch what happens when I run <code>shortcuts run testcut</code>.</p>
 <p>The relevant events are the following:</p>
-<pre><code>{&quot;event&quot;:&quot;ES_EVENT_TYPE_NOTIFY_EXEC&quot;,&quot;process&quot;:{&quot;pid&quot;:27552,&quot;path&quot;:&quot;/usr/bin/shortcuts&quot;,&quot;uid&quot;:501,&quot;arguments&quot;:[&quot;shortcuts&quot;,&quot;run&quot;,&quot;testcut&quot;],&quot;ppid&quot;:19388,&quot;ancestors&quot;:[19388,19387,19385,1],&quot;signing info&quot;:{&quot;csFlags&quot;:570522385,&quot;signatureIdentifier&quot;:&quot;com.apple.shortcuts.ShortcutsCommandLine&quot;,&quot;cdHash&quot;:&quot;89E43245F73BDFB56F80B23B43353C519D1AE2&quot;,&quot;isPlatformBinary&quot;:1}}}
+<pre tabindex="0"><code>{&quot;event&quot;:&quot;ES_EVENT_TYPE_NOTIFY_EXEC&quot;,&quot;process&quot;:{&quot;pid&quot;:27552,&quot;path&quot;:&quot;/usr/bin/shortcuts&quot;,&quot;uid&quot;:501,&quot;arguments&quot;:[&quot;shortcuts&quot;,&quot;run&quot;,&quot;testcut&quot;],&quot;ppid&quot;:19388,&quot;ancestors&quot;:[19388,19387,19385,1],&quot;signing info&quot;:{&quot;csFlags&quot;:570522385,&quot;signatureIdentifier&quot;:&quot;com.apple.shortcuts.ShortcutsCommandLine&quot;,&quot;cdHash&quot;:&quot;89E43245F73BDFB56F80B23B43353C519D1AE2&quot;,&quot;isPlatformBinary&quot;:1}}}
 
 {&quot;event&quot;:&quot;ES_EVENT_TYPE_NOTIFY_EXEC&quot;,&quot;process&quot;:{&quot;pid&quot;:27553,&quot;path&quot;:&quot;/System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/BackgroundShortcutRunner.xpc/Contents/MacOS/BackgroundShortcutRunner&quot;,&quot;uid&quot;:501,&quot;arguments&quot;:[&quot;/System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/BackgroundShortcutRunner.xpc/Contents/MacOS/BackgroundShortcutRunner&quot;],&quot;ppid&quot;:1,&quot;ancestors&quot;:[1],&quot;signing info&quot;:{&quot;csFlags&quot;:570522385,&quot;signatureIdentifier&quot;:&quot;com.apple.WorkflowKit.BackgroundShortcutRunner&quot;,&quot;cdHash&quot;:&quot;DF1F3A29EA01E827CDFDA696A05AE0C1C2B8B9&quot;,&quot;isPlatformBinary&quot;:1}}}
 
@@ -482,7 +482,7 @@ Internal requirements count=1 size=88
 {&quot;event&quot;:&quot;ES_EVENT_TYPE_NOTIFY_EXEC&quot;,&quot;process&quot;:{&quot;pid&quot;:27558,&quot;path&quot;:&quot;/usr/bin/touch&quot;,&quot;uid&quot;:501,&quot;arguments&quot;:[&quot;touch&quot;,&quot;/tmp/testcut&quot;],&quot;ppid&quot;:27556,&quot;ancestors&quot;:[27556],&quot;signing info&quot;:{&quot;csFlags&quot;:570522385,&quot;signatureIdentifier&quot;:&quot;com.apple.touch&quot;,&quot;cdHash&quot;:&quot;4547651A716192E0A34744DFECC015C8373B663&quot;,&quot;isPlatformBinary&quot;:1}}}
 </code></pre><p>Based on the sequence of events, <code>shortcuts</code> will call the <code>BackgroundShortcutRunner</code> XPC service first. This service will further call the <code>MacHelper</code> XPC service, which will finally execute our command.</p>
 <p>One interesting note is that <code>MacHelper</code> has Full Disk Access.</p>
-<pre><code>csaby@macos12 ~ % codesign -dv --entitlements :- /System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/MacHelper.xpc/Contents/MacOS/MacHelper
+<pre tabindex="0"><code>csaby@macos12 ~ % codesign -dv --entitlements :- /System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/MacHelper.xpc/Contents/MacOS/MacHelper
 Executable=/System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/MacHelper.xpc/Contents/MacOS/MacHelper
 Identifier=com.apple.WorkflowKit.MacHelper
 Format=bundle with Mach-O universal (x86_64 arm64e)

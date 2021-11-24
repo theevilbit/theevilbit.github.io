@@ -21,8 +21,8 @@ In the Terminal Preferences, under the Profiles tab, we can set a command that w
 In the Terminal Preferences, under the Profiles tab, we can set a command that will be executed upon Terminal&rsquo;s startup. This is shown in the screen below." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0020/" /><meta property="article:section" content="beyond" />
-<meta property="article:published_time" content="2021-09-22T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2021-09-22T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2021-09-22T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-09-22T00:00:00+00:00" />
 
 
 
@@ -58,7 +58,7 @@ In the Terminal Preferences, under the Profiles tab, we can set a command that w
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -150,7 +150,7 @@ In the Terminal Preferences, under the Profiles tab, we can set a command that w
 <p>In the Terminal Preferences, under the Profiles tab, we can set a command that will be executed upon Terminal&rsquo;s startup. This is shown in the screen below.</p>
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0020_0.png" alt="Terminal Profile Settings"></p>
 <p>This is stored inside Terminal&rsquo;s preferences PLIST file, located at  <code>~/Library/Preferences/com.apple.Terminal.plist</code>. Normally this is a binary PLIST, and thus we can use <code>plutil</code> to display it in a human readable form.</p>
-<pre><code>csaby@mac Preferences % plutil -p com.apple.Terminal.plist| less
+<pre tabindex="0"><code>csaby@mac Preferences % plutil -p com.apple.Terminal.plist| less
 {
   &quot;Default Window Settings&quot; =&gt; &quot;Basic&quot;
   &quot;DefaultProfilesVersion&quot; =&gt; 1
@@ -176,7 +176,7 @@ In the Terminal Preferences, under the Profiles tab, we can set a command that w
 ...
 </code></pre><p>As we can see above, the setting is stored under the &ldquo;Window Settings&rdquo; -&gt; Basic (which is the name of the profile) -&gt; &ldquo;CommandString&rdquo;. The Startup profile is set under &ldquo;Startup Window Settings&rdquo;. Which is important, because the command associated with the Startup profile will be executed.</p>
 <p>In XML it looks like the following:</p>
-<pre><code>csaby@mac Preferences % plutil -convert xml1 com.apple.Terminal.plist -o -| less 
+<pre tabindex="0"><code>csaby@mac Preferences % plutil -convert xml1 com.apple.Terminal.plist -o -| less 
 ...
         &lt;key&gt;Startup Window Settings&lt;/key&gt;
         &lt;string&gt;Basic&lt;/string&gt;

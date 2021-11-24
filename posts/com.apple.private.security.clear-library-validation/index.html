@@ -19,8 +19,8 @@ Intro With the release of Big Sur, I noticed that many of the system binaries ha
 Intro With the release of Big Sur, I noticed that many of the system binaries have a new entitlement, which I didn&rsquo;t see before, and that is com." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/com.apple.private.security.clear-library-validation/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2021-01-19T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2021-01-19T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2021-01-19T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-01-19T00:00:00+00:00" />
 
 
 
@@ -56,7 +56,7 @@ Intro With the release of Big Sur, I noticed that many of the system binaries ha
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.84.1" />
+    <meta name="generator" content="Hugo 0.89.2" />
   </head>
 
   <body class=" ">
@@ -148,11 +148,11 @@ Intro With the release of Big Sur, I noticed that many of the system binaries ha
 <p>However their inner working is different.</p>
 <h2 id="the-csops-system-call">The csops system call</h2>
 <p>I didn&rsquo;t dig into this new entitlement until I run into a new <code>csops</code> operation code listed below, which can be found in <code>xnu-7195.50.7.100.1/bsd/sys/codesign.h</code>.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#define CS_OPS_CLEAR_LV     15  </span><span style="color:#09f;font-style:italic">/* clear the library validation flag */</span><span style="color:#099">
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#define CS_OPS_CLEAR_LV     15  </span><span style="color:#09f;font-style:italic">/* clear the library validation flag */</span><span style="color:#099">
 </span></code></pre></div><p><code>csops</code> is a system call that can be used to perform various code signing related operation on processes. We can query the status of a process, set various flags during runtime, query its code signing blob, and so on. This was a new one that I didn&rsquo;t spot before, so I started to go after it.</p>
 <p>The description of this constant says that we can use this operation code to clear the library validation flag of a process. This means that if we can run this on a process we can load third party libraries into it if the call is successful.</p>
 <p>This constant is only referenced inside the <code>xnu-7195.50.7.100.1/bsd/kern/kern_proc.c</code> source file, which contains the source for the <code>csops_internal</code> function. This is the function that will be run when the system call is made. Here is the relevant part of the source code concerning the <code>CS_OPS_CLEAR_LV</code> operation.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">int</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">int</span>
 <span style="color:#c0f">csops_internal</span>(pid_t pid, <span style="color:#078;font-weight:bold">int</span> ops, user_addr_t uaddr, user_size_t usersize, user_addr_t uaudittoken)
 {
 (...)
@@ -247,7 +247,7 @@ Intro With the release of Big Sur, I noticed that many of the system binaries ha
 (...)
 }
 </code></pre></div><p>We will go through this piece by piece.  There are three places where it gets checked. We will start with the first <code>switch</code> case.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#069;font-weight:bold">switch</span> (ops) {
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#069;font-weight:bold">switch</span> (ops) {
 	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_STATUS</span>:
 	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CDHASH</span>:
 	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_PIDOFFSET</span>:
@@ -265,7 +265,7 @@ Intro With the release of Big Sur, I noticed that many of the system binaries ha
 	}
 </code></pre></div><p>What happens here is that the system will allow non-root execution of the operations listed in the switch table, including the one, which is in the focus of our interest. This means that we can call <code>csops</code> with the <code>CS_OPS_CLEAR_LV</code> operation even if we are not running as root.</p>
 <p>Let&rsquo;s move on to the other switch case.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#if CONFIG_MACF
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#if CONFIG_MACF
 </span><span style="color:#099"></span>	<span style="color:#069;font-weight:bold">switch</span> (ops) {
 	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_MARKINVALID</span>:
 	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_MARKHARD</span>:
@@ -286,7 +286,7 @@ Intro With the release of Big Sur, I noticed that many of the system binaries ha
 	}
 <span style="color:#099">#endif
 </span></code></pre></div><p>Here we have a MACF policy call, using the function <code>mac_proc_check_get_cs_info</code>. MACF policy calls return 0 if they are successful, and this is what being check on the condition. The <code>mac_proc_check_get_cs_info</code> function is implemented inside <code>xnu-7195.50.7.100.1/security/mac_process.c</code>. Let&rsquo;s follow it.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#078;font-weight:bold">int</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#078;font-weight:bold">int</span>
 <span style="color:#c0f">mac_proc_check_set_cs_info</span>(proc_t curp, proc_t target, <span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#078;font-weight:bold">int</span> op)
 {
 	kauth_cred_t cred;
@@ -309,7 +309,7 @@ Intro With the release of Big Sur, I noticed that many of the system binaries ha
 	<span style="color:#069;font-weight:bold">return</span> error;
 }
 </code></pre></div><p>This function will eventually make a MACF call using the <code>MAC_CHECK</code> macro, what I already discussed in my <a href="https://theevilbit.github.io/posts/reversing_cve_2020_9771/">Reversing engineering the fix of CVE-2020-9771</a> post. It will iterate over the MACF policy hooks, which make a check on <code>proc_check_set_cs_info</code>. This is only hooked right now by the Sandbox, which we can see below.</p>
-<pre><code class="language-clike" data-lang="clike">void _hook_proc_check_set_cs_info(int arg0, int arg1) {
+<pre tabindex="0"><code class="language-clike" data-lang="clike">void _hook_proc_check_set_cs_info(int arg0, int arg1) {
     ___bzero(&amp;var_1A0, 0x188);
     *(int32_t *)(&amp;var_1A0 + 0xa8) = 0x4;
     *(&amp;var_1A0 + 0xb8) = arg1;
@@ -319,7 +319,7 @@ Intro With the release of Big Sur, I noticed that many of the system binaries ha
 </code></pre><p>This will make an internal call to <code>_cred_sb_evaluate</code> with the opcode <code>0x65</code>, I also discussed this in my previous post.</p>
 <p>Going back to our <code>csops</code> call, we can determine that a MACF policy check will be run if this operation is allowed or not for the calling process.</p>
 <p>Assuming yes, we move on, and finally reach the point where the operation is actually implemented.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEAR_LV</span>: {
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEAR_LV</span>: {
 		<span style="color:#09f;font-style:italic">/*
 </span><span style="color:#09f;font-style:italic">		 * This option is used to remove library validation from
 </span><span style="color:#09f;font-style:italic">		 * a running process. This is used in plugin architectures
@@ -357,12 +357,12 @@ Intro With the release of Big Sur, I noticed that many of the system binaries ha
 		}
 </code></pre></div><p>I think the description added by Apple is very nice, detailed and explains everything. If the requirements are satisfied it will clear the library validation flag of the target process (<code>pt-&gt;p_csflags &amp;= (~(CS_REQUIRE_LV | CS_FORCED_LV));</code>).</p>
 <p>The condition is very strict. This operation can be called by processes only on themselves (<code>forself == 1</code>) and those that has the entitlement defined by the constant <code>CLEAR_LV_ENTITLEMENT</code>. This is defined in <code>xnu-7195.50.7.100.1/bsd/sys/codesign.h</code>.</p>
-<div class="highlight"><pre style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#define CLEAR_LV_ENTITLEMENT &#34;com.apple.private.security.clear-library-validation&#34;
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#define CLEAR_LV_ENTITLEMENT &#34;com.apple.private.security.clear-library-validation&#34;
 </span></code></pre></div><p>And the loop is closed we got the entitlement which we saw before.</p>
 <p>To sum up, we can say that a process owning the <code>com.apple.private.security.clear-library-validation</code> entitlement can call the <code>csops</code> system call using the <code>CLEAR_LV_ENTITLEMENT</code> to clear the library validation code signing flag on itself. This works even if the process is not running as root.</p>
 <h2 id="ssh">SSH</h2>
 <p>To confirm this finding I loaded <code>ssh</code>, which has this entitlement, into Hopper, and verify that it uses <code>csops</code> to disable library validation.</p>
-<pre><code class="language-clike" data-lang="clike">int sub_10016d41f(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
+<pre tabindex="0"><code class="language-clike" data-lang="clike">int sub_10016d41f(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
 (...)
 loc_10016d67b:
     rax = getpid();
@@ -382,7 +382,7 @@ loc_10016d694:
 <h2 id="why-is-it-good">Why is it good?</h2>
 <p>One might wonder what&rsquo;s the benefit of using this method over the old one. I&rsquo;m only speculating here, but I can see some benefits. With the new method, when applications being loaded, library validation will be enforced, which means that you can&rsquo;t perform a dylib hijacking or proxying attack on such binaries. This is very common problem especially on third party apps.</p>
 <p>You can still inject code to such apps, but only via plugins, and not through other means. Although a plugin might not be more difficult than a standard dylib, it&rsquo;s still a good move towards a better design. Unfortunately, as the name suggests, it&rsquo;s only available for Apple itself, if we try to use it on our own binary we get an error.</p>
-<pre><code>mac_vnode_check_signature: /tmp/launch: code signature validation failed fatally: When validating /tmp/launch:
+<pre tabindex="0"><code>mac_vnode_check_signature: /tmp/launch: code signature validation failed fatally: When validating /tmp/launch:
   Code has restricted entitlements, but the validation of its code signature failed.
 Unsatisfied Entitlements:
 </code></pre><h2 id="recap">Recap</h2>

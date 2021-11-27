@@ -5,7 +5,18 @@
     <link>https://theevilbit.github.io/categories/persistence/</link>
     <description>Recent content in persistence on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 24 Nov 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/categories/persistence/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 27 Nov 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/categories/persistence/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 23 - emond, The Event Monitor Daemon</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0023/</link>
+      <pubDate>Sat, 27 Nov 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0023/</guid>
+      <description>This is part 23 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ This post will be about emond, Apple&amp;rsquo;s Event Monitor daemon.
+I think almost everything has been already told about this method and emond in general by James Reynolds here and xorrior here so really not much left for me. There is no point for me replicating their awesome posts, so please just read them.</description>
+    </item>
+    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 22 - LoginHook and LogoutHook</title>
       <link>https://theevilbit.github.io/beyond/beyond_0022/</link>

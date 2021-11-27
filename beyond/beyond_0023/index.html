@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Csaba Fitzl">
+    
+    
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 23 - emond, The Event Monitor Daemon"/>
+<meta name="twitter:description" content="This is part 23 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ This post will be about emond, Apple&rsquo;s Event Monitor daemon.
+I think almost everything has been already told about this method and emond in general by James Reynolds here and xorrior here so really not much left for me. There is no point for me replicating their awesome posts, so please just read them."/>
+
+    <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 23 - emond, The Event Monitor Daemon" />
+<meta property="og:description" content="This is part 23 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ This post will be about emond, Apple&rsquo;s Event Monitor daemon.
+I think almost everything has been already told about this method and emond in general by James Reynolds here and xorrior here so really not much left for me. There is no point for me replicating their awesome posts, so please just read them." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0023/" /><meta property="article:section" content="beyond" />
+<meta property="article:published_time" content="2021-11-27T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-11-27T00:00:00+00:00" />
+
+
+
+    
+      <base href="https://theevilbit.github.io/beyond/beyond_0023/">
+    
+    <title>
+  Beyond the good ol&#39; LaunchAgents - 23 - emond, The Event Monitor Daemon · theevilbit blog
+</title>
+
+    
+      <link rel="canonical" href="https://theevilbit.github.io/beyond/beyond_0023/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+
+    
+    
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.89.2" />
+  </head>
+
+  <body class=" ">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://theevilbit.github.io/">
+      theevilbit blog
+    </a>
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/categories/">Categories</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+          </li>
+        
+      
+      
+    </ul>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Beyond the good ol&#39; LaunchAgents - 23 - emond, The Event Monitor Daemon</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2021-11-27T00:00:00Z'>
+                November 27, 2021
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              8 minutes read
+            </span>
+          </div>
+          <div class="categories">
+  <i class="fas fa-folder"></i>
+    <a href="https://theevilbit.github.io/categories/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/categories/beyond/">beyond</a></div>
+
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/beyond/">beyond</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        <blockquote>
+<p>This is part 23 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+</blockquote>
+<p>This post will be about <code>emond</code>, Apple&rsquo;s Event Monitor daemon.</p>
+<p>I think almost everything has been already told about this method and <code>emond</code> in general by James Reynolds <a href="http://magnusviri.com/what-is-emond.html">here</a> and <a href="https://twitter.com/xorrior">xorrior</a> <a href="https://www.xorrior.com/emond-persistence/">here</a> so really not much left for me. There is no point for me replicating their awesome posts, so please just read them. That&rsquo;s it! Thank you for reading! ¯\<em>(ツ)</em>/¯
+.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>OK, well&hellip;   I will still give a super-brief summary of how to persist with emond, and then, I decided to add my contribution to the <code>emond</code> documentation, so stay tuned.</p>
+<h2 id="the-tldr">The TL;DR</h2>
+<p>The <code>emond</code> service is defined in <code>/System/Library/LaunchDaemons/com.apple.emond.plist</code>.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+<span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>Disabled<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;false/&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>Label<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>com.apple.emond<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>MachServices<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.emond.evtq<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>HideUntilCheckIn<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>Program<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/sbin/emond<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>ProgramArguments<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/sbin/emond<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>QueueDirectories<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/private/var/db/emondClients<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>DrainMessagesOnFailedInit<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>EnablePressuredExit<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>EnableTransactions<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;false/&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
+</code></pre></div><p>It will start, whenever there is a file in the directory <code>/private/var/db/emondClients/</code>, which is specified by <code>QueueDirectories</code> in the PLIST file. We can create even an empty file, the content is not so important.</p>
+<pre tabindex="0"><code>sudo touch /private/var/db/emondClients/some
+</code></pre><p>Then <code>emond</code> will started by <code>launchd</code> and it will process the rules found inside <code>/etc/emond.d/rules/</code>. These rules define what action to perform when a specific event occurs. For a detailed explanation of these events and actions please refer to the blog posts I linked at the very beginning. For the persistence example I will show how we can run a simple command when <code>emond</code> is starting up. First, let&rsquo;s make a copy of the default sample rule.</p>
+<pre tabindex="0"><code>sudo cp /etc/emond.d/rules/SampleRules.plist /etc/emond.d/rules/startup.plist
+</code></pre><p>and edit it so it looks like this.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+<span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+        <span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+                <span style="color:#309;font-weight:bold">&lt;key&gt;</span>name<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+                <span style="color:#309;font-weight:bold">&lt;string&gt;</span>create file<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+                <span style="color:#309;font-weight:bold">&lt;key&gt;</span>enabled<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+                <span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+                <span style="color:#309;font-weight:bold">&lt;key&gt;</span>eventTypes<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+                <span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+                        <span style="color:#309;font-weight:bold">&lt;string&gt;</span>startup<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+                <span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+                <span style="color:#309;font-weight:bold">&lt;key&gt;</span>actions<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+                <span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+                        <span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+                                <span style="color:#309;font-weight:bold">&lt;key&gt;</span>command<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+                                <span style="color:#309;font-weight:bold">&lt;string&gt;</span>/bin/bash<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+                                <span style="color:#309;font-weight:bold">&lt;key&gt;</span>user<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+                                <span style="color:#309;font-weight:bold">&lt;string&gt;</span>root<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+                                <span style="color:#309;font-weight:bold">&lt;key&gt;</span>arguments<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+                                <span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+                                        <span style="color:#309;font-weight:bold">&lt;string&gt;</span>-c<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+                                        <span style="color:#309;font-weight:bold">&lt;string&gt;</span>touch /Library/emondstarted.txt<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+                                <span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+                                <span style="color:#309;font-weight:bold">&lt;key&gt;</span>type<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+                                <span style="color:#309;font-weight:bold">&lt;string&gt;</span>RunCommand<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+                        <span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+                <span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+        <span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
+</code></pre></div><p>Here we define a command that will be executed when <code>emond</code> starts (<code>eventTypes</code>:<code>startup</code>). Note that <code>emond</code> will startup during boot time, when the user is not yet logged in. We can control the command with the <code>command</code> , <code>arguments</code> and <code>user</code> keys. The above will execute <code>/bin/bash -c touch /Library/emondstarted.txt</code> as root. Note that the <code>enabled</code> key is set to <code>true</code>.</p>
+<p>Now if we restart <code>emond</code> by killing it or rebooting our machine the above command will be executed and the file <code>/Library/emondstarted.txt</code> will be created.</p>
+<p>The <code>/etc/emond.d/emond.plist</code> file contains configuration options, like other rule directories (<code>additionalRulesPaths</code>) and also the following filter:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#309;font-weight:bold">&lt;key&gt;</span>filterByUID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;string&gt;</span>0<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;key&gt;</span>filterByGID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;string&gt;&lt;/string&gt;</span>
+</code></pre></div><p>This filter controls who can call emond&rsquo;s XPC service, what we will  discuss next.</p>
+<h2 id="comappleemondevtq">com.apple.emond.evtq</h2>
+<p>I decided to dig into a bit into the XPC internals of <code>emond</code>, which I think was not documented before.</p>
+<p>As defined in the launchd file, the XPC service name is <code>com.apple.emond.evtq</code>. If we open <code>emond</code> in a disassembler, we can find that it&rsquo;s created here:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#09f;font-style:italic">/* @class Monitor */</span>
+<span style="color:#555">-</span>(<span style="color:#078;font-weight:bold">int</span>)<span style="color:#99f">SetXPCListenerFor</span>:(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)arg2 {
+    r15 <span style="color:#555">=</span> arg2;
+    r14 <span style="color:#555">=</span> self;
+    rax <span style="color:#555">=</span> xpc_connection_create_listener(<span style="color:#c30">&#34;com.apple.emond.evtq&#34;</span>, arg2, arg2);
+    <span style="color:#069;font-weight:bold">if</span> (rax <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) {
+            xpc_connection_set_legacy(rax);
+            var_48 <span style="color:#555">=</span> <span style="color:#555">*</span>__NSConcreteStackBlock;
+            <span style="color:#555">*</span>(<span style="color:#555">&amp;</span>var_48 <span style="color:#555">+</span> <span style="color:#f60">0x8</span>) <span style="color:#555">=</span> <span style="color:#f60">0xffffffffc2000000</span>;
+            <span style="color:#555">*</span>(<span style="color:#555">&amp;</span>var_48 <span style="color:#555">+</span> <span style="color:#f60">0x10</span>) <span style="color:#555">=</span> sub_10000e621;
+            <span style="color:#555">*</span>(<span style="color:#555">&amp;</span>var_48 <span style="color:#555">+</span> <span style="color:#f60">0x18</span>) <span style="color:#555">=</span> <span style="color:#f60">0x10002c420</span>;
+            <span style="color:#555">*</span>(<span style="color:#555">&amp;</span>var_48 <span style="color:#555">+</span> <span style="color:#f60">0x20</span>) <span style="color:#555">=</span> r14;
+            <span style="color:#555">*</span>(<span style="color:#555">&amp;</span>var_48 <span style="color:#555">+</span> <span style="color:#f60">0x28</span>) <span style="color:#555">=</span> r15;
+            xpc_connection_set_event_handler(rax, <span style="color:#555">&amp;</span>var_48);
+            <span style="color:#555">*</span>(r14 <span style="color:#555">+</span> <span style="color:#f60">0x18</span>) <span style="color:#555">=</span> rax;
+            xpc_retain(rax);
+            xpc_connection_resume(rax);
+            rax <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
+    }
+    <span style="color:#069;font-weight:bold">else</span> {
+            rax <span style="color:#555">=</span> <span style="color:#f60">0xffffffffffffffff</span>;
+    }
+    <span style="color:#069;font-weight:bold">return</span> rax;
+}
+</code></pre></div><p>Inside the connection handler we find a call to <code>filterBySourceUID:GID:</code>.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">sub_10000e621</span>(<span style="color:#078;font-weight:bold">int</span> arg0, <span style="color:#078;font-weight:bold">int</span> arg1, <span style="color:#078;font-weight:bold">int</span> arg2, <span style="color:#078;font-weight:bold">int</span> arg3, <span style="color:#078;font-weight:bold">int</span> arg4, <span style="color:#078;font-weight:bold">int</span> arg5) {
+...
+            r15 <span style="color:#555">=</span> xpc_connection_get_euid(r13);
+            rax <span style="color:#555">=</span> xpc_connection_get_egid(r13);
+            r12 <span style="color:#555">=</span> rax;
+            sub_10000bbc5(<span style="color:#f60">0x3</span>, <span style="color:#c30">&#34;XPC Connection Request recieved from %d:%d (uid:gid)&#34;</span>, r15, rax, r8, r9, var_60);
+            <span style="color:#069;font-weight:bold">if</span> ([<span style="color:#555">*</span>(r14 <span style="color:#555">+</span> <span style="color:#f60">0x20</span>) <span style="color:#99f">filterBySourceUID</span>:r15 <span style="color:#99f">GID</span>:r12] <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) {
+...
+</code></pre></div><p>The actual UID/GID filter is populated at the <code>EntryPoint</code>.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#555">*</span>qword_100038cb8 <span style="color:#555">=</span> [[Monitor alloc] <span style="color:#99f">initWithRulebase</span>:<span style="color:#555">*</span>qword_100038ca8 <span style="color:#99f">andVariables</span>:r13];
+[<span style="color:#555">*</span>qword_100038cb8 <span style="color:#99f">setEventFilterUID</span>:sub_10000c060([<span style="color:#555">*</span>qword_100038ca0 <span style="color:#99f">objectForKey</span>:<span style="color:#a00;background-color:#faa">@</span><span style="color:#c30">&#34;filterByUID&#34;</span>, r13]) <span style="color:#99f">FilterGID</span>:sub_10000c060([<span style="color:#555">*</span>qword_100038ca0 <span style="color:#99f">objectForKey</span>:<span style="color:#a00;background-color:#faa">@</span><span style="color:#c30">&#34;filterByGID&#34;</span>, r13])];
+</code></pre></div><p>Without going into further details, if we follow these function, we will find that it parses the config file, and reads in the values defined in <code>filterByUID</code> and <code>filterByGID</code>. This means that by default only <code>root</code> level processes can communicate with <code>emond</code>, but we can also modify this setting if needed, allowing other processes.</p>
+<p>So we know that only root can connect. But how normally messages are sent? The <code>/System/Library/LaunchDaemons/com.apple.emlog.plist</code> defines a perl script at <code>/usr/libexec/emlog.pl</code>. This script uses the <code>/usr/libexec/xssendevent</code> binary to send messages to <code>emond</code>.</p>
+<p>For example:</p>
+<pre tabindex="0"><code>echo &quot;{ eventType = auth.failure; eventSource = emlog.pl; eventDetails = {clientIP = \&quot;1.1.1.1\&quot;; hostPort = 21; protocolName = \&quot;ftp\&quot;;};}&quot; | /usr/libexec/xssendevent
+</code></pre><p>Since only root can send messages, we need to execute this command as root.</p>
+<p>I edited my <code>/private/etc/emond.d/rules/SampleRules.plist</code> to log a message for the <code>auth.failure</code> event type.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+<span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;key&gt;</span>name<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>sample rule<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;key&gt;</span>enabled<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;key&gt;</span>eventTypes<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>auth.failure<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;key&gt;</span>actions<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>message<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>Event Monitor started at ${builtin:now}<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>type<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>Log<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>logLevel<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>Notice<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>logType<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>syslog<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
+</code></pre></div><p>Now if we execute the command above, we will see a log message in the log stream.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sh-3.2# <span style="color:#366">echo</span> <span style="color:#c30">&#34;{ eventType = auth.failure; eventSource = emlog.pl; eventDetails = {clientIP = \&#34;1.1.1.1\&#34;; hostPort = 21; protocolName = \&#34;ftp\&#34;;};}&#34;</span> | /usr/libexec/xssendevent
+
+-----------
+
+csaby@mac ~ % log stream | grep <span style="color:#c30">&#34;Event Monitor&#34;</span>                      
+2021-11-27 14:47:02.926999+0100 0x66a7f3   Default     0x0                  <span style="color:#f60">18157</span>  <span style="color:#f60">0</span>    emond: Event Monitor started at 659713622.926977
+</code></pre></div><p>We can save the event in a json plist file, and specify it as the input for <code>xssendevent</code>. The json formatted event PLIST file:</p>
+<pre tabindex="0"><code>{ eventType = auth.failure; eventSource = emlog.pl; eventDetails = {clientIP = &quot;1.1.1.1&quot;; hostPort = 21; protocolName = &quot;ftp&quot;;};}
+</code></pre><p>Then using the <code>-e</code> option, we can specify the previously saved file.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/usr/libexec/xssendevent -e event.plist
+</code></pre></div><p>But how can we do this directly with xpc? <code>xssendevent</code> uses the <code>/usr/lib/libXSEvent.dylib</code> library to send a message.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sh-3.2# otool -L /usr/libexec/xssendevent
+/usr/libexec/xssendevent:
+	/usr/lib/libXSEvent.dylib <span style="color:#555">(</span>compatibility version 1.0.0, current version 1.0.0<span style="color:#555">)</span>
+	/System/Library/Frameworks/Security.framework/Versions/A/Security <span style="color:#555">(</span>compatibility version 1.0.0, current version 60157.40.30<span style="color:#555">)</span>
+	/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation <span style="color:#555">(</span>compatibility version 300.0.0, current version 1855.103.0<span style="color:#555">)</span>
+	/usr/lib/libobjc.A.dylib <span style="color:#555">(</span>compatibility version 1.0.0, current version 228.0.0<span style="color:#555">)</span>
+	/usr/lib/libSystem.B.dylib <span style="color:#555">(</span>compatibility version 1.0.0, current version 1311.0.0<span style="color:#555">)</span>
+	/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation <span style="color:#555">(</span>compatibility version 150.0.0, current version 1855.103.0<span style="color:#555">)</span>
+</code></pre></div><p>Instead of reversing everything, we can use Jonathan Levin&rsquo;s <code>XPoCe</code> utility to sniff the XPC communication, and then recreate the code ourselves. This is much easier as we will see the messages directly without doing lot&rsquo;s of manual reversing.</p>
+<p>To do this we need a machine with SIP disabled, as <code>XPoCe</code> injects code into the target process. Then we can send our event again.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sh-3.2#  <span style="color:#366">echo</span> <span style="color:#c30">&#34;{ eventType = auth.failure; eventSource = emlog.pl; eventDetails = {clientIP = \&#34;1.1.1.1\&#34;; hostPort = 21; protocolName = \&#34;ftp\&#34;;};}&#34;</span> | ./XPoCe /usr/libexec/xssendevent
+xpc_connection_create <span style="color:#555">(</span> <span style="color:#c30">&#34;com.apple.emond.evtq&#34;</span>,0x7f9c3640a0f0<span style="color:#555">)</span>  <span style="color:#555">=</span> 0x7f9c36504080 <span style="color:#555">()</span> 
+xpc_connection_send_message <span style="color:#555">(</span> connection@0x7f9c36504080,dictionary@0x7f9c3640b070<span style="color:#555">)</span> 
+
+ <span style="color:#555">=</span> <span style="color:#c30">&#34;&lt;connection: 0x7f9c36504080&gt; { name = com.apple.emond.evtq, listener = false, pid = 0, euid = 4294967295, egid = 4294967295, asid = 4294967295 }&#34;</span>
+ <span style="color:#555">=</span> <span style="color:#c30">&#34;&lt;dictionary: 0x7f9c3640b070&gt; { count = 3, transaction: 0, voucher = 0x0, contents =
+</span><span style="color:#c30">	&#34;</span>eventDetails<span style="color:#c30">&#34; =&gt; &lt;dictionary: 0x7f9c3640b0d0&gt; { count = 4, transaction: 0, voucher = 0x0, contents =
+</span><span style="color:#c30">		&#34;</span>clientIP<span style="color:#c30">&#34; =&gt; &lt;string: 0x7f9c3640b1f0&gt; { length = 7, contents = &#34;</span>1.1.1.1<span style="color:#c30">&#34; }
+</span><span style="color:#c30">		&#34;</span>protocolName<span style="color:#c30">&#34; =&gt; &lt;string: 0x7f9c3640b290&gt; { length = 3, contents = &#34;</span>ftp<span style="color:#c30">&#34; }
+</span><span style="color:#c30">		&#34;</span>hostPort<span style="color:#c30">&#34; =&gt; &lt;string: 0x7f9c3640b260&gt; { length = 2, contents = &#34;</span>21<span style="color:#c30">&#34; }
+</span><span style="color:#c30">		&#34;</span>eventSource<span style="color:#c30">&#34; =&gt; &lt;string: 0x7f9c3640b370&gt; { length = 8, contents = &#34;</span>emlog.pl<span style="color:#c30">&#34; }
+</span><span style="color:#c30">	}
+</span><span style="color:#c30">	&#34;</span>eventType<span style="color:#c30">&#34; =&gt; &lt;string: 0x7f9c3640b340&gt; { length = 12, contents = &#34;</span>auth.failure<span style="color:#c30">&#34; }
+</span><span style="color:#c30">	&#34;</span>eventTimestamp<span style="color:#c30">&#34; =&gt; &lt;double: 0x7f9c3640b130&gt;: 659713961.621497
+</span><span style="color:#c30">}&#34;</span>
+</code></pre></div><p>We can easily translate the above output to the following C code suing the standard XPC libraries.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
+</span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdlib.h&gt;</span><span style="color:#099">
+</span><span style="color:#099">#include</span> <span style="color:#099">&lt;xpc/xpc.h&gt;</span><span style="color:#099">
+</span><span style="color:#099"></span>
+<span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">main</span>(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv) {
+
+    xpc_connection_t service;
+    xpc_object_t msg, event_details;
+
+    msg <span style="color:#555">=</span> xpc_dictionary_create(<span style="color:#366">NULL</span>, <span style="color:#366">NULL</span>, <span style="color:#f60">0</span>);
+    event_details <span style="color:#555">=</span> xpc_dictionary_create(<span style="color:#366">NULL</span>, <span style="color:#366">NULL</span>, <span style="color:#f60">0</span>);
+
+    xpc_dictionary_set_string(event_details, <span style="color:#c30">&#34;clientIP&#34;</span>, <span style="color:#c30">&#34;1.1.1.1&#34;</span>);
+    xpc_dictionary_set_string(event_details, <span style="color:#c30">&#34;protocolName&#34;</span>, <span style="color:#c30">&#34;ftp&#34;</span>);
+    xpc_dictionary_set_string(event_details, <span style="color:#c30">&#34;hostPort&#34;</span>, <span style="color:#c30">&#34;21&#34;</span>);
+    xpc_dictionary_set_string(event_details, <span style="color:#c30">&#34;eventSource&#34;</span>, <span style="color:#c30">&#34;myxpc&#34;</span>);
+    
+    xpc_dictionary_set_string(msg, <span style="color:#c30">&#34;eventType&#34;</span>, <span style="color:#c30">&#34;auth.failure&#34;</span>);
+    xpc_dictionary_set_value(msg, <span style="color:#c30">&#34;eventDetails&#34;</span>, event_details);
+    xpc_dictionary_set_double(msg, <span style="color:#c30">&#34;eventTimestamp&#34;</span>, <span style="color:#f60">659713961.621497</span>);
+
+
+    service <span style="color:#555">=</span> xpc_connection_create_mach_service(<span style="color:#c30">&#34;com.apple.emond.evtq&#34;</span>, <span style="color:#366">NULL</span>, <span style="color:#f60">0</span>);
+    <span style="color:#069;font-weight:bold">if</span> (service <span style="color:#555">==</span> <span style="color:#366">NULL</span>) {
+        perror(<span style="color:#c30">&#34;xpc_connection_create_mach_service&#34;</span>);
+    }
+    
+    xpc_connection_set_event_handler(service, <span style="color:#555">^</span>(xpc_object_t event) {
+        xpc_type_t type <span style="color:#555">=</span> xpc_get_type(event);
+        <span style="color:#069;font-weight:bold">if</span> (type <span style="color:#555">==</span> XPC_TYPE_ERROR)
+        {
+            printf(<span style="color:#c30">&#34;emond, client, xpc error: %s&#34;</span>, xpc_dictionary_get_string(event, XPC_ERROR_KEY_DESCRIPTION));
+        }
+        <span style="color:#069;font-weight:bold">else</span>
+        {
+            <span style="color:#078;font-weight:bold">char</span><span style="color:#555">*</span> description <span style="color:#555">=</span> xpc_copy_description(event);
+            printf(<span style="color:#c30">&#34;emond, client, xpc unexpected type: %s&#34;</span>, description);
+            
+        }
+    });
+    
+
+    xpc_connection_resume(service);
+
+    xpc_connection_send_message(service, msg);
+
+}
+</code></pre></div><p>Then, once we compile it and execute, we can verify that our event message was properly logged by <code>emond</code>, by our rule.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">csaby@mac emond % sudo ./emondxpc
+
+------------------------------
+
+csaby@mac ~ % log stream | grep <span style="color:#c30">&#34;Event Monitor&#34;</span>
+2021-11-27 15:09:50.539508+0100 0x66de62   Default     0x0                  <span style="color:#f60">18157</span>  <span style="color:#f60">0</span>    emond: Event Monitor started at 659714990.539463
+</code></pre></div><p>If we set the &ldquo;eventType&rdquo; to &ldquo;startup&rdquo; we can get our file created.</p>
+<p>What it is good for? I don&rsquo;t know :))) I don&rsquo;t think it&rsquo;s good for any privilege escalation as we can&rsquo;t communicate it with <code>emond</code> as a regular user and <code>emond</code> doesn&rsquo;t have any cool entitlements. The effectiveness of our event message is also tied to the rules configured on the machine, which is nothing by default. However we might find an environment where <code>emontd</code> is configured differently, and maybe there is some interesting rule that we can trigger. Other than that I just entertained myself with some reverse engineering and get to know <code>emond</code> a bit better.</p>
+
+      </div>
+
+      <footer>
+        
+
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+     © 2021
+    
+       · 
+      Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.
+    
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-151008930-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+  </body>
+
+</html>

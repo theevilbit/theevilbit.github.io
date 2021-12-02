@@ -5,7 +5,17 @@
     <link>https://theevilbit.github.io/beyond/</link>
     <description>Recent content in Beyonds on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 27 Nov 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/beyond/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 02 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/beyond/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 24 - Folder Actions</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0024/</link>
+      <pubDate>Thu, 02 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0024/</guid>
+      <description>This is part 24 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ Folder action persistence has been documented by Cody Thomas back in 2019 in his blog. I think he did an awesome job, and everything he wrote still applies today. I wanted to take it a bit further and see if I can persist without any user prompts, and it turned out it is possible.</description>
+    </item>
+    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 23 - emond, The Event Monitor Daemon</title>
       <link>https://theevilbit.github.io/beyond/beyond_0023/</link>

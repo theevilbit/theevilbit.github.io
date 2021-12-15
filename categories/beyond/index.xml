@@ -5,7 +5,17 @@
     <link>https://theevilbit.github.io/categories/beyond/</link>
     <description>Recent content in beyond on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 02 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/categories/beyond/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 15 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/categories/beyond/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 25 - Apache2 modules</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0025/</link>
+      <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0025/</guid>
+      <description>This is part 25 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ Possibly a less known feature that macOS has a built-in Apache2 web server, which can be enabled anytime. Just as other Apache2 servers, it also supports the load of custom modules, and this is what we will explore here briefly for persistence.</description>
+    </item>
+    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 24 - Folder Actions</title>
       <link>https://theevilbit.github.io/beyond/beyond_0024/</link>

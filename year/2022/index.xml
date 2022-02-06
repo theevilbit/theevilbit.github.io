@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>2022 on theevilbit blog</title>
+    <link>https://theevilbit.github.io/year/2022/</link>
+    <description>Recent content in 2022 on theevilbit blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sat, 05 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/year/2022/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 26 - Finder Sync Plugins</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0026/</link>
+      <pubDate>Sat, 05 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0026/</guid>
+      <description>This is part 26 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ This method was documented very detailed by Patrick Wardle in his blogpost back in 2016. It was also covered by Leo Pitt in his Modern macOS Persistence talk, and he also made a POC, which can be found at his GitHub.</description>
+    </item>
+    
+  </channel>
+</rss>

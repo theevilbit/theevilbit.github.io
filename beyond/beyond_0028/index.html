@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Csaba Fitzl">
+    
+    
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 28 - Authorization Plugins"/>
+<meta name="twitter:description" content="This is part 28 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ This persistence mechanism was described in very detail by Chris Ross in his blogpost: Persistent Credential Theft with Authorization Plugins. He also developed sample code, which can be found on his GitHub. Thus this blog will only focus on the high level summary, and some changes that happened since he wrote that post."/>
+
+    <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 28 - Authorization Plugins" />
+<meta property="og:description" content="This is part 28 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ This persistence mechanism was described in very detail by Chris Ross in his blogpost: Persistent Credential Theft with Authorization Plugins. He also developed sample code, which can be found on his GitHub. Thus this blog will only focus on the high level summary, and some changes that happened since he wrote that post." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0028/" /><meta property="article:section" content="beyond" />
+<meta property="article:published_time" content="2022-02-08T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-02-08T00:00:00+00:00" />
+
+
+
+    
+      <base href="https://theevilbit.github.io/beyond/beyond_0028/">
+    
+    <title>
+  Beyond the good ol&#39; LaunchAgents - 28 - Authorization Plugins · theevilbit blog
+</title>
+
+    
+      <link rel="canonical" href="https://theevilbit.github.io/beyond/beyond_0028/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+
+    
+    
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.92.1" />
+  </head>
+
+  <body class=" ">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://theevilbit.github.io/">
+      theevilbit blog
+    </a>
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/categories/">Categories</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+          </li>
+        
+      
+      
+    </ul>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Beyond the good ol&#39; LaunchAgents - 28 - Authorization Plugins</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2022-02-08T00:00:00Z'>
+                February 8, 2022
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              3 minutes read
+            </span>
+          </div>
+          <div class="categories">
+  <i class="fas fa-folder"></i>
+    <a href="https://theevilbit.github.io/categories/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/categories/beyond/">beyond</a></div>
+
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/beyond/">beyond</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        <blockquote>
+<p>This is part 28 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+</blockquote>
+<p>This persistence mechanism was described in very detail by <a href="https://twitter.com/xorrior">Chris Ross</a> in his <a href="https://posts.specterops.io/persistent-credential-theft-with-authorization-plugins-d17b34719d65">blogpost: Persistent Credential Theft with Authorization Plugins</a>. He also developed sample code, which can be found on his <a href="https://github.com/xorrior/macOSTools/tree/master/auth_plugins">GitHub</a>. Thus this blog will only focus on the high level summary, and some changes that happened since he wrote that post.</p>
+<p>On a high level, <code>authorization plugins</code> are extensions that can be used by the system to grant specific authorization rights.</p>
+<p>For installation we need to perform two steps. First is adding the plugin bundle to the directory <code>/Library/Security/SecurityAgentPlugins/</code>. Second we need to modify the authorization database and add an entry so that our plugin is loaded and invoked as needed.</p>
+<p>For example I made a <code>testAuthPlugin</code> based on Chris&rsquo;s code, and used his install script to place it under the <code>system.login.console</code> right. The plugin is added under the mechanisms, as <code>testAuthPlugin:login,privileged</code>.</p>
+<pre tabindex="0"><code>csaby@mantarey ~ % security authorizationdb read system.login.console
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;
+&lt;plist version=&quot;1.0&quot;&gt;
+&lt;dict&gt;
+	&lt;key&gt;class&lt;/key&gt;
+	&lt;string&gt;evaluate-mechanisms&lt;/string&gt;
+	&lt;key&gt;comment&lt;/key&gt;
+	&lt;string&gt;Login mechanism based rule.  Not for general use, yet.&lt;/string&gt;
+	&lt;key&gt;created&lt;/key&gt;
+	&lt;real&gt;657182100.19664896&lt;/real&gt;
+	&lt;key&gt;mechanisms&lt;/key&gt;
+	&lt;array&gt;
+		&lt;string&gt;builtin:policy-banner&lt;/string&gt;
+		&lt;string&gt;builtin:prelogin&lt;/string&gt;
+		&lt;string&gt;loginwindow:login&lt;/string&gt;
+		&lt;string&gt;builtin:login-begin&lt;/string&gt;
+		&lt;string&gt;builtin:reset-password,privileged&lt;/string&gt;
+		&lt;string&gt;loginwindow:FDESupport,privileged&lt;/string&gt;
+		&lt;string&gt;builtin:forward-login,privileged&lt;/string&gt;
+		&lt;string&gt;builtin:auto-login,privileged&lt;/string&gt;
+		&lt;string&gt;builtin:authenticate,privileged&lt;/string&gt;
+		&lt;string&gt;PKINITMechanism:auth,privileged&lt;/string&gt;
+		&lt;string&gt;builtin:login-success&lt;/string&gt;
+		&lt;string&gt;loginwindow:success&lt;/string&gt;
+		&lt;string&gt;HomeDirMechanism:login,privileged&lt;/string&gt;
+		&lt;string&gt;HomeDirMechanism:status&lt;/string&gt;
+		&lt;string&gt;testAuthPlugin:login,privileged&lt;/string&gt;
+		&lt;string&gt;MCXMechanism:login&lt;/string&gt;
+		&lt;string&gt;CryptoTokenKit:login&lt;/string&gt;
+		&lt;string&gt;loginwindow:done&lt;/string&gt;
+	&lt;/array&gt;
+	&lt;key&gt;modified&lt;/key&gt;
+	&lt;real&gt;665844824.116117&lt;/real&gt;
+	&lt;key&gt;shared&lt;/key&gt;
+	&lt;true/&gt;
+	&lt;key&gt;tries&lt;/key&gt;
+	&lt;integer&gt;10000&lt;/integer&gt;
+	&lt;key&gt;version&lt;/key&gt;
+	&lt;integer&gt;8&lt;/integer&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;
+YES (0) 
+</code></pre><p>After a logoff and login, the plugin will be loaded.</p>
+<p>What I would like to highlight is that the process this plugins runs inside was changed. In the past it was running inside <code>authorizationhost</code>. If we check the entitlements of this process, we can see that it would be problematic.</p>
+<pre tabindex="0"><code>Executable=/System/Library/Frameworks/Security.framework/Versions/A/MachServices/authorizationhost.bundle/Contents/MacOS/authorizationhost
+Identifier=com.apple.authorizationhost
+Format=bundle with Mach-O universal (x86_64 arm64e)
+CodeDirectory v=20400 size=2388 flags=0x0(none) hashes=64+7 location=embedded
+Platform identifier=13
+Signature size=4442
+Signed Time=2021. Dec 20. 1:50:34
+Info.plist entries=22
+TeamIdentifier=not set
+Sealed Resources version=2 rules=2 files=0
+Internal requirements count=1 size=76
+[Dict]
+	[Key] com.apple.ahp
+	[Value]
+		[Bool] true
+	[Key] com.apple.keystore.device
+	[Value]
+		[Bool] true
+	[Key] com.apple.keystore.console
+	[Value]
+		[Bool] true
+	[Key] com.apple.keystore.filevault
+	[Value]
+		[Bool] true
+	[Key] com.apple.security.smartcard
+	[Value]
+		[Bool] true
+	[Key] com.apple.authkit.client.private
+	[Value]
+		[Bool] true
+	[Key] com.apple.keystore.device.verify
+	[Value]
+		[Bool] true
+	[Key] com.apple.keystore.domain.select
+	[Value]
+		[Bool] true
+	[Key] com.apple.authorization.extract-password
+	[Value]
+		[Bool] true
+	[Key] com.apple.private.applecredentialmanager.allow
+	[Value]
+		[Bool] true
+	[Key] com.apple.private.security.clear-library-validation
+	[Value]
+		[Bool] true
+	[Key] com.apple.private.opendirectoryd.registerexternalauth
+	[Value]
+		[Bool] true
+	[Key] com.apple.private.configurationprofiles.bootstraptoken.readonly
+	[Value]
+		[Bool] true
+	[Key] com.apple.private.tcc.allow
+	[Value]
+		[Array]
+			[String] kTCCServiceSystemPolicyNetworkVolumes
+</code></pre><p>The plugin would access all of these entitlements, and for example by accessing <code>kTCCServiceSystemPolicyNetworkVolumes</code> is a TCC bypass straight away. Apple has changed this (maybe someone reported this), and now the plugin is loaded by an XPC service, <code>authorizationhosthelper.x86_64</code>, which lacks all of these rights.</p>
+<pre tabindex="0"><code>Executable=/System/Library/Frameworks/Security.framework/Versions/A/MachServices/authorizationhost.bundle/Contents/XPCServices/authorizationhosthelper.x86_64.xpc/Contents/MacOS/authorizationhosthelper.x86_64
+Identifier=com.apple.authorizationhosthelper.x86_64
+Format=bundle with Mach-O thin (x86_64)
+CodeDirectory v=20400 size=1281 flags=0x0(none) hashes=29+7 location=embedded
+Platform identifier=13
+Signature size=4442
+Signed Time=2021. Dec 20. 1:49:47
+Info.plist entries=21
+TeamIdentifier=not set
+Sealed Resources version=2 rules=2 files=0
+Internal requirements count=1 size=88
+[Dict]
+	[Key] com.apple.security.smartcard
+	[Value]
+		[Bool] true
+	[Key] com.apple.private.security.clear-library-validation
+	[Value]
+		[Bool] true
+</code></pre><p>This is similar to what we see in other processes used by Apple, like <code>coreaudiod</code>, loading of external plugins is done by an XPC service.</p>
+<p>We can confirm this by checking the logs, for example my <code>testAuthPlugin</code> logs a simple message.</p>
+<pre tabindex="0"><code>2022-02-06 13:55:48.739099+0100 0x3e25     Default     0x0                  1151   0    authorizationhosthelper.x86_64: (testAuthPlugin) testAuthPlugin was executed
+</code></pre>
+      </div>
+
+      <footer>
+        
+
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+     © 2022
+    
+       · 
+      Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.
+    
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-151008930-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+  </body>
+
+</html>

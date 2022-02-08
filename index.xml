@@ -18,16 +18,6 @@ macOS Dock stores shortcuts for applications, that we would like to access throu
     </item>
     
     <item>
-      <title>Beyond the good ol&#39; LaunchAgents - 28 - Authorization Plugins</title>
-      <link>https://theevilbit.github.io/beyond/beyond_0028/</link>
-      <pubDate>Tue, 08 Feb 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://theevilbit.github.io/beyond/beyond_0028/</guid>
-      <description>This is part 28 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
- This persistence mechanism was described in very detail by Chris Ross in his blogpost: Persistent Credential Theft with Authorization Plugins. He also developed sample code, which can be found on his GitHub. Thus this blog will only focus on the high level summary, and some changes that happened since he wrote that post.</description>
-    </item>
-    
-    <item>
       <title>Beyond the good ol&#39; LaunchAgents - 26 - Finder Sync Plugins</title>
       <link>https://theevilbit.github.io/beyond/beyond_0026/</link>
       <pubDate>Sat, 05 Feb 2022 00:00:00 +0000</pubDate>

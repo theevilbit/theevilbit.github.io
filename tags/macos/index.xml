@@ -5,7 +5,17 @@
     <link>https://theevilbit.github.io/tags/macos/</link>
     <description>Recent content in macos on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 08 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/macos/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 09 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/macos/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 28 - Authorization Plugins</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0028/</link>
+      <pubDate>Wed, 09 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0028/</guid>
+      <description>This is part 28 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ This persistence mechanism was described in very detail by Chris Ross in his blogpost: Persistent Credential Theft with Authorization Plugins. He also developed sample code, which can be found on his GitHub. Thus this blog will only focus on the high level summary, and some changes that happened since he wrote that post.</description>
+    </item>
+    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 27 - Dock shortcuts</title>
       <link>https://theevilbit.github.io/beyond/beyond_0027/</link>

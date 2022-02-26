@@ -12,11 +12,11 @@
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="CVE-2020-9771 - mount_apfs TCC bypass and privilege escalation"/>
 <meta name="twitter:description" content="TL;DR We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc&hellip;) of every user on the system, including those protected by Apple&rsquo;s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
-This could be achieved with a single command, for example: mount_apfs -o noowners -s http://com."/>
+This could be achieved with a single command, for example: mount_apfs -o noowners -s com."/>
 
     <meta property="og:title" content="CVE-2020-9771 - mount_apfs TCC bypass and privilege escalation" />
 <meta property="og:description" content="TL;DR We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc&hellip;) of every user on the system, including those protected by Apple&rsquo;s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
-This could be achieved with a single command, for example: mount_apfs -o noowners -s http://com." />
+This could be achieved with a single command, for example: mount_apfs -o noowners -s com." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/cve_2020_9771/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2020-07-03T00:00:00+00:00" />
@@ -146,7 +146,7 @@ This could be achieved with a single command, for example: mount_apfs -o noowner
         <h2 id="tldr">TL;DR</h2>
 <p>We could mount the entire file system through APFS snapshots as read-only, with the <code>noowners</code> flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc&hellip;) of every user on the system, including those protected by Apple&rsquo;s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱</p>
 <p>This could be achieved with a single command, for example:
-<code>mount_apfs -o noowners -s http://com.apple.TimeMachine.2019-11-17-141812.local /System/Volumes/Data /tmp/snap</code></p>
+<code>mount_apfs -o noowners -s com.apple.TimeMachine.2019-11-17-141812.local /System/Volumes/Data /tmp/snap</code></p>
 <p>This has been fixed in macOS Catalina 10.15.4 and on Mojave on the 26th of May.</p>
 <h2 id="the-issues">The Issues</h2>
 <p>There were two separate issues in this bug, and the combination of those became a very powerful system wide access.</p>

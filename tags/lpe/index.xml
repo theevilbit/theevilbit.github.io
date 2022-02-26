@@ -51,7 +51,7 @@ The TeamViewer macOS client used a PrivilegedHelperTool named com.teamviewer.Hel
       
       <guid>https://theevilbit.github.io/posts/cve_2020_9771/</guid>
       <description>TL;DR We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc&amp;hellip;) of every user on the system, including those protected by Apple&amp;rsquo;s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
-This could be achieved with a single command, for example: mount_apfs -o noowners -s http://com.</description>
+This could be achieved with a single command, for example: mount_apfs -o noowners -s com.</description>
     </item>
     
     <item>

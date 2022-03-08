@@ -5,7 +5,18 @@
     <link>https://theevilbit.github.io/year/2022/</link>
     <description>Recent content in 2022 on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 09 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/year/2022/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 08 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/year/2022/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 29 - amstoold</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0029/</link>
+      <pubDate>Tue, 08 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0029/</guid>
+      <description>This is part 29 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+ When doing some research on macOS I came across the following LaunchAgent: /System/Library/LaunchAgents/com.apple.amstoold.plist. Its content is the following.
+&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt; &amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt; &amp;lt;plist version=&amp;#34;1.0&amp;#34;&amp;gt; &amp;lt;dict&amp;gt; &amp;lt;key&amp;gt;EnablePressuredExit&amp;lt;/key&amp;gt; &amp;lt;true/&amp;gt; &amp;lt;key&amp;gt;EnableTransactions&amp;lt;/key&amp;gt; &amp;lt;true/&amp;gt; &amp;lt;key&amp;gt;Label&amp;lt;/key&amp;gt; &amp;lt;string&amp;gt;com.apple.amstoold&amp;lt;/string&amp;gt; &amp;lt;key&amp;gt;LaunchEvents&amp;lt;/key&amp;gt; &amp;lt;dict&amp;gt; &amp;lt;key&amp;gt;com.</description>
+    </item>
+    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 28 - Authorization Plugins</title>
       <link>https://theevilbit.github.io/beyond/beyond_0028/</link>

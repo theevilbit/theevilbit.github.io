@@ -11,11 +11,11 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 10 - Application script files"/>
-<meta name="twitter:description" content="This is part 10 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta name="twitter:description" content="This is part 10 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  I started to explore to possibility of persisting on macOS through script files contained in an application. The basic idea is that if we find a script file, which is being executed by a given application, we can edit that script file, put our code inside, and wait for an execution."/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 10 - Application script files" />
-<meta property="og:description" content="This is part 10 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta property="og:description" content="This is part 10 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  I started to explore to possibility of persisting on macOS through script files contained in an application. The basic idea is that if we find a script file, which is being executed by a given application, we can edit that script file, put our code inside, and wait for an execution." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0010/" /><meta property="article:section" content="beyond" />
@@ -56,7 +56,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.92.1" />
+    <meta name="generator" content="Hugo 0.96.0" />
   </head>
 
   <body class=" ">
@@ -142,42 +142,42 @@
 
       <div>
         <blockquote>
-<p>This is part 10 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+<p>This is part 10 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
 </blockquote>
 <p>I started to explore to possibility of persisting on macOS through script files contained in an application. The basic idea is that if we find a script file, which is being executed by a given application, we can edit that script file, put our code inside, and wait for an execution. Such technique is highly dependent on the applications the user has installed, so I looked through first how rare / frequent is having such scripts inside applications. I started with the below searches:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">find /Applications/ -name <span style="color:#c30">&#34;*.sh&#34;</span>
-find /Applications/ -name <span style="color:#c30">&#34;*.py&#34;</span>
-</code></pre></div><p>I have two Macs, one I use for private stuff and one for work, the second has significantly lower number of apps installed, only those I really need. First I checked my work MacBook as it has a much lower ‘attack surface’ and it turns out that these scripts files are not that rare at all, but they are also not everywhere. There is a common pattern of apps using scripts for specific purpose, at least based on the name, a few examples:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/Applications//Bear.app/Contents/Resources/Custom Tag Keywords/keywordsplist_to_csv.py
-/Applications//Hopper Disassembler v4.app/Contents/Resources/script_disassemble.py
-/Applications//BBEdit.app/Contents/PlugIns/Language Modules/Python.bblm/Contents/SharedSupport/py_check_syntax.py
-
-/Applications//VMware Fusion.app/Contents/Library/shares/adduser.sh
-/Applications//BBEdit.app/Contents/PlugIns/Language Modules/ManPage.bblm/Contents/Resources/man2html.sh
-</code></pre></div><p>Xcode is also full of such scripts. The problem with these that we don’t know when they will be called, possibly it’s not so frequent, so they are not ideal for persistence, as we want something that is always invoked when an applications starts. There is a chance that you can find a frequently run script somewhere, but those would require a check one by one, which I didn’t do. You could also go about infecting every possible script you find, increasing the chances of being executed. The question is if there are any other scripts that will always run, and the answer is yes.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>find /Applications/ -name <span style="color:#c30">&#34;*.sh&#34;</span>
+</span></span><span style="display:flex;"><span>find /Applications/ -name <span style="color:#c30">&#34;*.py&#34;</span>
+</span></span></code></pre></div><p>I have two Macs, one I use for private stuff and one for work, the second has significantly lower number of apps installed, only those I really need. First I checked my work MacBook as it has a much lower ‘attack surface’ and it turns out that these scripts files are not that rare at all, but they are also not everywhere. There is a common pattern of apps using scripts for specific purpose, at least based on the name, a few examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/Applications//Bear.app/Contents/Resources/Custom Tag Keywords/keywordsplist_to_csv.py
+</span></span><span style="display:flex;"><span>/Applications//Hopper Disassembler v4.app/Contents/Resources/script_disassemble.py
+</span></span><span style="display:flex;"><span>/Applications//BBEdit.app/Contents/PlugIns/Language Modules/Python.bblm/Contents/SharedSupport/py_check_syntax.py
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>/Applications//VMware Fusion.app/Contents/Library/shares/adduser.sh
+</span></span><span style="display:flex;"><span>/Applications//BBEdit.app/Contents/PlugIns/Language Modules/ManPage.bblm/Contents/Resources/man2html.sh
+</span></span></code></pre></div><p>Xcode is also full of such scripts. The problem with these that we don’t know when they will be called, possibly it’s not so frequent, so they are not ideal for persistence, as we want something that is always invoked when an applications starts. There is a chance that you can find a frequently run script somewhere, but those would require a check one by one, which I didn’t do. You could also go about infecting every possible script you find, increasing the chances of being executed. The question is if there are any other scripts that will always run, and the answer is yes.</p>
 <h2 id="python3-idleapp">Python3 Idle.app</h2>
 <p>Although it’s probably not that common people installing Python on a macOS system, as it’s present by default, but if so, it contains the Idle.app editor. This application has a idlemain.py script in the resources folder, that is executed upon starting Idle. The app or the OS doesn’t verify if the script was tampered with.</p>
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0010_0.png" alt="image1"></p>
 <p>I have two problems with this, one is that finding this app somewhere is very unlikely, the second is that as you have to install this, the folder permissions are set for root access only. Even if you persist, you will only maintain yourself as the user and not as root. So it’s not that ideal, but it works if really needed.</p>
 <h2 id="sublime-text">Sublime Text</h2>
 <p>This one is much more promising. This is a very popular text editor application, so you are likely to find it somewhere. Second, you install it by drag &amp; drop to the application folder, so the user has the rights to edit the script file. If we edit the following file:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/Applications//Sublime<span style="color:#c30;font-weight:bold">\ </span>Text.app/Contents/MacOS/sublime.py 
-</code></pre></div><p>It will be executed every time you start up Sublime Text. That’s awesome! I used the following POC code:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">os</span>
-os<span style="color:#555">.</span>system(<span style="color:#c30">&#34;osascript -e &#39;Tell application </span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">System Events</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30"> to display dialog </span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30"> Message </span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">&#39;&#34;</span>)
-</code></pre></div><p>You will get a prompt on Mojave to grant access, but you can add other code, which would do something else to avoid this prompt, and even if you get it, an average user will just grant access.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/Applications//Sublime<span style="color:#c30;font-weight:bold">\ </span>Text.app/Contents/MacOS/sublime.py 
+</span></span></code></pre></div><p>It will be executed every time you start up Sublime Text. That’s awesome! I used the following POC code:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">os</span>
+</span></span><span style="display:flex;"><span>os<span style="color:#555">.</span>system(<span style="color:#c30">&#34;osascript -e &#39;Tell application </span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">System Events</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30"> to display dialog </span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30"> Message </span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">&#39;&#34;</span>)
+</span></span></code></pre></div><p>You will get a prompt on Mojave to grant access, but you can add other code, which would do something else to avoid this prompt, and even if you get it, an average user will just grant access.</p>
 <p>Sublime has a code signature and hash for this script, the reason macOS will not block tampering with the script, was covered by Thomas Reed in his talk about “Code Signing flaw in macOS“: <a href="https://objectivebythesea.com/v1/talks/OBTS_v1_Reed.pdf">https://objectivebythesea.com/v1/talks/OBTS_v1_Reed.pdf</a>
 In short macOS will only verify code signature upon first execution, anything changes after that will be undetected.</p>
 <h2 id="gog-launchers">GOG launchers</h2>
 <p>If I run the same search on my private MacBook there are a whole lot of other apps that has scripts inside, and I found one particularly funny. I used to buy games from <a href="https://gog.com">https://gog.com</a> I like that they are DRM free, I can backup the game, don’t need to rely on online connectivity, etc… It turns out that they have very interesting script in one of the main packages to launch games:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#099">#!/bin/bash
-</span><span style="color:#099"></span><span style="color:#09f;font-style:italic"># GOG.com (www.gog.com)</span>
-<span style="color:#09f;font-style:italic"># GOGLauncher Script</span>
-
-<span style="color:#033">FIND_GAME</span><span style="color:#555">=</span><span style="color:#c30">`</span>find game/ -type d -maxdepth <span style="color:#f60">1</span> -name <span style="color:#c30">&#34;*.app&#34;</span><span style="color:#c30">`</span>
-xattr -r -d com.apple.quarantine <span style="color:#c30">&#34;</span><span style="color:#033">$FIND_GAME</span><span style="color:#c30">&#34;</span>
-open <span style="color:#c30">&#34;</span><span style="color:#a00">${</span><span style="color:#033">FIND_GAME</span><span style="color:#a00">}</span><span style="color:#c30">&#34;</span>
-</code></pre></div><p>Stop for a minute and let the script sink in :) Here is what does it do in human language:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#099">#!/bin/bash
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span><span style="color:#09f;font-style:italic"># GOG.com (www.gog.com)</span>
+</span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"># GOGLauncher Script</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#033">FIND_GAME</span><span style="color:#555">=</span><span style="color:#c30">`</span>find game/ -type d -maxdepth <span style="color:#f60">1</span> -name <span style="color:#c30">&#34;*.app&#34;</span><span style="color:#c30">`</span>
+</span></span><span style="display:flex;"><span>xattr -r -d com.apple.quarantine <span style="color:#c30">&#34;</span><span style="color:#033">$FIND_GAME</span><span style="color:#c30">&#34;</span>
+</span></span><span style="display:flex;"><span>open <span style="color:#c30">&#34;</span><span style="color:#a00">${</span><span style="color:#033">FIND_GAME</span><span style="color:#a00">}</span><span style="color:#c30">&#34;</span>
+</span></span></code></pre></div><p>Stop for a minute and let the script sink in :) Here is what does it do in human language:</p>
 <p>Upon starting the launcher script, it will look for apps in the game/ folder, remove the quarantine attribute and launch the app with the open command. The open command would invoke Gatekeeper, but only if the attribute is not removed! What this means, that you can replace the game-to-be-launched with anything you want (!!!) and it will be executed, even if it has a quarantine flag set. This is a signed launcher, which will launch code embedded within the app. BUT! There is always a BUT! It is not as good as it looks for first sight.
 It will only do this if the application was already run once, if not then the entire package, including the embedded game’s file hashes will be verified, because there is a list of all files in the <code>Contents/_CodeSignature/CodeResources</code> file, which can’t be altered, although this is an XML plist file as its hash is in the app’s signature. See the above talk again. This means that you can’t use this launcher to bypass Gatekeeper in a generic way. (Yes I spent some time to explore this option :)).</p>
 <p>Some good resources I found on code signing:
@@ -186,91 +186,91 @@ It will only do this if the application was already run once, if not then the en
 <p>This was a side track, but going back to original question, about using scripts, you can find many of those in GOG games, which you can expect users running, also they have a user permission set, so you can edit them.</p>
 <h2 id="the-library-folder">The /Library folder</h2>
 <p>Another place to look for files is the <code>/Library</code> folder or the <code>~/Library</code> folder. The first one can contain exessive amount of files, so we might want to limit our search, where the user has write access to, using this syntax:</p>
-<pre tabindex="0"><code>find /Library/ -name &quot;*.sh&quot; -perm +0200 -user username
-find /Library/ -name &quot;*.py&quot; -perm -u+w -user username
+<pre tabindex="0"><code>find /Library/ -name &#34;*.sh&#34; -perm +0200 -user username
+find /Library/ -name &#34;*.py&#34; -perm -u+w -user username
 </code></pre><p>There can be some gems as well, like this:</p>
 <pre tabindex="0"><code>/Library//Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/
 </code></pre><p>Here you can ‘infect’ many of the installed modules, so whenever they are imported you got code execution, you can expect these to be run more frequently.</p>
 <h2 id="homebrew">Homebrew</h2>
 <p>This idea came from <a href="https://twitter.com/philofishal">@philofishal</a>. <a href="https://brew.sh/">Homebrew</a> is a very popular macOS package manager. Most powerusers have it installed. It&rsquo;s located at <code>/usr/local/bin/brew</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">% which brew
-/usr/local/bin/brew
-
-% file <span style="color:#c30">`</span>which brew<span style="color:#c30">`</span>
-/usr/local/bin/brew: Bourne-Again shell script text executable, ASCII text
-</code></pre></div><p>If we check the type of that file we can notice that it&rsquo;s a regular bash script file. As it&rsquo;s frequently run to install new packages or updates, it&rsquo;s an excellent target for backdoor and persistence.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>% which brew
+</span></span><span style="display:flex;"><span>/usr/local/bin/brew
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>% file <span style="color:#c30">`</span>which brew<span style="color:#c30">`</span>
+</span></span><span style="display:flex;"><span>/usr/local/bin/brew: Bourne-Again shell script text executable, ASCII text
+</span></span></code></pre></div><p>If we check the type of that file we can notice that it&rsquo;s a regular bash script file. As it&rsquo;s frequently run to install new packages or updates, it&rsquo;s an excellent target for backdoor and persistence.</p>
 <h2 id="wireshark">Wireshark</h2>
 <p>Another idea that came from <a href="https://twitter.com/philofishal">@philofishal</a>. Wireshark installs a launchd file at <code>/Library/LaunchDaemons/org.wireshark.ChmodBPF.plist</code>, which means that it will be executed as root.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">% cat /Library/LaunchDaemons/org.wireshark.ChmodBPF.plist
-&lt;?xml <span style="color:#033">version</span><span style="color:#555">=</span><span style="color:#c30">&#34;1.0&#34;</span> <span style="color:#033">encoding</span><span style="color:#555">=</span><span style="color:#c30">&#34;UTF-8&#34;</span>?&gt;
-&lt;!DOCTYPE plist PUBLIC <span style="color:#c30">&#34;-//Apple Computer//DTD PLIST 1.0//EN&#34;</span> <span style="color:#c30">&#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;</span>&gt;
-&lt;plist <span style="color:#033">version</span><span style="color:#555">=</span><span style="color:#c30">&#34;1.0&#34;</span>&gt;
-&lt;dict&gt;
-	&lt;key&gt;Label&lt;/key&gt;
-	&lt;string&gt;org.wireshark.ChmodBPF&lt;/string&gt;
-	&lt;key&gt;RunAtLoad&lt;/key&gt;
-	&lt;true/&gt;
-	&lt;key&gt;Program&lt;/key&gt;
-	&lt;string&gt;/Library/Application Support/Wireshark/ChmodBPF/ChmodBPF&lt;/string&gt;
-&lt;/dict&gt;
-&lt;/plist&gt;
-
-% file <span style="color:#c30">&#34;/Library/Application Support/Wireshark/ChmodBPF/ChmodBPF&#34;</span>
-/Library/Application Support/Wireshark/ChmodBPF/ChmodBPF: Bourne-Again shell script text executable, ASCII text
-</code></pre></div><p>If we check the file, it&rsquo;s again a bash script, which we can easily backdoor if we got root level access. It can be hardly noticed.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>% cat /Library/LaunchDaemons/org.wireshark.ChmodBPF.plist
+</span></span><span style="display:flex;"><span>&lt;?xml <span style="color:#033">version</span><span style="color:#555">=</span><span style="color:#c30">&#34;1.0&#34;</span> <span style="color:#033">encoding</span><span style="color:#555">=</span><span style="color:#c30">&#34;UTF-8&#34;</span>?&gt;
+</span></span><span style="display:flex;"><span>&lt;!DOCTYPE plist PUBLIC <span style="color:#c30">&#34;-//Apple Computer//DTD PLIST 1.0//EN&#34;</span> <span style="color:#c30">&#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;plist <span style="color:#033">version</span><span style="color:#555">=</span><span style="color:#c30">&#34;1.0&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;dict&gt;
+</span></span><span style="display:flex;"><span>	&lt;key&gt;Label&lt;/key&gt;
+</span></span><span style="display:flex;"><span>	&lt;string&gt;org.wireshark.ChmodBPF&lt;/string&gt;
+</span></span><span style="display:flex;"><span>	&lt;key&gt;RunAtLoad&lt;/key&gt;
+</span></span><span style="display:flex;"><span>	&lt;true/&gt;
+</span></span><span style="display:flex;"><span>	&lt;key&gt;Program&lt;/key&gt;
+</span></span><span style="display:flex;"><span>	&lt;string&gt;/Library/Application Support/Wireshark/ChmodBPF/ChmodBPF&lt;/string&gt;
+</span></span><span style="display:flex;"><span>&lt;/dict&gt;
+</span></span><span style="display:flex;"><span>&lt;/plist&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>% file <span style="color:#c30">&#34;/Library/Application Support/Wireshark/ChmodBPF/ChmodBPF&#34;</span>
+</span></span><span style="display:flex;"><span>/Library/Application Support/Wireshark/ChmodBPF/ChmodBPF: Bourne-Again shell script text executable, ASCII text
+</span></span></code></pre></div><p>If we check the file, it&rsquo;s again a bash script, which we can easily backdoor if we got root level access. It can be hardly noticed.</p>
 <h2 id="python-import-hijacking">Python import hijacking</h2>
 <p>If we talk about scripts, I have to mention this technique. It’s well documented in many blog posts, talks, so won’t go into too many details, but here is the TL;DR version:
 If you import a module in Python it will first look in the current folder for that PY script, and then on the other folders, where PYTHONPATH points to. We can get this list from Python, on my machine it looks like this:</p>
 <pre tabindex="0"><code>Python 2.7.11 (v2.7.11:6d1b6a68f775, Dec  5 2015, 12:54:16) 
 [GCC 4.2.1 (Apple Inc. build 5666) (dot 3)] on darwin
-Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+Type &#34;help&#34;, &#34;copyright&#34;, &#34;credits&#34; or &#34;license&#34; for more information.
 &gt;&gt;&gt; import sys
 &gt;&gt;&gt; print sys.path
-['', '/Library/Frameworks/Python.framework/Versions/2.7/lib/python27.zip', '/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7', '/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/plat-darwin', '/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/plat-mac', '/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/plat-mac/lib-scriptpackages', '/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/lib-tk', '/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/lib-old', '/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/lib-dynload', '/Users/csaby/Library/Python/2.7/lib/python/site-packages', '/usr/local/lib/python2.7/site-packages', '/usr/local/Cellar/numpy/1.16.1/libexec/nose/lib/python2.7/site-packages', '/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages', '/Library/Python/2.7/site-packages', '/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python', '/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/PyObjC']
+[&#39;&#39;, &#39;/Library/Frameworks/Python.framework/Versions/2.7/lib/python27.zip&#39;, &#39;/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7&#39;, &#39;/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/plat-darwin&#39;, &#39;/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/plat-mac&#39;, &#39;/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/plat-mac/lib-scriptpackages&#39;, &#39;/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/lib-tk&#39;, &#39;/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/lib-old&#39;, &#39;/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/lib-dynload&#39;, &#39;/Users/csaby/Library/Python/2.7/lib/python/site-packages&#39;, &#39;/usr/local/lib/python2.7/site-packages&#39;, &#39;/usr/local/Cellar/numpy/1.16.1/libexec/nose/lib/python2.7/site-packages&#39;, &#39;/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages&#39;, &#39;/Library/Python/2.7/site-packages&#39;, &#39;/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python&#39;, &#39;/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/PyObjC&#39;]
 </code></pre><p>Interestingly the 3rd path in the list <code>/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7</code> is writeable by the group where my account belongs to, so I can just persist there by injecting my code into one of the frequently used libraries, like <code>os</code> or <code>system</code>. The 2nd entry in the list <code>/Library/Frameworks/Python.framework/Versions/2.7/lib/python27.zip</code> doesn’t exists so it’s good to go.</p>
 <h2 id="detection">Detection</h2>
 <p>I think this is something very hard to detect, especially if someone backdoors the Python libraries, however one potential solution would be to compare the timestamps of the files of a given application. They should be the same or at least pretty close. I did a few checks and the actual hour/minute value can differ, so you can go for the date. This is a quick and dirty python script to do that:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">os</span>
-<span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">time</span>
-<span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">sys</span>
-
-<span style="color:#09f;font-style:italic">#original: https://stackoverflow.com/questions/17372696/pulling-files-and-timestamps-from-a-directory-and-subdirectories</span>
-<span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">find_timestamps</span>(directory_path):
-	all_files <span style="color:#555">=</span> []
-	<span style="color:#09f;font-style:italic"># Walk through files in directory_path, including subdirectories</span>
-	<span style="color:#069;font-weight:bold">for</span> root, _, filenames <span style="color:#000;font-weight:bold">in</span> os<span style="color:#555">.</span>walk(directory_path):
-		<span style="color:#069;font-weight:bold">for</span> filename <span style="color:#000;font-weight:bold">in</span> filenames:
-			file_path   <span style="color:#555">=</span> root <span style="color:#555">+</span> <span style="color:#c30">&#39;/&#39;</span> <span style="color:#555">+</span> filename
-			modified	<span style="color:#555">=</span> time<span style="color:#555">.</span>strftime(<span style="color:#c30">&#39;%Y-%m-</span><span style="color:#a00">%d</span><span style="color:#c30">&#39;</span>, time<span style="color:#555">.</span>localtime(os<span style="color:#555">.</span>path<span style="color:#555">.</span>getmtime(file_path)))
-			<span style="color:#09f;font-style:italic">#time.ctime(os.path.getmtime(file_path))</span>
-			
-			<span style="color:#09f;font-style:italic"># Process stuff for the file here, for example...</span>
-			<span style="color:#09f;font-style:italic">#print &#34;File: %s&#34; % file_path</span>
-			<span style="color:#09f;font-style:italic">#print &#34;	Last modified: %s&#34; % modified</span>
-			all_files<span style="color:#555">.</span>append((file_path, modified))
-	<span style="color:#069;font-weight:bold">return</span> all_files
-
-
-<span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">main</span>():
-	<span style="color:#069;font-weight:bold">if</span> (<span style="color:#366">len</span>(sys<span style="color:#555">.</span>argv) <span style="color:#555">&lt;</span> <span style="color:#f60">2</span>):
-		<span style="color:#366">print</span> <span style="color:#c30">&#34;[-] no folder specified, useage: </span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30"> find_discrepancy.py /path/to/app&#34;</span>
-		sys<span style="color:#555">.</span>exit(<span style="color:#555">-</span><span style="color:#f60">1</span>)
-	<span style="color:#366">dir</span> <span style="color:#555">=</span> sys<span style="color:#555">.</span>argv[<span style="color:#f60">1</span>]
-	<span style="color:#069;font-weight:bold">if</span>(<span style="color:#000;font-weight:bold">not</span> os<span style="color:#555">.</span>path<span style="color:#555">.</span>isdir(<span style="color:#366">dir</span>)):
-		<span style="color:#366">print</span> <span style="color:#c30">&#34;[-] This is not a directory&#34;</span>
-		sys<span style="color:#555">.</span>exit(<span style="color:#555">-</span><span style="color:#f60">1</span>)
-	all_files <span style="color:#555">=</span> find_timestamps(<span style="color:#366">dir</span>)
-	t <span style="color:#555">=</span> <span style="color:#c30">&#39;&#39;</span>
-	<span style="color:#069;font-weight:bold">for</span> f <span style="color:#000;font-weight:bold">in</span> all_files:
-		<span style="color:#069;font-weight:bold">if</span> t <span style="color:#555">==</span> <span style="color:#c30">&#39;&#39;</span>: <span style="color:#09f;font-style:italic">#we set the first timestamp found as reference, could be improved using stats</span>
-			t <span style="color:#555">=</span> f[<span style="color:#f60">1</span>] <span style="color:#09f;font-style:italic">#the modified param is the second item in the tuple</span>
-		<span style="color:#069;font-weight:bold">else</span>:
-			<span style="color:#069;font-weight:bold">if</span> f[<span style="color:#f60">1</span>]<span style="color:#555">!=</span> t:
-				<span style="color:#366">print</span> <span style="color:#c30">&#34;[!] The file </span><span style="color:#a00">%s</span><span style="color:#c30"> timestamp is different form the rest, file: </span><span style="color:#a00">%s</span><span style="color:#c30">, rest: </span><span style="color:#a00">%s</span><span style="color:#c30"> - potential backdoor&#34;</span> <span style="color:#555">%</span> (f[<span style="color:#f60">0</span>], f[<span style="color:#f60">1</span>], t)
-				
-<span style="color:#069;font-weight:bold">if</span> __name__<span style="color:#555">==</span> <span style="color:#c30">&#34;__main__&#34;</span>:
-	main()
-</code></pre></div><p>You could also monitor the hashes of all the files, and alert on changes. Here you will need to deal with updates, etc…</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">os</span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">time</span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">sys</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">#original: https://stackoverflow.com/questions/17372696/pulling-files-and-timestamps-from-a-directory-and-subdirectories</span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">find_timestamps</span>(directory_path):
+</span></span><span style="display:flex;"><span>	all_files <span style="color:#555">=</span> []
+</span></span><span style="display:flex;"><span>	<span style="color:#09f;font-style:italic"># Walk through files in directory_path, including subdirectories</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">for</span> root, _, filenames <span style="color:#000;font-weight:bold">in</span> os<span style="color:#555">.</span>walk(directory_path):
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">for</span> filename <span style="color:#000;font-weight:bold">in</span> filenames:
+</span></span><span style="display:flex;"><span>			file_path   <span style="color:#555">=</span> root <span style="color:#555">+</span> <span style="color:#c30">&#39;/&#39;</span> <span style="color:#555">+</span> filename
+</span></span><span style="display:flex;"><span>			modified	<span style="color:#555">=</span> time<span style="color:#555">.</span>strftime(<span style="color:#c30">&#39;%Y-%m-</span><span style="color:#a00">%d</span><span style="color:#c30">&#39;</span>, time<span style="color:#555">.</span>localtime(os<span style="color:#555">.</span>path<span style="color:#555">.</span>getmtime(file_path)))
+</span></span><span style="display:flex;"><span>			<span style="color:#09f;font-style:italic">#time.ctime(os.path.getmtime(file_path))</span>
+</span></span><span style="display:flex;"><span>			
+</span></span><span style="display:flex;"><span>			<span style="color:#09f;font-style:italic"># Process stuff for the file here, for example...</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#09f;font-style:italic">#print &#34;File: %s&#34; % file_path</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#09f;font-style:italic">#print &#34;	Last modified: %s&#34; % modified</span>
+</span></span><span style="display:flex;"><span>			all_files<span style="color:#555">.</span>append((file_path, modified))
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">return</span> all_files
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">main</span>():
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (<span style="color:#366">len</span>(sys<span style="color:#555">.</span>argv) <span style="color:#555">&lt;</span> <span style="color:#f60">2</span>):
+</span></span><span style="display:flex;"><span>		<span style="color:#366">print</span> <span style="color:#c30">&#34;[-] no folder specified, useage: </span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30"> find_discrepancy.py /path/to/app&#34;</span>
+</span></span><span style="display:flex;"><span>		sys<span style="color:#555">.</span>exit(<span style="color:#555">-</span><span style="color:#f60">1</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#366">dir</span> <span style="color:#555">=</span> sys<span style="color:#555">.</span>argv[<span style="color:#f60">1</span>]
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span>(<span style="color:#000;font-weight:bold">not</span> os<span style="color:#555">.</span>path<span style="color:#555">.</span>isdir(<span style="color:#366">dir</span>)):
+</span></span><span style="display:flex;"><span>		<span style="color:#366">print</span> <span style="color:#c30">&#34;[-] This is not a directory&#34;</span>
+</span></span><span style="display:flex;"><span>		sys<span style="color:#555">.</span>exit(<span style="color:#555">-</span><span style="color:#f60">1</span>)
+</span></span><span style="display:flex;"><span>	all_files <span style="color:#555">=</span> find_timestamps(<span style="color:#366">dir</span>)
+</span></span><span style="display:flex;"><span>	t <span style="color:#555">=</span> <span style="color:#c30">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">for</span> f <span style="color:#000;font-weight:bold">in</span> all_files:
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> t <span style="color:#555">==</span> <span style="color:#c30">&#39;&#39;</span>: <span style="color:#09f;font-style:italic">#we set the first timestamp found as reference, could be improved using stats</span>
+</span></span><span style="display:flex;"><span>			t <span style="color:#555">=</span> f[<span style="color:#f60">1</span>] <span style="color:#09f;font-style:italic">#the modified param is the second item in the tuple</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">else</span>:
+</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">if</span> f[<span style="color:#f60">1</span>]<span style="color:#555">!=</span> t:
+</span></span><span style="display:flex;"><span>				<span style="color:#366">print</span> <span style="color:#c30">&#34;[!] The file </span><span style="color:#a00">%s</span><span style="color:#c30"> timestamp is different form the rest, file: </span><span style="color:#a00">%s</span><span style="color:#c30">, rest: </span><span style="color:#a00">%s</span><span style="color:#c30"> - potential backdoor&#34;</span> <span style="color:#555">%</span> (f[<span style="color:#f60">0</span>], f[<span style="color:#f60">1</span>], t)
+</span></span><span style="display:flex;"><span>				
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">if</span> __name__<span style="color:#555">==</span> <span style="color:#c30">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>	main()
+</span></span></code></pre></div><p>You could also monitor the hashes of all the files, and alert on changes. Here you will need to deal with updates, etc…</p>
 <p>The same persistence idea is valid for Windows and Linux as well.</p>
 
       </div>

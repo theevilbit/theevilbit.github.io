@@ -5,16 +5,27 @@
     <link>https://theevilbit.github.io/tags/macos/</link>
     <description>Recent content in macos on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 08 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/macos/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 14 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/macos/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AMFI Launch Constraints - First Quick Look</title>
+      <link>https://theevilbit.github.io/posts/amfi_launch_constraints/</link>
+      <pubDate>Tue, 14 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/posts/amfi_launch_constraints/</guid>
+      <description>Dropping some initial quick notes for a new security feature I run into on macOS Ventura. It&amp;rsquo;s called &amp;ldquo;Launch Constraints&amp;rdquo; and lives inside AMFI.
+Do the following experiment: Copy Terminal.app to your HOME folder and try to run it on Monterey and Ventura. On the former it will work without any issues, on the other it will fail, and we will get the following error:
+2022-06-14 05:59:55.254678+0200 0x5481 Default 0x0 0 0 kernel: (AppleMobileFileIntegrity) AMFI: Launch Constraint Violation (enforcing), error info: c[1]p[1]m[1]e[2], (Constraint not matched) launching proc[vc: 1 pid: 1112]: /Users/ace/Terminal.</description>
+    </item>
+    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 29 - amstoold</title>
       <link>https://theevilbit.github.io/beyond/beyond_0029/</link>
       <pubDate>Tue, 08 Mar 2022 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0029/</guid>
-      <description>This is part 29 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 29 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  When doing some research on macOS I came across the following LaunchAgent: /System/Library/LaunchAgents/com.apple.amstoold.plist. Its content is the following.
-&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt; &amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt; &amp;lt;plist version=&amp;#34;1.0&amp;#34;&amp;gt; &amp;lt;dict&amp;gt; &amp;lt;key&amp;gt;EnablePressuredExit&amp;lt;/key&amp;gt; &amp;lt;true/&amp;gt; &amp;lt;key&amp;gt;EnableTransactions&amp;lt;/key&amp;gt; &amp;lt;true/&amp;gt; &amp;lt;key&amp;gt;Label&amp;lt;/key&amp;gt; &amp;lt;string&amp;gt;com.apple.amstoold&amp;lt;/string&amp;gt; &amp;lt;key&amp;gt;LaunchEvents&amp;lt;/key&amp;gt; &amp;lt;dict&amp;gt; &amp;lt;key&amp;gt;com.</description>
+&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt; &amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt; &amp;lt;plist version=&amp;#34;1.0&amp;#34;&amp;gt; &amp;lt;dict&amp;gt; 	&amp;lt;key&amp;gt;EnablePressuredExit&amp;lt;/key&amp;gt; 	&amp;lt;true/&amp;gt; 	&amp;lt;key&amp;gt;EnableTransactions&amp;lt;/key&amp;gt; 	&amp;lt;true/&amp;gt; 	&amp;lt;key&amp;gt;Label&amp;lt;/key&amp;gt; 	&amp;lt;string&amp;gt;com.</description>
     </item>
     
     <item>
@@ -23,7 +34,7 @@
       <pubDate>Wed, 09 Feb 2022 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0028/</guid>
-      <description>This is part 28 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 28 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  This persistence mechanism was described in very detail by Chris Ross in his blogpost: Persistent Credential Theft with Authorization Plugins. He also developed sample code, which can be found on his GitHub. Thus this blog will only focus on the high level summary, and some changes that happened since he wrote that post.</description>
     </item>
     
@@ -33,7 +44,7 @@
       <pubDate>Tue, 08 Feb 2022 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0027/</guid>
-      <description>This is part 27 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 27 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  This persistence is another gem I found in Leo Pitt&amp;rsquo;s Modern macOS Persistence talk.
 macOS Dock stores shortcuts for applications, that we would like to access through the, well&amp;hellip; Dock. It stores all settings in ~/Library/Preferences/com.apple.dock.plist. Although we can edit this PLIST directly, we can also use the defaults utility to change it.</description>
     </item>
@@ -44,7 +55,7 @@ macOS Dock stores shortcuts for applications, that we would like to access throu
       <pubDate>Sat, 05 Feb 2022 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0026/</guid>
-      <description>This is part 26 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 26 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  This method was documented very detailed by Patrick Wardle in his blogpost back in 2016. It was also covered by Leo Pitt in his Modern macOS Persistence talk, and he also made a POC, which can be found at his GitHub.</description>
     </item>
     
@@ -54,7 +65,7 @@ macOS Dock stores shortcuts for applications, that we would like to access throu
       <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0025/</guid>
-      <description>This is part 25 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 25 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  Possibly a less known feature that macOS has a built-in Apache2 web server, which can be enabled anytime. Just as other Apache2 servers, it also supports the load of custom modules, and this is what we will explore here briefly for persistence.</description>
     </item>
     
@@ -64,7 +75,7 @@ macOS Dock stores shortcuts for applications, that we would like to access throu
       <pubDate>Thu, 02 Dec 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0024/</guid>
-      <description>This is part 24 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 24 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  Folder action persistence has been documented by Cody Thomas back in 2019 in his blog. I think he did an awesome job, and everything he wrote still applies today. I wanted to take it a bit further and see if I can persist without any user prompts, and it turned out it is possible.</description>
     </item>
     
@@ -74,7 +85,7 @@ macOS Dock stores shortcuts for applications, that we would like to access throu
       <pubDate>Sat, 27 Nov 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0023/</guid>
-      <description>This is part 23 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 23 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  This post will be about emond, Apple&amp;rsquo;s Event Monitor daemon.
 I think almost everything has been already told about this method and emond in general by James Reynolds here and xorrior here so really not much left for me. There is no point for me replicating their awesome posts, so please just read them.</description>
     </item>
@@ -85,7 +96,7 @@ I think almost everything has been already told about this method and emond in g
       <pubDate>Wed, 24 Nov 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0022/</guid>
-      <description>This is part 22 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 22 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  This method is considered deprecated by Apple, yet it still works.
 LoginHooks and LogoutHooks have been widely documented by many people, so this post is mostly for completeness. The official, Apple documentation can be found here: Customizing Login and Logout</description>
     </item>
@@ -106,7 +117,7 @@ The Vulnerability I don&amp;rsquo;t know why but I started to experiment with it
       <pubDate>Tue, 12 Oct 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0021/</guid>
-      <description>This is part 21 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 21 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  This method was also documented by Patrick Wardle, in his original Methods of Malware Persistence white paper and also at MITRE ATT&amp;amp;CK®.
 When we restart macOS, we are presented with the following window:
 I guess, most users keep it selected, and then macOS will reopen all apps.</description>
@@ -128,7 +139,7 @@ I thought I will try to collect some resources that can help people to get start
       <pubDate>Wed, 22 Sep 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0020/</guid>
-      <description>This is part 20 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 20 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  This is another application specific persistence method, related to the Terminal application.
 In the Terminal Preferences, under the Profiles tab, we can set a command that will be executed upon Terminal&amp;rsquo;s startup. This is shown in the screen below.</description>
     </item>
@@ -139,7 +150,7 @@ In the Terminal Preferences, under the Profiles tab, we can set a command that w
       <pubDate>Fri, 06 Aug 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0019/</guid>
-      <description>This is part 19 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 19 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  This post has been long due, as it&amp;rsquo;s one of my favorite persistence tricks. Up until Big Sur 11.5 you could also exploit it for privilege escalation if Homebrew was installed on the system.
 Periodic scripts have a FreeBSD origin.</description>
     </item>
@@ -160,7 +171,7 @@ mmap Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel ex
       <pubDate>Mon, 28 Jun 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0018/</guid>
-      <description>This is part 18 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 18 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  I learned about XQuartz while reading Armin Briegel&amp;rsquo;s ‎macOS Terminal and shell book. It&amp;rsquo;s one of the alternative third party terminals we can install on macOS. As most terminals, this one also offers unique options to persist on the system.</description>
     </item>
     
@@ -179,7 +190,7 @@ mmap Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel ex
       <pubDate>Mon, 31 May 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0017/</guid>
-      <description>This is part 17 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 17 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  Color pickers??? It&amp;rsquo;s this menu, where we can select a color:
 To my surprise we can install our own color pickers on the system, and add custom ones. There are quite a few of these, some are even open source, like this: GitHub - viktorstrate/color-picker-plus: An Improved Color Picker for macOS.</description>
     </item>
@@ -190,7 +201,7 @@ To my surprise we can install our own color pickers on the system, and add custo
       <pubDate>Sun, 30 May 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0016/</guid>
-      <description>This is part 16 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 16 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  Screen savers have been detailed recently by Leo Pitton his blog post: &amp;ldquo;Saving Your Access&amp;rdquo;. Considering that he already wrote most of the interesting stuff, I will try to show some new information, but there will be some overlap.</description>
     </item>
     
@@ -210,7 +221,7 @@ The TeamViewer macOS client used a PrivilegedHelperTool named com.teamviewer.Hel
       <pubDate>Wed, 12 May 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0015/</guid>
-      <description>This is part 15 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 15 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  I run into this not so exciting persistent method when I was investigating xsanctl for&amp;hellip; other&amp;hellip; reasons&amp;hellip; xsanctl is a &amp;ldquo;Xsan file system control utility&amp;rdquo;, which allows us to mount and manage Xsans.
 The xsanctl binary can be found at /System/Library/Filesystems/acfs.</description>
     </item>
@@ -221,7 +232,7 @@ The xsanctl binary can be found at /System/Library/Filesystems/acfs.</descriptio
       <pubDate>Tue, 27 Apr 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0014/</guid>
-      <description>This is part 14 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 14 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  The at command set is a heritage *nix job scheduler on macOS. Although it&amp;rsquo;s slowly being deprecated, it&amp;rsquo;s still available on Big Sur, although disabled by default.
 Enabling atrun As described by atrun&amp;rsquo;s man page, the scheduler can be enabled using the following command:</description>
     </item>
@@ -251,7 +262,7 @@ Beyond Apple I do bug bounties also in other programs, like HackerOne, BugCrowd,
       <pubDate>Mon, 19 Apr 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0013/</guid>
-      <description>This is part 13 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 13 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  This is another one of my favorites for some reason. macOS being a popular audio editing device, supports external audio drivers and plugins. @xorrior wrote a very extensive blog post about these at his website, here: Audio Unit Plug-ins. Legitimate Un-signed Code Execution | by Christopher Ross | Posts By SpecterOps Team Members</description>
     </item>
     
@@ -261,7 +272,7 @@ Beyond Apple I do bug bounties also in other programs, like HackerOne, BugCrowd,
       <pubDate>Mon, 05 Apr 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0012/</guid>
-      <description>This is part 12 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 12 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  TL;DR This technique is very similarly to Spotlight Importers, but heavily sandboxed. It’s even more limited as the user need to specifically want to preview the file.
 Intro This will be a short post and it goes hand in hand with my previous one that detailed the use of Spotlight Importers for persistence.</description>
     </item>
@@ -272,7 +283,7 @@ Intro This will be a short post and it goes hand in hand with my previous one th
       <pubDate>Sat, 03 Apr 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0011/</guid>
-      <description>This is part 11 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 11 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  TL;DR It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware.</description>
     </item>
     
@@ -282,7 +293,7 @@ Intro This will be a short post and it goes hand in hand with my previous one th
       <pubDate>Fri, 02 Apr 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0010/</guid>
-      <description>This is part 10 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 10 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  I started to explore to possibility of persisting on macOS through script files contained in an application. The basic idea is that if we find a script file, which is being executed by a given application, we can edit that script file, put our code inside, and wait for an execution.</description>
     </item>
     
@@ -292,7 +303,7 @@ Intro This will be a short post and it goes hand in hand with my previous one th
       <pubDate>Thu, 25 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0009/</guid>
-      <description>This is part 9 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 9 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  Preference panes on macOS are plugins to the System Preferences.app. These panes can extend the functionality of the app, and typically allow you to modify configuration settings for your app. These admins are loaded when the user selects them, so they are not perfect from persistence point of view, as it requires user interaction, but can still be a thing.</description>
     </item>
     
@@ -302,7 +313,7 @@ Intro This will be a short post and it goes hand in hand with my previous one th
       <pubDate>Tue, 23 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0008/</guid>
-      <description>This is part 8 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 8 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  This idea came from my colleague @dejandayoff. It&amp;rsquo;s another application specific persistence option, related to Hammerspoon. The app is an automation tool, that allows macOS scripting through LUA scripting language. We can even embed full AppleScript code as well as run shell scripts.</description>
     </item>
     
@@ -312,7 +323,7 @@ Intro This will be a short post and it goes hand in hand with my previous one th
       <pubDate>Mon, 22 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0007/</guid>
-      <description>This is part 7 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 7 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  This technique came from @bradleyjkemp in one of his Twitter posts.
 xbar is an application that can put the output of a script into the menubar. The scripts should be placed in ~/Library/Application\ Support/xbar/plugins/. Standard shell scripts are supported, and so I tried the one listed on their GitHub page as an example.</description>
     </item>
@@ -323,7 +334,7 @@ xbar is an application that can put the output of a script into the menubar. The
       <pubDate>Sun, 21 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0006/</guid>
-      <description>This is part 6 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 6 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  I learned about this trick from @0xdade when he posted it on Twitter.
 If we create a file in the user&amp;rsquo;s HOME directory at ~/.ssh/rc it will be executed prior to the user&amp;rsquo;s login shell becomes available. The man page of sshd describes this in more detail.</description>
     </item>
@@ -334,7 +345,7 @@ If we create a file in the user&amp;rsquo;s HOME directory at ~/.ssh/rc it will 
       <pubDate>Sat, 20 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0005/</guid>
-      <description>This is part 5 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 5 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  PAM originated from Red Hat Linux, but made its way to most *nix based system, including macOS. It&amp;rsquo;s a modular system, that allows third party additions to various authentication related operations. I highly recommend checking out the FreeBSD documentation to get a full picture.</description>
     </item>
     
@@ -344,7 +355,7 @@ If we create a file in the user&amp;rsquo;s HOME directory at ~/.ssh/rc it will 
       <pubDate>Thu, 18 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0004/</guid>
-      <description>This is part 4 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 4 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  cron is probably one of the most well known persistence mechanisms for macOS and basically any *nix operating system. It was originally developed for Unix back in 1975, and made its way to most platforms, which has Unix origins, like Linux, FreeBSD and thus macOS.</description>
     </item>
     
@@ -354,7 +365,7 @@ If we create a file in the user&amp;rsquo;s HOME directory at ~/.ssh/rc it will 
       <pubDate>Wed, 17 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0003/</guid>
-      <description>This is part 3 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 3 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  To clear up some expectations. The below tweet is not about this method, that is deferred for now. :)
 Login items are probably one of the most well documented methods to persist on macOS. It&amp;rsquo;s widely used by various application to launch themselves upon user login.</description>
     </item>
@@ -365,7 +376,7 @@ Login items are probably one of the most well documented methods to persist on m
       <pubDate>Tue, 16 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0002/</guid>
-      <description>This is part 2 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 2 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  If the first part was about Terminal and shell profiles, it&amp;rsquo;s worth to mention iTerm2, which is a popular Terminal alternative on macOS. It&amp;rsquo;s being used by many people, especially power users.
 When we start iTerm2 it starts the same shell environment as Terminal, and thus the same startup files apply here as well.</description>
     </item>
@@ -376,7 +387,7 @@ When we start iTerm2 it starts the same shell environment as Terminal, and thus 
       <pubDate>Sun, 14 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_0001/</guid>
-      <description>This is part 1 in the series of &amp;ldquo;Beyond the good ol&#39; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+      <description>This is part 1 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  Shell startup files are executed when our shell environment like zsh or bash is starting up. macOS defaults to /bin/zsh these days, and whenever we open Terminal or SSH into the device, this is the shell environment we are placed into.</description>
     </item>
     
@@ -386,7 +397,7 @@ When we start iTerm2 it starts the same shell environment as Terminal, and thus 
       <pubDate>Sun, 14 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/beyond/beyond_intro/</guid>
-      <description>I was always amazed by @Hexacorn&amp;rsquo;s Beyond good ol&#39; Run key blog post series, which collects various persistence methods on Windows. It&amp;rsquo;s an awesome series, which has 133 parts at the time of this writing. I find them pretty cool, and if you are doing either offensive or defensive work on Windows, this is a must read and follow blog.
+      <description>I was always amazed by @Hexacorn&amp;rsquo;s Beyond good ol&amp;rsquo; Run key blog post series, which collects various persistence methods on Windows. It&amp;rsquo;s an awesome series, which has 133 parts at the time of this writing. I find them pretty cool, and if you are doing either offensive or defensive work on Windows, this is a must read and follow blog.
 In the past years as my interest in macOS grew, and now that I&amp;rsquo;m mostly doing only macOS related research and studies I started to came across many - many tricks, which allows someone to do persistence on macOS beyond just the LaunchDaemons or LaunchAgents directories, which is used to store the launchd startup files.</description>
     </item>
     

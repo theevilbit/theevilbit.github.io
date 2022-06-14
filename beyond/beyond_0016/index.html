@@ -11,11 +11,11 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 16 - Screen Saver"/>
-<meta name="twitter:description" content="This is part 16 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta name="twitter:description" content="This is part 16 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  Screen savers have been detailed recently by Leo Pitton his blog post: &ldquo;Saving Your Access&rdquo;. Considering that he already wrote most of the interesting stuff, I will try to show some new information, but there will be some overlap."/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 16 - Screen Saver" />
-<meta property="og:description" content="This is part 16 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta property="og:description" content="This is part 16 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  Screen savers have been detailed recently by Leo Pitton his blog post: &ldquo;Saving Your Access&rdquo;. Considering that he already wrote most of the interesting stuff, I will try to show some new information, but there will be some overlap." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0016/" /><meta property="article:section" content="beyond" />
@@ -56,7 +56,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.92.1" />
+    <meta name="generator" content="Hugo 0.96.0" />
   </head>
 
   <body class=" ">
@@ -142,7 +142,7 @@
 
       <div>
         <blockquote>
-<p>This is part 16 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+<p>This is part 16 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
 </blockquote>
 <p>Screen savers have been detailed recently by <a href="https://twitter.com/_D00mfist">Leo Pitt</a>on his <a href="https://posts.specterops.io/saving-your-access-d562bf5bf90b">blog post: &ldquo;Saving Your Access&rdquo;</a>. Considering that he already wrote most of the interesting stuff, I will try to show some new information, but there will be some overlap.</p>
 <p>Screen savers are macOS bundles with the bundle extension of <code>.saver</code>. Their <code>Info.plist</code> file doesn&rsquo;t contain anything screen saver specific, so we can really use any bundle with the right extension.</p>
@@ -153,64 +153,64 @@
 <li><code>~/Library/Screen Savers</code> - Here we can install screen savers for the given user</li>
 </ul>
 <p>Xcode contains a screen saver template, which creates a properly named bundle and an Objective C file, which has all the functions defined which is expected by the system to be implemented by a screen saver. Let&rsquo;s explore them.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#069;font-weight:bold">@implementation</span> <span style="color:#0a8;font-weight:bold">DemoScreenView</span>
-
-- (<span style="color:#078;font-weight:bold">instancetype</span>)<span style="color:#c0f">initWithFrame:</span>(NSRect)<span style="color:#033">frame</span> <span style="color:#c0f">isPreview:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">isPreview</span>
-{
- 
-    NSLog(<span style="color:#c30">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
-    <span style="color:#366">self</span> <span style="color:#555">=</span> [<span style="color:#366">super</span> <span style="color:#99f">initWithFrame</span>:frame <span style="color:#99f">isPreview</span>:isPreview];
-    <span style="color:#069;font-weight:bold">if</span> (<span style="color:#366">self</span>) {
-        [<span style="color:#366">self</span> <span style="color:#99f">setAnimationTimeInterval</span>:<span style="color:#f60">1</span><span style="color:#555">/</span><span style="color:#f60">30.0</span>];
-    }
-    <span style="color:#069;font-weight:bold">return</span> <span style="color:#366">self</span>;
-}
-
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">startAnimation</span>
-{
-    NSLog(<span style="color:#c30">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
-    [<span style="color:#366">super</span> startAnimation];
-}
-
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">stopAnimation</span>
-{
-    NSLog(<span style="color:#c30">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
-    [<span style="color:#366">super</span> stopAnimation];
-}
-
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">drawRect:</span>(NSRect)<span style="color:#033">rect</span>
-{
-    NSLog(<span style="color:#c30">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
-    [<span style="color:#366">super</span> <span style="color:#99f">drawRect</span>:rect];
-}
-
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">animateOneFrame</span>
-{
-    NSLog(<span style="color:#c30">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
-    <span style="color:#069;font-weight:bold">return</span>;
-}
-
-- (<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#c0f">hasConfigureSheet</span>
-{
-    NSLog(<span style="color:#c30">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
-    <span style="color:#069;font-weight:bold">return</span> <span style="color:#366">NO</span>;
-}
-
-- (NSWindow<span style="color:#555">*</span>)<span style="color:#c0f">configureSheet</span>
-{
-    NSLog(<span style="color:#c30">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
-    <span style="color:#069;font-weight:bold">return</span> <span style="color:#366">nil</span>;
-}
-
-<span style="color:#069;font-weight:bold">@end</span>
-</code></pre></div><p>Te functions are related to initialization, configuration of the screen saver and the actual drawing or animation. Here I added a log function to each, which will create a log message with the function name that called it. We can use the <code>__PRETTY_FUNCTION__</code> string to get the function name runtime, as it always holds the current function being called.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@implementation</span> <span style="color:#0a8;font-weight:bold">DemoScreenView</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">instancetype</span>)<span style="color:#c0f">initWithFrame:</span>(NSRect)<span style="color:#033">frame</span> <span style="color:#c0f">isPreview:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">isPreview</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
+</span></span><span style="display:flex;"><span>    <span style="color:#366">self</span> <span style="color:#555">=</span> [<span style="color:#366">super</span> <span style="color:#99f">initWithFrame</span>:frame <span style="color:#99f">isPreview</span>:isPreview];
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (<span style="color:#366">self</span>) {
+</span></span><span style="display:flex;"><span>        [<span style="color:#366">self</span> <span style="color:#99f">setAnimationTimeInterval</span>:<span style="color:#f60">1</span><span style="color:#555">/</span><span style="color:#f60">30.0</span>];
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span> <span style="color:#366">self</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">startAnimation</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
+</span></span><span style="display:flex;"><span>    [<span style="color:#366">super</span> startAnimation];
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">stopAnimation</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
+</span></span><span style="display:flex;"><span>    [<span style="color:#366">super</span> stopAnimation];
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">drawRect:</span>(NSRect)<span style="color:#033">rect</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
+</span></span><span style="display:flex;"><span>    [<span style="color:#366">super</span> <span style="color:#99f">drawRect</span>:rect];
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">animateOneFrame</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#c0f">hasConfigureSheet</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span> <span style="color:#366">NO</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>- (NSWindow<span style="color:#555">*</span>)<span style="color:#c0f">configureSheet</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span> <span style="color:#366">nil</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@end</span>
+</span></span></code></pre></div><p>Te functions are related to initialization, configuration of the screen saver and the actual drawing or animation. Here I added a log function to each, which will create a log message with the function name that called it. We can use the <code>__PRETTY_FUNCTION__</code> string to get the function name runtime, as it always holds the current function being called.</p>
 <p>I also added a constructor:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">__attribute__((constructor))
-<span style="color:#078;font-weight:bold">void</span> custom(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)
-{
-    NSLog(<span style="color:#c30">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
-}
-</code></pre></div><p>Once we installed a screensaver, and click on it in the preview pane, we will have the following log messages generated.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>__attribute__((constructor))
+</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">void</span> custom(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Once we installed a screensaver, and click on it in the preview pane, we will have the following log messages generated.</p>
 <pre tabindex="0"><code>csaby@bigsur ~ % log stream | grep hello_screensaver
 2021-05-28 08:43:59.329660-0700 0x1eb6     Default     0x6b54               692    0    legacyScreenSaver: (DemoScreen) hello_screensaver void custom(int, const char **)
 2021-05-28 08:43:59.329945-0700 0x1eb6     Default     0x6b54               692    0    legacyScreenSaver: (DemoScreen) hello_screensaver -[DemoScreenView initWithFrame:isPreview:]
@@ -221,57 +221,57 @@
 2021-05-28 08:43:59.846471-0700 0x1eb6     Default     0x6b54               692    0    legacyScreenSaver: (DemoScreen) hello_screensaver -[DemoScreenView animateOneFrame]
 </code></pre><p>What we can notice is that we are running within the process <code>legacyScreenSaver</code>. We can also find that after the constructor most of the other methods are also called, thus we could use them as well to contain our code.</p>
 <p>The <code>legacyScreenSaver </code> binary is located at <code>/System/Library/Frameworks/ScreenSaver.framework/PlugIns/legacyScreenSaver.appex/Contents/MacOS/legacyScreenSaver</code>. Since we run in the context of this process it worth taking a look. The process&rsquo;s code signing information is shown below.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml">Executable=/System/Library/Frameworks/ScreenSaver.framework/PlugIns/legacyScreenSaver.appex/Contents/MacOS/legacyScreenSaver
-Identifier=com.apple.ScreenSaver.Engine.legacyScreenSaver
-Format=bundle with Mach-O universal (x86_64 arm64e)
-CodeDirectory v=20400 size=935 flags=0x0(none) hashes=18+7 location=embedded
-Platform identifier=12
-Signature size=4442
-Signed Time=2021. May 8. 15:02:04
-Info.plist entries=27
-TeamIdentifier=not set
-Sealed Resources version=2 rules=2 files=0
-Internal requirements count=1 size=96
-<span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
-<span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
-<span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
-<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.private.xpc.launchd.per-user-lookup<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.security.app-sandbox<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.security.assets.pictures.read-only<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.security.cs.disable-library-validation<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.security.files.bookmarks.app-scope<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.security.files.user-selected.read-only<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.security.network.client<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.security.network.server<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.security.temporary-exception.files.absolute-path.read-only<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.security.temporary-exception.mach-lookup.global-name<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>com.apple.CARenderServer<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>com.apple.CoreDisplay.master<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>com.apple.nsurlstorage-cache<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>com.apple.ViewBridgeAuxiliary<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.security.temporary-exception.sbpl<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>(allow mach-lookup mach-register)<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.security.temporary-exception.yasb<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
-<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-<span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
-</code></pre></div><p>The entitlement <code>com.apple.security.cs.disable-library-validation</code> explains why it can load third party bundles, it has library validation disabled. Beyond that we find <code>com.apple.security.app-sandbox</code>, which indicates that it&rsquo;s sandboxed. Based on the rest of the entitlements it doesn&rsquo;t have too much rights, although at least it can reach the network. If we use screen savers for persistence, it&rsquo;s good to have a sandbox escape in our toolbox, otherwise we are quite locked.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span>Executable=/System/Library/Frameworks/ScreenSaver.framework/PlugIns/legacyScreenSaver.appex/Contents/MacOS/legacyScreenSaver
+</span></span><span style="display:flex;"><span>Identifier=com.apple.ScreenSaver.Engine.legacyScreenSaver
+</span></span><span style="display:flex;"><span>Format=bundle with Mach-O universal (x86_64 arm64e)
+</span></span><span style="display:flex;"><span>CodeDirectory v=20400 size=935 flags=0x0(none) hashes=18+7 location=embedded
+</span></span><span style="display:flex;"><span>Platform identifier=12
+</span></span><span style="display:flex;"><span>Signature size=4442
+</span></span><span style="display:flex;"><span>Signed Time=2021. May 8. 15:02:04
+</span></span><span style="display:flex;"><span>Info.plist entries=27
+</span></span><span style="display:flex;"><span>TeamIdentifier=not set
+</span></span><span style="display:flex;"><span>Sealed Resources version=2 rules=2 files=0
+</span></span><span style="display:flex;"><span>Internal requirements count=1 size=96
+</span></span><span style="display:flex;"><span><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.private.xpc.launchd.per-user-lookup<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.security.app-sandbox<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.security.assets.pictures.read-only<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.security.cs.disable-library-validation<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.security.files.bookmarks.app-scope<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.security.files.user-selected.read-only<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.security.network.client<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.security.network.server<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.security.temporary-exception.files.absolute-path.read-only<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.security.temporary-exception.mach-lookup.global-name<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>com.apple.CARenderServer<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>com.apple.CoreDisplay.master<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>com.apple.nsurlstorage-cache<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>com.apple.ViewBridgeAuxiliary<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.security.temporary-exception.sbpl<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>(allow mach-lookup mach-register)<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.security.temporary-exception.yasb<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
+</span></span></code></pre></div><p>The entitlement <code>com.apple.security.cs.disable-library-validation</code> explains why it can load third party bundles, it has library validation disabled. Beyond that we find <code>com.apple.security.app-sandbox</code>, which indicates that it&rsquo;s sandboxed. Based on the rest of the entitlements it doesn&rsquo;t have too much rights, although at least it can reach the network. If we use screen savers for persistence, it&rsquo;s good to have a sandbox escape in our toolbox, otherwise we are quite locked.</p>
 
       </div>
 

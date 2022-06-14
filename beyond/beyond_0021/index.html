@@ -11,13 +11,13 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 21 - Re-opened Applications"/>
-<meta name="twitter:description" content="This is part 21 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta name="twitter:description" content="This is part 21 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  This method was also documented by Patrick Wardle, in his original Methods of Malware Persistence white paper and also at MITRE ATT&amp;CK®.
 When we restart macOS, we are presented with the following window:
 I guess, most users keep it selected, and then macOS will reopen all apps."/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 21 - Re-opened Applications" />
-<meta property="og:description" content="This is part 21 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta property="og:description" content="This is part 21 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  This method was also documented by Patrick Wardle, in his original Methods of Malware Persistence white paper and also at MITRE ATT&amp;CK®.
 When we restart macOS, we are presented with the following window:
 I guess, most users keep it selected, and then macOS will reopen all apps." />
@@ -60,7 +60,7 @@ I guess, most users keep it selected, and then macOS will reopen all apps." />
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.92.1" />
+    <meta name="generator" content="Hugo 0.96.0" />
   </head>
 
   <body class=" ">
@@ -146,48 +146,48 @@ I guess, most users keep it selected, and then macOS will reopen all apps." />
 
       <div>
         <blockquote>
-<p>This is part 21 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+<p>This is part 21 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
 </blockquote>
 <p>This method was also documented by Patrick Wardle, in his original <a href="https://www.virusbulletin.com/uploads/pdf/conference/vb2014/VB2014-Wardle.pdf">Methods of Malware Persistence</a> white paper and also at <a href="https://attack.mitre.org/techniques/T1547/007/">MITRE ATT&amp;CK®</a>.</p>
 <p>When we restart macOS, we are presented with the following window:</p>
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0021_0.png" alt="Re-open Applications Prompt"></p>
 <p>I guess, most users keep it selected, and then macOS will reopen all apps.</p>
 <p>This information is stored in <code>~/Library/Preferences/ByHost/com.apple.loginwindow.&lt;UUID&gt;.plist</code>. The UUID is our Mac&rsquo;s UUID, which we can get by <a href="https://community.jamf.com/t5/jamf-pro/disable-self-service-from-launching-at-reboot/td-p/155904">running the following command</a>:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ioreg -rd1 -c IOPlatformExpertDevice | awk -F<span style="color:#c30">&#39;&#34;&#39;</span> <span style="color:#c30">&#39;/IOPlatformUUID/{print $4}&#39;</span>
-</code></pre></div><p>We can query the apps by either running the command:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">defaults -currentHost <span style="color:#366">read</span> com.apple.loginwindow TALAppsToRelaunchAtLogin
-<span style="color:#555">(</span>
-        <span style="color:#555">{</span>
-        <span style="color:#033">BackgroundState</span> <span style="color:#555">=</span> 2;
-        <span style="color:#033">BundleID</span> <span style="color:#555">=</span> <span style="color:#c30">&#34;com.apple.terminal&#34;</span>;
-        <span style="color:#033">Hide</span> <span style="color:#555">=</span> 0;
-        <span style="color:#033">Path</span> <span style="color:#555">=</span> <span style="color:#c30">&#34;/System/Applications/Utilities/Terminal.app&#34;</span>;
-    <span style="color:#555">}</span>,
-        <span style="color:#555">{</span>
-        <span style="color:#033">BackgroundState</span> <span style="color:#555">=</span> 2;
-        <span style="color:#033">BundleID</span> <span style="color:#555">=</span> <span style="color:#c30">&#34;com.apple.finder&#34;</span>;
-        <span style="color:#033">Hide</span> <span style="color:#555">=</span> 0;
-        <span style="color:#033">Path</span> <span style="color:#555">=</span> <span style="color:#c30">&#34;/System/Library/CoreServices/Finder.app&#34;</span>;
-    <span style="color:#555">}</span>,
-...
-</code></pre></div><p>or:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">plutil -p ~/Library/Preferences/ByHost/com.apple.loginwindow.&lt;UUID&gt;.plist
-<span style="color:#555">{</span>
-  <span style="color:#c30">&#34;TALAppsToRelaunchAtLogin&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#555">[</span>
-    <span style="color:#033">0</span> <span style="color:#555">=</span>&gt; <span style="color:#555">{</span>
-      <span style="color:#c30">&#34;BackgroundState&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#f60">2</span>
-      <span style="color:#c30">&#34;BundleID&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#c30">&#34;com.apple.terminal&#34;</span>
-      <span style="color:#c30">&#34;Hide&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#f60">0</span>
-      <span style="color:#c30">&#34;Path&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#c30">&#34;/System/Applications/Utilities/Terminal.app&#34;</span>
-    <span style="color:#555">}</span>
-    <span style="color:#033">1</span> <span style="color:#555">=</span>&gt; <span style="color:#555">{</span>
-      <span style="color:#c30">&#34;BackgroundState&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#f60">2</span>
-      <span style="color:#c30">&#34;BundleID&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#c30">&#34;com.apple.finder&#34;</span>
-      <span style="color:#c30">&#34;Hide&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#f60">0</span>
-      <span style="color:#c30">&#34;Path&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#c30">&#34;/System/Library/CoreServices/Finder.app&#34;</span>
-    <span style="color:#555">}</span>
-...
-</code></pre></div><p>The only thing attackers need to do is add their app to this list.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ioreg -rd1 -c IOPlatformExpertDevice | awk -F<span style="color:#c30">&#39;&#34;&#39;</span> <span style="color:#c30">&#39;/IOPlatformUUID/{print $4}&#39;</span>
+</span></span></code></pre></div><p>We can query the apps by either running the command:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>defaults -currentHost <span style="color:#366">read</span> com.apple.loginwindow TALAppsToRelaunchAtLogin
+</span></span><span style="display:flex;"><span><span style="color:#555">(</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#555">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#033">BackgroundState</span> <span style="color:#555">=</span> 2;
+</span></span><span style="display:flex;"><span>        <span style="color:#033">BundleID</span> <span style="color:#555">=</span> <span style="color:#c30">&#34;com.apple.terminal&#34;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#033">Hide</span> <span style="color:#555">=</span> 0;
+</span></span><span style="display:flex;"><span>        <span style="color:#033">Path</span> <span style="color:#555">=</span> <span style="color:#c30">&#34;/System/Applications/Utilities/Terminal.app&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#555">}</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#555">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#033">BackgroundState</span> <span style="color:#555">=</span> 2;
+</span></span><span style="display:flex;"><span>        <span style="color:#033">BundleID</span> <span style="color:#555">=</span> <span style="color:#c30">&#34;com.apple.finder&#34;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#033">Hide</span> <span style="color:#555">=</span> 0;
+</span></span><span style="display:flex;"><span>        <span style="color:#033">Path</span> <span style="color:#555">=</span> <span style="color:#c30">&#34;/System/Library/CoreServices/Finder.app&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#555">}</span>,
+</span></span><span style="display:flex;"><span>...
+</span></span></code></pre></div><p>or:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>plutil -p ~/Library/Preferences/ByHost/com.apple.loginwindow.&lt;UUID&gt;.plist
+</span></span><span style="display:flex;"><span><span style="color:#555">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#c30">&#34;TALAppsToRelaunchAtLogin&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#555">[</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#033">0</span> <span style="color:#555">=</span>&gt; <span style="color:#555">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#c30">&#34;BackgroundState&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#f60">2</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#c30">&#34;BundleID&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#c30">&#34;com.apple.terminal&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#c30">&#34;Hide&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#f60">0</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#c30">&#34;Path&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#c30">&#34;/System/Applications/Utilities/Terminal.app&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#555">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#033">1</span> <span style="color:#555">=</span>&gt; <span style="color:#555">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#c30">&#34;BackgroundState&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#f60">2</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#c30">&#34;BundleID&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#c30">&#34;com.apple.finder&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#c30">&#34;Hide&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#f60">0</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#c30">&#34;Path&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#c30">&#34;/System/Library/CoreServices/Finder.app&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#555">}</span>
+</span></span><span style="display:flex;"><span>...
+</span></span></code></pre></div><p>The only thing attackers need to do is add their app to this list.</p>
 
       </div>
 

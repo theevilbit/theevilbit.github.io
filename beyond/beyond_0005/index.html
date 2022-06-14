@@ -11,11 +11,11 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 5 - Pluggable Authentication Modules (PAM)"/>
-<meta name="twitter:description" content="This is part 5 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta name="twitter:description" content="This is part 5 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  PAM originated from Red Hat Linux, but made its way to most *nix based system, including macOS. It&rsquo;s a modular system, that allows third party additions to various authentication related operations. I highly recommend checking out the FreeBSD documentation to get a full picture."/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 5 - Pluggable Authentication Modules (PAM)" />
-<meta property="og:description" content="This is part 5 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta property="og:description" content="This is part 5 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  PAM originated from Red Hat Linux, but made its way to most *nix based system, including macOS. It&rsquo;s a modular system, that allows third party additions to various authentication related operations. I highly recommend checking out the FreeBSD documentation to get a full picture." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0005/" /><meta property="article:section" content="beyond" />
@@ -56,7 +56,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.92.1" />
+    <meta name="generator" content="Hugo 0.96.0" />
   </head>
 
   <body class=" ">
@@ -142,7 +142,7 @@
 
       <div>
         <blockquote>
-<p>This is part 5 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+<p>This is part 5 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
 </blockquote>
 <p><a href="https://en.wikipedia.org/wiki/Pluggable_authentication_module">PAM</a> originated from Red Hat Linux, but made its way to most *nix based system, including macOS. It&rsquo;s a modular system, that allows third party additions to various authentication related operations. I highly recommend checking out the <a href="https://docs.freebsd.org/en/articles/pam/">FreeBSD documentation</a> to get a full picture.</p>
 <p>PAM has four facilities concerning authentication, <em>auth</em>, <em>account</em>, <em>session</em> and <em>password</em>. These are related to authentication, account management, session management and password management respectively. I will focus here on <em>auth</em> which is responsible for user authentication.</p>
@@ -166,41 +166,41 @@ session    optional       pam_mount.so
 <p>But there is more! We can load our own module by adding it to the configuration.</p>
 <pre tabindex="0"><code>auth       sufficient     /Users/Shared/pam.dylib
 </code></pre><p>This will call our module whenever there is an authentication request. Here is an empty skeleton for a PAM module, I found it on <a href="https://stackoverflow.com/questions/25515077/writing-pluggable-authentication-module-pam-for-osx">Stack Overflow</a>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#099">#define PAM_SM_ACCOUNT
-</span><span style="color:#099">#define PAM_SM_AUTH
-</span><span style="color:#099">#define PAM_SM_PASSWORD
-</span><span style="color:#099">#define PAM_SM_SESSION
-</span><span style="color:#099"></span>
-<span style="color:#099">#include</span> <span style="color:#099">&lt;security/pam_appl.h&gt;</span><span style="color:#099">
-</span><span style="color:#099">#include</span> <span style="color:#099">&lt;security/pam_modules.h&gt;</span><span style="color:#099">
-</span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdlib.h&gt;</span><span style="color:#099">
-</span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
-</span><span style="color:#099"></span>
-
-PAM_EXTERN <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">pam_sm_open_session</span>(pam_handle_t <span style="color:#555">*</span>pamh, <span style="color:#078;font-weight:bold">int</span> flags, <span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv) {
-    <span style="color:#069;font-weight:bold">return</span>(PAM_SUCCESS);
-}
-
-PAM_EXTERN <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">pam_sm_close_session</span>(pam_handle_t <span style="color:#555">*</span>pamh, <span style="color:#078;font-weight:bold">int</span> flags, <span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)           {
-    <span style="color:#069;font-weight:bold">return</span>(PAM_SUCCESS);
-}
-
-PAM_EXTERN <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">pam_sm_acct_mgmt</span>(pam_handle_t <span style="color:#555">*</span>pamh, <span style="color:#078;font-weight:bold">int</span> flags, <span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv) {
-    <span style="color:#069;font-weight:bold">return</span>(PAM_SUCCESS);
-}
-
-PAM_EXTERN <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">pam_sm_authenticate</span>(pam_handle_t <span style="color:#555">*</span>pamh, <span style="color:#078;font-weight:bold">int</span> flags, <span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv) {
-    <span style="color:#069;font-weight:bold">return</span>(PAM_SUCCESS);
-}
-
-PAM_EXTERN <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">pam_sm_setcred</span>(pam_handle_t <span style="color:#555">*</span>pamh, <span style="color:#078;font-weight:bold">int</span> flags, <span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv) {
-    <span style="color:#069;font-weight:bold">return</span>(PAM_SUCCESS);
-}
-
-PAM_EXTERN <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">pam_sm_chauthtok</span>(pam_handle_t <span style="color:#555">*</span>pamh, <span style="color:#078;font-weight:bold">int</span> flags, <span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv) {
-    <span style="color:#069;font-weight:bold">return</span>(PAM_SUCCESS);
-}
-</code></pre></div><p>We can add our own code, and do whatever we want, although we likely want to be non-blocking, otherwise the machine could become unusable. As these services run as root, this is a very nice backdoor if we have root level access.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#define PAM_SM_ACCOUNT
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#define PAM_SM_AUTH
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#define PAM_SM_PASSWORD
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#define PAM_SM_SESSION
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
+</span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;security/pam_appl.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;security/pam_modules.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdlib.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>PAM_EXTERN <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">pam_sm_open_session</span>(pam_handle_t <span style="color:#555">*</span>pamh, <span style="color:#078;font-weight:bold">int</span> flags, <span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv) {
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span>(PAM_SUCCESS);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>PAM_EXTERN <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">pam_sm_close_session</span>(pam_handle_t <span style="color:#555">*</span>pamh, <span style="color:#078;font-weight:bold">int</span> flags, <span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)           {
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span>(PAM_SUCCESS);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>PAM_EXTERN <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">pam_sm_acct_mgmt</span>(pam_handle_t <span style="color:#555">*</span>pamh, <span style="color:#078;font-weight:bold">int</span> flags, <span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv) {
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span>(PAM_SUCCESS);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>PAM_EXTERN <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">pam_sm_authenticate</span>(pam_handle_t <span style="color:#555">*</span>pamh, <span style="color:#078;font-weight:bold">int</span> flags, <span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv) {
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span>(PAM_SUCCESS);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>PAM_EXTERN <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">pam_sm_setcred</span>(pam_handle_t <span style="color:#555">*</span>pamh, <span style="color:#078;font-weight:bold">int</span> flags, <span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv) {
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span>(PAM_SUCCESS);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>PAM_EXTERN <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">pam_sm_chauthtok</span>(pam_handle_t <span style="color:#555">*</span>pamh, <span style="color:#078;font-weight:bold">int</span> flags, <span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv) {
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span>(PAM_SUCCESS);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>We can add our own code, and do whatever we want, although we likely want to be non-blocking, otherwise the machine could become unusable. As these services run as root, this is a very nice backdoor if we have root level access.</p>
 <p>The reason we can load our modules (by design) is because of the entitlement of these services. For example, here is <code>sshd</code>.</p>
 <pre tabindex="0"><code>Executable=/usr/sbin/sshd
 Identifier=com.apple.sshd
@@ -213,9 +213,9 @@ Info.plist=not bound
 TeamIdentifier=not set
 Sealed Resources=none
 Internal requirements count=1 size=64
-&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;
-&lt;plist version=&quot;1.0&quot;&gt;
+&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;
+&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;
+&lt;plist version=&#34;1.0&#34;&gt;
 &lt;dict&gt;
 	&lt;key&gt;com.apple.private.security.clear-library-validation&lt;/key&gt;
 	&lt;true/&gt;

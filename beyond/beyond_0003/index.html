@@ -11,12 +11,12 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 3 - Login Items"/>
-<meta name="twitter:description" content="This is part 3 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta name="twitter:description" content="This is part 3 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  To clear up some expectations. The below tweet is not about this method, that is deferred for now. :)
 Login items are probably one of the most well documented methods to persist on macOS. It&rsquo;s widely used by various application to launch themselves upon user login."/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 3 - Login Items" />
-<meta property="og:description" content="This is part 3 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta property="og:description" content="This is part 3 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  To clear up some expectations. The below tweet is not about this method, that is deferred for now. :)
 Login items are probably one of the most well documented methods to persist on macOS. It&rsquo;s widely used by various application to launch themselves upon user login." />
 <meta property="og:type" content="article" />
@@ -58,7 +58,7 @@ Login items are probably one of the most well documented methods to persist on m
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.92.1" />
+    <meta name="generator" content="Hugo 0.96.0" />
   </head>
 
   <body class=" ">
@@ -144,7 +144,7 @@ Login items are probably one of the most well documented methods to persist on m
 
       <div>
         <blockquote>
-<p>This is part 3 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+<p>This is part 3 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
 </blockquote>
 <p>To clear up some expectations. The below tweet is not about this method, that is deferred for now. :)</p>
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0003_0.png" alt="Twitter"></p>
@@ -155,9 +155,9 @@ Login items are probably one of the most well documented methods to persist on m
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0003_1.png" alt="Login Items in System Preferences"></p>
 <p>Login Items installed via the LS framework typically show up under <em>System Preferences</em> -&gt; <em>Users &amp; Groups</em> -&gt; <em>Login Items</em>. We can use this menu to either add or remove something from the list.</p>
 <p>We can also use some scripting to get the same information.</p>
-<pre tabindex="0"><code>csaby@mac ~ % osascript -e 'tell application &quot;System Events&quot; to get count of login items'
+<pre tabindex="0"><code>csaby@mac ~ % osascript -e &#39;tell application &#34;System Events&#34; to get count of login items&#39;
 6
-csaby@mac ~ % osascript -e 'tell application &quot;System Events&quot; to get the name of every login item'
+csaby@mac ~ % osascript -e &#39;tell application &#34;System Events&#34; to get the name of every login item&#39;
 Do Not Disturb Helper, Backup and sync from Google, LuLu, BlockBlock Helper, OverSight Helper, ReiKey Helper
 </code></pre><p>However as noted, this is not the complete picture. For example my <a href="https://theevilbit.github.io/shield/">Shield.app</a> doesn&rsquo;t show up in the list. We have another framework to interact with Login Items.</p>
 <h2 id="service-management-framework">Service Management Framework</h2>
@@ -177,9 +177,9 @@ drwxr-xr-x  2 root  wheel   64 Jan  1  2020 config
 -rw-r--r--@ 1 root  wheel  730 Mar 17 05:59 disabled.plist
 -rw-r--r--  1 root  wheel  561 Dec 16 21:39 loginitems.501.plist
 </code></pre><p>These items will be available under <code>/var/db/com.apple.xpc.launchd</code> in the <code>loginitems.[userid].plist</code> files. Let&rsquo;s open <code>loginitems.501.plist</code>.</p>
-<pre tabindex="0"><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;
-&lt;plist version=&quot;1.0&quot;&gt;
+<pre tabindex="0"><code>&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;
+&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;
+&lt;plist version=&#34;1.0&#34;&gt;
 &lt;dict&gt;
         &lt;key&gt;version.com.csaba.fitzl.shield.ShieldHelper&lt;/key&gt;
         &lt;string&gt;1&lt;/string&gt;

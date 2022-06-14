@@ -11,11 +11,11 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 13 - Audio Plugins"/>
-<meta name="twitter:description" content="This is part 13 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta name="twitter:description" content="This is part 13 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  This is another one of my favorites for some reason. macOS being a popular audio editing device, supports external audio drivers and plugins. @xorrior wrote a very extensive blog post about these at his website, here: Audio Unit Plug-ins. Legitimate Un-signed Code Execution | by Christopher Ross | Posts By SpecterOps Team Members"/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 13 - Audio Plugins" />
-<meta property="og:description" content="This is part 13 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta property="og:description" content="This is part 13 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  This is another one of my favorites for some reason. macOS being a popular audio editing device, supports external audio drivers and plugins. @xorrior wrote a very extensive blog post about these at his website, here: Audio Unit Plug-ins. Legitimate Un-signed Code Execution | by Christopher Ross | Posts By SpecterOps Team Members" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0013/" /><meta property="article:section" content="beyond" />
@@ -56,7 +56,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.92.1" />
+    <meta name="generator" content="Hugo 0.96.0" />
   </head>
 
   <body class=" ">
@@ -142,40 +142,40 @@
 
       <div>
         <blockquote>
-<p>This is part 13 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+<p>This is part 13 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
 </blockquote>
 <p>This is another one of my favorites for some reason. macOS being a popular audio editing device, supports external audio drivers and plugins. <a href="https://twitter.com/xorrior">@xorrior</a> wrote a very extensive blog post about these at his website, here: <a href="https://posts.specterops.io/audio-unit-plug-ins-896d3434a882">Audio Unit Plug-ins. Legitimate Un-signed Code Execution | by Christopher Ross | Posts By SpecterOps Team Members</a></p>
 <p>It is pretty amazing, and I don&rsquo;t plan to repeat what it&rsquo;s there but show another way of implementing a plugin. I will briefly describe how to create a Hardware Abstraction Layer (HAL) Service plug-in.</p>
 <p>Apple has a nice documentation as well: <a href="https://developer.apple.com/library/archive/documentation/MusicAudio/Conceptual/CoreAudioOverview/Introduction/Introduction.html">Core Audio Overview</a></p>
 <p>HAL plugins are loaded by <code>coreaudiod</code>, which runs as root, and defined at <code>/System/Library/LaunchDaemons/com.apple.audio.coreaudiod.plist</code>. HAL plugins are located at <code>/Library/Audio/Plug-Ins/HAL</code>, which means that we require root access to install them.</p>
 <p>We can easily create such a plugin with Xcode, by creating a new project, and selecting the type as <code>bundle</code>. For the bundle extension we need to provide <code>.driver</code>. Once the project is created we need to add a new source file.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#099">#import &lt;Foundation/Foundation.h&gt;
-</span><span style="color:#099"></span>
-__attribute__((constructor)) <span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">void</span> run()
-{
-    NSLog(<span style="color:#c30">@&#34;%@&#34;</span>, <span style="color:#c30">@&#34;Hello from MasterAudio&#34;</span>);
-}
-</code></pre></div><p>We can implement a simple <code>constructor</code> which will be loaded when the driver is loaded. We don&rsquo;t really need to do anything else. This will work just fine, and won&rsquo;t crash <code>coreaudiod</code>.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#099">#import &lt;Foundation/Foundation.h&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
+</span></span><span style="display:flex;"><span>__attribute__((constructor)) <span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">void</span> run()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;%@&#34;</span>, <span style="color:#c30">@&#34;Hello from MasterAudio&#34;</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>We can implement a simple <code>constructor</code> which will be loaded when the driver is loaded. We don&rsquo;t really need to do anything else. This will work just fine, and won&rsquo;t crash <code>coreaudiod</code>.</p>
 <p>In the <code>Info.plist</code> we also need to add some UUID, and default function name, but we don&rsquo;t need to implement it.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#309;font-weight:bold">&lt;key&gt;</span>CFPlugInFactories<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-    <span style="color:#309;font-weight:bold">&lt;key&gt;</span>00000000-0000-0000-0000-000000000000<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-    <span style="color:#309;font-weight:bold">&lt;string&gt;</span>SomeFunction<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CFPlugInTypes<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-    <span style="color:#309;font-weight:bold">&lt;key&gt;</span>00000000-0000-0000-0000-000000000000<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-    <span style="color:#309;font-weight:bold">&lt;array&gt;</span>
-        <span style="color:#309;font-weight:bold">&lt;string&gt;</span>00000000-0000-0000-0000-000000000000<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-    <span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
-<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-</code></pre></div><p>Next we can simply compile it and place it in <code>/Library/Audio/Plug-Ins/HAL</code>. We will need to set folder ownership to <code>root:wheel</code>.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>CFPlugInFactories<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#309;font-weight:bold">&lt;key&gt;</span>00000000-0000-0000-0000-000000000000<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#309;font-weight:bold">&lt;string&gt;</span>SomeFunction<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>CFPlugInTypes<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#309;font-weight:bold">&lt;key&gt;</span>00000000-0000-0000-0000-000000000000<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#309;font-weight:bold">&lt;string&gt;</span>00000000-0000-0000-0000-000000000000<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span></code></pre></div><p>Next we can simply compile it and place it in <code>/Library/Audio/Plug-Ins/HAL</code>. We will need to set folder ownership to <code>root:wheel</code>.</p>
 <p>We can then go and restart <code>coreaudiod</code>.</p>
 <pre tabindex="0"><code>csaby@dev ~ % sudo launchctl stop com.apple.audio.coreaudiod 
 csaby@dev ~ % sudo launchctl start com.apple.audio.coreaudiod
 </code></pre><p>Now we can query the logs.</p>
-<pre tabindex="0"><code>csaby@dev ~ % log show --predicate 'eventMessage contains[c] &quot;MasterAudio&quot;' --last 20m
-Filtering the log data using &quot;composedMessage CONTAINS[c] &quot;MasterAudio&quot;&quot;
+<pre tabindex="0"><code>csaby@dev ~ % log show --predicate &#39;eventMessage contains[c] &#34;MasterAudio&#34;&#39; --last 20m
+Filtering the log data using &#34;composedMessage CONTAINS[c] &#34;MasterAudio&#34;&#34;
 Skipping info and debug messages, pass --info and/or --debug to include.
 Timestamp                       Thread     Type        Activity             PID    TTL  
 2021-04-19 22:39:55.144111+0200 0x18e2     Default     0x0                  586    0    coreaudiod: (MasterAudio) Hello from MasterAudio

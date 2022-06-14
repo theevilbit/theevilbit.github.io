@@ -11,12 +11,12 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 15 - xsanctl"/>
-<meta name="twitter:description" content="This is part 15 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta name="twitter:description" content="This is part 15 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  I run into this not so exciting persistent method when I was investigating xsanctl for&hellip; other&hellip; reasons&hellip; xsanctl is a &ldquo;Xsan file system control utility&rdquo;, which allows us to mount and manage Xsans.
 The xsanctl binary can be found at /System/Library/Filesystems/acfs."/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 15 - xsanctl" />
-<meta property="og:description" content="This is part 15 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta property="og:description" content="This is part 15 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  I run into this not so exciting persistent method when I was investigating xsanctl for&hellip; other&hellip; reasons&hellip; xsanctl is a &ldquo;Xsan file system control utility&rdquo;, which allows us to mount and manage Xsans.
 The xsanctl binary can be found at /System/Library/Filesystems/acfs." />
 <meta property="og:type" content="article" />
@@ -58,7 +58,7 @@ The xsanctl binary can be found at /System/Library/Filesystems/acfs." />
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.92.1" />
+    <meta name="generator" content="Hugo 0.96.0" />
   </head>
 
   <body class=" ">
@@ -144,7 +144,7 @@ The xsanctl binary can be found at /System/Library/Filesystems/acfs." />
 
       <div>
         <blockquote>
-<p>This is part 15 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+<p>This is part 15 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
 </blockquote>
 <p>I run into this not so exciting persistent method when I was investigating <code>xsanctl</code> for&hellip; other&hellip; reasons&hellip; <code>xsanctl</code> is a &ldquo;Xsan file system control utility&rdquo;, which allows us to mount and manage Xsans.</p>
 <p>The <code>xsanctl</code> binary can be found at <code>/System/Library/Filesystems/acfs.fs/Contents/bin/xsanctl</code>, however when we simply run the command it is run from <code>/usr/sbin/xsanctl</code>. If we check, this is a symbolic link.</p>
@@ -157,12 +157,12 @@ if [ -r /Library/Preferences/Xsan/.xsanrc ]
 then
     . /Library/Preferences/Xsan/.xsanrc
 fi
-if [ x&quot;${XSAN_ALT_BINDIR}&quot; == x ]
+if [ x&#34;${XSAN_ALT_BINDIR}&#34; == x ]
 then
     XSAN_ALT_BINDIR=/System/Library/Filesystems/acfs.fs/Contents/bin
 fi
 COMMAND=`basename $0`
-${XSAN_ALT_BINDIR}/${COMMAND} &quot;$@&quot;
+${XSAN_ALT_BINDIR}/${COMMAND} &#34;$@&#34;
 </code></pre><p>It will execute the file <code>/Library/Preferences/Xsan/.xsanrc</code> if exists. Moreover it will also look for the <code>xsanctl</code> binary in different location if the <code>XSAN_ALT_BINDIR</code> environment variable is defined, which allows further redirection.</p>
 <p>Essentially we can persist in the <code>/Library/Preferences/Xsan/.xsanrc</code> script. Unfortunately this location requires root access, and this utility likely also not frequently run, especially by non-enterprise users.</p>
 <p>So it&rsquo;s not super useful, but thought it would worth a quick post.</p>

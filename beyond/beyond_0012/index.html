@@ -11,12 +11,12 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 12 - QuickLook Plugins"/>
-<meta name="twitter:description" content="This is part 12 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta name="twitter:description" content="This is part 12 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  TL;DR This technique is very similarly to Spotlight Importers, but heavily sandboxed. It’s even more limited as the user need to specifically want to preview the file.
 Intro This will be a short post and it goes hand in hand with my previous one that detailed the use of Spotlight Importers for persistence."/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 12 - QuickLook Plugins" />
-<meta property="og:description" content="This is part 12 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta property="og:description" content="This is part 12 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  TL;DR This technique is very similarly to Spotlight Importers, but heavily sandboxed. It’s even more limited as the user need to specifically want to preview the file.
 Intro This will be a short post and it goes hand in hand with my previous one that detailed the use of Spotlight Importers for persistence." />
 <meta property="og:type" content="article" />
@@ -58,7 +58,7 @@ Intro This will be a short post and it goes hand in hand with my previous one th
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.92.1" />
+    <meta name="generator" content="Hugo 0.96.0" />
   </head>
 
   <body class=" ">
@@ -144,7 +144,7 @@ Intro This will be a short post and it goes hand in hand with my previous one th
 
       <div>
         <blockquote>
-<p>This is part 12 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+<p>This is part 12 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
 </blockquote>
 <h2 id="tldr">TL;DR</h2>
 <p>This technique is very similarly to Spotlight Importers, but heavily sandboxed. It’s even more limited as the user need to specifically want to preview the file.</p>
@@ -165,82 +165,82 @@ These plugins are in a bundle named <code>qlgenerator</code>, and has a similar 
 <ol>
 <li><code>Info.plist</code> file - this file should detail the various file types the QL plugin will support, the related part, looks like this:</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml">	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CFBundleDocumentTypes<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CFBundleTypeRole<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>QLGenerator<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>LSItemContentTypes<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>net.daringfireball.markdown<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>net.daringfireball<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>net.multimarkdown.text<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>org.vim.markdown-file<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>com.unknown.md<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>com.foldingtext.FoldingText.document<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>dyn.ah62d4rv4ge8043a<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>dyn.ah62d4rv4ge80445e<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>dyn.ah62d4rv4ge8042pwrrwg875s<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>dyn.ah62d4rv4ge8045pe<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
-</code></pre></div><ol start="2">
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CFBundleDocumentTypes<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CFBundleTypeRole<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>QLGenerator<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>LSItemContentTypes<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>net.daringfireball.markdown<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>net.daringfireball<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>net.multimarkdown.text<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>org.vim.markdown-file<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>com.unknown.md<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>com.foldingtext.FoldingText.document<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>dyn.ah62d4rv4ge8043a<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>dyn.ah62d4rv4ge80445e<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>dyn.ah62d4rv4ge8042pwrrwg875s<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>dyn.ah62d4rv4ge8045pe<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+</span></span></code></pre></div><ol start="2">
 <li><code>main.c</code> file - this is auto-generated, we don’t really need to modify it. Similarly to the mdimporters this will make our plugin work.</li>
 <li><code>GenerateThumbnailForURL.m</code> - this file is responsible for generating a thumbnail via the <code>GenerateThumbnailForURL</code> function.</li>
 <li><code>GeneratePreviewForURL.m</code> - this file is responsible for generating the quick preview via the <code>GeneratePreviewForURL</code> function. This is what I modified.</li>
 </ol>
 <p>Really that’s it. The last two functions can be empty if we want and if we don’t want to error out, we simply return <code>noErr</code> from both. There are also cancel functions for the preview generation, but those can be also empty. I basically copy pasted my code form the other importer, and implemented it here. The only thing I had to change is handling file reference, as here we got it via <code>CFURLRef</code>. Here is the full code:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">OSStatus <span style="color:#c0f">GeneratePreviewForURL</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>thisInterface, QLPreviewRequestRef preview, CFURLRef url, CFStringRef contentTypeUTI, CFDictionaryRef options);
-<span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">CancelPreviewGeneration</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>thisInterface, QLPreviewRequestRef preview);
-
-<span style="color:#09f;font-style:italic">/* ——————————————————————————————————————
-</span><span style="color:#09f;font-style:italic"> Generate a preview for file
-</span><span style="color:#09f;font-style:italic"> 
-</span><span style="color:#09f;font-style:italic"> This function’s job is to create preview for designated file
-</span><span style="color:#09f;font-style:italic"> —————————————————————————————————————— */</span>
-
-<span style="color:#09f;font-style:italic">//——————————————————————————————————————
-</span><span style="color:#09f;font-style:italic"></span>OSStatus <span style="color:#c0f">GeneratePreviewForURL</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>thisInterface, QLPreviewRequestRef preview, CFURLRef url, CFStringRef contentTypeUTI, CFDictionaryRef options)
-{
-    
-    NSLog(@<span style="color:#a00;background-color:#faa">“</span>Hello from peristent quicklook by <span style="color:#99f">csaby</span> :)<span style="color:#a00;background-color:#faa">”</span>);
-    NSURL <span style="color:#555">*</span>nsurl <span style="color:#555">=</span> (<span style="color:#069;font-weight:bold">__bridge</span> NSURL <span style="color:#555">*</span>)url;
-
-     NSString<span style="color:#555">*</span> tempDir <span style="color:#555">=</span> NSTemporaryDirectory();
-     NSString<span style="color:#555">*</span> tempDirFolder <span style="color:#555">=</span> [tempDir <span style="color:#99f">stringByAppendingPathComponent</span>:@<span style="color:#a00;background-color:#faa">“</span>TestPersist<span style="color:#a00;background-color:#faa">”</span>];
-     NSString <span style="color:#555">*</span>source <span style="color:#555">=</span> nsurl.path;
-     NSString <span style="color:#555">*</span>theFileName <span style="color:#555">=</span> [[source lastPathComponent] stringByDeletingPathExtension];
-     NSString <span style="color:#555">*</span>destination <span style="color:#555">=</span> [tempDirFolder <span style="color:#99f">stringByAppendingPathComponent</span>:theFileName];
-     NSError <span style="color:#555">*</span>error;
-     NSFileManager <span style="color:#555">*</span>fileManager <span style="color:#555">=</span> [NSFileManager defaultManager];
-
-     <span style="color:#09f;font-style:italic">//create temp folder
-</span><span style="color:#09f;font-style:italic"></span>     <span style="color:#078;font-weight:bold">BOOL</span> fileOK <span style="color:#555">=</span> [[NSFileManager defaultManager] <span style="color:#99f">createDirectoryAtPath</span>:tempDirFolder <span style="color:#99f">withIntermediateDirectories</span>:<span style="color:#366">NO</span> <span style="color:#99f">attributes</span>:<span style="color:#366">nil</span> <span style="color:#99f">error</span>:<span style="color:#555">&amp;</span>error ];
-     <span style="color:#069;font-weight:bold">if</span> ( <span style="color:#555">!</span>fileOK )
-         NSLog(@<span style="color:#a00;background-color:#faa">“</span>createDirectoryAtPath <span style="color:#555">%</span>@<span style="color:#a00;background-color:#faa">“</span>, [error localizedDescription]);
-     
-     <span style="color:#09f;font-style:italic">//copy file
-</span><span style="color:#09f;font-style:italic"></span>     <span style="color:#069;font-weight:bold">if</span> ([fileManager <span style="color:#99f">copyItemAtPath</span>:source <span style="color:#99f">toPath</span>:destination <span style="color:#99f">error</span>:<span style="color:#555">&amp;</span>error]){
-         NSLog(@<span style="color:#a00;background-color:#faa">“</span>Copy Success <span style="color:#99f">from</span>: <span style="color:#555">%</span>@, to <span style="color:#555">%</span>@<span style="color:#a00;background-color:#faa">“</span>, source, destination);
-     }
-     <span style="color:#069;font-weight:bold">else</span>{
-         NSLog(@<span style="color:#a00;background-color:#faa">“</span>Copy <span style="color:#99f">error</span>: <span style="color:#555">%</span>@<span style="color:#a00;background-color:#faa">“</span>, error);
-     }
-     
-     <span style="color:#09f;font-style:italic">//network test
-</span><span style="color:#09f;font-style:italic"></span>     NSString <span style="color:#555">*</span>URLString <span style="color:#555">=</span> [NSString <span style="color:#99f">stringWithContentsOfURL</span>:[NSURL <span style="color:#99f">URLWithString</span>:<span style="color:#c30">@&#34;https://www.google.com&#34;</span>]];
-     NSLog(<span style="color:#c30">@&#34;URL: %@&#34;</span>, URLString);
-
-  <span style="color:#069;font-weight:bold">return</span> noErr;
-}
-
-<span style="color:#09f;font-style:italic">//-----------------------------------------------------------------------------
-</span><span style="color:#09f;font-style:italic"></span><span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">CancelPreviewGeneration</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>thisInterface, QLPreviewRequestRef preview)
-{
-  <span style="color:#09f;font-style:italic">// Implement only if supported
-</span><span style="color:#09f;font-style:italic"></span>}
-</code></pre></div><p>If you want to put this inside an application, follow the steps I described in my previous post. The only difference is at the end, the copy files build phase will need to have a different destination, specifically <code>Contents/Library/QuickLook</code>. The above code can be found in my GitHub project: <a href="https://github.com/theevilbit/macos/tree/master/PersistentQL">macos/PersistentQL at master · theevilbit/macos · GitHub</a></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>OSStatus <span style="color:#c0f">GeneratePreviewForURL</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>thisInterface, QLPreviewRequestRef preview, CFURLRef url, CFStringRef contentTypeUTI, CFDictionaryRef options);
+</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">CancelPreviewGeneration</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>thisInterface, QLPreviewRequestRef preview);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">/* ——————————————————————————————————————
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> Generate a preview for file
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> 
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> This function’s job is to create preview for designated file
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> —————————————————————————————————————— */</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//——————————————————————————————————————
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>OSStatus <span style="color:#c0f">GeneratePreviewForURL</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>thisInterface, QLPreviewRequestRef preview, CFURLRef url, CFStringRef contentTypeUTI, CFDictionaryRef options)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    NSLog(@<span style="color:#a00;background-color:#faa">“</span>Hello from peristent quicklook by <span style="color:#99f">csaby</span> :)<span style="color:#a00;background-color:#faa">”</span>);
+</span></span><span style="display:flex;"><span>    NSURL <span style="color:#555">*</span>nsurl <span style="color:#555">=</span> (<span style="color:#069;font-weight:bold">__bridge</span> NSURL <span style="color:#555">*</span>)url;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>     NSString<span style="color:#555">*</span> tempDir <span style="color:#555">=</span> NSTemporaryDirectory();
+</span></span><span style="display:flex;"><span>     NSString<span style="color:#555">*</span> tempDirFolder <span style="color:#555">=</span> [tempDir <span style="color:#99f">stringByAppendingPathComponent</span>:@<span style="color:#a00;background-color:#faa">“</span>TestPersist<span style="color:#a00;background-color:#faa">”</span>];
+</span></span><span style="display:flex;"><span>     NSString <span style="color:#555">*</span>source <span style="color:#555">=</span> nsurl.path;
+</span></span><span style="display:flex;"><span>     NSString <span style="color:#555">*</span>theFileName <span style="color:#555">=</span> [[source lastPathComponent] stringByDeletingPathExtension];
+</span></span><span style="display:flex;"><span>     NSString <span style="color:#555">*</span>destination <span style="color:#555">=</span> [tempDirFolder <span style="color:#99f">stringByAppendingPathComponent</span>:theFileName];
+</span></span><span style="display:flex;"><span>     NSError <span style="color:#555">*</span>error;
+</span></span><span style="display:flex;"><span>     NSFileManager <span style="color:#555">*</span>fileManager <span style="color:#555">=</span> [NSFileManager defaultManager];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>     <span style="color:#09f;font-style:italic">//create temp folder
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>     <span style="color:#078;font-weight:bold">BOOL</span> fileOK <span style="color:#555">=</span> [[NSFileManager defaultManager] <span style="color:#99f">createDirectoryAtPath</span>:tempDirFolder <span style="color:#99f">withIntermediateDirectories</span>:<span style="color:#366">NO</span> <span style="color:#99f">attributes</span>:<span style="color:#366">nil</span> <span style="color:#99f">error</span>:<span style="color:#555">&amp;</span>error ];
+</span></span><span style="display:flex;"><span>     <span style="color:#069;font-weight:bold">if</span> ( <span style="color:#555">!</span>fileOK )
+</span></span><span style="display:flex;"><span>         NSLog(@<span style="color:#a00;background-color:#faa">“</span>createDirectoryAtPath <span style="color:#555">%</span>@<span style="color:#a00;background-color:#faa">“</span>, [error localizedDescription]);
+</span></span><span style="display:flex;"><span>     
+</span></span><span style="display:flex;"><span>     <span style="color:#09f;font-style:italic">//copy file
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>     <span style="color:#069;font-weight:bold">if</span> ([fileManager <span style="color:#99f">copyItemAtPath</span>:source <span style="color:#99f">toPath</span>:destination <span style="color:#99f">error</span>:<span style="color:#555">&amp;</span>error]){
+</span></span><span style="display:flex;"><span>         NSLog(@<span style="color:#a00;background-color:#faa">“</span>Copy Success <span style="color:#99f">from</span>: <span style="color:#555">%</span>@, to <span style="color:#555">%</span>@<span style="color:#a00;background-color:#faa">“</span>, source, destination);
+</span></span><span style="display:flex;"><span>     }
+</span></span><span style="display:flex;"><span>     <span style="color:#069;font-weight:bold">else</span>{
+</span></span><span style="display:flex;"><span>         NSLog(@<span style="color:#a00;background-color:#faa">“</span>Copy <span style="color:#99f">error</span>: <span style="color:#555">%</span>@<span style="color:#a00;background-color:#faa">“</span>, error);
+</span></span><span style="display:flex;"><span>     }
+</span></span><span style="display:flex;"><span>     
+</span></span><span style="display:flex;"><span>     <span style="color:#09f;font-style:italic">//network test
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>     NSString <span style="color:#555">*</span>URLString <span style="color:#555">=</span> [NSString <span style="color:#99f">stringWithContentsOfURL</span>:[NSURL <span style="color:#99f">URLWithString</span>:<span style="color:#c30">@&#34;https://www.google.com&#34;</span>]];
+</span></span><span style="display:flex;"><span>     NSLog(<span style="color:#c30">@&#34;URL: %@&#34;</span>, URLString);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#069;font-weight:bold">return</span> noErr;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//-----------------------------------------------------------------------------
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span><span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">CancelPreviewGeneration</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>thisInterface, QLPreviewRequestRef preview)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#09f;font-style:italic">// Implement only if supported
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>}
+</span></span></code></pre></div><p>If you want to put this inside an application, follow the steps I described in my previous post. The only difference is at the end, the copy files build phase will need to have a different destination, specifically <code>Contents/Library/QuickLook</code>. The above code can be found in my GitHub project: <a href="https://github.com/theevilbit/macos/tree/master/PersistentQL">macos/PersistentQL at master · theevilbit/macos · GitHub</a></p>
 <h2 id="installation">Installation</h2>
 <p>Very simple, we just copy the <code>qlgenerator</code> to one of the places described above, or install it as part of an application bundle. The system will automatically find it, but if not, we can either reboot or run <code>qlmanage -r</code> to reset the <code>quicklookd</code> daemon process. If it’s in an application bundle it can take quite some time to be found, or we need to open the app.</p>
 <p>Luckily similarly with mdimporters, if we download an application, and let Safari auto-unzip it, the QL plugin won’t be registered, so we can’t drop an app with drive by download and hope that the embedded plugin will run.</p>

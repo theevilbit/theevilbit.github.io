@@ -54,7 +54,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.92.1" />
+    <meta name="generator" content="Hugo 0.96.0" />
   </head>
 
   <body class=" ">
@@ -170,26 +170,26 @@ total 8
 <p><img src="https://media.giphy.com/media/tXL4FHPSnVJ0A/giphy.gif" alt="Waiting"></p>
 <p>Ok, a week passed. The impatience ones, like me can set their date to a week ahead to play along - of course you can&rsquo;t do this if not root, so in real life it doesn&rsquo;t count.</p>
 <p>Once the process starts cleanup, we can see that it will delete all files found in that directory, depending on its timestamp.</p>
-<pre tabindex="0"><code>csaby@bigsur DiagnosticReports % log show --style syslog --predicate 'processImagePath CONTAINS[c] &quot;SubmitDiagInfo&quot; &amp;&amp; eventMessage CONTAINS[c] &quot;Removing&quot;' --last 2h
-Filtering the log data using &quot;processImagePath CONTAINS[c] &quot;SubmitDiagInfo&quot; AND composedMessage CONTAINS[c] &quot;Removing&quot;&quot;
+<pre tabindex="0"><code>csaby@bigsur DiagnosticReports % log show --style syslog --predicate &#39;processImagePath CONTAINS[c] &#34;SubmitDiagInfo&#34; &amp;&amp; eventMessage CONTAINS[c] &#34;Removing&#34;&#39; --last 2h
+Filtering the log data using &#34;processImagePath CONTAINS[c] &#34;SubmitDiagInfo&#34; AND composedMessage CONTAINS[c] &#34;Removing&#34;&#34;
 Skipping info and debug messages, pass --info and/or --debug to include.
 Timestamp                       (process)[PID]    
-2021-04-26 05:10:55.982396-0700  localhost SubmitDiagInfo[468]: (OSAnalytics) Removing old retired log '/Users/csaby/Library/Logs/DiagnosticReports/Retired/com.vmware.launchd.tools.plist'
+2021-04-26 05:10:55.982396-0700  localhost SubmitDiagInfo[468]: (OSAnalytics) Removing old retired log &#39;/Users/csaby/Library/Logs/DiagnosticReports/Retired/com.vmware.launchd.tools.plist&#39;
 </code></pre><p>Yay! The file is deleted.</p>
 <p>Interestingly it detects the symlink, yet still follows it.</p>
-<pre tabindex="0"><code>csaby@bigsur DiagnosticReports % log show --style syslog --predicate 'processImagePath CONTAINS[c] &quot;SubmitDiagInfo&quot; &amp;&amp; eventMessage CONTAINS[c] &quot;Symlink&quot;' --last 2h
-Filtering the log data using &quot;processImagePath CONTAINS[c] &quot;SubmitDiagInfo&quot; AND composedMessage CONTAINS[c] &quot;Symlink&quot;&quot;
+<pre tabindex="0"><code>csaby@bigsur DiagnosticReports % log show --style syslog --predicate &#39;processImagePath CONTAINS[c] &#34;SubmitDiagInfo&#34; &amp;&amp; eventMessage CONTAINS[c] &#34;Symlink&#34;&#39; --last 2h
+Filtering the log data using &#34;processImagePath CONTAINS[c] &#34;SubmitDiagInfo&#34; AND composedMessage CONTAINS[c] &#34;Symlink&#34;&#34;
 Skipping info and debug messages, pass --info and/or --debug to include.
 Timestamp                       (process)[PID]    
-2021-04-26 05:10:55.981832-0700  localhost SubmitDiagInfo[468]: (OSAnalytics) subpath symlink detected '/Users/csaby/Library/Logs/DiagnosticReports/Retired' -&gt; '/Library/LaunchDaemons'; no usable path
+2021-04-26 05:10:55.981832-0700  localhost SubmitDiagInfo[468]: (OSAnalytics) subpath symlink detected &#39;/Users/csaby/Library/Logs/DiagnosticReports/Retired&#39; -&gt; &#39;/Library/LaunchDaemons&#39;; no usable path
 </code></pre><p>Ok, so here we deleted a file as root with our user account. If you are here for privilege escalation, read on. And what is this symlink detection anyway?</p>
 <h2 id="cve-2020-9900---file-write-to-custom-location">CVE-2020-9900 - File write to custom location</h2>
 <p>This is where the first bugs comes into play, and the log entry about the symlink. If we go back to an earlier version of Catalina (e.g.: 10.15.4), we will find that similarly to file deletion, we can redirect file writes into custom location, when logs are retired from the <code>DiagnosticReports</code> directory. The symlink message is also gone.</p>
-<pre tabindex="0"><code>csaby@dev ~ % log show --style syslog --predicate 'processImagePath CONTAINS[c] &quot;SubmitDiagInfo&quot; &amp;&amp; eventMessage CONTAINS[c] &quot;Analytics&quot;' --last 4h      
-Filtering the log data using &quot;processImagePath CONTAINS[c] &quot;SubmitDiagInfo&quot; AND composedMessage CONTAINS[c] &quot;Analytics&quot;&quot;
+<pre tabindex="0"><code>csaby@dev ~ % log show --style syslog --predicate &#39;processImagePath CONTAINS[c] &#34;SubmitDiagInfo&#34; &amp;&amp; eventMessage CONTAINS[c] &#34;Analytics&#34;&#39; --last 4h      
+Filtering the log data using &#34;processImagePath CONTAINS[c] &#34;SubmitDiagInfo&#34; AND composedMessage CONTAINS[c] &#34;Analytics&#34;&#34;
 Skipping info and debug messages, pass --info and/or --debug to include.
 Timestamp                       (process)[PID]    
-2020-07-30 13:45:13.940456+0200  localhost SubmitDiagInfo[498]: (OSAnalytics) Retiring submitted '/Library/Logs/DiagnosticReports/Analytics-Journal-90Day-2020-07-30-122025.core_analytics'
+2020-07-30 13:45:13.940456+0200  localhost SubmitDiagInfo[498]: (OSAnalytics) Retiring submitted &#39;/Library/Logs/DiagnosticReports/Analytics-Journal-90Day-2020-07-30-122025.core_analytics&#39;
 </code></pre><p>Ok, but which files will be retired? Turns out not every file type, it will be extension specific. The <code>CopyExtensionForProblemType</code> function in the <code>CrashReporterSupport</code> framework, which is located at <code>/System/Library/PrivateFrameworks/CrashReporterSupport.framework/Versions/A/CrashReporterSupport</code> - or instead in the dyld shared cache if you look on the Big Sur version ;) has a nice list of the supported extensions.</p>
 <p><img src="https://theevilbit.github.io/images/macos_crashreporter/1.png" alt=""></p>
 <p>The list is not really interesting beyond the fact that it&rsquo;s limited.</p>
@@ -229,7 +229,7 @@ CVE-2021-1786: Csaba Fitzl (@theevilbit) of Offensive Security
 Crash Reporter
 Impact: A local attacker may be able to elevate their privileges
 Description: An issue existed within the path validation logic for symlinks. This issue was addressed with improved path sanitization.
-CVE-2020-9900: Zhongcheng Li (CK01) of Zero-dayits Team of Legendsec at Qi'anxin Group
+CVE-2020-9900: Zhongcheng Li (CK01) of Zero-dayits Team of Legendsec at Qi&#39;anxin Group
 </code></pre>
       </div>
 

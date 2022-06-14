@@ -11,11 +11,11 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 18 - X11 and XQuartz"/>
-<meta name="twitter:description" content="This is part 18 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta name="twitter:description" content="This is part 18 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  I learned about XQuartz while reading Armin Briegel&rsquo;s ‎macOS Terminal and shell book. It&rsquo;s one of the alternative third party terminals we can install on macOS. As most terminals, this one also offers unique options to persist on the system."/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 18 - X11 and XQuartz" />
-<meta property="og:description" content="This is part 18 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta property="og:description" content="This is part 18 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  I learned about XQuartz while reading Armin Briegel&rsquo;s ‎macOS Terminal and shell book. It&rsquo;s one of the alternative third party terminals we can install on macOS. As most terminals, this one also offers unique options to persist on the system." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0018/" /><meta property="article:section" content="beyond" />
@@ -56,7 +56,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.92.1" />
+    <meta name="generator" content="Hugo 0.96.0" />
   </head>
 
   <body class=" ">
@@ -142,7 +142,7 @@
 
       <div>
         <blockquote>
-<p>This is part 18 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+<p>This is part 18 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
 </blockquote>
 <p>I learned about <a href="https://www.xquartz.org/">XQuartz</a> while reading Armin Briegel&rsquo;s <a href="https://books.apple.com/hu/book/macos-terminal-and-shell/id1550617226">‎macOS Terminal and shell</a> book. It&rsquo;s one of the alternative third party terminals we can install on macOS. As most terminals, this one also offers unique options to persist on the system.</p>
 <p>X11 used to be part of OS X, till 10.7, and it was open source, which we can find <a href="https://opensource.apple.com/source/X11server/X11server-106.7/">here</a>.</p>
@@ -179,54 +179,53 @@ touch ~/x11.txt
 </code></pre><p>Above we have a script which creates a file <code>x11.txt</code> in the user&rsquo;s HOME folder upon starting <code>xterm</code>. This is shown below.</p>
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0018_0.png" alt=""></p>
 <p>The last directory to explore is <code>/opt/X11/etc/X11/xinit/privileged_startx.d</code>. It also contains scripts, and whatever we put here, will be executed by the <code>privileged_startx</code> process as root. This process is defined in <code>/Library/LaunchDaemons/org.xquartz.privileged_startx.plist</code> as follows.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
-<span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
-<span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
-<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>Label<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>org.xquartz.privileged_startx<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>ProgramArguments<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/opt/X11/libexec/privileged_startx<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>-d<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/opt/X11/etc/X11/xinit/privileged_startx.d<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>MachServices<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>org.xquartz.privileged_startx<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-				<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>TimeOut<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>120<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
-	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>EnableTransactions<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-		<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
-<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-<span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
-</code></pre></div><p>If we check Apple&rsquo;s source code <a href="https://opensource.apple.com/source/X11server/X11server-106.7/xinit/xinit-1.3.0/privileged_startx/server.c.auto.html">server.c</a> we can find the related code that runs these files.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">kern_return_t <span style="color:#c0f">do_privileged_startx</span>(mach_port_t test_port __attribute__((unused))) {
-...
-    <span style="color:#09f;font-style:italic">/* Itterate over these files in alphabetical order */</span>
-    <span style="color:#069;font-weight:bold">for</span>(; ftsent; ftsent <span style="color:#555">=</span> ftsent<span style="color:#555">-&gt;</span>fts_link) {
-        <span style="color:#09f;font-style:italic">/* We only source regular files that are executable */</span>
-        <span style="color:#09f;font-style:italic">/* Note: This assumes we own them, which should always be the case */</span>
-        <span style="color:#069;font-weight:bold">if</span>((ftsent<span style="color:#555">-&gt;</span>fts_statp<span style="color:#555">-&gt;</span>st_mode <span style="color:#555">&amp;</span> S_IFREG) <span style="color:#555">&amp;&amp;</span>
-           (ftsent<span style="color:#555">-&gt;</span>fts_statp<span style="color:#555">-&gt;</span>st_mode <span style="color:#555">&amp;</span> S_IXUSR)) {
-
-            <span style="color:#09f;font-style:italic">/* Complete the full path filename in fn_buf */</span>
-            strcpy(s, ftsent<span style="color:#555">-&gt;</span>fts_name);
-
-            <span style="color:#09f;font-style:italic">/* Run it */</span>
-            error_code <span style="color:#555">=</span> system(fn_buf);
-            <span style="color:#069;font-weight:bold">if</span>(error_code <span style="color:#555">!=</span> <span style="color:#f60">0</span>) {
-                asl_log(<span style="color:#366">NULL</span>, <span style="color:#366">NULL</span>, ASL_LEVEL_ERR,
-                        <span style="color:#c30">&#34;do_privileged_startx: %s: exited with status %d</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>,
-                        fn_buf, error_code);
-                retval <span style="color:#555">=</span> KERN_FAILURE;
-            }
-        }
-    }
-
-</code></pre></div><p>This is a nice place to persist as root. Since Xquartz is not sandboxed (as shown below) it&rsquo;s even better.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>Label<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>org.xquartz.privileged_startx<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>ProgramArguments<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/opt/X11/libexec/privileged_startx<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>-d<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/opt/X11/etc/X11/xinit/privileged_startx.d<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>MachServices<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>org.xquartz.privileged_startx<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>TimeOut<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>120<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>EnableTransactions<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
+</span></span></code></pre></div><p>If we check Apple&rsquo;s source code <a href="https://opensource.apple.com/source/X11server/X11server-106.7/xinit/xinit-1.3.0/privileged_startx/server.c.auto.html">server.c</a> we can find the related code that runs these files.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>kern_return_t <span style="color:#c0f">do_privileged_startx</span>(mach_port_t test_port __attribute__((unused))) {
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">/* Itterate over these files in alphabetical order */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">for</span>(; ftsent; ftsent <span style="color:#555">=</span> ftsent<span style="color:#555">-&gt;</span>fts_link) {
+</span></span><span style="display:flex;"><span>        <span style="color:#09f;font-style:italic">/* We only source regular files that are executable */</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#09f;font-style:italic">/* Note: This assumes we own them, which should always be the case */</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#069;font-weight:bold">if</span>((ftsent<span style="color:#555">-&gt;</span>fts_statp<span style="color:#555">-&gt;</span>st_mode <span style="color:#555">&amp;</span> S_IFREG) <span style="color:#555">&amp;&amp;</span>
+</span></span><span style="display:flex;"><span>           (ftsent<span style="color:#555">-&gt;</span>fts_statp<span style="color:#555">-&gt;</span>st_mode <span style="color:#555">&amp;</span> S_IXUSR)) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#09f;font-style:italic">/* Complete the full path filename in fn_buf */</span>
+</span></span><span style="display:flex;"><span>            strcpy(s, ftsent<span style="color:#555">-&gt;</span>fts_name);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#09f;font-style:italic">/* Run it */</span>
+</span></span><span style="display:flex;"><span>            error_code <span style="color:#555">=</span> system(fn_buf);
+</span></span><span style="display:flex;"><span>            <span style="color:#069;font-weight:bold">if</span>(error_code <span style="color:#555">!=</span> <span style="color:#f60">0</span>) {
+</span></span><span style="display:flex;"><span>                asl_log(<span style="color:#366">NULL</span>, <span style="color:#366">NULL</span>, ASL_LEVEL_ERR,
+</span></span><span style="display:flex;"><span>                        <span style="color:#c30">&#34;do_privileged_startx: %s: exited with status %d</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>,
+</span></span><span style="display:flex;"><span>                        fn_buf, error_code);
+</span></span><span style="display:flex;"><span>                retval <span style="color:#555">=</span> KERN_FAILURE;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div><p>This is a nice place to persist as root. Since Xquartz is not sandboxed (as shown below) it&rsquo;s even better.</p>
 <pre tabindex="0"><code>csaby@bigsur ~ % codesign -dv --entitlements :- /Applications/Utilities/XQuartz.app          
 Executable=/Applications/Utilities/XQuartz.app/Contents/MacOS/X11
 Identifier=org.xquartz.X11

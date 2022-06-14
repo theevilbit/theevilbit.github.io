@@ -11,12 +11,12 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 14 - atrun"/>
-<meta name="twitter:description" content="This is part 14 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta name="twitter:description" content="This is part 14 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  The at command set is a heritage *nix job scheduler on macOS. Although it&rsquo;s slowly being deprecated, it&rsquo;s still available on Big Sur, although disabled by default.
 Enabling atrun As described by atrun&rsquo;s man page, the scheduler can be enabled using the following command:"/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 14 - atrun" />
-<meta property="og:description" content="This is part 14 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta property="og:description" content="This is part 14 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  The at command set is a heritage *nix job scheduler on macOS. Although it&rsquo;s slowly being deprecated, it&rsquo;s still available on Big Sur, although disabled by default.
 Enabling atrun As described by atrun&rsquo;s man page, the scheduler can be enabled using the following command:" />
 <meta property="og:type" content="article" />
@@ -58,7 +58,7 @@ Enabling atrun As described by atrun&rsquo;s man page, the scheduler can be enab
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.92.1" />
+    <meta name="generator" content="Hugo 0.96.0" />
   </head>
 
   <body class=" ">
@@ -144,7 +144,7 @@ Enabling atrun As described by atrun&rsquo;s man page, the scheduler can be enab
 
       <div>
         <blockquote>
-<p>This is part 14 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+<p>This is part 14 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
 </blockquote>
 <p>The <code>at</code> command set is a heritage *nix job scheduler on macOS. Although it&rsquo;s slowly being deprecated, it&rsquo;s still available on Big Sur, although disabled by default.</p>
 <h2 id="enabling-atrun">Enabling atrun</h2>
@@ -156,7 +156,7 @@ Enabling atrun As described by atrun&rsquo;s man page, the scheduler can be enab
 <p>If all of this was done, we can start using it.</p>
 <h2 id="scheduling-jobs">Scheduling jobs</h2>
 <p>We can schedule jobs using the <code>at</code> command.</p>
-<pre tabindex="0"><code>sh-3.2# echo &quot;echo 11 &gt; /tmp/at.txt&quot; | at now+1
+<pre tabindex="0"><code>sh-3.2# echo &#34;echo 11 &gt; /tmp/at.txt&#34; | at now+1
 job 26 at Tue Apr 27 00:46:36 2021
 </code></pre><p>The above will schedule a job in 1 minute, and will execute the command <code>echo 11 &gt; /tmp/at.txt</code>. It got the job number 26.</p>
 <p>We can check the job queue using <code>atq</code>.</p>
@@ -187,7 +187,7 @@ LC_CTYPE=UTF-8; export LC_CTYPE
 SUDO_GID=20; export SUDO_GID
 _=/usr/bin/at; export _
 cd /Users/csaby || {
-	 echo 'Execution directory inaccessible' &gt;&amp;2
+	 echo &#39;Execution directory inaccessible&#39; &gt;&amp;2
 	 exit 1
 }
 unset OLDPWD

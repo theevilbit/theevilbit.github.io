@@ -11,12 +11,12 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 17 - Color Pickers"/>
-<meta name="twitter:description" content="This is part 17 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta name="twitter:description" content="This is part 17 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  Color pickers??? It&rsquo;s this menu, where we can select a color:
 To my surprise we can install our own color pickers on the system, and add custom ones. There are quite a few of these, some are even open source, like this: GitHub - viktorstrate/color-picker-plus: An Improved Color Picker for macOS."/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 17 - Color Pickers" />
-<meta property="og:description" content="This is part 17 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta property="og:description" content="This is part 17 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  Color pickers??? It&rsquo;s this menu, where we can select a color:
 To my surprise we can install our own color pickers on the system, and add custom ones. There are quite a few of these, some are even open source, like this: GitHub - viktorstrate/color-picker-plus: An Improved Color Picker for macOS." />
 <meta property="og:type" content="article" />
@@ -58,7 +58,7 @@ To my surprise we can install our own color pickers on the system, and add custo
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.92.1" />
+    <meta name="generator" content="Hugo 0.96.0" />
   </head>
 
   <body class=" ">
@@ -144,7 +144,7 @@ To my surprise we can install our own color pickers on the system, and add custo
 
       <div>
         <blockquote>
-<p>This is part 17 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+<p>This is part 17 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
 </blockquote>
 <p>Color pickers??? It&rsquo;s this menu, where we can select a color:</p>
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0017_0.png" alt=""></p>
@@ -172,9 +172,9 @@ Info.plist entries=23
 TeamIdentifier=not set
 Sealed Resources version=2 rules=2 files=0
 Internal requirements count=1 size=108
-&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;
-&lt;plist version=&quot;1.0&quot;&gt;
+&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;
+&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;
+&lt;plist version=&#34;1.0&#34;&gt;
 &lt;dict&gt;
 	&lt;key&gt;com.apple.security.app-sandbox&lt;/key&gt;
 	&lt;true/&gt;
@@ -182,9 +182,9 @@ Internal requirements count=1 size=108
 	&lt;true/&gt;
 	&lt;key&gt;com.apple.security.temporary-exception.sbpl&lt;/key&gt;
 	&lt;array&gt;
-		&lt;string&gt;(deny file-write* (home-subpath &quot;/Library/Colors&quot;))&lt;/string&gt;
-		&lt;string&gt;(allow file-read* process-exec file-map-executable (home-subpath &quot;/Library/ColorPickers&quot;))&lt;/string&gt;
-		&lt;string&gt;(allow file-read* (extension &quot;com.apple.app-sandbox.read&quot;))&lt;/string&gt;
+		&lt;string&gt;(deny file-write* (home-subpath &#34;/Library/Colors&#34;))&lt;/string&gt;
+		&lt;string&gt;(allow file-read* process-exec file-map-executable (home-subpath &#34;/Library/ColorPickers&#34;))&lt;/string&gt;
+		&lt;string&gt;(allow file-read* (extension &#34;com.apple.app-sandbox.read&#34;))&lt;/string&gt;
 	&lt;/array&gt;
 &lt;/dict&gt;
 &lt;/plist&gt;

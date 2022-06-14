@@ -11,12 +11,12 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 27 - Dock shortcuts"/>
-<meta name="twitter:description" content="This is part 27 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta name="twitter:description" content="This is part 27 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  This persistence is another gem I found in Leo Pitt&rsquo;s Modern macOS Persistence talk.
 macOS Dock stores shortcuts for applications, that we would like to access through the, well&hellip; Dock. It stores all settings in ~/Library/Preferences/com.apple.dock.plist. Although we can edit this PLIST directly, we can also use the defaults utility to change it."/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 27 - Dock shortcuts" />
-<meta property="og:description" content="This is part 27 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta property="og:description" content="This is part 27 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  This persistence is another gem I found in Leo Pitt&rsquo;s Modern macOS Persistence talk.
 macOS Dock stores shortcuts for applications, that we would like to access through the, well&hellip; Dock. It stores all settings in ~/Library/Preferences/com.apple.dock.plist. Although we can edit this PLIST directly, we can also use the defaults utility to change it." />
 <meta property="og:type" content="article" />
@@ -58,7 +58,7 @@ macOS Dock stores shortcuts for applications, that we would like to access throu
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.92.1" />
+    <meta name="generator" content="Hugo 0.96.0" />
   </head>
 
   <body class=" ">
@@ -144,15 +144,15 @@ macOS Dock stores shortcuts for applications, that we would like to access throu
 
       <div>
         <blockquote>
-<p>This is part 27 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+<p>This is part 27 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
 </blockquote>
 <p>This persistence is another gem I found in <a href="https://twitter.com/_D00mfist">Leo Pitt</a>&rsquo;s <a href="https://www.youtube.com/watch?v=OFQYTJiAmxs">Modern macOS Persistence</a> talk.</p>
 <p>macOS Dock stores shortcuts for applications, that we would like to access through the, well&hellip; Dock. It stores all settings in <code>~/Library/Preferences/com.apple.dock.plist</code>. Although we can edit this PLIST directly, we can also use the <code>defaults</code> utility to change it. For example adding a new entry:</p>
-<pre tabindex="0"><code>defaults write com.apple.dock persistent-apps -array-add '&lt;dict&gt;&lt;key&gt;tile-data&lt;/key&gt;&lt;dict&gt;&lt;key&gt;file-data&lt;/key&gt;&lt;dict&gt;&lt;key&gt;_CFURLString&lt;/key&gt;&lt;string&gt;/System/Applications/Books.app&lt;/string&gt;&lt;key&gt;_CFURLStringType&lt;/key&gt;&lt;integer&gt;0&lt;/integer&gt;&lt;/dict&gt;&lt;/dict&gt;&lt;/dict&gt;'
+<pre tabindex="0"><code>defaults write com.apple.dock persistent-apps -array-add &#39;&lt;dict&gt;&lt;key&gt;tile-data&lt;/key&gt;&lt;dict&gt;&lt;key&gt;file-data&lt;/key&gt;&lt;dict&gt;&lt;key&gt;_CFURLString&lt;/key&gt;&lt;string&gt;/System/Applications/Books.app&lt;/string&gt;&lt;key&gt;_CFURLStringType&lt;/key&gt;&lt;integer&gt;0&lt;/integer&gt;&lt;/dict&gt;&lt;/dict&gt;&lt;/dict&gt;&#39;
 
 killall Dock
 </code></pre><blockquote>
-<p>This is part 27 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+<p>This is part 27 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
 </blockquote>
 <p>Note that we don&rsquo;t need to add the <code>bundle-identifier</code> or the <code>book</code> tags, what is also detailed in Leo&rsquo;s presentation.</p>
 <p>At the end we need to restart Dock, so the new icon shows up. Of course we could also change items. The problem it creates is that <code>defaults</code> uses the <code>cfprefsd</code> daemon to change the file, which is the one that normally changes this file anyway, so this can break detection. Below is the <code>fs_usage</code> file system log showing this change.</p>

@@ -11,11 +11,11 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 1 - shell startup files"/>
-<meta name="twitter:description" content="This is part 1 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta name="twitter:description" content="This is part 1 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  Shell startup files are executed when our shell environment like zsh or bash is starting up. macOS defaults to /bin/zsh these days, and whenever we open Terminal or SSH into the device, this is the shell environment we are placed into."/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 1 - shell startup files" />
-<meta property="og:description" content="This is part 1 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta property="og:description" content="This is part 1 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  Shell startup files are executed when our shell environment like zsh or bash is starting up. macOS defaults to /bin/zsh these days, and whenever we open Terminal or SSH into the device, this is the shell environment we are placed into." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0001/" /><meta property="article:section" content="beyond" />
@@ -56,7 +56,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.92.1" />
+    <meta name="generator" content="Hugo 0.96.0" />
   </head>
 
   <body class=" ">
@@ -142,7 +142,7 @@
 
       <div>
         <blockquote>
-<p>This is part 1 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+<p>This is part 1 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
 </blockquote>
 <p>Shell startup files are executed when our shell environment like <code>zsh</code> or <code>bash</code> is starting up. macOS defaults to <code>/bin/zsh</code>  these days, and whenever we open <code>Terminal</code> or SSH into the device, this is the shell environment we are placed into. <code>bash</code> and <code>sh</code> are still available, however they have to be specifically started.</p>
 <p>When we start <code>zsh</code> it checks number of files, and if there is an environment variable or command inside, it will be set or executed. Probably the most common is <code>.zshrc</code>, which is used to set the shell environment and execute commands. It can be found in the user&rsquo;s home directory. <code>bash</code> has a similar one, called <code>.bashrc</code>.</p>
@@ -158,15 +158,15 @@
        and $ZDOTDIR/.zlogin are read.
 
        When  a  login  shell  exits, the files $ZDOTDIR/.zlogout and then /etc/zlogout are read.  This happens with either an explicit exit via the exit or
-       logout commands, or an implicit exit by reading end-of-file from the terminal.  However, if the shell terminates due to  exec'ing  another  process,
+       logout commands, or an implicit exit by reading end-of-file from the terminal.  However, if the shell terminates due to  exec&#39;ing  another  process,
        the logout files are not read.  These are also affected by the RCS and GLOBAL_RCS options.  Note also that the RCS option affects the saving of his-
        tory files, i.e. if RCS is unset when the shell exits, no history file will be saved.
 
        If ZDOTDIR is unset, HOME is used instead.  Files listed above as being in /etc may be in another directory, depending on the installation.
 
        As /etc/zshenv is run for all instances of zsh, it is important that it be kept as small as possible.  In particular, it is a good idea to put  code
-       that  does  not need to be run for every single shell behind a test of the form `if [[ -o rcs ]]; then ...' so that it will not be executed when zsh
-       is invoked with the `-f' option.
+       that  does  not need to be run for every single shell behind a test of the form `if [[ -o rcs ]]; then ...&#39; so that it will not be executed when zsh
+       is invoked with the `-f&#39; option.
 
        Any of these files may be pre-compiled with the zcompile builtin command (see zshbuiltins(1)).  If a compiled file exists (named  for  the  original
        file plus the .zwc extension) and it is newer than the original file, the compiled file will be used instead.

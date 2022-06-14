@@ -5,7 +5,18 @@
     <link>https://theevilbit.github.io/categories/blog/</link>
     <description>Recent content in BLOG on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 29 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/categories/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 14 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/categories/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AMFI Launch Constraints - First Quick Look</title>
+      <link>https://theevilbit.github.io/posts/amfi_launch_constraints/</link>
+      <pubDate>Tue, 14 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/posts/amfi_launch_constraints/</guid>
+      <description>Dropping some initial quick notes for a new security feature I run into on macOS Ventura. It&amp;rsquo;s called &amp;ldquo;Launch Constraints&amp;rdquo; and lives inside AMFI.
+Do the following experiment: Copy Terminal.app to your HOME folder and try to run it on Monterey and Ventura. On the former it will work without any issues, on the other it will fail, and we will get the following error:
+2022-06-14 05:59:55.254678+0200 0x5481 Default 0x0 0 0 kernel: (AppleMobileFileIntegrity) AMFI: Launch Constraint Violation (enforcing), error info: c[1]p[1]m[1]e[2], (Constraint not matched) launching proc[vc: 1 pid: 1112]: /Users/ace/Terminal.</description>
+    </item>
+    
     <item>
       <title>CVE-2021-30808 - CVE-2021-1784 strikes back - TCC bypass via mounting</title>
       <link>https://theevilbit.github.io/posts/cve-2021-30808/</link>

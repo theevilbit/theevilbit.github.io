@@ -54,7 +54,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.92.1" />
+    <meta name="generator" content="Hugo 0.96.0" />
   </head>
 
   <body class=" ">
@@ -156,10 +156,10 @@ Internal requirements count=1 size=220
 <p>That was the easy part, let&rsquo;s load the XPC server component into Hopper, and take a look at the <code>shouldAcceptNewConnection</code> function.</p>
 <p>Is the XPC service verifies the client based on the auth token and not the PID?
 Yes! Nice, as this is not frequently seen.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#069;font-weight:bold">if</span> ([r12 <span style="color:#99f">codeSignatureIsValidForAuditToken</span>:<span style="color:#069;font-weight:bold">@selector</span>(auditToken)] <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) { 
-</code></pre></div><p>Is the code signature properly verified?</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec">rax <span style="color:#555">=</span> SecRequirementCreateWithString(<span style="color:#c30">@&#34;anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = </span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">34XR7GXFPX</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">&#34;</span>, <span style="color:#f60">0x0</span>, <span style="color:#555">&amp;</span>var_58);
-</code></pre></div><p>Yes and no - everything looks good, except that the client version is not verified, which means that if I would find an old client, to which I can inject I can talk to the service. I was wrong.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">if</span> ([r12 <span style="color:#99f">codeSignatureIsValidForAuditToken</span>:<span style="color:#069;font-weight:bold">@selector</span>(auditToken)] <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) { 
+</span></span></code></pre></div><p>Is the code signature properly verified?</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>rax <span style="color:#555">=</span> SecRequirementCreateWithString(<span style="color:#c30">@&#34;anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = </span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">34XR7GXFPX</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">&#34;</span>, <span style="color:#f60">0x0</span>, <span style="color:#555">&amp;</span>var_58);
+</span></span></code></pre></div><p>Yes and no - everything looks good, except that the client version is not verified, which means that if I would find an old client, to which I can inject I can talk to the service. I was wrong.</p>
 <p>So I downloaded an older version of Viscosity, specifically 1.6.8, as we can see it doesn&rsquo;t have hardened runtime, and nothing else, which means that we can inject our own dylib.</p>
 <pre tabindex="0"><code>% codesign -dv Viscosity.app 
 Executable=/Users/csaby/Documents/dev/exploit/_old_my/noluck_Viscosity_privhelper/Viscosity.app/Contents/MacOS/Viscosity
@@ -173,35 +173,35 @@ TeamIdentifier=34XR7GXFPX
 Sealed Resources version=2 rules=13 files=477
 Internal requirements count=1 size=220
 </code></pre><p>I wrote a small POC:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#099">#import &lt;Foundation/Foundation.h&gt;
-</span><span style="color:#099"></span><span style="color:#069;font-weight:bold">static</span> NSString<span style="color:#555">*</span> XPCHelperMachServiceName <span style="color:#555">=</span> <span style="color:#c30">@&#34;com.sparklabs.ViscosityHelper&#34;</span>;
-
-<span style="color:#069;font-weight:bold">@protocol</span> <span style="color:#0a8;font-weight:bold">SLViscosityIPCXPCProtocol</span>
-- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">message:</span>(NSDictionary <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSDictionary <span style="color:#555">*</span>))<span style="color:#033">arg2</span>;
-<span style="color:#069;font-weight:bold">@end</span>
-
-__attribute__((constructor))
-<span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">void</span> customConstructor(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv) {
-        NSDictionary <span style="color:#555">*</span>dict <span style="color:#555">=</span> [NSDictionary <span style="color:#99f">dictionaryWithObjectsAndKeys</span>: <span style="color:#c30">@&#34;resetNetwork&#34;</span>,<span style="color:#c30">@&#34;command&#34;</span>, <span style="color:#366">nil</span>];
-        
-        NSString<span style="color:#555">*</span>  _serviceName <span style="color:#555">=</span> XPCHelperMachServiceName;
-        NSXPCConnection<span style="color:#555">*</span> _agentConnection <span style="color:#555">=</span> [[NSXPCConnection alloc] <span style="color:#99f">initWithMachServiceName</span>:_serviceName <span style="color:#99f">options</span>:<span style="color:#f60">4096</span>];
-        [_agentConnection <span style="color:#99f">setRemoteObjectInterface</span>:[NSXPCInterface <span style="color:#99f">interfaceWithProtocol</span>:@protocol(SLViscosityIPCXPCProtocol)]];
-        [_agentConnection resume];
-
-        <span style="color:#078;font-weight:bold">id</span> obj <span style="color:#555">=</span> [_agentConnection <span style="color:#99f">remoteObjectProxyWithErrorHandler</span>:<span style="color:#555">^</span>(NSError<span style="color:#555">*</span> error)
-        {
-            (<span style="color:#078;font-weight:bold">void</span>)error;
-            NSLog(<span style="color:#c30">@&#34;Connection Failure&#34;</span>);
-        }];
-        NSLog(<span style="color:#c30">@&#34;obj: %@&#34;</span>, obj);
-        NSLog(<span style="color:#c30">@&#34;conn: %@&#34;</span>, _agentConnection);
-        [obj <span style="color:#99f">message</span>:dict <span style="color:#99f">withReply</span>:<span style="color:#555">^</span>(NSDictionary <span style="color:#555">*</span> dic){
-                        NSLog(<span style="color:#c30">@&#34;Reply, %@&#34;</span>, dic);
-                    }];
-       
-}
-</code></pre></div><p>and I tried to connect:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#099">#import &lt;Foundation/Foundation.h&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span><span style="color:#069;font-weight:bold">static</span> NSString<span style="color:#555">*</span> XPCHelperMachServiceName <span style="color:#555">=</span> <span style="color:#c30">@&#34;com.sparklabs.ViscosityHelper&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@protocol</span> <span style="color:#0a8;font-weight:bold">SLViscosityIPCXPCProtocol</span>
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">message:</span>(NSDictionary <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">withReply:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSDictionary <span style="color:#555">*</span>))<span style="color:#033">arg2</span>;
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>__attribute__((constructor))
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">void</span> customConstructor(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv) {
+</span></span><span style="display:flex;"><span>        NSDictionary <span style="color:#555">*</span>dict <span style="color:#555">=</span> [NSDictionary <span style="color:#99f">dictionaryWithObjectsAndKeys</span>: <span style="color:#c30">@&#34;resetNetwork&#34;</span>,<span style="color:#c30">@&#34;command&#34;</span>, <span style="color:#366">nil</span>];
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        NSString<span style="color:#555">*</span>  _serviceName <span style="color:#555">=</span> XPCHelperMachServiceName;
+</span></span><span style="display:flex;"><span>        NSXPCConnection<span style="color:#555">*</span> _agentConnection <span style="color:#555">=</span> [[NSXPCConnection alloc] <span style="color:#99f">initWithMachServiceName</span>:_serviceName <span style="color:#99f">options</span>:<span style="color:#f60">4096</span>];
+</span></span><span style="display:flex;"><span>        [_agentConnection <span style="color:#99f">setRemoteObjectInterface</span>:[NSXPCInterface <span style="color:#99f">interfaceWithProtocol</span>:@protocol(SLViscosityIPCXPCProtocol)]];
+</span></span><span style="display:flex;"><span>        [_agentConnection resume];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#078;font-weight:bold">id</span> obj <span style="color:#555">=</span> [_agentConnection <span style="color:#99f">remoteObjectProxyWithErrorHandler</span>:<span style="color:#555">^</span>(NSError<span style="color:#555">*</span> error)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            (<span style="color:#078;font-weight:bold">void</span>)error;
+</span></span><span style="display:flex;"><span>            NSLog(<span style="color:#c30">@&#34;Connection Failure&#34;</span>);
+</span></span><span style="display:flex;"><span>        }];
+</span></span><span style="display:flex;"><span>        NSLog(<span style="color:#c30">@&#34;obj: %@&#34;</span>, obj);
+</span></span><span style="display:flex;"><span>        NSLog(<span style="color:#c30">@&#34;conn: %@&#34;</span>, _agentConnection);
+</span></span><span style="display:flex;"><span>        [obj <span style="color:#99f">message</span>:dict <span style="color:#99f">withReply</span>:<span style="color:#555">^</span>(NSDictionary <span style="color:#555">*</span> dic){
+</span></span><span style="display:flex;"><span>                        NSLog(<span style="color:#c30">@&#34;Reply, %@&#34;</span>, dic);
+</span></span><span style="display:flex;"><span>                    }];
+</span></span><span style="display:flex;"><span>       
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>and I tried to connect:</p>
 <pre tabindex="0"><code>% DYLD_INSERT_LIBRARIES=main.dylib ./Viscosity.app/Contents/MacOS/Viscosity 
 2020-03-22 14:03:27.214 Viscosity[5026:207265] obj: &lt;__NSXPCInterfaceProxy_SLViscosityIPCXPCProtocol: 0x7f926c500d60&gt;
 2020-03-22 14:03:27.214 Viscosity[5026:207265] conn: &lt;NSXPCConnection: 0x7f926c40b1f0&gt; connection to service on pid 0 named com.sparklabs.ViscosityHelper
@@ -210,57 +210,57 @@ __attribute__((constructor))
 <p>Looking at the logs I could see that there was an error with the code signing check:</p>
 <p><code>default	14:03:27.383645+0100	com.sparklabs.ViscosityHelper	SecCodeCopySigningInformation() csFlags error</code></p>
 <p>The CSFLAG related error is already alarming, and looking up the error in Hopper I arrived to the following location:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-objectivec" data-lang="objectivec"><span style="color:#99f">loc_10000f20e</span>:
-    var_50 <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
-    rax <span style="color:#555">=</span> SecCodeCopySigningInformation(<span style="color:#f60">0x0</span>, <span style="color:#f60">0x8</span>, <span style="color:#555">&amp;</span>var_50);
-(...)
-
-<span style="color:#99f">loc_10000f276</span>:
-    rdx <span style="color:#555">=</span> <span style="color:#555">**</span>_kSecCodeInfoStatus;
-    rax <span style="color:#555">=</span> [var_50 <span style="color:#99f">objectForKeyedSubscript</span>:rdx];
-    rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
-    [rax intValue];
-    [rax <span style="color:#069;font-weight:bold">release</span>];
-    CFRelease(var_50);
-    <span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span>COND) {
-            rbx <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
-            NSLog(<span style="color:#c30">@&#34;SecCodeCopySigningInformation() csFlags error&#34;</span>);
-    }
-</code></pre></div><p>The service retrieves the CS flags of the connecting process, which will be in <code>kSecCodeInfoStatus</code>. Hopper didn&rsquo;t reveal for me what is <code>COND</code>, so I took a look at the assembly:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-nasm" data-lang="nasm"><span style="color:#99f">loc_10000f276:</span>
-<span style="color:#c0f">mov</span>        <span style="color:#366">rdi</span>, <span style="color:#078;font-weight:bold">qword</span> [<span style="color:#366">rbp</span><span style="color:#555">+</span><span style="color:#033">var_50</span>] <span style="color:#09f;font-style:italic">; argument &#34;instance&#34; for method _objc_msgSend, CODE XREF=-[SLViscosityIPCServer codeSignatureIsValidForAuditToken:]+240</span>
-<span style="color:#c0f">mov</span>        <span style="color:#366">rax</span>, <span style="color:#078;font-weight:bold">qword</span> [<span style="color:#033">_kSecCodeInfoStatus_10008d0f8</span>] <span style="color:#09f;font-style:italic">; _kSecCodeInfoStatus_10008d0f8</span>
-<span style="color:#c0f">mov</span>        <span style="color:#366">rdx</span>, <span style="color:#078;font-weight:bold">qword</span> [<span style="color:#366">rax</span>]
-<span style="color:#c0f">mov</span>        <span style="color:#366">rsi</span>, <span style="color:#078;font-weight:bold">qword</span> [<span style="color:#f60">0x1000a1578</span>] <span style="color:#09f;font-style:italic">; argument &#34;selector&#34; for method _objc_msgSend, @selector(objectForKeyedSubscript:)</span>
-<span style="color:#c0f">call</span>       <span style="color:#033">r12</span>          <span style="color:#09f;font-style:italic">; Jumps to 0x1000e6780 (_objc_msgSend), _objc_msgSend</span>
-<span style="color:#c0f">mov</span>        <span style="color:#366">rdi</span>, <span style="color:#366">rax</span>     <span style="color:#09f;font-style:italic">; argument &#34;instance&#34; for method imp___stubs__objc_retainAutoreleasedReturnValue</span>
-<span style="color:#c0f">call</span>       <span style="color:#033">imp___stubs__objc_retainAutoreleasedReturnValue</span> <span style="color:#09f;font-style:italic">; objc_retainAutoreleasedReturnValue</span>
-<span style="color:#c0f">mov</span>        <span style="color:#033">r15</span>, <span style="color:#366">rax</span>
-<span style="color:#c0f">mov</span>        <span style="color:#366">rsi</span>, <span style="color:#078;font-weight:bold">qword</span> [<span style="color:#f60">0x1000a1368</span>] <span style="color:#09f;font-style:italic">; argument &#34;selector&#34; for method _objc_msgSend, @selector(intValue)</span>
-<span style="color:#c0f">mov</span>        <span style="color:#366">rdi</span>, <span style="color:#366">rax</span>     <span style="color:#09f;font-style:italic">; argument &#34;instance&#34; for method _objc_msgSend</span>
-<span style="color:#c0f">call</span>       <span style="color:#033">r12</span>          <span style="color:#09f;font-style:italic">; Jumps to 0x1000e6780 (_objc_msgSend), _objc_msgSend</span>
-<span style="color:#c0f">mov</span>        <span style="color:#366">r12d</span>, <span style="color:#366">eax</span>
-<span style="color:#c0f">mov</span>        <span style="color:#366">rdi</span>, <span style="color:#033">r15</span>     <span style="color:#09f;font-style:italic">; argument &#34;instance&#34; for method _objc_release</span>
-<span style="color:#c0f">call</span>       <span style="color:#078;font-weight:bold">qword</span> [<span style="color:#033">_objc_release_10008d118</span>] <span style="color:#09f;font-style:italic">; _objc_release, _objc_release_10008d118,_objc_release</span>
-<span style="color:#c0f">mov</span>        <span style="color:#366">rdi</span>, <span style="color:#078;font-weight:bold">qword</span> [<span style="color:#366">rbp</span><span style="color:#555">+</span><span style="color:#033">var_50</span>] <span style="color:#09f;font-style:italic">; argument &#34;cf&#34; for method imp___stubs__CFRelease</span>
-<span style="color:#c0f">call</span>       <span style="color:#033">imp___stubs__CFRelease</span> <span style="color:#09f;font-style:italic">; CFRelease</span>
-<span style="color:#c0f">bt</span>         <span style="color:#366">r12d</span>, <span style="color:#f60">0xd</span>
-<span style="color:#c0f">jb</span>         <span style="color:#033">loc_10000f2d7</span>
-</code></pre></div><p>The test is done here:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-nasm" data-lang="nasm"><span style="color:#c0f">bt</span>         <span style="color:#366">r12d</span>, <span style="color:#f60">0xd</span>
-<span style="color:#c0f">jb</span>         <span style="color:#033">loc_10000f2d7</span>
-</code></pre></div><p>This will do a <a href="https://en.wikipedia.org/wiki/Bit_Test">Bit Test</a> operation, checking the 13th bit we get earlier for the CS flags. It&rsquo;s done by moving the specified bit to the CF (carry) flag. The 13th bit means <code>0x2000</code> in hex, which is equal for <code>library-validation</code>. This means that if it&rsquo;s set (<code>jb</code> assembly will verify the CF flag, and jump if set), it will proceed with the regular code signing check:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-nasm" data-lang="nasm"><span style="color:#99f">loc_10000f2d7:</span>
-<span style="color:#c0f">mov</span>        <span style="color:#366">rdi</span>, <span style="color:#078;font-weight:bold">qword</span> [<span style="color:#366">rbp</span><span style="color:#555">+</span><span style="color:#033">var_48</span>] <span style="color:#09f;font-style:italic">; argument &#34;code&#34; for method imp___stubs__SecCodeCheckValidityWithErrors, CODE XREF=-[SLViscosityIPCServer codeSignatureIsValidForAuditToken:]+391</span>
-<span style="color:#c0f">mov</span>        <span style="color:#366">rdx</span>, <span style="color:#078;font-weight:bold">qword</span> [<span style="color:#366">rbp</span><span style="color:#555">+</span><span style="color:#033">var_58</span>] <span style="color:#09f;font-style:italic">; argument &#34;requirement&#34; for method imp___stubs__SecCodeCheckValidityWithErrors</span>
-<span style="color:#c0f">xor</span>        <span style="color:#366">esi</span>, <span style="color:#366">esi</span>     <span style="color:#09f;font-style:italic">; argument &#34;flags&#34; for method imp___stubs__SecCodeCheckValidityWithErrors</span>
-<span style="color:#c0f">xor</span>        <span style="color:#366">ecx</span>, <span style="color:#366">ecx</span>     <span style="color:#09f;font-style:italic">; argument &#34;errors&#34; for method imp___stubs__SecCodeCheckValidityWithErrors</span>
-<span style="color:#c0f">call</span>       <span style="color:#033">imp___stubs__SecCodeCheckValidityWithErrors</span> <span style="color:#09f;font-style:italic">; SecCodeCheckValidityWithErrors</span>
-<span style="color:#c0f">mov</span>        <span style="color:#366">r15d</span>, <span style="color:#366">eax</span>
-<span style="color:#c0f">mov</span>        <span style="color:#366">rdi</span>, <span style="color:#078;font-weight:bold">qword</span> [<span style="color:#366">rbp</span><span style="color:#555">+</span><span style="color:#033">var_48</span>]
-<span style="color:#c0f">test</span>       <span style="color:#366">rdi</span>, <span style="color:#366">rdi</span>
-<span style="color:#c0f">je</span>         <span style="color:#033">loc_10000f2f9</span>
-</code></pre></div><p>It means that our client has to have <code>library-validation</code> set, which will involve that we can&rsquo;t do DYLIB injection into the client, as I discussed this here before: <a href="https://theevilbit.github.io/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/">DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX · theevilbit blog</a>.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#99f">loc_10000f20e</span>:
+</span></span><span style="display:flex;"><span>    var_50 <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
+</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> SecCodeCopySigningInformation(<span style="color:#f60">0x0</span>, <span style="color:#f60">0x8</span>, <span style="color:#555">&amp;</span>var_50);
+</span></span><span style="display:flex;"><span>(...)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#99f">loc_10000f276</span>:
+</span></span><span style="display:flex;"><span>    rdx <span style="color:#555">=</span> <span style="color:#555">**</span>_kSecCodeInfoStatus;
+</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [var_50 <span style="color:#99f">objectForKeyedSubscript</span>:rdx];
+</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
+</span></span><span style="display:flex;"><span>    [rax intValue];
+</span></span><span style="display:flex;"><span>    [rax <span style="color:#069;font-weight:bold">release</span>];
+</span></span><span style="display:flex;"><span>    CFRelease(var_50);
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span>COND) {
+</span></span><span style="display:flex;"><span>            rbx <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
+</span></span><span style="display:flex;"><span>            NSLog(<span style="color:#c30">@&#34;SecCodeCopySigningInformation() csFlags error&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div><p>The service retrieves the CS flags of the connecting process, which will be in <code>kSecCodeInfoStatus</code>. Hopper didn&rsquo;t reveal for me what is <code>COND</code>, so I took a look at the assembly:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-nasm" data-lang="nasm"><span style="display:flex;"><span><span style="color:#99f">loc_10000f276:</span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">mov</span>        <span style="color:#366">rdi</span>, <span style="color:#078;font-weight:bold">qword</span> [<span style="color:#366">rbp</span><span style="color:#555">+</span><span style="color:#033">var_50</span>] <span style="color:#09f;font-style:italic">; argument &#34;instance&#34; for method _objc_msgSend, CODE XREF=-[SLViscosityIPCServer codeSignatureIsValidForAuditToken:]+240</span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">mov</span>        <span style="color:#366">rax</span>, <span style="color:#078;font-weight:bold">qword</span> [<span style="color:#033">_kSecCodeInfoStatus_10008d0f8</span>] <span style="color:#09f;font-style:italic">; _kSecCodeInfoStatus_10008d0f8</span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">mov</span>        <span style="color:#366">rdx</span>, <span style="color:#078;font-weight:bold">qword</span> [<span style="color:#366">rax</span>]
+</span></span><span style="display:flex;"><span><span style="color:#c0f">mov</span>        <span style="color:#366">rsi</span>, <span style="color:#078;font-weight:bold">qword</span> [<span style="color:#f60">0x1000a1578</span>] <span style="color:#09f;font-style:italic">; argument &#34;selector&#34; for method _objc_msgSend, @selector(objectForKeyedSubscript:)</span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">call</span>       <span style="color:#033">r12</span>          <span style="color:#09f;font-style:italic">; Jumps to 0x1000e6780 (_objc_msgSend), _objc_msgSend</span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">mov</span>        <span style="color:#366">rdi</span>, <span style="color:#366">rax</span>     <span style="color:#09f;font-style:italic">; argument &#34;instance&#34; for method imp___stubs__objc_retainAutoreleasedReturnValue</span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">call</span>       <span style="color:#033">imp___stubs__objc_retainAutoreleasedReturnValue</span> <span style="color:#09f;font-style:italic">; objc_retainAutoreleasedReturnValue</span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">mov</span>        <span style="color:#033">r15</span>, <span style="color:#366">rax</span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">mov</span>        <span style="color:#366">rsi</span>, <span style="color:#078;font-weight:bold">qword</span> [<span style="color:#f60">0x1000a1368</span>] <span style="color:#09f;font-style:italic">; argument &#34;selector&#34; for method _objc_msgSend, @selector(intValue)</span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">mov</span>        <span style="color:#366">rdi</span>, <span style="color:#366">rax</span>     <span style="color:#09f;font-style:italic">; argument &#34;instance&#34; for method _objc_msgSend</span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">call</span>       <span style="color:#033">r12</span>          <span style="color:#09f;font-style:italic">; Jumps to 0x1000e6780 (_objc_msgSend), _objc_msgSend</span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">mov</span>        <span style="color:#366">r12d</span>, <span style="color:#366">eax</span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">mov</span>        <span style="color:#366">rdi</span>, <span style="color:#033">r15</span>     <span style="color:#09f;font-style:italic">; argument &#34;instance&#34; for method _objc_release</span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">call</span>       <span style="color:#078;font-weight:bold">qword</span> [<span style="color:#033">_objc_release_10008d118</span>] <span style="color:#09f;font-style:italic">; _objc_release, _objc_release_10008d118,_objc_release</span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">mov</span>        <span style="color:#366">rdi</span>, <span style="color:#078;font-weight:bold">qword</span> [<span style="color:#366">rbp</span><span style="color:#555">+</span><span style="color:#033">var_50</span>] <span style="color:#09f;font-style:italic">; argument &#34;cf&#34; for method imp___stubs__CFRelease</span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">call</span>       <span style="color:#033">imp___stubs__CFRelease</span> <span style="color:#09f;font-style:italic">; CFRelease</span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">bt</span>         <span style="color:#366">r12d</span>, <span style="color:#f60">0xd</span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">jb</span>         <span style="color:#033">loc_10000f2d7</span>
+</span></span></code></pre></div><p>The test is done here:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-nasm" data-lang="nasm"><span style="display:flex;"><span><span style="color:#c0f">bt</span>         <span style="color:#366">r12d</span>, <span style="color:#f60">0xd</span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">jb</span>         <span style="color:#033">loc_10000f2d7</span>
+</span></span></code></pre></div><p>This will do a <a href="https://en.wikipedia.org/wiki/Bit_Test">Bit Test</a> operation, checking the 13th bit we get earlier for the CS flags. It&rsquo;s done by moving the specified bit to the CF (carry) flag. The 13th bit means <code>0x2000</code> in hex, which is equal for <code>library-validation</code>. This means that if it&rsquo;s set (<code>jb</code> assembly will verify the CF flag, and jump if set), it will proceed with the regular code signing check:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-nasm" data-lang="nasm"><span style="display:flex;"><span><span style="color:#99f">loc_10000f2d7:</span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">mov</span>        <span style="color:#366">rdi</span>, <span style="color:#078;font-weight:bold">qword</span> [<span style="color:#366">rbp</span><span style="color:#555">+</span><span style="color:#033">var_48</span>] <span style="color:#09f;font-style:italic">; argument &#34;code&#34; for method imp___stubs__SecCodeCheckValidityWithErrors, CODE XREF=-[SLViscosityIPCServer codeSignatureIsValidForAuditToken:]+391</span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">mov</span>        <span style="color:#366">rdx</span>, <span style="color:#078;font-weight:bold">qword</span> [<span style="color:#366">rbp</span><span style="color:#555">+</span><span style="color:#033">var_58</span>] <span style="color:#09f;font-style:italic">; argument &#34;requirement&#34; for method imp___stubs__SecCodeCheckValidityWithErrors</span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">xor</span>        <span style="color:#366">esi</span>, <span style="color:#366">esi</span>     <span style="color:#09f;font-style:italic">; argument &#34;flags&#34; for method imp___stubs__SecCodeCheckValidityWithErrors</span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">xor</span>        <span style="color:#366">ecx</span>, <span style="color:#366">ecx</span>     <span style="color:#09f;font-style:italic">; argument &#34;errors&#34; for method imp___stubs__SecCodeCheckValidityWithErrors</span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">call</span>       <span style="color:#033">imp___stubs__SecCodeCheckValidityWithErrors</span> <span style="color:#09f;font-style:italic">; SecCodeCheckValidityWithErrors</span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">mov</span>        <span style="color:#366">r15d</span>, <span style="color:#366">eax</span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">mov</span>        <span style="color:#366">rdi</span>, <span style="color:#078;font-weight:bold">qword</span> [<span style="color:#366">rbp</span><span style="color:#555">+</span><span style="color:#033">var_48</span>]
+</span></span><span style="display:flex;"><span><span style="color:#c0f">test</span>       <span style="color:#366">rdi</span>, <span style="color:#366">rdi</span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">je</span>         <span style="color:#033">loc_10000f2f9</span>
+</span></span></code></pre></div><p>It means that our client has to have <code>library-validation</code> set, which will involve that we can&rsquo;t do DYLIB injection into the client, as I discussed this here before: <a href="https://theevilbit.github.io/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/">DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX · theevilbit blog</a>.</p>
 <p>I didn&rsquo;t know that it&rsquo;s possible, and it&rsquo;s a very good way to actually verify the client. Normally I said that we need to ensure that the client is a new version, where we know that it&rsquo;s already hardened, but this is also a very good way.</p>
 <p>I found after this, that this idea is explained in LittleSnitch&rsquo;s blog as well: <a href="https://blog.obdev.at/what-we-have-learned-from-a-vulnerability/">The Story Behind CVE-2019-13013</a></p>
 

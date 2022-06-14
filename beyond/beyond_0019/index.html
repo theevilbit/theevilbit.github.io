@@ -11,12 +11,12 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 19 - Periodic Scripts"/>
-<meta name="twitter:description" content="This is part 19 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta name="twitter:description" content="This is part 19 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  This post has been long due, as it&rsquo;s one of my favorite persistence tricks. Up until Big Sur 11.5 you could also exploit it for privilege escalation if Homebrew was installed on the system.
 Periodic scripts have a FreeBSD origin."/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 19 - Periodic Scripts" />
-<meta property="og:description" content="This is part 19 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta property="og:description" content="This is part 19 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  This post has been long due, as it&rsquo;s one of my favorite persistence tricks. Up until Big Sur 11.5 you could also exploit it for privilege escalation if Homebrew was installed on the system.
 Periodic scripts have a FreeBSD origin." />
 <meta property="og:type" content="article" />
@@ -58,7 +58,7 @@ Periodic scripts have a FreeBSD origin." />
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.92.1" />
+    <meta name="generator" content="Hugo 0.96.0" />
   </head>
 
   <body class=" ">
@@ -144,7 +144,7 @@ Periodic scripts have a FreeBSD origin." />
 
       <div>
         <blockquote>
-<p>This is part 19 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+<p>This is part 19 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
 </blockquote>
 <p>This post has been long due, as it&rsquo;s one of my favorite persistence tricks. Up until Big Sur 11.5 you could also exploit it for privilege escalation if Homebrew was installed on the system.</p>
 <p>Periodic scripts have a FreeBSD origin. These scripts are doing some maintenance tasks on the system, and scheduled to be run on a daily, weekly and monthly basis.</p>
@@ -162,21 +162,21 @@ Periodic scripts have a FreeBSD origin." />
 <h2 id="the-vulnerability--the-fix">The Vulnerability &amp; The Fix</h2>
 <p>Periodic scripts have a secondary location defined in the configuration file <code>/etc/defaults/periodic.conf</code>.</p>
 <pre tabindex="0"><code># periodic script dirs
-local_periodic=&quot;/usr/local/etc/periodic&quot;
+local_periodic=&#34;/usr/local/etc/periodic&#34;
 </code></pre><p>Anyone who has <a href="https://brew.sh/">Homebrew</a> installed knows that the owner of the <code>/usr/local/</code> directory is changed from root to the admin user. This means that an admin user can write to this location without further privilege elevation. Thus if we create the above folder, and drop our script inside we gain code execution as root.</p>
 <p>I reported this to Apple, and although it&rsquo;s not a default configuration they still fixed it. To my surprise they fixed it the way I recommended it. Here is a shortened version of the <code>diff</code> of the old and patched periodic bash script.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">csaby@mac ~ % diff periodic_11.4 periodic_11.5
-...
-<span style="color:#033">result</span><span style="color:#555">=(</span><span style="color:#c30">`</span>/usr/bin/stat -f <span style="color:#c30">&#39;%Su %Ul&#39;</span> <span style="color:#033">$file</span><span style="color:#c30">`</span><span style="color:#555">)</span>
-<span style="color:#033">user</span><span style="color:#555">=</span><span style="color:#a00">${</span><span style="color:#033">result</span>[0]<span style="color:#a00">}</span>
-<span style="color:#033">hardlinks</span><span style="color:#555">=</span><span style="color:#a00">${</span><span style="color:#033">result</span>[1]<span style="color:#a00">}</span>
-<span style="color:#069;font-weight:bold">if</span> <span style="color:#555">[</span> <span style="color:#033">$hardlinks</span> -ne <span style="color:#f60">1</span> <span style="color:#555">]</span> ; <span style="color:#069;font-weight:bold">then</span>
-    <span style="color:#033">skippedlist</span><span style="color:#555">+=(</span><span style="color:#c30">&#34;</span><span style="color:#033">$file</span><span style="color:#c30">&#34;</span><span style="color:#555">)</span>
-    <span style="color:#069;font-weight:bold">continue</span>
-<span style="color:#069;font-weight:bold">fi</span>
-/usr/bin/su <span style="color:#033">$user</span> -c <span style="color:#033">$file</span> &lt;/dev/null &gt;<span style="color:#033">$tmp_output</span> 2&gt;&amp;<span style="color:#f60">1</span>
-...
-</code></pre></div><p>What happens here is that they check the owner of the script file, and will execute the script as the owner. This means that if you create a script with your user it will be executed as your user instead of root.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>csaby@mac ~ % diff periodic_11.4 periodic_11.5
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span><span style="color:#033">result</span><span style="color:#555">=(</span><span style="color:#c30">`</span>/usr/bin/stat -f <span style="color:#c30">&#39;%Su %Ul&#39;</span> <span style="color:#033">$file</span><span style="color:#c30">`</span><span style="color:#555">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#033">user</span><span style="color:#555">=</span><span style="color:#a00">${</span><span style="color:#033">result</span>[0]<span style="color:#a00">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#033">hardlinks</span><span style="color:#555">=</span><span style="color:#a00">${</span><span style="color:#033">result</span>[1]<span style="color:#a00">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">if</span> <span style="color:#555">[</span> <span style="color:#033">$hardlinks</span> -ne <span style="color:#f60">1</span> <span style="color:#555">]</span> ; <span style="color:#069;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#033">skippedlist</span><span style="color:#555">+=(</span><span style="color:#c30">&#34;</span><span style="color:#033">$file</span><span style="color:#c30">&#34;</span><span style="color:#555">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">continue</span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span>/usr/bin/su <span style="color:#033">$user</span> -c <span style="color:#033">$file</span> &lt;/dev/null &gt;<span style="color:#033">$tmp_output</span> 2&gt;&amp;<span style="color:#f60">1</span>
+</span></span><span style="display:flex;"><span>...
+</span></span></code></pre></div><p>What happens here is that they check the owner of the script file, and will execute the script as the owner. This means that if you create a script with your user it will be executed as your user instead of root.</p>
 <p>Moreover this also kills an exploit weaponization technique where you could move a file with an exploit. If you dropped a script here, you could turn a &ldquo;file move&rdquo; exploit into a full privilege escalation. This path is closed now. Sorry.</p>
 <p>It was slightly different but I also utilized this weaponization trick in <a href="https://www.offensive-security.com/offsec/macos-preferences-priv-escalation/">CVE-2021-1815</a>.</p>
 <h2 id="but-not-all-is-lost">But Not All Is Lost</h2>
@@ -184,18 +184,18 @@ local_periodic=&quot;/usr/local/etc/periodic&quot;
 <pre tabindex="0"><code>csaby@mac /etc % grep .local /etc/defaults/periodic.conf         
 ...
 # 999.local
-daily_local=&quot;/etc/daily.local&quot;				# Local scripts
+daily_local=&#34;/etc/daily.local&#34;				# Local scripts
 # 999.local
-weekly_local=&quot;/etc/weekly.local&quot;			# Local scripts
+weekly_local=&#34;/etc/weekly.local&#34;			# Local scripts
 # 999.local
-monthly_local=&quot;/etc/monthly.local&quot;			# Local scripts
+monthly_local=&#34;/etc/monthly.local&#34;			# Local scripts
                 local i sourced_files
 </code></pre><p>As we can find there is one for each schedule. As there are no further checks in the <code>999.local</code> scripts for user ownership, if we can move and create the file <code>/etc/daily.local</code>, that will be executed as root. Although we can&rsquo;t use it as privilege escalation, we can still use it for weaponization.</p>
 <p>You are welcome :)</p>
 <h2 id="further-notes">Further notes</h2>
 <p>The periodic script uses the previously mentioned configuration file to locate some of the scripts directories. This means that if we as an attacker overwrite it, we can place our scripts anywhere, so someone has to monitor for any file changes. Beyond that the config file defines other config files.</p>
 <pre tabindex="0"><code># What files override these defaults ?
-periodic_conf_files=&quot;/etc/periodic.conf /etc/periodic.conf.local&quot;
+periodic_conf_files=&#34;/etc/periodic.conf /etc/periodic.conf.local&#34;
 </code></pre>
       </div>
 

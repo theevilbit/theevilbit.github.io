@@ -54,7 +54,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.92.1" />
+    <meta name="generator" content="Hugo 0.96.0" />
   </head>
 
   <body class=" ">
@@ -155,9 +155,9 @@ Info.plist entries=54
 TeamIdentifier=not set
 Sealed Resources version=2 rules=2 files=0
 Internal requirements count=1 size=68
-&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;https://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;
-&lt;plist version=&quot;1.0&quot;&gt;
+&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;
+&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;https://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;
+&lt;plist version=&#34;1.0&#34;&gt;
 	&lt;dict&gt;
 		&lt;key&gt;com.apple.CompanionLink&lt;/key&gt;
 		&lt;true/&gt;
@@ -362,9 +362,9 @@ total 4696
 -rw-r--r--@ 1 csaby  staff  1400832 Jun 10 22:20 Shortcuts.sqlite-wal
 -rw-r--r--  1 csaby  staff       60 Jun 10 22:20 Spotlight.dat
 </code></pre><p>Let&rsquo;s start with <code>SecuredPreferences.plist</code>. This file contains the &ldquo;advanced&rdquo; configuration option for Shortcuts. The file is very short.</p>
-<pre tabindex="0"><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;
-&lt;plist version=&quot;1.0&quot;&gt;
+<pre tabindex="0"><code>&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;
+&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;
+&lt;plist version=&#34;1.0&#34;&gt;
 &lt;dict&gt;
 	&lt;key&gt;WFAllowDeletingLargeAmountsOfDataKey&lt;/key&gt;
 	&lt;true/&gt;
@@ -381,7 +381,7 @@ total 4696
 <p>Let&rsquo;s take a look on the database. I&rsquo;m sure <a href="https://twitter.com/iamevltwin">Sarah Edwards</a> will come up with some awesome queries for her Apollo 4n6 project. :) I won&rsquo;t go too crazy here.</p>
 <pre tabindex="0"><code>csaby@macos12 ~ % sqlite3 Library/Shortcuts/Shortcuts.sqlite
 SQLite version 3.35.3 2021-03-26 16:31:39
-Enter &quot;.help&quot; for usage hints.
+Enter &#34;.help&#34; for usage hints.
 sqlite&gt; .tables
 ZACCESSRESOURCEPERMISSION                  
 ZCLOUDKITSYNCTOKEN                         
@@ -412,10 +412,10 @@ testcut|Run Shell Script
 <p><code>ZSHORTCUTACTIONS</code> will contain information about the configured actions.</p>
 <pre tabindex="0"><code>sqlite&gt; select * from ZSHORTCUTACTIONS;
 Z_PK|Z_ENT|Z_OPT|ZSHORTCUT|ZDATA
-3|5|9|3|bplist00??_WFWorkflowActionIdentifier_WFWorkflowActionParameters_&quot;is.workflow.actions.runshellscript?   VScriptTUUID_touch /tmp/testcut_$2252E11A-5DEF-446E-BC5D-F053391273CC
+3|5|9|3|bplist00??_WFWorkflowActionIdentifier_WFWorkflowActionParameters_&#34;is.workflow.actions.runshellscript?   VScriptTUUID_touch /tmp/testcut_$2252E11A-5DEF-446E-BC5D-F053391273CC
 ,Insz?
 </code></pre><p>As we can find in the above query, the actions is stored as a binary plist. Unfortunatley plutil will fail converting it. :-/</p>
-<pre tabindex="0"><code>csaby@macos12 ~ % sqlite3 Library/Shortcuts/Shortcuts.sqlite &quot;select ZDATA from ZSHORTCUTACTIONS where Z_PK=3&quot; | plutil -convert xml1 - -o -
+<pre tabindex="0"><code>csaby@macos12 ~ % sqlite3 Library/Shortcuts/Shortcuts.sqlite &#34;select ZDATA from ZSHORTCUTACTIONS where Z_PK=3&#34; | plutil -convert xml1 - -o -
 &lt;stdin&gt;: Property List error: Unexpected character b at line 1 / JSON error: JSON text did not start with array or object and option to allow fragments not set. around line 1, column 0.
 </code></pre><p>Nevertheless, we can still spot our <code>touch /tmp/testcut</code> command inside. So if ever someone wants to persist using shortcuts, this is the table to use, and cross reference entries with other tables.</p>
 <blockquote>
@@ -440,9 +440,9 @@ Info.plist entries=19
 TeamIdentifier=not set
 Sealed Resources=none
 Internal requirements count=1 size=88
-&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;https://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;
-&lt;plist version=&quot;1.0&quot;&gt;
+&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;
+&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;https://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;
+&lt;plist version=&#34;1.0&#34;&gt;
 	&lt;dict&gt;
 		&lt;key&gt;com.apple.siri.VoiceShortcuts.xpc&lt;/key&gt;
 		&lt;true/&gt;
@@ -469,17 +469,17 @@ Internal requirements count=1 size=88
 <h2 id="execution">Execution</h2>
 <p>I used Patrick Wardle&rsquo;s <a href="https://objective-see.com/products/utilities.html#ProcessMonitor">ProcessMonitor</a> to watch what happens when I run <code>shortcuts run testcut</code>.</p>
 <p>The relevant events are the following:</p>
-<pre tabindex="0"><code>{&quot;event&quot;:&quot;ES_EVENT_TYPE_NOTIFY_EXEC&quot;,&quot;process&quot;:{&quot;pid&quot;:27552,&quot;path&quot;:&quot;/usr/bin/shortcuts&quot;,&quot;uid&quot;:501,&quot;arguments&quot;:[&quot;shortcuts&quot;,&quot;run&quot;,&quot;testcut&quot;],&quot;ppid&quot;:19388,&quot;ancestors&quot;:[19388,19387,19385,1],&quot;signing info&quot;:{&quot;csFlags&quot;:570522385,&quot;signatureIdentifier&quot;:&quot;com.apple.shortcuts.ShortcutsCommandLine&quot;,&quot;cdHash&quot;:&quot;89E43245F73BDFB56F80B23B43353C519D1AE2&quot;,&quot;isPlatformBinary&quot;:1}}}
+<pre tabindex="0"><code>{&#34;event&#34;:&#34;ES_EVENT_TYPE_NOTIFY_EXEC&#34;,&#34;process&#34;:{&#34;pid&#34;:27552,&#34;path&#34;:&#34;/usr/bin/shortcuts&#34;,&#34;uid&#34;:501,&#34;arguments&#34;:[&#34;shortcuts&#34;,&#34;run&#34;,&#34;testcut&#34;],&#34;ppid&#34;:19388,&#34;ancestors&#34;:[19388,19387,19385,1],&#34;signing info&#34;:{&#34;csFlags&#34;:570522385,&#34;signatureIdentifier&#34;:&#34;com.apple.shortcuts.ShortcutsCommandLine&#34;,&#34;cdHash&#34;:&#34;89E43245F73BDFB56F80B23B43353C519D1AE2&#34;,&#34;isPlatformBinary&#34;:1}}}
 
-{&quot;event&quot;:&quot;ES_EVENT_TYPE_NOTIFY_EXEC&quot;,&quot;process&quot;:{&quot;pid&quot;:27553,&quot;path&quot;:&quot;/System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/BackgroundShortcutRunner.xpc/Contents/MacOS/BackgroundShortcutRunner&quot;,&quot;uid&quot;:501,&quot;arguments&quot;:[&quot;/System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/BackgroundShortcutRunner.xpc/Contents/MacOS/BackgroundShortcutRunner&quot;],&quot;ppid&quot;:1,&quot;ancestors&quot;:[1],&quot;signing info&quot;:{&quot;csFlags&quot;:570522385,&quot;signatureIdentifier&quot;:&quot;com.apple.WorkflowKit.BackgroundShortcutRunner&quot;,&quot;cdHash&quot;:&quot;DF1F3A29EA01E827CDFDA696A05AE0C1C2B8B9&quot;,&quot;isPlatformBinary&quot;:1}}}
+{&#34;event&#34;:&#34;ES_EVENT_TYPE_NOTIFY_EXEC&#34;,&#34;process&#34;:{&#34;pid&#34;:27553,&#34;path&#34;:&#34;/System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/BackgroundShortcutRunner.xpc/Contents/MacOS/BackgroundShortcutRunner&#34;,&#34;uid&#34;:501,&#34;arguments&#34;:[&#34;/System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/BackgroundShortcutRunner.xpc/Contents/MacOS/BackgroundShortcutRunner&#34;],&#34;ppid&#34;:1,&#34;ancestors&#34;:[1],&#34;signing info&#34;:{&#34;csFlags&#34;:570522385,&#34;signatureIdentifier&#34;:&#34;com.apple.WorkflowKit.BackgroundShortcutRunner&#34;,&#34;cdHash&#34;:&#34;DF1F3A29EA01E827CDFDA696A05AE0C1C2B8B9&#34;,&#34;isPlatformBinary&#34;:1}}}
 
-{&quot;event&quot;:&quot;ES_EVENT_TYPE_NOTIFY_EXEC&quot;,&quot;process&quot;:{&quot;pid&quot;:27556,&quot;path&quot;:&quot;/System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/MacHelper.xpc/Contents/MacOS/MacHelper&quot;,&quot;uid&quot;:501,&quot;arguments&quot;:[&quot;/System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/MacHelper.xpc/Contents/MacOS/MacHelper&quot;],&quot;ppid&quot;:1,&quot;ancestors&quot;:[1],&quot;signing info&quot;:{&quot;csFlags&quot;:570522385,&quot;signatureIdentifier&quot;:&quot;com.apple.WorkflowKit.MacHelper&quot;,&quot;cdHash&quot;:&quot;F3A1B2D858F28373BE6F52CF4C5E2DF19B65D&quot;,&quot;isPlatformBinary&quot;:1}}}
+{&#34;event&#34;:&#34;ES_EVENT_TYPE_NOTIFY_EXEC&#34;,&#34;process&#34;:{&#34;pid&#34;:27556,&#34;path&#34;:&#34;/System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/MacHelper.xpc/Contents/MacOS/MacHelper&#34;,&#34;uid&#34;:501,&#34;arguments&#34;:[&#34;/System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/MacHelper.xpc/Contents/MacOS/MacHelper&#34;],&#34;ppid&#34;:1,&#34;ancestors&#34;:[1],&#34;signing info&#34;:{&#34;csFlags&#34;:570522385,&#34;signatureIdentifier&#34;:&#34;com.apple.WorkflowKit.MacHelper&#34;,&#34;cdHash&#34;:&#34;F3A1B2D858F28373BE6F52CF4C5E2DF19B65D&#34;,&#34;isPlatformBinary&#34;:1}}}
 
-{&quot;event&quot;:&quot;ES_EVENT_TYPE_NOTIFY_FORK&quot;,&quot;process&quot;:{&quot;pid&quot;:27558,&quot;path&quot;:&quot;/System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/MacHelper.xpc/Contents/MacOS/MacHelper&quot;,&quot;uid&quot;:501,&quot;arguments&quot;:[],&quot;ppid&quot;:27556,&quot;ancestors&quot;:[27556],&quot;signing info&quot;:{&quot;csFlags&quot;:570522385,&quot;signatureIdentifier&quot;:&quot;com.apple.WorkflowKit.MacHelper&quot;,&quot;cdHash&quot;:&quot;F3A1B2D858F28373BE6F52CF4C5E2DF19B65D&quot;,&quot;isPlatformBinary&quot;:1}}}
+{&#34;event&#34;:&#34;ES_EVENT_TYPE_NOTIFY_FORK&#34;,&#34;process&#34;:{&#34;pid&#34;:27558,&#34;path&#34;:&#34;/System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/MacHelper.xpc/Contents/MacOS/MacHelper&#34;,&#34;uid&#34;:501,&#34;arguments&#34;:[],&#34;ppid&#34;:27556,&#34;ancestors&#34;:[27556],&#34;signing info&#34;:{&#34;csFlags&#34;:570522385,&#34;signatureIdentifier&#34;:&#34;com.apple.WorkflowKit.MacHelper&#34;,&#34;cdHash&#34;:&#34;F3A1B2D858F28373BE6F52CF4C5E2DF19B65D&#34;,&#34;isPlatformBinary&#34;:1}}}
 
-{&quot;event&quot;:&quot;ES_EVENT_TYPE_NOTIFY_EXEC&quot;,&quot;process&quot;:{&quot;pid&quot;:27558,&quot;path&quot;:&quot;/bin/zsh&quot;,&quot;uid&quot;:501,&quot;arguments&quot;:[&quot;/bin/zsh&quot;,&quot;-c&quot;,&quot;touch /tmp/testcut&quot;,&quot;-&quot;],&quot;ppid&quot;:27556,&quot;ancestors&quot;:[27556],&quot;signing info&quot;:{&quot;csFlags&quot;:570510081,&quot;signatureIdentifier&quot;:&quot;com.apple.zsh&quot;,&quot;cdHash&quot;:&quot;467AA8464C3C76FDB13FFE1FD356CE4BD75A44&quot;,&quot;isPlatformBinary&quot;:1}}}
+{&#34;event&#34;:&#34;ES_EVENT_TYPE_NOTIFY_EXEC&#34;,&#34;process&#34;:{&#34;pid&#34;:27558,&#34;path&#34;:&#34;/bin/zsh&#34;,&#34;uid&#34;:501,&#34;arguments&#34;:[&#34;/bin/zsh&#34;,&#34;-c&#34;,&#34;touch /tmp/testcut&#34;,&#34;-&#34;],&#34;ppid&#34;:27556,&#34;ancestors&#34;:[27556],&#34;signing info&#34;:{&#34;csFlags&#34;:570510081,&#34;signatureIdentifier&#34;:&#34;com.apple.zsh&#34;,&#34;cdHash&#34;:&#34;467AA8464C3C76FDB13FFE1FD356CE4BD75A44&#34;,&#34;isPlatformBinary&#34;:1}}}
 
-{&quot;event&quot;:&quot;ES_EVENT_TYPE_NOTIFY_EXEC&quot;,&quot;process&quot;:{&quot;pid&quot;:27558,&quot;path&quot;:&quot;/usr/bin/touch&quot;,&quot;uid&quot;:501,&quot;arguments&quot;:[&quot;touch&quot;,&quot;/tmp/testcut&quot;],&quot;ppid&quot;:27556,&quot;ancestors&quot;:[27556],&quot;signing info&quot;:{&quot;csFlags&quot;:570522385,&quot;signatureIdentifier&quot;:&quot;com.apple.touch&quot;,&quot;cdHash&quot;:&quot;4547651A716192E0A34744DFECC015C8373B663&quot;,&quot;isPlatformBinary&quot;:1}}}
+{&#34;event&#34;:&#34;ES_EVENT_TYPE_NOTIFY_EXEC&#34;,&#34;process&#34;:{&#34;pid&#34;:27558,&#34;path&#34;:&#34;/usr/bin/touch&#34;,&#34;uid&#34;:501,&#34;arguments&#34;:[&#34;touch&#34;,&#34;/tmp/testcut&#34;],&#34;ppid&#34;:27556,&#34;ancestors&#34;:[27556],&#34;signing info&#34;:{&#34;csFlags&#34;:570522385,&#34;signatureIdentifier&#34;:&#34;com.apple.touch&#34;,&#34;cdHash&#34;:&#34;4547651A716192E0A34744DFECC015C8373B663&#34;,&#34;isPlatformBinary&#34;:1}}}
 </code></pre><p>Based on the sequence of events, <code>shortcuts</code> will call the <code>BackgroundShortcutRunner</code> XPC service first. This service will further call the <code>MacHelper</code> XPC service, which will finally execute our command.</p>
 <p>One interesting note is that <code>MacHelper</code> has Full Disk Access.</p>
 <pre tabindex="0"><code>csaby@macos12 ~ % codesign -dv --entitlements :- /System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/MacHelper.xpc/Contents/MacOS/MacHelper
@@ -494,9 +494,9 @@ Info.plist entries=23
 TeamIdentifier=not set
 Sealed Resources version=2 rules=2 files=0
 Internal requirements count=1 size=80
-&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;https://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;
-&lt;plist version=&quot;1.0&quot;&gt;
+&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;
+&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;https://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;
+&lt;plist version=&#34;1.0&#34;&gt;
 	&lt;dict&gt;
 		&lt;key&gt;com.apple.dock.add-item&lt;/key&gt;
 		&lt;true/&gt;

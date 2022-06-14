@@ -11,12 +11,12 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 6 - SSHRC"/>
-<meta name="twitter:description" content="This is part 6 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta name="twitter:description" content="This is part 6 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  I learned about this trick from @0xdade when he posted it on Twitter.
 If we create a file in the user&rsquo;s HOME directory at ~/.ssh/rc it will be executed prior to the user&rsquo;s login shell becomes available. The man page of sshd describes this in more detail."/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 6 - SSHRC" />
-<meta property="og:description" content="This is part 6 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta property="og:description" content="This is part 6 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  I learned about this trick from @0xdade when he posted it on Twitter.
 If we create a file in the user&rsquo;s HOME directory at ~/.ssh/rc it will be executed prior to the user&rsquo;s login shell becomes available. The man page of sshd describes this in more detail." />
 <meta property="og:type" content="article" />
@@ -58,7 +58,7 @@ If we create a file in the user&rsquo;s HOME directory at ~/.ssh/rc it will be e
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.92.1" />
+    <meta name="generator" content="Hugo 0.96.0" />
   </head>
 
   <body class=" ">
@@ -144,23 +144,23 @@ If we create a file in the user&rsquo;s HOME directory at ~/.ssh/rc it will be e
 
       <div>
         <blockquote>
-<p>This is part 6 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+<p>This is part 6 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
 </blockquote>
 <p>I learned about this trick from <a href="https://twitter.com/0xdade">@0xdade</a> when he <a href="https://twitter.com/0xdade/status/1373145566943711235">posted</a> it on Twitter.</p>
 <p>If we create a file in the user&rsquo;s HOME directory at <code>~/.ssh/rc</code> it will be executed prior to the user&rsquo;s login shell becomes available. The man page of <code>sshd</code> describes this in more detail.</p>
-<pre tabindex="0"><code> If ~/.ssh/rc exists and the sshd_config(5) PermitUserRC option is set, runs it; else if /etc/ssh/sshrc exists, runs it; otherwise runs xauth.  The ``rc'' files are given the X11 authenti-cation protocol and cookie in standard input.  See SSHRC, below.
+<pre tabindex="0"><code> If ~/.ssh/rc exists and the sshd_config(5) PermitUserRC option is set, runs it; else if /etc/ssh/sshrc exists, runs it; otherwise runs xauth.  The ``rc&#39;&#39; files are given the X11 authenti-cation protocol and cookie in standard input.  See SSHRC, below.
 </code></pre><p>and some more.</p>
 <pre tabindex="0"><code>SSHRC
-     If the file ~/.ssh/rc exists, sh(1) runs it after reading the environment files but before starting the user's shell or command.  It must not produce any output on stdout; stderr must be used
-     instead.  If X11 forwarding is in use, it will receive the &quot;proto cookie&quot; pair in its standard input (and DISPLAY in its environment).  The script must call xauth(1) because sshd will not run xauth
+     If the file ~/.ssh/rc exists, sh(1) runs it after reading the environment files but before starting the user&#39;s shell or command.  It must not produce any output on stdout; stderr must be used
+     instead.  If X11 forwarding is in use, it will receive the &#34;proto cookie&#34; pair in its standard input (and DISPLAY in its environment).  The script must call xauth(1) because sshd will not run xauth
      automatically to add X11 cookies.
 
-     The primary purpose of this file is to run any initialization routines which may be needed before the user's home directory becomes accessible; AFS is a particular example of such an environment.
+     The primary purpose of this file is to run any initialization routines which may be needed before the user&#39;s home directory becomes accessible; AFS is a particular example of such an environment.
 
      This file will probably contain some initialization code followed by something similar to:
 
-        if read proto cookie &amp;&amp; [ -n &quot;$DISPLAY&quot; ]; then
-                if [ `echo $DISPLAY | cut -c1-10` = 'localhost:' ]; then
+        if read proto cookie &amp;&amp; [ -n &#34;$DISPLAY&#34; ]; then
+                if [ `echo $DISPLAY | cut -c1-10` = &#39;localhost:&#39; ]; then
                         # X11UseLocalhost=yes
                         echo add unix:`echo $DISPLAY |
                             cut -c11-` $proto $cookie

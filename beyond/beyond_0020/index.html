@@ -11,12 +11,12 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 20 - Terminal Preferences"/>
-<meta name="twitter:description" content="This is part 20 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta name="twitter:description" content="This is part 20 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  This is another application specific persistence method, related to the Terminal application.
 In the Terminal Preferences, under the Profiles tab, we can set a command that will be executed upon Terminal&rsquo;s startup. This is shown in the screen below."/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 20 - Terminal Preferences" />
-<meta property="og:description" content="This is part 20 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta property="og:description" content="This is part 20 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  This is another application specific persistence method, related to the Terminal application.
 In the Terminal Preferences, under the Profiles tab, we can set a command that will be executed upon Terminal&rsquo;s startup. This is shown in the screen below." />
 <meta property="og:type" content="article" />
@@ -58,7 +58,7 @@ In the Terminal Preferences, under the Profiles tab, we can set a command that w
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.92.1" />
+    <meta name="generator" content="Hugo 0.96.0" />
   </head>
 
   <body class=" ">
@@ -144,7 +144,7 @@ In the Terminal Preferences, under the Profiles tab, we can set a command that w
 
       <div>
         <blockquote>
-<p>This is part 20 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+<p>This is part 20 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
 </blockquote>
 <p>This is another application specific persistence method, related to the Terminal application.</p>
 <p>In the Terminal Preferences, under the Profiles tab, we can set a command that will be executed upon Terminal&rsquo;s startup. This is shown in the screen below.</p>
@@ -152,27 +152,27 @@ In the Terminal Preferences, under the Profiles tab, we can set a command that w
 <p>This is stored inside Terminal&rsquo;s preferences PLIST file, located at  <code>~/Library/Preferences/com.apple.Terminal.plist</code>. Normally this is a binary PLIST, and thus we can use <code>plutil</code> to display it in a human readable form.</p>
 <pre tabindex="0"><code>csaby@mac Preferences % plutil -p com.apple.Terminal.plist| less
 {
-  &quot;Default Window Settings&quot; =&gt; &quot;Basic&quot;
-  &quot;DefaultProfilesVersion&quot; =&gt; 1
-  &quot;HasMigratedDefaults&quot; =&gt; 1
-  &quot;Man Page Window Settings&quot; =&gt; &quot;Man Page&quot;
-  &quot;NSNavLastRootDirectory&quot; =&gt; &quot;~/Documents&quot;
-  &quot;NSNavLastUserSetHideExtensionButtonState&quot; =&gt; 0
-  &quot;NSWindow Frame NSNavPanelAutosaveName&quot; =&gt; &quot;732 711 328 167 0 0 1792 1095 &quot;
-  &quot;NSWindow Frame TTAppPreferences&quot; =&gt; &quot;563 437 668 554 0 0 1792 1095 &quot;
-  &quot;NSWindow Frame TTWindow&quot; =&gt; &quot;132 206 1522 805 0 0 1792 1095 &quot;
-  &quot;NSWindow Frame TTWindow Basic&quot; =&gt; &quot;132 178 1522 833 0 0 1792 1095 &quot;
-  &quot;NSWindow Frame TTWindow Man Page&quot; =&gt; &quot;59 152 570 707 0 0 1792 1095 &quot;
-  &quot;NSWindow Frame TTWindow test&quot; =&gt; &quot;61 555 934 561 0 0 1920 1177 &quot;
-  &quot;NSWindow Frame TTWindow test 1&quot; =&gt; &quot;76 310 585 365 0 0 1792 1097 &quot;
-  &quot;ProfileCurrentVersion&quot; =&gt; 2.07
-  &quot;SecureKeyboardEntry&quot; =&gt; 0
-  &quot;Shell&quot; =&gt; &quot;&quot;
-  &quot;Startup Window Settings&quot; =&gt; &quot;Basic&quot;
-  &quot;TTAppPreferences Selected Tab&quot; =&gt; 1
-  &quot;Window Settings&quot; =&gt; {
-    &quot;Basic&quot; =&gt; {
-      &quot;CommandString&quot; =&gt; &quot;touch /Users/Shared/executed.txt;&quot;
+  &#34;Default Window Settings&#34; =&gt; &#34;Basic&#34;
+  &#34;DefaultProfilesVersion&#34; =&gt; 1
+  &#34;HasMigratedDefaults&#34; =&gt; 1
+  &#34;Man Page Window Settings&#34; =&gt; &#34;Man Page&#34;
+  &#34;NSNavLastRootDirectory&#34; =&gt; &#34;~/Documents&#34;
+  &#34;NSNavLastUserSetHideExtensionButtonState&#34; =&gt; 0
+  &#34;NSWindow Frame NSNavPanelAutosaveName&#34; =&gt; &#34;732 711 328 167 0 0 1792 1095 &#34;
+  &#34;NSWindow Frame TTAppPreferences&#34; =&gt; &#34;563 437 668 554 0 0 1792 1095 &#34;
+  &#34;NSWindow Frame TTWindow&#34; =&gt; &#34;132 206 1522 805 0 0 1792 1095 &#34;
+  &#34;NSWindow Frame TTWindow Basic&#34; =&gt; &#34;132 178 1522 833 0 0 1792 1095 &#34;
+  &#34;NSWindow Frame TTWindow Man Page&#34; =&gt; &#34;59 152 570 707 0 0 1792 1095 &#34;
+  &#34;NSWindow Frame TTWindow test&#34; =&gt; &#34;61 555 934 561 0 0 1920 1177 &#34;
+  &#34;NSWindow Frame TTWindow test 1&#34; =&gt; &#34;76 310 585 365 0 0 1792 1097 &#34;
+  &#34;ProfileCurrentVersion&#34; =&gt; 2.07
+  &#34;SecureKeyboardEntry&#34; =&gt; 0
+  &#34;Shell&#34; =&gt; &#34;&#34;
+  &#34;Startup Window Settings&#34; =&gt; &#34;Basic&#34;
+  &#34;TTAppPreferences Selected Tab&#34; =&gt; 1
+  &#34;Window Settings&#34; =&gt; {
+    &#34;Basic&#34; =&gt; {
+      &#34;CommandString&#34; =&gt; &#34;touch /Users/Shared/executed.txt;&#34;
 ...
 </code></pre><p>As we can see above, the setting is stored under the &ldquo;Window Settings&rdquo; -&gt; Basic (which is the name of the profile) -&gt; &ldquo;CommandString&rdquo;. The Startup profile is set under &ldquo;Startup Window Settings&rdquo;. Which is important, because the command associated with the Startup profile will be executed.</p>
 <p>In XML it looks like the following:</p>

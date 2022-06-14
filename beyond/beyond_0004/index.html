@@ -11,11 +11,11 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 4 - cron jobs"/>
-<meta name="twitter:description" content="This is part 4 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta name="twitter:description" content="This is part 4 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  cron is probably one of the most well known persistence mechanisms for macOS and basically any *nix operating system. It was originally developed for Unix back in 1975, and made its way to most platforms, which has Unix origins, like Linux, FreeBSD and thus macOS."/>
 
     <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 4 - cron jobs" />
-<meta property="og:description" content="This is part 4 in the series of &ldquo;Beyond the good ol&#39; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta property="og:description" content="This is part 4 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
  cron is probably one of the most well known persistence mechanisms for macOS and basically any *nix operating system. It was originally developed for Unix back in 1975, and made its way to most platforms, which has Unix origins, like Linux, FreeBSD and thus macOS." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0004/" /><meta property="article:section" content="beyond" />
@@ -56,7 +56,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.92.1" />
+    <meta name="generator" content="Hugo 0.96.0" />
   </head>
 
   <body class=" ">
@@ -142,12 +142,12 @@
 
       <div>
         <blockquote>
-<p>This is part 4 in the series of &ldquo;Beyond the good ol' LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+<p>This is part 4 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
 </blockquote>
 <p><a href="https://en.wikipedia.org/wiki/Cron">cron</a> is probably one of the most well known persistence mechanisms for macOS and basically any *nix operating system. It was originally developed for Unix back in 1975, and made its way to most platforms, which has Unix origins, like Linux, FreeBSD and thus macOS.</p>
 <p>We can use the <code>crontab</code> utility to manage our cron jobs. The <code>-l</code> option will list our currently scheduled jobs.</p>
 <pre tabindex="0"><code>csaby@mac ~ % crontab -l
-* * * * * /bin/bash -c &quot;touch /tmp/cron2&quot;
+* * * * * /bin/bash -c &#34;touch /tmp/cron2&#34;
 </code></pre><p>The output above show that we have a bash script to run every minute.</p>
 <p>The option <code>-r</code> allows us to delete the current crontab file.</p>
 <p>Finally we can use the <code>-e</code> option to edit the scheduled jobs. By default it will drop us inside a <code>vim</code> editor, and if we don&rsquo;t like that we can specify our editor of choice in the <code>EDITOR</code> environment variable.</p>
@@ -158,10 +158,10 @@
 total 8
 -rw-------  1 root  wheel  267 Mar 18 06:43 csaby
 </code></pre><p>We can also use a one liner to edit the cron tab.</p>
-<pre tabindex="0"><code>csaby@mac ~ % echo &quot;* * * * * /bin/bash -c \&quot;touch /tmp/cron3\&quot;&quot; | crontab -
+<pre tabindex="0"><code>csaby@mac ~ % echo &#34;* * * * * /bin/bash -c \&#34;touch /tmp/cron3\&#34;&#34; | crontab -
 
 csaby@mac ~ % crontab -l                                                    
-* * * * * /bin/bash -c &quot;touch /tmp/cron3&quot;
+* * * * * /bin/bash -c &#34;touch /tmp/cron3&#34;
 </code></pre><p>Objective-See&rsquo;s <a href="https://objective-see.com/products/blockblock.html">BlockBlock</a> will alert us upon cron job creation.</p>
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0004_0.png" alt="BlockBlock Alert"></p>
 <p>The other Objective-See tool, <a href="https://objective-see.com/products/knockknock.html">KnockKnock</a> can also detect it.</p>

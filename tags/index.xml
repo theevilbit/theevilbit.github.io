@@ -5,7 +5,43 @@
     <link>https://theevilbit.github.io/tags/</link>
     <description>Recent content in Tags on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 14 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 29 Aug 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>cve</title>
+      <link>https://theevilbit.github.io/tags/cve/</link>
+      <pubDate>Mon, 29 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/tags/cve/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>lpe</title>
+      <link>https://theevilbit.github.io/tags/lpe/</link>
+      <pubDate>Mon, 29 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/tags/lpe/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>macos</title>
+      <link>https://theevilbit.github.io/tags/macos/</link>
+      <pubDate>Mon, 29 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/tags/macos/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>vulnerability</title>
+      <link>https://theevilbit.github.io/tags/vulnerability/</link>
+      <pubDate>Mon, 29 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/tags/vulnerability/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>amfi</title>
       <link>https://theevilbit.github.io/tags/amfi/</link>
@@ -21,15 +57,6 @@
       <pubDate>Tue, 14 Jun 2022 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/tags/internals/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>macos</title>
-      <link>https://theevilbit.github.io/tags/macos/</link>
-      <pubDate>Tue, 14 Jun 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://theevilbit.github.io/tags/macos/</guid>
       <description></description>
     </item>
     
@@ -52,38 +79,11 @@
     </item>
     
     <item>
-      <title>cve</title>
-      <link>https://theevilbit.github.io/tags/cve/</link>
-      <pubDate>Fri, 29 Oct 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://theevilbit.github.io/tags/cve/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>lpe</title>
-      <link>https://theevilbit.github.io/tags/lpe/</link>
-      <pubDate>Fri, 29 Oct 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://theevilbit.github.io/tags/lpe/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>tcc</title>
       <link>https://theevilbit.github.io/tags/tcc/</link>
       <pubDate>Fri, 29 Oct 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/tags/tcc/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>vulnerability</title>
-      <link>https://theevilbit.github.io/tags/vulnerability/</link>
-      <pubDate>Fri, 29 Oct 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://theevilbit.github.io/tags/vulnerability/</guid>
       <description></description>
     </item>
     

@@ -5,7 +5,16 @@
     <link>https://theevilbit.github.io/tags/macos/</link>
     <description>Recent content in macos on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 14 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/macos/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 29 Aug 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/macos/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CVE-2017-2533 - The details behind</title>
+      <link>https://theevilbit.github.io/posts/cve-2017-2533/</link>
+      <pubDate>Mon, 29 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/posts/cve-2017-2533/</guid>
+      <description>Intro CVE-2017-2533 was part of a chain of vulnerabilities, used at pwn2own 2017 found by the phoenhex team. They wrote a blogpost about it here. This vulnerability led me to find CVE-2022-32780, which I detailed at Black Hat Asia 2022. Although the nature of CVE-2017-2533 was discussed by the authors, but the actual code part was never truly revealed, and I always wondered about the full details. Now I took the time to dig up the details, including how it was fixed, and why the fix solves the problem.</description>
+    </item>
+    
     <item>
       <title>AMFI Launch Constraints - First Quick Look</title>
       <link>https://theevilbit.github.io/posts/amfi_launch_constraints/</link>

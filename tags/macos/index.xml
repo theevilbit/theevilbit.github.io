@@ -5,7 +5,16 @@
     <link>https://theevilbit.github.io/tags/macos/</link>
     <description>Recent content in macos on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 29 Aug 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/macos/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 24 Oct 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/macos/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Prologue - The Lord of The Rules</title>
+      <link>https://theevilbit.github.io/posts/prologue/</link>
+      <pubDate>Mon, 24 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/posts/prologue/</guid>
+      <description>The world is changed: I feel it in the Sandbox, I feel it in the entitlements, I smell it in the kernel... Much that once was is lost, only a few live now who remember it. Lord of the Rules It began with the forging of the Great Privacy Rules. Three were given to the root user, immortal, wisest...fairest of all beings. Seven to the users, great people and clients of the Apple spaceship.</description>
+    </item>
+    
     <item>
       <title>CVE-2017-2533 - The details behind</title>
       <link>https://theevilbit.github.io/posts/cve-2017-2533/</link>

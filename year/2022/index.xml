@@ -5,7 +5,17 @@
     <link>https://theevilbit.github.io/year/2022/</link>
     <description>Recent content in 2022 on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 24 Oct 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/year/2022/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 14 Nov 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/year/2022/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CVE-2022-32929 - Bypass iOS backup&#39;s TCC protection</title>
+      <link>https://theevilbit.github.io/posts/cve-2022-32929/</link>
+      <pubDate>Mon, 14 Nov 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/posts/cve-2022-32929/</guid>
+      <description>Intro Normally, when a users backup their iOS device, the backup is saved into ~/Library/Application Support/MobileSync/Backup directory. The MobileSync directory is properly protected by TCC, as the backup can contain photos, contact information, everything from the iOS device, and it might be unencrypted, so this is a whole lot of private information. It&amp;rsquo;s only accessible with Full Disk Access rights.
+The issue is that an attacker can invoke the AppleMobileBackup utility and make a backup to a custom location.</description>
+    </item>
+    
     <item>
       <title>Prologue - The Lord of The Rules</title>
       <link>https://theevilbit.github.io/posts/prologue/</link>
@@ -42,8 +52,8 @@ Do the following experiment: Copy Terminal.app to your HOME folder and try to ru
       
       <guid>https://theevilbit.github.io/beyond/beyond_0029/</guid>
       <description>This is part 29 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
- When doing some research on macOS I came across the following LaunchAgent: /System/Library/LaunchAgents/com.apple.amstoold.plist. Its content is the following.
-&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt; &amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt; &amp;lt;plist version=&amp;#34;1.0&amp;#34;&amp;gt; &amp;lt;dict&amp;gt; 	&amp;lt;key&amp;gt;EnablePressuredExit&amp;lt;/key&amp;gt; 	&amp;lt;true/&amp;gt; 	&amp;lt;key&amp;gt;EnableTransactions&amp;lt;/key&amp;gt; 	&amp;lt;true/&amp;gt; 	&amp;lt;key&amp;gt;Label&amp;lt;/key&amp;gt; 	&amp;lt;string&amp;gt;com.</description>
+When doing some research on macOS I came across the following LaunchAgent: /System/Library/LaunchAgents/com.apple.amstoold.plist. Its content is the following.
+&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt; &amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt; &amp;lt;plist version=&amp;#34;1.0&amp;#34;&amp;gt; &amp;lt;dict&amp;gt; &amp;lt;key&amp;gt;EnablePressuredExit&amp;lt;/key&amp;gt; &amp;lt;true/&amp;gt; &amp;lt;key&amp;gt;EnableTransactions&amp;lt;/key&amp;gt; &amp;lt;true/&amp;gt; &amp;lt;key&amp;gt;Label&amp;lt;/key&amp;gt; &amp;lt;string&amp;gt;com.apple.amstoold&amp;lt;/string&amp;gt; &amp;lt;key&amp;gt;LaunchEvents&amp;lt;/key&amp;gt; &amp;lt;dict&amp;gt; &amp;lt;key&amp;gt;com.apple.distnoted.matching&amp;lt;/key&amp;gt; &amp;lt;dict&amp;gt; &amp;lt;key&amp;gt;com.</description>
     </item>
     
     <item>
@@ -53,7 +63,7 @@ Do the following experiment: Copy Terminal.app to your HOME folder and try to ru
       
       <guid>https://theevilbit.github.io/beyond/beyond_0028/</guid>
       <description>This is part 28 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
- This persistence mechanism was described in very detail by Chris Ross in his blogpost: Persistent Credential Theft with Authorization Plugins. He also developed sample code, which can be found on his GitHub. Thus this blog will only focus on the high level summary, and some changes that happened since he wrote that post.</description>
+This persistence mechanism was described in very detail by Chris Ross in his blogpost: Persistent Credential Theft with Authorization Plugins. He also developed sample code, which can be found on his GitHub. Thus this blog will only focus on the high level summary, and some changes that happened since he wrote that post.</description>
     </item>
     
     <item>
@@ -63,7 +73,7 @@ Do the following experiment: Copy Terminal.app to your HOME folder and try to ru
       
       <guid>https://theevilbit.github.io/beyond/beyond_0027/</guid>
       <description>This is part 27 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
- This persistence is another gem I found in Leo Pitt&amp;rsquo;s Modern macOS Persistence talk.
+This persistence is another gem I found in Leo Pitt&amp;rsquo;s Modern macOS Persistence talk.
 macOS Dock stores shortcuts for applications, that we would like to access through the, well&amp;hellip; Dock. It stores all settings in ~/Library/Preferences/com.apple.dock.plist. Although we can edit this PLIST directly, we can also use the defaults utility to change it.</description>
     </item>
     
@@ -74,7 +84,7 @@ macOS Dock stores shortcuts for applications, that we would like to access throu
       
       <guid>https://theevilbit.github.io/beyond/beyond_0026/</guid>
       <description>This is part 26 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
- This method was documented very detailed by Patrick Wardle in his blogpost back in 2016. It was also covered by Leo Pitt in his Modern macOS Persistence talk, and he also made a POC, which can be found at his GitHub.</description>
+This method was documented very detailed by Patrick Wardle in his blogpost back in 2016. It was also covered by Leo Pitt in his Modern macOS Persistence talk, and he also made a POC, which can be found at his GitHub.</description>
     </item>
     
   </channel>

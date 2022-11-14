@@ -5,7 +5,17 @@
     <link>https://theevilbit.github.io/posts/</link>
     <description>Recent content in Posts on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 24 Oct 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 14 Nov 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CVE-2022-32929 - Bypass iOS backup&#39;s TCC protection</title>
+      <link>https://theevilbit.github.io/posts/cve-2022-32929/</link>
+      <pubDate>Mon, 14 Nov 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/posts/cve-2022-32929/</guid>
+      <description>Intro Normally, when a users backup their iOS device, the backup is saved into ~/Library/Application Support/MobileSync/Backup directory. The MobileSync directory is properly protected by TCC, as the backup can contain photos, contact information, everything from the iOS device, and it might be unencrypted, so this is a whole lot of private information. It&amp;rsquo;s only accessible with Full Disk Access rights.
+The issue is that an attacker can invoke the AppleMobileBackup utility and make a backup to a custom location.</description>
+    </item>
+    
     <item>
       <title>Prologue - The Lord of The Rules</title>
       <link>https://theevilbit.github.io/posts/prologue/</link>
@@ -253,9 +263,9 @@ There are many great posts describing how to set up kernel debugging between two
       
       <guid>https://theevilbit.github.io/posts/iobit_unlocker_lpe/</guid>
       <description>IOBit’s Unlocker program is advertised to solve the following issues:
- IObit Unlocker performs well in solving “cannot delete files”, “access is denied”, “The file is in use by another program or user”, or “There has been a sharing violation” problems. With IObit Unlocker, you can manage all your files the way you want.
- and even:
- With “Unlock &amp;amp; Delete”, “Unlock &amp;amp; Rename”, “Unlock &amp;amp; Move”, and “Unlock &amp;amp; Copy”, IObit Unlocker offers easier ways to unlock and manage the files and folders to keep them safe and available.</description>
+IObit Unlocker performs well in solving “cannot delete files”, “access is denied”, “The file is in use by another program or user”, or “There has been a sharing violation” problems. With IObit Unlocker, you can manage all your files the way you want.
+and even:
+With “Unlock &amp;amp; Delete”, “Unlock &amp;amp; Rename”, “Unlock &amp;amp; Move”, and “Unlock &amp;amp; Copy”, IObit Unlocker offers easier ways to unlock and manage the files and folders to keep them safe and available.</description>
     </item>
     
     <item>
@@ -295,8 +305,8 @@ What is HMValidateHandle? HMValidateHandle is an internal, unexported function o
       
       <guid>https://theevilbit.github.io/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/</guid>
       <description>After my recent blog post, my old mate @_Dark_Knight_ reached out to me and he asked me a question:
- “Do you typically callout user apps that allow dyld_insert_libraries?”
- And a few similar ones, and I will be honest, I had no idea what is he talking about, if only I understood the question :D Despite the fact that my recent blog posts and talks are about macOS, I deal much more with Windows on a daily basis, probably like 95%, and macOS is still a whole new territory for me.</description>
+“Do you typically callout user apps that allow dyld_insert_libraries?”
+And a few similar ones, and I will be honest, I had no idea what is he talking about, if only I understood the question :D Despite the fact that my recent blog posts and talks are about macOS, I deal much more with Windows on a daily basis, probably like 95%, and macOS is still a whole new territory for me.</description>
     </item>
     
     <item>

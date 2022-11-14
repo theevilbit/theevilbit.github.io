@@ -116,9 +116,9 @@ The root cause The XPC services of F-Secure SAFE use the process ID (PID) to ver
       
       <guid>https://theevilbit.github.io/posts/iobit_unlocker_lpe/</guid>
       <description>IOBit’s Unlocker program is advertised to solve the following issues:
- IObit Unlocker performs well in solving “cannot delete files”, “access is denied”, “The file is in use by another program or user”, or “There has been a sharing violation” problems. With IObit Unlocker, you can manage all your files the way you want.
- and even:
- With “Unlock &amp;amp; Delete”, “Unlock &amp;amp; Rename”, “Unlock &amp;amp; Move”, and “Unlock &amp;amp; Copy”, IObit Unlocker offers easier ways to unlock and manage the files and folders to keep them safe and available.</description>
+IObit Unlocker performs well in solving “cannot delete files”, “access is denied”, “The file is in use by another program or user”, or “There has been a sharing violation” problems. With IObit Unlocker, you can manage all your files the way you want.
+and even:
+With “Unlock &amp;amp; Delete”, “Unlock &amp;amp; Rename”, “Unlock &amp;amp; Move”, and “Unlock &amp;amp; Copy”, IObit Unlocker offers easier ways to unlock and manage the files and folders to keep them safe and available.</description>
     </item>
     
     <item>
@@ -138,8 +138,8 @@ In case an application is installed for the current user and not for all user, t
       
       <guid>https://theevilbit.github.io/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/</guid>
       <description>After my recent blog post, my old mate @_Dark_Knight_ reached out to me and he asked me a question:
- “Do you typically callout user apps that allow dyld_insert_libraries?”
- And a few similar ones, and I will be honest, I had no idea what is he talking about, if only I understood the question :D Despite the fact that my recent blog posts and talks are about macOS, I deal much more with Windows on a daily basis, probably like 95%, and macOS is still a whole new territory for me.</description>
+“Do you typically callout user apps that allow dyld_insert_libraries?”
+And a few similar ones, and I will be honest, I had no idea what is he talking about, if only I understood the question :D Despite the fact that my recent blog posts and talks are about macOS, I deal much more with Windows on a daily basis, probably like 95%, and macOS is still a whole new territory for me.</description>
     </item>
     
     <item>

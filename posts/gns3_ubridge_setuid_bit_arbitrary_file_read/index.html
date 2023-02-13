@@ -23,7 +23,6 @@
 <meta property="article:modified_time" content="2019-05-28T00:00:00+00:00" />
 
 
-
     
       <base href="https://theevilbit.github.io/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/">
     
@@ -56,7 +55,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.105.0">
+    <meta name="generator" content="Hugo 0.110.0">
   </head>
 
   <body class=" ">
@@ -183,10 +182,10 @@
 </span></span><span style="display:flex;"><span>-&gt; a
 </span></span></code></pre></div><p>This is an open source project, so we can check the source code what causes this. It can be found here: <a href="https://github.com/GNS3/ubridge">GitHub - GNS3/ubridge: Bridge for UDP tunnels, Ethernet, TAP and VMnet interfaces.</a></p>
 <p>The following lines in the <code>iniparser.c</code> code causing this behaviour, in case it cannot parse the supplied file, it will print out every single line:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>fprintf(stderr, <span style="color:#c30">&#34;iniparser: syntax error in %s (%d):</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>,
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#c0f">fprintf</span>(stderr, <span style="color:#c30">&#34;iniparser: syntax error in %s (%d):</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>,
 </span></span><span style="display:flex;"><span>                    ininame,
 </span></span><span style="display:flex;"><span>                    lineno);
-</span></span><span style="display:flex;"><span>fprintf(stderr, <span style="color:#c30">&#34;-&gt; %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, line);
+</span></span><span style="display:flex;"><span><span style="color:#c0f">fprintf</span>(stderr, <span style="color:#c30">&#34;-&gt; %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, line);
 </span></span></code></pre></div><p>I did run a Google search to see if it’s known to the community or not. It turned out that it’s not, however <a href="https://twitter.com/hackerfantastic">Hacker Fantastic (@hackerfantastic) | Twitter</a> also reported an issue a while ago, that was a true privilege escalation:</p>
 <p><a href="https://gns3.com/discussions/gns3-local-privilege-escalation-">https://gns3.com/discussions/gns3-local-privilege-escalation-</a>
 That exploit is still available at:
@@ -218,7 +217,7 @@ That exploit is still available at:
       <footer class="footer">
   <section class="container">
     
-     © 2022
+     © 2023
     
        · 
       Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.

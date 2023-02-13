@@ -23,7 +23,6 @@ Intro With the release of Big Sur, I noticed that many of the system binaries ha
 <meta property="article:modified_time" content="2021-01-19T00:00:00+00:00" />
 
 
-
     
       <base href="https://theevilbit.github.io/posts/com.apple.private.security.clear-library-validation/">
     
@@ -56,7 +55,7 @@ Intro With the release of Big Sur, I noticed that many of the system binaries ha
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.105.0">
+    <meta name="generator" content="Hugo 0.110.0">
   </head>
 
   <body class=" ">
@@ -153,13 +152,13 @@ Intro With the release of Big Sur, I noticed that many of the system binaries ha
 <p>The description of this constant says that we can use this operation code to clear the library validation flag of a process. This means that if we can run this on a process we can load third party libraries into it if the call is successful.</p>
 <p>This constant is only referenced inside the <code>xnu-7195.50.7.100.1/bsd/kern/kern_proc.c</code> source file, which contains the source for the <code>csops_internal</code> function. This is the function that will be run when the system call is made. Here is the relevant part of the source code concerning the <code>CS_OPS_CLEAR_LV</code> operation.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">int</span>
-</span></span><span style="display:flex;"><span><span style="color:#c0f">csops_internal</span>(pid_t pid, <span style="color:#078;font-weight:bold">int</span> ops, user_addr_t uaddr, user_size_t usersize, user_addr_t uaudittoken)
+</span></span><span style="display:flex;"><span><span style="color:#c0f">csops_internal</span>(<span style="color:#078;font-weight:bold">pid_t</span> pid, <span style="color:#078;font-weight:bold">int</span> ops, <span style="color:#078;font-weight:bold">user_addr_t</span> uaddr, <span style="color:#078;font-weight:bold">user_size_t</span> usersize, <span style="color:#078;font-weight:bold">user_addr_t</span> uaudittoken)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>(...)
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (pid <span style="color:#555">==</span> <span style="color:#f60">0</span>) {
-</span></span><span style="display:flex;"><span>		pid <span style="color:#555">=</span> proc_selfpid();
+</span></span><span style="display:flex;"><span>		pid <span style="color:#555">=</span> <span style="color:#c0f">proc_selfpid</span>();
 </span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (pid <span style="color:#555">==</span> proc_selfpid()) {
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (pid <span style="color:#555">==</span> <span style="color:#c0f">proc_selfpid</span>()) {
 </span></span><span style="display:flex;"><span>		forself <span style="color:#555">=</span> <span style="color:#f60">1</span>;
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>
@@ -175,13 +174,13 @@ Intro With the release of Big Sur, I noticed that many of the system binaries ha
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEAR_LV</span>:
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">break</span>;          <span style="color:#09f;font-style:italic">/* not restricted to root */</span>
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">default</span><span style="color:#555">:</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> (forself <span style="color:#555">==</span> <span style="color:#f60">0</span> <span style="color:#555">&amp;&amp;</span> kauth_cred_issuser(kauth_cred_get()) <span style="color:#555">!=</span> TRUE) {
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> (forself <span style="color:#555">==</span> <span style="color:#f60">0</span> <span style="color:#555">&amp;&amp;</span> <span style="color:#c0f">kauth_cred_issuser</span>(<span style="color:#c0f">kauth_cred_get</span>()) <span style="color:#555">!=</span> TRUE) {
 </span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">return</span> EPERM;
 </span></span><span style="display:flex;"><span>		}
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">break</span>;
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	pt <span style="color:#555">=</span> proc_find(pid);
+</span></span><span style="display:flex;"><span>	pt <span style="color:#555">=</span> <span style="color:#c0f">proc_find</span>(pid);
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (pt <span style="color:#555">==</span> PROC_NULL) {
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> ESRCH;
 </span></span><span style="display:flex;"><span>	}
@@ -196,12 +195,12 @@ Intro With the release of Big Sur, I noticed that many of the system binaries ha
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEARINSTALLER</span>:
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEARPLATFORM</span>:
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEAR_LV</span>:
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> ((error <span style="color:#555">=</span> mac_proc_check_set_cs_info(current_proc(), pt, ops))) {
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> ((error <span style="color:#555">=</span> <span style="color:#c0f">mac_proc_check_set_cs_info</span>(<span style="color:#c0f">current_proc</span>(), pt, ops))) {
 </span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">goto</span> out;
 </span></span><span style="display:flex;"><span>		}
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">break</span>;
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">default</span><span style="color:#555">:</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> ((error <span style="color:#555">=</span> mac_proc_check_get_cs_info(current_proc(), pt, ops))) {
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> ((error <span style="color:#555">=</span> <span style="color:#c0f">mac_proc_check_get_cs_info</span>(<span style="color:#c0f">current_proc</span>(), pt, ops))) {
 </span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">goto</span> out;
 </span></span><span style="display:flex;"><span>		}
 </span></span><span style="display:flex;"><span>	}
@@ -236,10 +235,10 @@ Intro With the release of Big Sur, I noticed that many of the system binaries ha
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 *
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * We also only allow altering ourselves.
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 */</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> (forself <span style="color:#555">==</span> <span style="color:#f60">1</span> <span style="color:#555">&amp;&amp;</span> IOTaskHasEntitlement(pt<span style="color:#555">-&gt;</span>task, CLEAR_LV_ENTITLEMENT)) {
-</span></span><span style="display:flex;"><span>			proc_lock(pt);
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> (forself <span style="color:#555">==</span> <span style="color:#f60">1</span> <span style="color:#555">&amp;&amp;</span> <span style="color:#c0f">IOTaskHasEntitlement</span>(pt<span style="color:#555">-&gt;</span>task, CLEAR_LV_ENTITLEMENT)) {
+</span></span><span style="display:flex;"><span>			<span style="color:#c0f">proc_lock</span>(pt);
 </span></span><span style="display:flex;"><span>			pt<span style="color:#555">-&gt;</span>p_csflags <span style="color:#555">&amp;=</span> (<span style="color:#555">~</span>(CS_REQUIRE_LV <span style="color:#555">|</span> CS_FORCED_LV));
-</span></span><span style="display:flex;"><span>			proc_unlock(pt);
+</span></span><span style="display:flex;"><span>			<span style="color:#c0f">proc_unlock</span>(pt);
 </span></span><span style="display:flex;"><span>			error <span style="color:#555">=</span> <span style="color:#f60">0</span>;
 </span></span><span style="display:flex;"><span>		} <span style="color:#069;font-weight:bold">else</span> {
 </span></span><span style="display:flex;"><span>			error <span style="color:#555">=</span> EPERM;
@@ -258,7 +257,7 @@ Intro With the release of Big Sur, I noticed that many of the system binaries ha
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEAR_LV</span>:
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">break</span>;          <span style="color:#09f;font-style:italic">/* not restricted to root */</span>
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">default</span><span style="color:#555">:</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> (forself <span style="color:#555">==</span> <span style="color:#f60">0</span> <span style="color:#555">&amp;&amp;</span> kauth_cred_issuser(kauth_cred_get()) <span style="color:#555">!=</span> TRUE) {
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> (forself <span style="color:#555">==</span> <span style="color:#f60">0</span> <span style="color:#555">&amp;&amp;</span> <span style="color:#c0f">kauth_cred_issuser</span>(<span style="color:#c0f">kauth_cred_get</span>()) <span style="color:#555">!=</span> TRUE) {
 </span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">return</span> EPERM;
 </span></span><span style="display:flex;"><span>		}
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">break</span>;
@@ -275,21 +274,21 @@ Intro With the release of Big Sur, I noticed that many of the system binaries ha
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEARINSTALLER</span>:
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEARPLATFORM</span>:
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEAR_LV</span>:
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> ((error <span style="color:#555">=</span> mac_proc_check_set_cs_info(current_proc(), pt, ops))) {
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> ((error <span style="color:#555">=</span> <span style="color:#c0f">mac_proc_check_set_cs_info</span>(<span style="color:#c0f">current_proc</span>(), pt, ops))) {
 </span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">goto</span> out;
 </span></span><span style="display:flex;"><span>		}
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">break</span>;
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">default</span><span style="color:#555">:</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> ((error <span style="color:#555">=</span> mac_proc_check_get_cs_info(current_proc(), pt, ops))) {
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> ((error <span style="color:#555">=</span> <span style="color:#c0f">mac_proc_check_get_cs_info</span>(<span style="color:#c0f">current_proc</span>(), pt, ops))) {
 </span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">goto</span> out;
 </span></span><span style="display:flex;"><span>		}
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span><span style="color:#099">#endif
 </span></span></span></code></pre></div><p>Here we have a MACF policy call, using the function <code>mac_proc_check_get_cs_info</code>. MACF policy calls return 0 if they are successful, and this is what being check on the condition. The <code>mac_proc_check_get_cs_info</code> function is implemented inside <code>xnu-7195.50.7.100.1/security/mac_process.c</code>. Let&rsquo;s follow it.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span>
-</span></span><span style="display:flex;"><span><span style="color:#c0f">mac_proc_check_set_cs_info</span>(proc_t curp, proc_t target, <span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#078;font-weight:bold">int</span> op)
+</span></span><span style="display:flex;"><span><span style="color:#c0f">mac_proc_check_set_cs_info</span>(<span style="color:#078;font-weight:bold">proc_t</span> curp, <span style="color:#078;font-weight:bold">proc_t</span> target, <span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#078;font-weight:bold">int</span> op)
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	kauth_cred_t cred;
+</span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">kauth_cred_t</span> cred;
 </span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">int</span> error <span style="color:#555">=</span> <span style="color:#f60">0</span>;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#099">#if SECURITY_MAC_CHECK_ENFORCE
@@ -298,13 +297,13 @@ Intro With the release of Big Sur, I noticed that many of the system binaries ha
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> <span style="color:#f60">0</span>;
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span><span style="color:#099">#endif
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	<span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span>mac_proc_check_enforce(curp)) {
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	<span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span><span style="color:#c0f">mac_proc_check_enforce</span>(curp)) {
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> <span style="color:#f60">0</span>;
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	cred <span style="color:#555">=</span> kauth_cred_proc_ref(curp);
-</span></span><span style="display:flex;"><span>	MAC_CHECK(proc_check_set_cs_info, cred, target, op);
-</span></span><span style="display:flex;"><span>	kauth_cred_unref(<span style="color:#555">&amp;</span>cred);
+</span></span><span style="display:flex;"><span>	cred <span style="color:#555">=</span> <span style="color:#c0f">kauth_cred_proc_ref</span>(curp);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">MAC_CHECK</span>(proc_check_set_cs_info, cred, target, op);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">kauth_cred_unref</span>(<span style="color:#555">&amp;</span>cred);
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">return</span> error;
 </span></span><span style="display:flex;"><span>}
@@ -347,10 +346,10 @@ Intro With the release of Big Sur, I noticed that many of the system binaries ha
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 *
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * We also only allow altering ourselves.
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 */</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> (forself <span style="color:#555">==</span> <span style="color:#f60">1</span> <span style="color:#555">&amp;&amp;</span> IOTaskHasEntitlement(pt<span style="color:#555">-&gt;</span>task, CLEAR_LV_ENTITLEMENT)) {
-</span></span><span style="display:flex;"><span>			proc_lock(pt);
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> (forself <span style="color:#555">==</span> <span style="color:#f60">1</span> <span style="color:#555">&amp;&amp;</span> <span style="color:#c0f">IOTaskHasEntitlement</span>(pt<span style="color:#555">-&gt;</span>task, CLEAR_LV_ENTITLEMENT)) {
+</span></span><span style="display:flex;"><span>			<span style="color:#c0f">proc_lock</span>(pt);
 </span></span><span style="display:flex;"><span>			pt<span style="color:#555">-&gt;</span>p_csflags <span style="color:#555">&amp;=</span> (<span style="color:#555">~</span>(CS_REQUIRE_LV <span style="color:#555">|</span> CS_FORCED_LV));
-</span></span><span style="display:flex;"><span>			proc_unlock(pt);
+</span></span><span style="display:flex;"><span>			<span style="color:#c0f">proc_unlock</span>(pt);
 </span></span><span style="display:flex;"><span>			error <span style="color:#555">=</span> <span style="color:#f60">0</span>;
 </span></span><span style="display:flex;"><span>		} <span style="color:#069;font-weight:bold">else</span> {
 </span></span><span style="display:flex;"><span>			error <span style="color:#555">=</span> EPERM;
@@ -406,7 +405,7 @@ Unsatisfied Entitlements:
       <footer class="footer">
   <section class="container">
     
-     © 2022
+     © 2023
     
        · 
       Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.

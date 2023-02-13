@@ -25,7 +25,6 @@ I think almost everything has been already told about this method and emond in g
 <meta property="article:modified_time" content="2021-11-27T00:00:00+00:00" />
 
 
-
     
       <base href="https://theevilbit.github.io/beyond/beyond_0023/">
     
@@ -58,7 +57,7 @@ I think almost everything has been already told about this method and emond in g
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.105.0">
+    <meta name="generator" content="Hugo 0.110.0">
   </head>
 
   <body class=" ">
@@ -246,19 +245,19 @@ I think almost everything has been already told about this method and emond in g
 </span></span><span style="display:flex;"><span><span style="color:#555">-</span>(<span style="color:#078;font-weight:bold">int</span>)<span style="color:#99f">SetXPCListenerFor</span>:(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)arg2 {
 </span></span><span style="display:flex;"><span>    r15 <span style="color:#555">=</span> arg2;
 </span></span><span style="display:flex;"><span>    r14 <span style="color:#555">=</span> self;
-</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> xpc_connection_create_listener(<span style="color:#c30">&#34;com.apple.emond.evtq&#34;</span>, arg2, arg2);
+</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> <span style="color:#c0f">xpc_connection_create_listener</span>(<span style="color:#c30">&#34;com.apple.emond.evtq&#34;</span>, arg2, arg2);
 </span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (rax <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) {
-</span></span><span style="display:flex;"><span>            xpc_connection_set_legacy(rax);
+</span></span><span style="display:flex;"><span>            <span style="color:#c0f">xpc_connection_set_legacy</span>(rax);
 </span></span><span style="display:flex;"><span>            var_48 <span style="color:#555">=</span> <span style="color:#555">*</span>__NSConcreteStackBlock;
 </span></span><span style="display:flex;"><span>            <span style="color:#555">*</span>(<span style="color:#555">&amp;</span>var_48 <span style="color:#555">+</span> <span style="color:#f60">0x8</span>) <span style="color:#555">=</span> <span style="color:#f60">0xffffffffc2000000</span>;
 </span></span><span style="display:flex;"><span>            <span style="color:#555">*</span>(<span style="color:#555">&amp;</span>var_48 <span style="color:#555">+</span> <span style="color:#f60">0x10</span>) <span style="color:#555">=</span> sub_10000e621;
 </span></span><span style="display:flex;"><span>            <span style="color:#555">*</span>(<span style="color:#555">&amp;</span>var_48 <span style="color:#555">+</span> <span style="color:#f60">0x18</span>) <span style="color:#555">=</span> <span style="color:#f60">0x10002c420</span>;
 </span></span><span style="display:flex;"><span>            <span style="color:#555">*</span>(<span style="color:#555">&amp;</span>var_48 <span style="color:#555">+</span> <span style="color:#f60">0x20</span>) <span style="color:#555">=</span> r14;
 </span></span><span style="display:flex;"><span>            <span style="color:#555">*</span>(<span style="color:#555">&amp;</span>var_48 <span style="color:#555">+</span> <span style="color:#f60">0x28</span>) <span style="color:#555">=</span> r15;
-</span></span><span style="display:flex;"><span>            xpc_connection_set_event_handler(rax, <span style="color:#555">&amp;</span>var_48);
+</span></span><span style="display:flex;"><span>            <span style="color:#c0f">xpc_connection_set_event_handler</span>(rax, <span style="color:#555">&amp;</span>var_48);
 </span></span><span style="display:flex;"><span>            <span style="color:#555">*</span>(r14 <span style="color:#555">+</span> <span style="color:#f60">0x18</span>) <span style="color:#555">=</span> rax;
-</span></span><span style="display:flex;"><span>            xpc_retain(rax);
-</span></span><span style="display:flex;"><span>            xpc_connection_resume(rax);
+</span></span><span style="display:flex;"><span>            <span style="color:#c0f">xpc_retain</span>(rax);
+</span></span><span style="display:flex;"><span>            <span style="color:#c0f">xpc_connection_resume</span>(rax);
 </span></span><span style="display:flex;"><span>            rax <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">else</span> {
@@ -269,15 +268,15 @@ I think almost everything has been already told about this method and emond in g
 </span></span></code></pre></div><p>Inside the connection handler we find a call to <code>filterBySourceUID:GID:</code>.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">sub_10000e621</span>(<span style="color:#078;font-weight:bold">int</span> arg0, <span style="color:#078;font-weight:bold">int</span> arg1, <span style="color:#078;font-weight:bold">int</span> arg2, <span style="color:#078;font-weight:bold">int</span> arg3, <span style="color:#078;font-weight:bold">int</span> arg4, <span style="color:#078;font-weight:bold">int</span> arg5) {
 </span></span><span style="display:flex;"><span>...
-</span></span><span style="display:flex;"><span>            r15 <span style="color:#555">=</span> xpc_connection_get_euid(r13);
-</span></span><span style="display:flex;"><span>            rax <span style="color:#555">=</span> xpc_connection_get_egid(r13);
+</span></span><span style="display:flex;"><span>            r15 <span style="color:#555">=</span> <span style="color:#c0f">xpc_connection_get_euid</span>(r13);
+</span></span><span style="display:flex;"><span>            rax <span style="color:#555">=</span> <span style="color:#c0f">xpc_connection_get_egid</span>(r13);
 </span></span><span style="display:flex;"><span>            r12 <span style="color:#555">=</span> rax;
-</span></span><span style="display:flex;"><span>            sub_10000bbc5(<span style="color:#f60">0x3</span>, <span style="color:#c30">&#34;XPC Connection Request recieved from %d:%d (uid:gid)&#34;</span>, r15, rax, r8, r9, var_60);
+</span></span><span style="display:flex;"><span>            <span style="color:#c0f">sub_10000bbc5</span>(<span style="color:#f60">0x3</span>, <span style="color:#c30">&#34;XPC Connection Request recieved from %d:%d (uid:gid)&#34;</span>, r15, rax, r8, r9, var_60);
 </span></span><span style="display:flex;"><span>            <span style="color:#069;font-weight:bold">if</span> ([<span style="color:#555">*</span>(r14 <span style="color:#555">+</span> <span style="color:#f60">0x20</span>) <span style="color:#99f">filterBySourceUID</span>:r15 <span style="color:#99f">GID</span>:r12] <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) {
 </span></span><span style="display:flex;"><span>...
 </span></span></code></pre></div><p>The actual UID/GID filter is populated at the <code>EntryPoint</code>.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#555">*</span>qword_100038cb8 <span style="color:#555">=</span> [[Monitor alloc] <span style="color:#99f">initWithRulebase</span>:<span style="color:#555">*</span>qword_100038ca8 <span style="color:#99f">andVariables</span>:r13];
-</span></span><span style="display:flex;"><span>[<span style="color:#555">*</span>qword_100038cb8 <span style="color:#99f">setEventFilterUID</span>:sub_10000c060([<span style="color:#555">*</span>qword_100038ca0 <span style="color:#99f">objectForKey</span>:<span style="color:#a00;background-color:#faa">@</span><span style="color:#c30">&#34;filterByUID&#34;</span>, r13]) <span style="color:#99f">FilterGID</span>:sub_10000c060([<span style="color:#555">*</span>qword_100038ca0 <span style="color:#99f">objectForKey</span>:<span style="color:#a00;background-color:#faa">@</span><span style="color:#c30">&#34;filterByGID&#34;</span>, r13])];
+</span></span><span style="display:flex;"><span>[<span style="color:#555">*</span>qword_100038cb8 <span style="color:#99f">setEventFilterUID</span>:<span style="color:#c0f">sub_10000c060</span>([<span style="color:#555">*</span>qword_100038ca0 <span style="color:#99f">objectForKey</span>:<span style="color:#a00;background-color:#faa">@</span><span style="color:#c30">&#34;filterByUID&#34;</span>, r13]) <span style="color:#99f">FilterGID</span>:<span style="color:#c0f">sub_10000c060</span>([<span style="color:#555">*</span>qword_100038ca0 <span style="color:#99f">objectForKey</span>:<span style="color:#a00;background-color:#faa">@</span><span style="color:#c30">&#34;filterByGID&#34;</span>, r13])];
 </span></span></code></pre></div><p>Without going into further details, if we follow these function, we will find that it parses the config file, and reads in the values defined in <code>filterByUID</code> and <code>filterByGID</code>. This means that by default only <code>root</code> level processes can communicate with <code>emond</code>, but we can also modify this setting if needed, allowing other processes.</p>
 <p>So we know that only root can connect. But how normally messages are sent? The <code>/System/Library/LaunchDaemons/com.apple.emlog.plist</code> defines a perl script at <code>/usr/libexec/emlog.pl</code>. This script uses the <code>/usr/libexec/xssendevent</code> binary to send messages to <code>emond</code>.</p>
 <p>For example:</p>
@@ -357,45 +356,45 @@ I think almost everything has been already told about this method and emond in g
 </span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
 </span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">main</span>(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv) {
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    xpc_connection_t service;
-</span></span><span style="display:flex;"><span>    xpc_object_t msg, event_details;
+</span></span><span style="display:flex;"><span>    <span style="color:#078;font-weight:bold">xpc_connection_t</span> service;
+</span></span><span style="display:flex;"><span>    <span style="color:#078;font-weight:bold">xpc_object_t</span> msg, event_details;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    msg <span style="color:#555">=</span> xpc_dictionary_create(<span style="color:#366">NULL</span>, <span style="color:#366">NULL</span>, <span style="color:#f60">0</span>);
-</span></span><span style="display:flex;"><span>    event_details <span style="color:#555">=</span> xpc_dictionary_create(<span style="color:#366">NULL</span>, <span style="color:#366">NULL</span>, <span style="color:#f60">0</span>);
+</span></span><span style="display:flex;"><span>    msg <span style="color:#555">=</span> <span style="color:#c0f">xpc_dictionary_create</span>(<span style="color:#366">NULL</span>, <span style="color:#366">NULL</span>, <span style="color:#f60">0</span>);
+</span></span><span style="display:flex;"><span>    event_details <span style="color:#555">=</span> <span style="color:#c0f">xpc_dictionary_create</span>(<span style="color:#366">NULL</span>, <span style="color:#366">NULL</span>, <span style="color:#f60">0</span>);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    xpc_dictionary_set_string(event_details, <span style="color:#c30">&#34;clientIP&#34;</span>, <span style="color:#c30">&#34;1.1.1.1&#34;</span>);
-</span></span><span style="display:flex;"><span>    xpc_dictionary_set_string(event_details, <span style="color:#c30">&#34;protocolName&#34;</span>, <span style="color:#c30">&#34;ftp&#34;</span>);
-</span></span><span style="display:flex;"><span>    xpc_dictionary_set_string(event_details, <span style="color:#c30">&#34;hostPort&#34;</span>, <span style="color:#c30">&#34;21&#34;</span>);
-</span></span><span style="display:flex;"><span>    xpc_dictionary_set_string(event_details, <span style="color:#c30">&#34;eventSource&#34;</span>, <span style="color:#c30">&#34;myxpc&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#c0f">xpc_dictionary_set_string</span>(event_details, <span style="color:#c30">&#34;clientIP&#34;</span>, <span style="color:#c30">&#34;1.1.1.1&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#c0f">xpc_dictionary_set_string</span>(event_details, <span style="color:#c30">&#34;protocolName&#34;</span>, <span style="color:#c30">&#34;ftp&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#c0f">xpc_dictionary_set_string</span>(event_details, <span style="color:#c30">&#34;hostPort&#34;</span>, <span style="color:#c30">&#34;21&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#c0f">xpc_dictionary_set_string</span>(event_details, <span style="color:#c30">&#34;eventSource&#34;</span>, <span style="color:#c30">&#34;myxpc&#34;</span>);
 </span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>    xpc_dictionary_set_string(msg, <span style="color:#c30">&#34;eventType&#34;</span>, <span style="color:#c30">&#34;auth.failure&#34;</span>);
-</span></span><span style="display:flex;"><span>    xpc_dictionary_set_value(msg, <span style="color:#c30">&#34;eventDetails&#34;</span>, event_details);
-</span></span><span style="display:flex;"><span>    xpc_dictionary_set_double(msg, <span style="color:#c30">&#34;eventTimestamp&#34;</span>, <span style="color:#f60">659713961.621497</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#c0f">xpc_dictionary_set_string</span>(msg, <span style="color:#c30">&#34;eventType&#34;</span>, <span style="color:#c30">&#34;auth.failure&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#c0f">xpc_dictionary_set_value</span>(msg, <span style="color:#c30">&#34;eventDetails&#34;</span>, event_details);
+</span></span><span style="display:flex;"><span>    <span style="color:#c0f">xpc_dictionary_set_double</span>(msg, <span style="color:#c30">&#34;eventTimestamp&#34;</span>, <span style="color:#f60">659713961.621497</span>);
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    service <span style="color:#555">=</span> xpc_connection_create_mach_service(<span style="color:#c30">&#34;com.apple.emond.evtq&#34;</span>, <span style="color:#366">NULL</span>, <span style="color:#f60">0</span>);
+</span></span><span style="display:flex;"><span>    service <span style="color:#555">=</span> <span style="color:#c0f">xpc_connection_create_mach_service</span>(<span style="color:#c30">&#34;com.apple.emond.evtq&#34;</span>, <span style="color:#366">NULL</span>, <span style="color:#f60">0</span>);
 </span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (service <span style="color:#555">==</span> <span style="color:#366">NULL</span>) {
-</span></span><span style="display:flex;"><span>        perror(<span style="color:#c30">&#34;xpc_connection_create_mach_service&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#c0f">perror</span>(<span style="color:#c30">&#34;xpc_connection_create_mach_service&#34;</span>);
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>    xpc_connection_set_event_handler(service, <span style="color:#555">^</span>(xpc_object_t event) {
-</span></span><span style="display:flex;"><span>        xpc_type_t type <span style="color:#555">=</span> xpc_get_type(event);
+</span></span><span style="display:flex;"><span>    <span style="color:#c0f">xpc_connection_set_event_handler</span>(service, <span style="color:#555">^</span>(<span style="color:#078;font-weight:bold">xpc_object_t</span> event) {
+</span></span><span style="display:flex;"><span>        <span style="color:#078;font-weight:bold">xpc_type_t</span> type <span style="color:#555">=</span> <span style="color:#c0f">xpc_get_type</span>(event);
 </span></span><span style="display:flex;"><span>        <span style="color:#069;font-weight:bold">if</span> (type <span style="color:#555">==</span> XPC_TYPE_ERROR)
 </span></span><span style="display:flex;"><span>        {
-</span></span><span style="display:flex;"><span>            printf(<span style="color:#c30">&#34;emond, client, xpc error: %s&#34;</span>, xpc_dictionary_get_string(event, XPC_ERROR_KEY_DESCRIPTION));
+</span></span><span style="display:flex;"><span>            <span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;emond, client, xpc error: %s&#34;</span>, <span style="color:#c0f">xpc_dictionary_get_string</span>(event, XPC_ERROR_KEY_DESCRIPTION));
 </span></span><span style="display:flex;"><span>        }
 </span></span><span style="display:flex;"><span>        <span style="color:#069;font-weight:bold">else</span>
 </span></span><span style="display:flex;"><span>        {
-</span></span><span style="display:flex;"><span>            <span style="color:#078;font-weight:bold">char</span><span style="color:#555">*</span> description <span style="color:#555">=</span> xpc_copy_description(event);
-</span></span><span style="display:flex;"><span>            printf(<span style="color:#c30">&#34;emond, client, xpc unexpected type: %s&#34;</span>, description);
+</span></span><span style="display:flex;"><span>            <span style="color:#078;font-weight:bold">char</span><span style="color:#555">*</span> description <span style="color:#555">=</span> <span style="color:#c0f">xpc_copy_description</span>(event);
+</span></span><span style="display:flex;"><span>            <span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;emond, client, xpc unexpected type: %s&#34;</span>, description);
 </span></span><span style="display:flex;"><span>            
 </span></span><span style="display:flex;"><span>        }
 </span></span><span style="display:flex;"><span>    });
 </span></span><span style="display:flex;"><span>    
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    xpc_connection_resume(service);
+</span></span><span style="display:flex;"><span>    <span style="color:#c0f">xpc_connection_resume</span>(service);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    xpc_connection_send_message(service, msg);
+</span></span><span style="display:flex;"><span>    <span style="color:#c0f">xpc_connection_send_message</span>(service, msg);
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>Then, once we compile it and execute, we can verify that our event message was properly logged by <code>emond</code>, by our rule.</p>
@@ -426,7 +425,7 @@ I think almost everything has been already told about this method and emond in g
       <footer class="footer">
   <section class="container">
     
-     © 2022
+     © 2023
     
        · 
       Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.

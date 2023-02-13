@@ -25,7 +25,6 @@ And a few similar ones, and I will be honest, I had no idea what is he talking a
 <meta property="article:modified_time" content="2019-07-09T00:00:00+00:00" />
 
 
-
     
       <base href="https://theevilbit.github.io/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/">
     
@@ -58,7 +57,7 @@ And a few similar ones, and I will be honest, I had no idea what is he talking a
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.105.0">
+    <meta name="generator" content="Hugo 0.110.0">
   </head>
 
   <body class=" ">
@@ -157,11 +156,11 @@ And a few similar ones, and I will be honest, I had no idea what is he talking a
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
 </span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;syslog.h&gt;</span><span style="color:#099">
 </span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
-</span></span><span style="display:flex;"><span>__attribute__((constructor))
-</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">void</span> customConstructor(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)
+</span></span><span style="display:flex;"><span><span style="color:#c0f">__attribute__</span>((constructor))
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">customConstructor</span>(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)
 </span></span><span style="display:flex;"><span> {
-</span></span><span style="display:flex;"><span>     printf(<span style="color:#c30">&#34;Hello from dylib!</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>     syslog(LOG_ERR, <span style="color:#c30">&#34;Dylib injection successful in %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, argv[<span style="color:#f60">0</span>]);
+</span></span><span style="display:flex;"><span>     <span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;Hello from dylib!</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>     <span style="color:#c0f">syslog</span>(LOG_ERR, <span style="color:#c30">&#34;Dylib injection successful in %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, argv[<span style="color:#f60">0</span>]);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>Compile:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>gcc -dynamiclib inject.c -o inject.dylib
@@ -194,7 +193,7 @@ And a few similar ones, and I will be honest, I had no idea what is he talking a
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>	<span style="color:#078;font-weight:bold">int</span> removedCount <span style="color:#555">=</span> <span style="color:#f60">0</span>;
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span><span style="color:#555">**</span> d <span style="color:#555">=</span> envp;
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">for</span>(<span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span><span style="color:#555">**</span> s <span style="color:#555">=</span> envp; <span style="color:#555">*</span>s <span style="color:#555">!=</span> <span style="color:#366">NULL</span>; s<span style="color:#555">++</span>) {
-</span></span><span style="display:flex;"><span>	    <span style="color:#069;font-weight:bold">if</span> ( (strncmp(<span style="color:#555">*</span>s, <span style="color:#c30">&#34;DYLD_&#34;</span>, <span style="color:#f60">5</span>) <span style="color:#555">!=</span> <span style="color:#f60">0</span>) <span style="color:#555">&amp;&amp;</span> (strncmp(<span style="color:#555">*</span>s, <span style="color:#c30">&#34;LD_LIBRARY_PATH=&#34;</span>, <span style="color:#f60">16</span>) <span style="color:#555">!=</span> <span style="color:#f60">0</span>) ) {
+</span></span><span style="display:flex;"><span>	    <span style="color:#069;font-weight:bold">if</span> ( (<span style="color:#c0f">strncmp</span>(<span style="color:#555">*</span>s, <span style="color:#c30">&#34;DYLD_&#34;</span>, <span style="color:#f60">5</span>) <span style="color:#555">!=</span> <span style="color:#f60">0</span>) <span style="color:#555">&amp;&amp;</span> (<span style="color:#c0f">strncmp</span>(<span style="color:#555">*</span>s, <span style="color:#c30">&#34;LD_LIBRARY_PATH=&#34;</span>, <span style="color:#f60">16</span>) <span style="color:#555">!=</span> <span style="color:#f60">0</span>) ) {
 </span></span><span style="display:flex;"><span>			<span style="color:#555">*</span>d<span style="color:#555">++</span> <span style="color:#555">=</span> <span style="color:#555">*</span>s;
 </span></span><span style="display:flex;"><span>		}
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">else</span> {
@@ -203,18 +202,18 @@ And a few similar ones, and I will be honest, I had no idea what is he talking a
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>	<span style="color:#555">*</span>d<span style="color:#555">++</span> <span style="color:#555">=</span> <span style="color:#366">NULL</span>;
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> ( removedCount <span style="color:#555">!=</span> <span style="color:#f60">0</span> ) {
-</span></span><span style="display:flex;"><span>		dyld<span style="color:#555">::</span>log(<span style="color:#c30">&#34;dyld: DYLD_ environment variables being ignored because &#34;</span>);
+</span></span><span style="display:flex;"><span>		dyld<span style="color:#555">::</span><span style="color:#c0f">log</span>(<span style="color:#c30">&#34;dyld: DYLD_ environment variables being ignored because &#34;</span>);
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">switch</span> (sRestrictedReason) {
 </span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">restrictedNot</span>:
 </span></span><span style="display:flex;"><span>				<span style="color:#069;font-weight:bold">break</span>;
 </span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">restrictedBySetGUid</span>:
-</span></span><span style="display:flex;"><span>				dyld<span style="color:#555">::</span>log(<span style="color:#c30">&#34;main executable (%s) is setuid or setgid</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, sExecPath);
+</span></span><span style="display:flex;"><span>				dyld<span style="color:#555">::</span><span style="color:#c0f">log</span>(<span style="color:#c30">&#34;main executable (%s) is setuid or setgid</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, sExecPath);
 </span></span><span style="display:flex;"><span>				<span style="color:#069;font-weight:bold">break</span>;
 </span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">restrictedBySegment</span>:
-</span></span><span style="display:flex;"><span>				dyld<span style="color:#555">::</span>log(<span style="color:#c30">&#34;main executable (%s) has __RESTRICT/__restrict section</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, sExecPath);
+</span></span><span style="display:flex;"><span>				dyld<span style="color:#555">::</span><span style="color:#c0f">log</span>(<span style="color:#c30">&#34;main executable (%s) has __RESTRICT/__restrict section</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, sExecPath);
 </span></span><span style="display:flex;"><span>				<span style="color:#069;font-weight:bold">break</span>;
 </span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">restrictedByEntitlements</span>:
-</span></span><span style="display:flex;"><span>				dyld<span style="color:#555">::</span>log(<span style="color:#c30">&#34;main executable (%s) is code signed with entitlements</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, sExecPath);
+</span></span><span style="display:flex;"><span>				dyld<span style="color:#555">::</span><span style="color:#c0f">log</span>(<span style="color:#c30">&#34;main executable (%s) is code signed with entitlements</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, sExecPath);
 </span></span><span style="display:flex;"><span>				<span style="color:#069;font-weight:bold">break</span>;
 </span></span><span style="display:flex;"><span>		}
 </span></span><span style="display:flex;"><span>	}
@@ -237,13 +236,13 @@ And a few similar ones, and I will be honest, I had no idea what is he talking a
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">bool</span> <span style="color:#c0f">processRestricted</span>(<span style="color:#069;font-weight:bold">const</span> macho_header<span style="color:#555">*</span> mainExecutableMH)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">// all processes with setuid or setgid bit set are restricted
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    <span style="color:#069;font-weight:bold">if</span> ( issetugid() ) {
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    <span style="color:#069;font-weight:bold">if</span> ( <span style="color:#c0f">issetugid</span>() ) {
 </span></span><span style="display:flex;"><span>		sRestrictedReason <span style="color:#555">=</span> restrictedBySetGUid;
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> <span style="color:#366">true</span>;
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>		
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">const</span> uid_t euid <span style="color:#555">=</span> geteuid();
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> ( (euid <span style="color:#555">!=</span> <span style="color:#f60">0</span>) <span style="color:#555">&amp;&amp;</span> hasRestrictedSegment(mainExecutableMH) ) {
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">uid_t</span> euid <span style="color:#555">=</span> <span style="color:#c0f">geteuid</span>();
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> ( (euid <span style="color:#555">!=</span> <span style="color:#f60">0</span>) <span style="color:#555">&amp;&amp;</span> <span style="color:#c0f">hasRestrictedSegment</span>(mainExecutableMH) ) {
 </span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">// existence of __RESTRICT/__restrict section make process restricted
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>		sRestrictedReason <span style="color:#555">=</span> restrictedBySegment;
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> <span style="color:#366">true</span>;
@@ -252,7 +251,7 @@ And a few similar ones, and I will be honest, I had no idea what is he talking a
 </span></span><span style="display:flex;"><span><span style="color:#099">#if __MAC_OS_X_VERSION_MIN_REQUIRED    
 </span></span></span><span style="display:flex;"><span><span style="color:#099"></span>    <span style="color:#09f;font-style:italic">// ask kernel if code signature of program makes it restricted
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    <span style="color:#078;font-weight:bold">uint32_t</span> flags;
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> ( syscall(SYS_csops <span style="color:#09f;font-style:italic">/* 169 */</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> ( <span style="color:#c0f">syscall</span>(SYS_csops <span style="color:#09f;font-style:italic">/* 169 */</span>,
 </span></span><span style="display:flex;"><span>                <span style="color:#f60">0</span> <span style="color:#09f;font-style:italic">/* asking about myself */</span>,
 </span></span><span style="display:flex;"><span>                CS_OPS_STATUS,
 </span></span><span style="display:flex;"><span>                <span style="color:#555">&amp;</span>flags,
@@ -284,11 +283,11 @@ And a few similar ones, and I will be honest, I had no idea what is he talking a
 </span></span><span style="display:flex;"><span>				<span style="color:#069;font-weight:bold">const</span> <span style="color:#069;font-weight:bold">struct</span> macho_segment_command<span style="color:#555">*</span> seg <span style="color:#555">=</span> (<span style="color:#069;font-weight:bold">struct</span> macho_segment_command<span style="color:#555">*</span>)cmd;
 </span></span><span style="display:flex;"><span>				
 </span></span><span style="display:flex;"><span>				<span style="color:#09f;font-style:italic">//dyld::log(&#34;seg name: %s\n&#34;, seg-&gt;segname);
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>				<span style="color:#069;font-weight:bold">if</span> (strcmp(seg<span style="color:#555">-&gt;</span>segname, <span style="color:#c30">&#34;__RESTRICT&#34;</span>) <span style="color:#555">==</span> <span style="color:#f60">0</span>) {
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>				<span style="color:#069;font-weight:bold">if</span> (<span style="color:#c0f">strcmp</span>(seg<span style="color:#555">-&gt;</span>segname, <span style="color:#c30">&#34;__RESTRICT&#34;</span>) <span style="color:#555">==</span> <span style="color:#f60">0</span>) {
 </span></span><span style="display:flex;"><span>					<span style="color:#069;font-weight:bold">const</span> <span style="color:#069;font-weight:bold">struct</span> macho_section<span style="color:#555">*</span> <span style="color:#069;font-weight:bold">const</span> sectionsStart <span style="color:#555">=</span> (<span style="color:#069;font-weight:bold">struct</span> macho_section<span style="color:#555">*</span>)((<span style="color:#078;font-weight:bold">char</span><span style="color:#555">*</span>)seg <span style="color:#555">+</span> <span style="color:#069;font-weight:bold">sizeof</span>(<span style="color:#069;font-weight:bold">struct</span> macho_segment_command));
 </span></span><span style="display:flex;"><span>					<span style="color:#069;font-weight:bold">const</span> <span style="color:#069;font-weight:bold">struct</span> macho_section<span style="color:#555">*</span> <span style="color:#069;font-weight:bold">const</span> sectionsEnd <span style="color:#555">=</span> <span style="color:#555">&amp;</span>sectionsStart[seg<span style="color:#555">-&gt;</span>nsects];
 </span></span><span style="display:flex;"><span>					<span style="color:#069;font-weight:bold">for</span> (<span style="color:#069;font-weight:bold">const</span> <span style="color:#069;font-weight:bold">struct</span> macho_section<span style="color:#555">*</span> sect<span style="color:#555">=</span>sectionsStart; sect <span style="color:#555">&lt;</span> sectionsEnd; <span style="color:#555">++</span>sect) {
-</span></span><span style="display:flex;"><span>						<span style="color:#069;font-weight:bold">if</span> (strcmp(sect<span style="color:#555">-&gt;</span>sectname, <span style="color:#c30">&#34;__restrict&#34;</span>) <span style="color:#555">==</span> <span style="color:#f60">0</span>) 
+</span></span><span style="display:flex;"><span>						<span style="color:#069;font-weight:bold">if</span> (<span style="color:#c0f">strcmp</span>(sect<span style="color:#555">-&gt;</span>sectname, <span style="color:#c30">&#34;__restrict&#34;</span>) <span style="color:#555">==</span> <span style="color:#f60">0</span>) 
 </span></span><span style="display:flex;"><span>							<span style="color:#069;font-weight:bold">return</span> <span style="color:#366">true</span>;
 </span></span><span style="display:flex;"><span>					}
 </span></span><span style="display:flex;"><span>				}
@@ -308,14 +307,14 @@ And a few similar ones, and I will be honest, I had no idea what is he talking a
 </span></span><span style="display:flex;"><span><span style="color:#099">#if TARGET_IPHONE_SIMULATOR
 </span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	amfiInputFlags <span style="color:#555">|=</span> AMFI_DYLD_INPUT_PROC_IN_SIMULATOR;
 </span></span><span style="display:flex;"><span><span style="color:#099">#elif __MAC_OS_X_VERSION_MIN_REQUIRED
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	<span style="color:#069;font-weight:bold">if</span> ( hasRestrictedSegment(mainExecutableMH) )
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	<span style="color:#069;font-weight:bold">if</span> ( <span style="color:#c0f">hasRestrictedSegment</span>(mainExecutableMH) )
 </span></span><span style="display:flex;"><span>		amfiInputFlags <span style="color:#555">|=</span> AMFI_DYLD_INPUT_PROC_HAS_RESTRICT_SEG;
 </span></span><span style="display:flex;"><span><span style="color:#099">#elif __IPHONE_OS_VERSION_MIN_REQUIRED
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	<span style="color:#069;font-weight:bold">if</span> ( isFairPlayEncrypted(mainExecutableMH) )
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	<span style="color:#069;font-weight:bold">if</span> ( <span style="color:#c0f">isFairPlayEncrypted</span>(mainExecutableMH) )
 </span></span><span style="display:flex;"><span>		amfiInputFlags <span style="color:#555">|=</span> AMFI_DYLD_INPUT_PROC_IS_ENCRYPTED;
 </span></span><span style="display:flex;"><span><span style="color:#099">#endif
 </span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	<span style="color:#078;font-weight:bold">uint64_t</span> amfiOutputFlags <span style="color:#555">=</span> <span style="color:#f60">0</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> ( amfi_check_dyld_policy_self(amfiInputFlags, <span style="color:#555">&amp;</span>amfiOutputFlags) <span style="color:#555">==</span> <span style="color:#f60">0</span> ) {
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> ( <span style="color:#c0f">amfi_check_dyld_policy_self</span>(amfiInputFlags, <span style="color:#555">&amp;</span>amfiOutputFlags) <span style="color:#555">==</span> <span style="color:#f60">0</span> ) {
 </span></span><span style="display:flex;"><span>		gLinkContext.allowAtPaths 				<span style="color:#555">=</span> (amfiOutputFlags <span style="color:#555">&amp;</span> AMFI_DYLD_OUTPUT_ALLOW_AT_PATH);
 </span></span><span style="display:flex;"><span>		gLinkContext.allowEnvVarsPrint			<span style="color:#555">=</span> (amfiOutputFlags <span style="color:#555">&amp;</span> AMFI_DYLD_OUTPUT_ALLOW_PRINT_VARS);
 </span></span><span style="display:flex;"><span>		gLinkContext.allowEnvVarsPath			<span style="color:#555">=</span> (amfiOutputFlags <span style="color:#555">&amp;</span> AMFI_DYLD_OUTPUT_ALLOW_PATH_VARS);
@@ -329,12 +328,12 @@ And a few similar ones, and I will be honest, I had no idea what is he talking a
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>		<span style="color:#078;font-weight:bold">bool</span> isRestricted <span style="color:#555">=</span> <span style="color:#366">false</span>;
 </span></span><span style="display:flex;"><span>		<span style="color:#078;font-weight:bold">bool</span> libraryValidation <span style="color:#555">=</span> <span style="color:#366">false</span>;
 </span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">// any processes with setuid or setgid bit set or with __RESTRICT segment is restricted
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>		<span style="color:#069;font-weight:bold">if</span> ( issetugid() <span style="color:#555">||</span> hasRestrictedSegment(mainExecutableMH) ) {
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>		<span style="color:#069;font-weight:bold">if</span> ( <span style="color:#c0f">issetugid</span>() <span style="color:#555">||</span> <span style="color:#c0f">hasRestrictedSegment</span>(mainExecutableMH) ) {
 </span></span><span style="display:flex;"><span>			isRestricted <span style="color:#555">=</span> <span style="color:#366">true</span>;
 </span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#078;font-weight:bold">bool</span> usingSIP <span style="color:#555">=</span> (csr_check(CSR_ALLOW_TASK_FOR_PID) <span style="color:#555">!=</span> <span style="color:#f60">0</span>);
+</span></span><span style="display:flex;"><span>		<span style="color:#078;font-weight:bold">bool</span> usingSIP <span style="color:#555">=</span> (<span style="color:#c0f">csr_check</span>(CSR_ALLOW_TASK_FOR_PID) <span style="color:#555">!=</span> <span style="color:#f60">0</span>);
 </span></span><span style="display:flex;"><span>		<span style="color:#078;font-weight:bold">uint32_t</span> flags;
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> ( csops(<span style="color:#f60">0</span>, CS_OPS_STATUS, <span style="color:#555">&amp;</span>flags, <span style="color:#069;font-weight:bold">sizeof</span>(flags)) <span style="color:#555">!=</span> <span style="color:#555">-</span><span style="color:#f60">1</span> ) {
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> ( <span style="color:#c0f">csops</span>(<span style="color:#f60">0</span>, CS_OPS_STATUS, <span style="color:#555">&amp;</span>flags, <span style="color:#069;font-weight:bold">sizeof</span>(flags)) <span style="color:#555">!=</span> <span style="color:#555">-</span><span style="color:#f60">1</span> ) {
 </span></span><span style="display:flex;"><span>			<span style="color:#09f;font-style:italic">// On OS X CS_RESTRICT means the program was signed with entitlements
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>			<span style="color:#069;font-weight:bold">if</span> ( ((flags <span style="color:#555">&amp;</span> CS_RESTRICT) <span style="color:#555">==</span> CS_RESTRICT) <span style="color:#555">&amp;&amp;</span> usingSIP ) {
 </span></span><span style="display:flex;"><span>				isRestricted <span style="color:#555">=</span> <span style="color:#366">true</span>;
@@ -352,7 +351,7 @@ And a few similar ones, and I will be honest, I had no idea what is he talking a
 </span></span><span style="display:flex;"><span>		gLinkContext.allowClassicFallbackPaths   <span style="color:#555">=</span> <span style="color:#555">!</span>isRestricted;
 </span></span><span style="display:flex;"><span>		gLinkContext.allowInsertFailures         <span style="color:#555">=</span> <span style="color:#366">false</span>;
 </span></span><span style="display:flex;"><span><span style="color:#099">#else
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>		halt(<span style="color:#c30">&#34;amfi_check_dyld_policy_self() failed</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>		<span style="color:#c0f">halt</span>(<span style="color:#c30">&#34;amfi_check_dyld_policy_self() failed</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
 </span></span><span style="display:flex;"><span><span style="color:#099">#endif
 </span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	}
 </span></span><span style="display:flex;"><span>}
@@ -533,13 +532,13 @@ $ DYLD_INSERT_LIBRARIES=inject.dylib /Applications/Utilities/Disk\ Utility.app/C
 </span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;syslog.h&gt;</span><span style="color:#099">
 </span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdlib.h&gt;</span><span style="color:#099">
 </span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
-</span></span><span style="display:flex;"><span>__attribute__((constructor))
-</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">void</span> customConstructor(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)
+</span></span><span style="display:flex;"><span><span style="color:#c0f">__attribute__</span>((constructor))
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">customConstructor</span>(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)
 </span></span><span style="display:flex;"><span> {
-</span></span><span style="display:flex;"><span>	setuid(<span style="color:#f60">0</span>);
-</span></span><span style="display:flex;"><span> 	system(<span style="color:#c30">&#34;id&#34;</span>);
-</span></span><span style="display:flex;"><span>	printf(<span style="color:#c30">&#34;Hello from dylib!</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>	syslog(LOG_ERR, <span style="color:#c30">&#34;Dylib injection successful in %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, argv[<span style="color:#f60">0</span>]);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">setuid</span>(<span style="color:#f60">0</span>);
+</span></span><span style="display:flex;"><span> 	<span style="color:#c0f">system</span>(<span style="color:#c30">&#34;id&#34;</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;Hello from dylib!</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">syslog</span>(LOG_ERR, <span style="color:#c30">&#34;Dylib injection successful in %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, argv[<span style="color:#f60">0</span>]);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>Let’s sign this, and the test program with the same certificate and set the SUID bit for the test binary and run it. As we can see we can inject a dylib as expected and indeed it will run as root.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>gcc -dynamiclib inject.c -o inject.dylib
@@ -648,7 +647,7 @@ com.apple.quarantine: 0081;5d248e35;Chrome;CE4482F1-0AD8-4387-ABF6-C05A4443CAF4
       <footer class="footer">
   <section class="container">
     
-     © 2022
+     © 2023
     
        · 
       Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.

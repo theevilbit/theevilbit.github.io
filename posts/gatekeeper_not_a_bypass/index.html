@@ -23,7 +23,6 @@ mmap Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel ex
 <meta property="article:modified_time" content="2021-06-29T00:00:00+00:00" />
 
 
-
     
       <base href="https://theevilbit.github.io/posts/gatekeeper_not_a_bypass/">
     
@@ -56,7 +55,7 @@ mmap Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel ex
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.105.0">
+    <meta name="generator" content="Hugo 0.110.0">
   </head>
 
   <body class=" ">
@@ -222,22 +221,22 @@ mmap Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel ex
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
 </span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdlib.h&gt;</span><span style="color:#099">
 </span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
-</span></span><span style="display:flex;"><span>__attribute__((constructor))
-</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">void</span> custom(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)
+</span></span><span style="display:flex;"><span><span style="color:#c0f">__attribute__</span>((constructor))
+</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">custom</span>(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	printf(<span style="color:#c30">&#34;Executed constructor!</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>	system(<span style="color:#c30">&#34;/System/Applications/Calculator.app/Contents/MacOS/Calculator&#34;</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;Executed constructor!</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">system</span>(<span style="color:#c30">&#34;/System/Applications/Calculator.app/Contents/MacOS/Calculator&#34;</span>);
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">void</span> execute()
+</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">execute</span>()
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	printf(<span style="color:#c30">&#34;Executed execute!</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>	system(<span style="color:#c30">&#34;/System/Applications/Calculator.app/Contents/MacOS/Calculator&#34;</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;Executed execute!</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">system</span>(<span style="color:#c30">&#34;/System/Applications/Calculator.app/Contents/MacOS/Calculator&#34;</span>);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>It has a constructor and an execute function. Both print a message and start Calculator.</p>
 <p>If we load this from our app it will start Calculator twice (once the first is closed), because the constructor will be called and also the <code>execute</code> function.</p>
 <p>I also added a line to my app to try to do the same load with <code>dlopen</code> to show that it doesn&rsquo;t work:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>dlopen(<span style="color:#c30">&#34;/Volumes/QB/test.bundle&#34;</span>,<span style="color:#f60">1</span>);
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#c0f">dlopen</span>(<span style="color:#c30">&#34;/Volumes/QB/test.bundle&#34;</span>,<span style="color:#f60">1</span>);
 </span></span></code></pre></div><p>When this is invoked we will get the popup shown above.</p>
 <p>However on the dynamic mapping it will be loaded and Calculator will be executed.</p>
 <p>Note, that <code>test.bundle</code> is unsigned!</p>
@@ -351,7 +350,7 @@ mmap Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel ex
 </span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
 </span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">main</span>(<span style="color:#078;font-weight:bold">void</span>)
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span> dlopen(<span style="color:#c30">&#34;log.dylib&#34;</span>, RTLD_LAZY);
+</span></span><span style="display:flex;"><span> <span style="color:#c0f">dlopen</span>(<span style="color:#c30">&#34;log.dylib&#34;</span>, RTLD_LAZY);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>Then I notarized the dylib, and downloaded it so it got a quarantine flag. Then started the executable and the dylib was loaded without any prompts. This was really weird.</p>
 <p>Thus I decided to take a look at the GK logs from <code>syspolicyd</code>. The following shows the <code>syspolicyd</code> logs concerning the load of the <code>log.dylib</code>.</p>
@@ -429,7 +428,7 @@ mmap Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel ex
       <footer class="footer">
   <section class="container">
     
-     © 2022
+     © 2023
     
        · 
       Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.

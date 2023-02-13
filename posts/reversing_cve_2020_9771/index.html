@@ -21,7 +21,6 @@
 <meta property="article:modified_time" content="2020-12-13T00:00:00+00:00" />
 
 
-
     
       <base href="https://theevilbit.github.io/posts/reversing_cve_2020_9771/">
     
@@ -54,7 +53,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.105.0">
+    <meta name="generator" content="Hugo 0.110.0">
   </head>
 
   <body class=" ">
@@ -149,10 +148,10 @@
 <p><img src="https://theevilbit.github.io/images/Reversing_CVE_2020_9771/yoda.jpg" alt=""></p>
 <p>During the past year Apple released the source code for XNU till macOS 10.15.6, so I decided to start looking there. I keep a copy of all tarballs, so extracted an earlier version of XNU, 6153.41.3 and also the one used in macOS 10.15.4, which is 6153.141.1. If any changes were made in the open source part we should see that. Let&rsquo;s try to find out if anything changed.</p>
 <p>First we will start with tracking how snapshot mounting happens through system calls using <code>xnu-6153.41.3</code>. The file <code>./xnu-6153.41.3/libsyscall/wrappers/fs_snapshot.c</code> contains wrapper for various snapshot mounting related system calls. The one that is interesting for us is <code>fs_snapshot_mount</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>fs_snapshot_mount(<span style="color:#078;font-weight:bold">int</span> dirfd, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>dir, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>snapshot,
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#c0f">fs_snapshot_mount</span>(<span style="color:#078;font-weight:bold">int</span> dirfd, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>dir, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>snapshot,
 </span></span><span style="display:flex;"><span>    <span style="color:#078;font-weight:bold">uint32_t</span> flags)
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">return</span> __fs_snapshot(SNAPSHOT_OP_MOUNT, dirfd, snapshot, dir,
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">return</span> <span style="color:#c0f">__fs_snapshot</span>(SNAPSHOT_OP_MOUNT, dirfd, snapshot, dir,
 </span></span><span style="display:flex;"><span>	           <span style="color:#366">NULL</span>, flags);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>This function does a call to <code>fs_snapshot</code> with the opcode <code>SNAPSHOT_OP_MOUNT</code>. This function eventually leads to <code>fs_snapshot </code>, which can be found in <code>./xnu-6153.41.3/bsd/vfs/vfs_syscalls.c</code>. Here is a small section of it.</p>
@@ -160,21 +159,21 @@
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> * FS snapshot operations dispatcher
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> */</span>
 </span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span>
-</span></span><span style="display:flex;"><span><span style="color:#c0f">fs_snapshot</span>(__unused proc_t p, <span style="color:#069;font-weight:bold">struct</span> fs_snapshot_args <span style="color:#555">*</span>uap,
+</span></span><span style="display:flex;"><span><span style="color:#c0f">fs_snapshot</span>(__unused <span style="color:#078;font-weight:bold">proc_t</span> p, <span style="color:#069;font-weight:bold">struct</span> fs_snapshot_args <span style="color:#555">*</span>uap,
 </span></span><span style="display:flex;"><span>    __unused <span style="color:#078;font-weight:bold">int32_t</span> <span style="color:#555">*</span>retval)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>...
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">SNAPSHOT_OP_MOUNT</span>:
-</span></span><span style="display:flex;"><span>		error <span style="color:#555">=</span> snapshot_mount(uap<span style="color:#555">-&gt;</span>dirfd, uap<span style="color:#555">-&gt;</span>name1, uap<span style="color:#555">-&gt;</span>name2,
+</span></span><span style="display:flex;"><span>		error <span style="color:#555">=</span> <span style="color:#c0f">snapshot_mount</span>(uap<span style="color:#555">-&gt;</span>dirfd, uap<span style="color:#555">-&gt;</span>name1, uap<span style="color:#555">-&gt;</span>name2,
 </span></span><span style="display:flex;"><span>		    uap<span style="color:#555">-&gt;</span>data, uap<span style="color:#555">-&gt;</span>flags, ctx);
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">break</span>;
 </span></span><span style="display:flex;"><span>...
 </span></span></code></pre></div><p>It&rsquo;s not a very long function, and at the very end it has a switch table, which is based on the opcodes passed. In our case it leads to  <code>snapshot_mount</code>. This function is in the same file, and it looks like the following.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">int</span>
-</span></span><span style="display:flex;"><span><span style="color:#c0f">snapshot_mount</span>(<span style="color:#078;font-weight:bold">int</span> dirfd, user_addr_t name, user_addr_t directory,
-</span></span><span style="display:flex;"><span>    __unused user_addr_t mnt_data, __unused <span style="color:#078;font-weight:bold">uint32_t</span> flags, vfs_context_t ctx)
+</span></span><span style="display:flex;"><span><span style="color:#c0f">snapshot_mount</span>(<span style="color:#078;font-weight:bold">int</span> dirfd, <span style="color:#078;font-weight:bold">user_addr_t</span> name, <span style="color:#078;font-weight:bold">user_addr_t</span> directory,
+</span></span><span style="display:flex;"><span>    __unused <span style="color:#078;font-weight:bold">user_addr_t</span> mnt_data, __unused <span style="color:#078;font-weight:bold">uint32_t</span> flags, <span style="color:#078;font-weight:bold">vfs_context_t</span> ctx)
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	vnode_t rvp, snapdvp, snapvp, vp, pvp;
+</span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">vnode_t</span> rvp, snapdvp, snapvp, vp, pvp;
 </span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">int</span> error;
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">struct</span> nameidata <span style="color:#555">*</span>snapndp, <span style="color:#555">*</span>dirndp;
 </span></span><span style="display:flex;"><span>	<span style="color:#09f;font-style:italic">/* carving out a chunk for structs that are too big to be on stack. */</span>
@@ -183,27 +182,27 @@
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">struct</span> nameidata dirnd;
 </span></span><span style="display:flex;"><span>	} <span style="color:#555">*</span> __snapshot_mount_data;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	MALLOC(__snapshot_mount_data, <span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>, <span style="color:#069;font-weight:bold">sizeof</span>(<span style="color:#555">*</span>__snapshot_mount_data),
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">MALLOC</span>(__snapshot_mount_data, <span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>, <span style="color:#069;font-weight:bold">sizeof</span>(<span style="color:#555">*</span>__snapshot_mount_data),
 </span></span><span style="display:flex;"><span>	    M_TEMP, M_WAITOK);
 </span></span><span style="display:flex;"><span>	snapndp <span style="color:#555">=</span> <span style="color:#555">&amp;</span>__snapshot_mount_data<span style="color:#555">-&gt;</span>snapnd;
 </span></span><span style="display:flex;"><span>	dirndp <span style="color:#555">=</span> <span style="color:#555">&amp;</span>__snapshot_mount_data<span style="color:#555">-&gt;</span>dirnd;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	error <span style="color:#555">=</span> vnode_get_snapshot(dirfd, <span style="color:#555">&amp;</span>rvp, <span style="color:#555">&amp;</span>snapdvp, name, snapndp, LOOKUP,
+</span></span><span style="display:flex;"><span>	error <span style="color:#555">=</span> <span style="color:#c0f">vnode_get_snapshot</span>(dirfd, <span style="color:#555">&amp;</span>rvp, <span style="color:#555">&amp;</span>snapdvp, name, snapndp, LOOKUP,
 </span></span><span style="display:flex;"><span>	    OP_LOOKUP, ctx);
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (error) {
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">goto</span> out;
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>	snapvp  <span style="color:#555">=</span> snapndp<span style="color:#555">-&gt;</span>ni_vp;
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span>vnode_mount(rvp) <span style="color:#555">||</span> (vnode_mount(rvp) <span style="color:#555">==</span> dead_mountp)) {
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span><span style="color:#c0f">vnode_mount</span>(rvp) <span style="color:#555">||</span> (<span style="color:#c0f">vnode_mount</span>(rvp) <span style="color:#555">==</span> dead_mountp)) {
 </span></span><span style="display:flex;"><span>		error <span style="color:#555">=</span> EIO;
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">goto</span> out1;
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>	<span style="color:#09f;font-style:italic">/* Get the vnode to be covered */</span>
-</span></span><span style="display:flex;"><span>	NDINIT(dirndp, LOOKUP, OP_MOUNT, FOLLOW <span style="color:#555">|</span> AUDITVNPATH1 <span style="color:#555">|</span> WANTPARENT,
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">NDINIT</span>(dirndp, LOOKUP, OP_MOUNT, FOLLOW <span style="color:#555">|</span> AUDITVNPATH1 <span style="color:#555">|</span> WANTPARENT,
 </span></span><span style="display:flex;"><span>	    UIO_USERSPACE, directory, ctx);
-</span></span><span style="display:flex;"><span>	error <span style="color:#555">=</span> namei(dirndp);
+</span></span><span style="display:flex;"><span>	error <span style="color:#555">=</span> <span style="color:#c0f">namei</span>(dirndp);
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (error) {
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">goto</span> out1;
 </span></span><span style="display:flex;"><span>	}
@@ -214,31 +213,31 @@
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> ((vp<span style="color:#555">-&gt;</span>v_flag <span style="color:#555">&amp;</span> VROOT) <span style="color:#555">&amp;&amp;</span> (vp<span style="color:#555">-&gt;</span>v_mount<span style="color:#555">-&gt;</span>mnt_flag <span style="color:#555">&amp;</span> MNT_ROOTFS)) {
 </span></span><span style="display:flex;"><span>		error <span style="color:#555">=</span> EINVAL;
 </span></span><span style="display:flex;"><span>	} <span style="color:#069;font-weight:bold">else</span> {
-</span></span><span style="display:flex;"><span>		mount_t mp <span style="color:#555">=</span> vnode_mount(rvp);
+</span></span><span style="display:flex;"><span>		<span style="color:#078;font-weight:bold">mount_t</span> mp <span style="color:#555">=</span> <span style="color:#c0f">vnode_mount</span>(rvp);
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">struct</span> fs_snapshot_mount_args smnt_data;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>		smnt_data.sm_mp  <span style="color:#555">=</span> mp;
 </span></span><span style="display:flex;"><span>		smnt_data.sm_cnp <span style="color:#555">=</span> <span style="color:#555">&amp;</span>snapndp<span style="color:#555">-&gt;</span>ni_cnd;
-</span></span><span style="display:flex;"><span>		error <span style="color:#555">=</span> mount_common(mp<span style="color:#555">-&gt;</span>mnt_vfsstat.f_fstypename, pvp, vp,
-</span></span><span style="display:flex;"><span>		    <span style="color:#555">&amp;</span>dirndp<span style="color:#555">-&gt;</span>ni_cnd, CAST_USER_ADDR_T(<span style="color:#555">&amp;</span>smnt_data), flags <span style="color:#555">&amp;</span> MNT_DONTBROWSE,
+</span></span><span style="display:flex;"><span>		error <span style="color:#555">=</span> <span style="color:#c0f">mount_common</span>(mp<span style="color:#555">-&gt;</span>mnt_vfsstat.f_fstypename, pvp, vp,
+</span></span><span style="display:flex;"><span>		    <span style="color:#555">&amp;</span>dirndp<span style="color:#555">-&gt;</span>ni_cnd, <span style="color:#c0f">CAST_USER_ADDR_T</span>(<span style="color:#555">&amp;</span>smnt_data), flags <span style="color:#555">&amp;</span> MNT_DONTBROWSE,
 </span></span><span style="display:flex;"><span>		    KERNEL_MOUNT_SNAPSHOT, <span style="color:#366">NULL</span>, FALSE, ctx);
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	vnode_put(vp);
-</span></span><span style="display:flex;"><span>	vnode_put(pvp);
-</span></span><span style="display:flex;"><span>	nameidone(dirndp);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">vnode_put</span>(vp);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">vnode_put</span>(pvp);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">nameidone</span>(dirndp);
 </span></span><span style="display:flex;"><span><span style="color:#99f">out1</span>:
-</span></span><span style="display:flex;"><span>	vnode_put(snapvp);
-</span></span><span style="display:flex;"><span>	vnode_put(snapdvp);
-</span></span><span style="display:flex;"><span>	vnode_put(rvp);
-</span></span><span style="display:flex;"><span>	nameidone(snapndp);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">vnode_put</span>(snapvp);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">vnode_put</span>(snapdvp);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">vnode_put</span>(rvp);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">nameidone</span>(snapndp);
 </span></span><span style="display:flex;"><span><span style="color:#99f">out</span>:
-</span></span><span style="display:flex;"><span>	FREE(__snapshot_mount_data, M_TEMP);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">FREE</span>(__snapshot_mount_data, M_TEMP);
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">return</span> error;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>This function is eventually calls out to <code>mount_common</code>, which is also in the same file, and it will be responsible for the actual mount. Let&rsquo;s see how this function has changed, and for that we will use the code from <code>xnu-6153.141.1</code> specifically the file <code>./xnu-6153.141.1/bsd/vfs/vfs_syscalls.c</code>. I won&rsquo;t paste the entire function again, just the new important part.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#if CONFIG_MACF
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	error <span style="color:#555">=</span> mac_mount_check_snapshot_mount(ctx, rvp, vp, <span style="color:#555">&amp;</span>dirndp<span style="color:#555">-&gt;</span>ni_cnd, snapndp<span style="color:#555">-&gt;</span>ni_cnd.cn_nameptr,
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	error <span style="color:#555">=</span> <span style="color:#c0f">mac_mount_check_snapshot_mount</span>(ctx, rvp, vp, <span style="color:#555">&amp;</span>dirndp<span style="color:#555">-&gt;</span>ni_cnd, snapndp<span style="color:#555">-&gt;</span>ni_cnd.cn_nameptr,
 </span></span><span style="display:flex;"><span>	    mp<span style="color:#555">-&gt;</span>mnt_vfsstat.f_fstypename);
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (error) {
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">goto</span> out2;
@@ -248,20 +247,20 @@
 <p>This is where things start to make sense, because if we recall that Apple considered this a bug in &ldquo;Sandbox&rdquo;, this callout makes sense.</p>
 <p>Apparently the bug is that a Sandbox check was missing. If we search for <code>mac_mount_*</code> in the old source code, we will see that there are many callouts, but not with the snapshot call, and specifically the <code>mac_mount_check_snapshot_mount</code> doesn&rsquo;t exists in earlier versions.</p>
 <p>Let&rsquo;s move on. This function is defined in two places, first in <code>xnu-6153.141.1/security/mac_base.c</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">mac_mount_check_snapshot_mount</span>(vfs_context_t ctx, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>rvp, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>vp, <span style="color:#069;font-weight:bold">struct</span> componentname <span style="color:#555">*</span>cnp,
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">mac_mount_check_snapshot_mount</span>(<span style="color:#078;font-weight:bold">vfs_context_t</span> ctx, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>rvp, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>vp, <span style="color:#069;font-weight:bold">struct</span> componentname <span style="color:#555">*</span>cnp,
 </span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>name, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>vfc_name);
 </span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span>
-</span></span><span style="display:flex;"><span><span style="color:#c0f">mac_mount_check_snapshot_mount</span>(vfs_context_t ctx __unused, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>rvp __unused, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>vp __unused,
+</span></span><span style="display:flex;"><span><span style="color:#c0f">mac_mount_check_snapshot_mount</span>(<span style="color:#078;font-weight:bold">vfs_context_t</span> ctx __unused, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>rvp __unused, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>vp __unused,
 </span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">struct</span> componentname <span style="color:#555">*</span>cnp __unused, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>name __unused, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>vfc_name __unused)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">return</span> <span style="color:#f60">0</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>Here this function simply returns 0, which in case of the MACF framework, means &ldquo;allow&rdquo;. I&rsquo;m guessing here, but I think this is just to ensure that if none of the MACF policy hooks support this check, the operation will be allowed. I think this is like a default allow action.</p>
 <p>The other implementation is in <code>xnu-6153.141.1/security/mac_vfs.c</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>mac_mount_check_snapshot_mount(vfs_context_t ctx, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>rvp, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>vp, <span style="color:#069;font-weight:bold">struct</span> componentname <span style="color:#555">*</span>cnp,
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#c0f">mac_mount_check_snapshot_mount</span>(<span style="color:#078;font-weight:bold">vfs_context_t</span> ctx, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>rvp, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>vp, <span style="color:#069;font-weight:bold">struct</span> componentname <span style="color:#555">*</span>cnp,
 </span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>name, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>vfc_name)
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	kauth_cred_t cred;
+</span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">kauth_cred_t</span> cred;
 </span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">int</span> error;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#099">#if SECURITY_MAC_CHECK_ENFORCE
@@ -270,13 +269,13 @@
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> <span style="color:#f60">0</span>;
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span><span style="color:#099">#endif
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	cred <span style="color:#555">=</span> vfs_context_ucred(ctx);
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span>mac_cred_check_enforce(cred)) {
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	cred <span style="color:#555">=</span> <span style="color:#c0f">vfs_context_ucred</span>(ctx);
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span><span style="color:#c0f">mac_cred_check_enforce</span>(cred)) {
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> <span style="color:#f60">0</span>;
 </span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	VFS_KERNEL_DEBUG_START1(<span style="color:#f60">92</span>, vp);
-</span></span><span style="display:flex;"><span>	MAC_CHECK(mount_check_snapshot_mount, cred, rvp, vp, cnp, name, vfc_name);
-</span></span><span style="display:flex;"><span>	VFS_KERNEL_DEBUG_END1(<span style="color:#f60">92</span>, vp);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">VFS_KERNEL_DEBUG_START1</span>(<span style="color:#f60">92</span>, vp);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">MAC_CHECK</span>(mount_check_snapshot_mount, cred, rvp, vp, cnp, name, vfc_name);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">VFS_KERNEL_DEBUG_END1</span>(<span style="color:#f60">92</span>, vp);
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">return</span> error;
 </span></span><span style="display:flex;"><span>} 
 </span></span></code></pre></div><p>This function uses the macro <code>MAC_CHECK</code>. This is defined in <code>./xnu-6153.141.1/security/mac_internal.h</code>.</p>
@@ -373,7 +372,7 @@
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> *  for errno should be returned.
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> */</span>
 </span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">typedef</span> <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">mpo_mount_check_snapshot_mount_t</span>(
-</span></span><span style="display:flex;"><span>	kauth_cred_t cred,
+</span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">kauth_cred_t</span> cred,
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>rvp,
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>vp,
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">struct</span> componentname <span style="color:#555">*</span>cnp,
@@ -535,7 +534,7 @@ Target 0: (kernel) stopped.
       <footer class="footer">
   <section class="container">
     
-     © 2022
+     © 2023
     
        · 
       Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.

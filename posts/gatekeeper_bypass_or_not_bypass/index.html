@@ -21,7 +21,6 @@
 <meta property="article:modified_time" content="2019-10-25T00:00:00+00:00" />
 
 
-
     
       <base href="https://theevilbit.github.io/posts/gatekeeper_bypass_or_not_bypass/">
     
@@ -54,7 +53,7 @@
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.105.0">
+    <meta name="generator" content="Hugo 0.110.0">
   </head>
 
   <body class=" ">
@@ -225,7 +224,7 @@ On macOS Catalina lot has changed, the most notable one regarding gatekeeper is 
 </span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdlib.h&gt;</span><span style="color:#099">
 </span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
 </span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">main</span>(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#078;font-weight:bold">char</span><span style="color:#555">*</span> argv[]) {
-</span></span><span style="display:flex;"><span>    system(argv[<span style="color:#f60">1</span>]);
+</span></span><span style="display:flex;"><span>    <span style="color:#c0f">system</span>(argv[<span style="color:#f60">1</span>]);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>gcc hello.c -o h
 </span></span><span style="display:flex;"><span>./h /Users/csaby/Downloads/m
@@ -456,7 +455,7 @@ Here I will only highlight the main item involving GateKeeper. The most signific
       <footer class="footer">
   <section class="container">
     
-     © 2022
+     © 2023
     
        · 
       Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.

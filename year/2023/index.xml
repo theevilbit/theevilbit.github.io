@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>2023 on theevilbit blog</title>
+    <link>https://theevilbit.github.io/year/2023/</link>
+    <description>Recent content in 2023 on theevilbit blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Mon, 13 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/year/2023/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CVE-2022-22655 - TCC - Location Services Bypass</title>
+      <link>https://theevilbit.github.io/posts/cve-2022-22655/</link>
+      <pubDate>Mon, 13 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/posts/cve-2022-22655/</guid>
+      <description>This is a quick blogpost about a vulnerability I covered in our Black Hat Europe 2022 talk with Wojciech Regula.
+In contrary to what people would expect, clients which can access location services are not maintained in one of the TCC databased, but in a separate location, and it&amp;rsquo;s maintained by locationd. This has been also recently covered by Howard Oakley, in his Privacy: what TCC does and doesn’t blogpost.</description>
+    </item>
+    
+  </channel>
+</rss>

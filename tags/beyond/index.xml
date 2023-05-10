@@ -5,7 +5,17 @@
     <link>https://theevilbit.github.io/tags/beyond/</link>
     <description>Recent content in beyond on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 08 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/beyond/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 10 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/beyond/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 30 - The man config file - man.conf</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0030/</link>
+      <pubDate>Wed, 10 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0030/</guid>
+      <description>This is part 30 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+I was watching an old BSidesLuxemburg 2019 talk by Aaron Jewitt, called &amp;ldquo;Threat Hunting On Linux And Mac With Auditbeat System Module&amp;rdquo;, it&amp;rsquo;s up on YouTube. Aaron mentioned in one of the slides that you can persist using man.conf files. It looked really odd, I tried to quickly Google it, but haven’t found anything about it.</description>
+    </item>
+    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 29 - amstoold</title>
       <link>https://theevilbit.github.io/beyond/beyond_0029/</link>
@@ -15,16 +25,6 @@
       <description>This is part 29 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
 When doing some research on macOS I came across the following LaunchAgent: /System/Library/LaunchAgents/com.apple.amstoold.plist. Its content is the following.
 &amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt; &amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt; &amp;lt;plist version=&amp;#34;1.0&amp;#34;&amp;gt; &amp;lt;dict&amp;gt; &amp;lt;key&amp;gt;EnablePressuredExit&amp;lt;/key&amp;gt; &amp;lt;true/&amp;gt; &amp;lt;key&amp;gt;EnableTransactions&amp;lt;/key&amp;gt; &amp;lt;true/&amp;gt; &amp;lt;key&amp;gt;Label&amp;lt;/key&amp;gt; &amp;lt;string&amp;gt;com.apple.amstoold&amp;lt;/string&amp;gt; &amp;lt;key&amp;gt;LaunchEvents&amp;lt;/key&amp;gt; &amp;lt;dict&amp;gt; &amp;lt;key&amp;gt;com.apple.distnoted.matching&amp;lt;/key&amp;gt; &amp;lt;dict&amp;gt; &amp;lt;key&amp;gt;com.</description>
-    </item>
-    
-    <item>
-      <title>Beyond the good ol&#39; LaunchAgents - 29 - The man config file - man.conf</title>
-      <link>https://theevilbit.github.io/beyond/beyond_0030/</link>
-      <pubDate>Tue, 08 Mar 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://theevilbit.github.io/beyond/beyond_0030/</guid>
-      <description>This is part 30 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-I was watching an old BSidesLuxemburg 2019 talk by Aaron Jewitt, called &amp;ldquo;Threat Hunting On Linux And Mac With Auditbeat System Module&amp;rdquo;, it&amp;rsquo;s up on YouTube. Aaron mentioned in one of the slides that you can persist using man.conf files. It looked really odd, I tried to quickly Google it, but haven’t found anything about it.</description>
     </item>
     
     <item>

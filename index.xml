@@ -67,6 +67,16 @@ When doing some research on macOS I came across the following LaunchAgent: /Syst
     </item>
     
     <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 29 - The man config file - man.conf</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0030/</link>
+      <pubDate>Tue, 08 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0030/</guid>
+      <description>This is part 30 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+I was watching an old BSidesLuxemburg 2019 talk by Aaron Jewitt, called &amp;ldquo;Threat Hunting On Linux And Mac With Auditbeat System Module&amp;rdquo;, it&amp;rsquo;s up on YouTube. Aaron mentioned in one of the slides that you can persist using man.conf files. It looked really odd, I tried to quickly Google it, but haven’t found anything about it.</description>
+    </item>
+    
+    <item>
       <title>Beyond the good ol&#39; LaunchAgents - 28 - Authorization Plugins</title>
       <link>https://theevilbit.github.io/beyond/beyond_0028/</link>
       <pubDate>Wed, 09 Feb 2022 00:00:00 +0000</pubDate>

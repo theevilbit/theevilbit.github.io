@@ -5,6 +5,7 @@
     <link>https://theevilbit.github.io/tags/injection/</link>
     <description>Recent content in injection on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
     <lastBuildDate>Tue, 09 Jul 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/injection/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX</title>

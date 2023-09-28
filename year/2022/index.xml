@@ -5,6 +5,7 @@
     <link>https://theevilbit.github.io/year/2022/</link>
     <description>Recent content in 2022 on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
     <lastBuildDate>Mon, 14 Nov 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/year/2022/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>CVE-2022-32929 - Bypass iOS backup&#39;s TCC protection</title>

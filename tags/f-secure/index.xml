@@ -5,6 +5,7 @@
     <link>https://theevilbit.github.io/tags/f-secure/</link>
     <description>Recent content in f-secure on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
     <lastBuildDate>Tue, 16 Jun 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/f-secure/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>CVE-2020-14977 - Secure coding XPC Services - Part 5 - PID reuse attacks</title>

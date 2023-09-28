@@ -5,6 +5,7 @@
     <link>https://theevilbit.github.io/categories/shield/</link>
     <description>Recent content in shield on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
     <lastBuildDate>Sun, 22 Sep 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/categories/shield/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Shield - An app to protect against process injection on macOS</title>

@@ -5,7 +5,19 @@
     <link>https://theevilbit.github.io/</link>
     <description>Recent content on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 26 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <language>en</language>
+    <lastBuildDate>Thu, 28 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>macOS Service Management - The SMAppService API - Quick Notes</title>
+      <link>https://theevilbit.github.io/posts/smappservice/</link>
+      <pubDate>Thu, 28 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/posts/smappservice/</guid>
+      <description>This is just a super quick post and some notes, about my experiences with SMAppService.
+Apple introduced the SMAppService API in macOS Ventura (13) to replace the older SMJobBless and SMLoginItemSetEnabled APIs. SMAppService should be used now to register any new Login Item, Launch Agent or Daemon.
+The API is super easy to use, even I could learn it from the developer docs, which is a big thing, and it means that it is indeed really easy as I suck as a developer.</description>
+    </item>
+    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 31 - BSM audit framework</title>
       <link>https://theevilbit.github.io/beyond/beyond_0031/</link>

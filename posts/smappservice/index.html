@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Csaba Fitzl">
+    
+    
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="macOS Service Management - The SMAppService API - Quick Notes"/>
+<meta name="twitter:description" content="This is just a super quick post and some notes, about my experiences with SMAppService.
+Apple introduced the SMAppService API in macOS Ventura (13) to replace the older SMJobBless and SMLoginItemSetEnabled APIs. SMAppService should be used now to register any new Login Item, Launch Agent or Daemon.
+The API is super easy to use, even I could learn it from the developer docs, which is a big thing, and it means that it is indeed really easy as I suck as a developer."/>
+
+    <meta property="og:title" content="macOS Service Management - The SMAppService API - Quick Notes" />
+<meta property="og:description" content="This is just a super quick post and some notes, about my experiences with SMAppService.
+Apple introduced the SMAppService API in macOS Ventura (13) to replace the older SMJobBless and SMLoginItemSetEnabled APIs. SMAppService should be used now to register any new Login Item, Launch Agent or Daemon.
+The API is super easy to use, even I could learn it from the developer docs, which is a big thing, and it means that it is indeed really easy as I suck as a developer." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://theevilbit.github.io/posts/smappservice/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-09-28T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-09-28T00:00:00+00:00" />
+
+
+    
+      <base href="https://theevilbit.github.io/posts/smappservice/">
+    
+    <title>
+  macOS Service Management - The SMAppService API - Quick Notes · theevilbit blog
+</title>
+
+    
+      <link rel="canonical" href="https://theevilbit.github.io/posts/smappservice/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+
+    
+    
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.119.0">
+  </head>
+
+  <body class=" ">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://theevilbit.github.io/">
+      theevilbit blog
+    </a>
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/categories/">Categories</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+          </li>
+        
+      
+      
+    </ul>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">macOS Service Management - The SMAppService API - Quick Notes</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2023-09-28T00:00:00Z'>
+                September 28, 2023
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              5 minutes read
+            </span>
+          </div>
+          <div class="categories">
+  <i class="fas fa-folder"></i>
+    <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
+
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/developer/">developer</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/malware/">malware</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/api/">api</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        <p>This is just a super quick post and some notes, about my experiences with SMAppService.</p>
+<p>Apple introduced the SMAppService API in macOS Ventura (13) to replace the older SMJobBless and SMLoginItemSetEnabled APIs. SMAppService should be used now to register any new Login Item, Launch Agent or Daemon.</p>
+<p>The API is super easy to use, even I could learn it from the developer docs, which is a big thing, and it means that it is indeed really easy as I suck as a developer.</p>
+<p>For example registering a new launch daemon is simple as is:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objective-c" data-lang="objective-c"><span style="display:flex;"><span> SMAppService<span style="color:#555">*</span> service <span style="color:#555">=</span> [SMAppService <span style="color:#99f">daemonServiceWithPlistName</span>:<span style="color:#c30">@&#34;mysuperherodaemon.plist&#34;</span>];
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span> [service <span style="color:#99f">registerAndReturnError</span>:<span style="color:#366">NULL</span>];
+</span></span></code></pre></div><p>I remember how painful it was to use SMJobBless with doing all the authorization, etc&hellip; now that is abstracted away, and the system will take care of that on our behalf.</p>
+<p>When we call the above API, the users will have to approve a background item first, and if they do so they will be prompted for authentication, as installing a daemon requires root privileges.</p>
+<p>Querying the status from our app is also super simple.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objective-c" data-lang="objective-c"><span style="display:flex;"><span>SMAppService<span style="color:#555">*</span> service <span style="color:#555">=</span> [SMAppService <span style="color:#99f">daemonServiceWithPlistName</span>:HELPER_PLIST];
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">if</span>(service.status <span style="color:#555">==</span> SMAppServiceStatusNotRegistered) {
+</span></span><span style="display:flex;"><span>    <span style="color:#366">self</span>.helperStatus.stringValue <span style="color:#555">=</span> <span style="color:#c30">@&#34;The service hasn’t registered with the Service Management framework, or the service attempted to reregister after it was already registered.&#34;</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">else</span> <span style="color:#069;font-weight:bold">if</span> (service.status <span style="color:#555">==</span> SMAppServiceStatusEnabled) {
+</span></span><span style="display:flex;"><span>    <span style="color:#366">self</span>.helperStatus.stringValue <span style="color:#555">=</span> <span style="color:#c30">@&#34;The service has been successfully registered and is eligible to run.&#34;</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">else</span> <span style="color:#069;font-weight:bold">if</span>(service.status <span style="color:#555">==</span> SMAppServiceStatusRequiresApproval) {
+</span></span><span style="display:flex;"><span>    <span style="color:#366">self</span>.helperStatus.stringValue <span style="color:#555">=</span> <span style="color:#c30">@&#34;The service has been successfully registered, but the user needs to take action in System Preferences.&#34;</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">else</span> <span style="color:#069;font-weight:bold">if</span>(service.status <span style="color:#555">==</span> SMAppServiceStatusNotFound) {
+</span></span><span style="display:flex;"><span>    <span style="color:#366">self</span>.helperStatus.stringValue <span style="color:#555">=</span> <span style="color:#c30">@&#34;An error occurred and the framework couldn’t find this service.&#34;</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Once the user approved it, we can verify that indeed it was installed. We can either use <code>launchctl</code> as shown below.</p>
+<pre tabindex="0"><code>csaby@max ~ % sudo launchctl list | grep Script
+-	0	com.csabafitzl.ScriptRunner.helper
+</code></pre><p>Or we can use <code>sfltool</code> to dump the BTM (BackgroundTaskManagement) database. Its output is shown below.</p>
+<pre tabindex="0"><code>csaby@max ~ % sudo sfltool dumpbtm 
+========================
+ Records for UID -2 : FFFFEEEE-DDDD-CCCC-BBBB-AAAAFFFFFFFE
+========================
+
+ #17:
+                 UUID: B6DF59C7-508F-4057-B529-0C0F64BBC6A4
+                 Name: ScriptRunner
+       Developer Name: Csaba Fitzl
+      Team Identifier: 33YRLYRBYV
+                 Type: app (0x2)
+          Disposition: [disabled, allowed, visible, notified] (10)
+           Identifier: identifier &#34;com.csabafitzl.ScriptRunner&#34; and anchor apple generic and certificate leaf[subject.CN] = &#34;Apple Development: Csaba Fitzl (RQGUDM4LR2)&#34; and certificate 1[field.1.2.840.113635.100.6.2.1] /* exists */
+                  URL: file:///Applications/ScriptRunner.app/
+           Generation: 8
+    Bundle Identifier: com.csabafitzl.ScriptRunner
+  Embedded Item Identifiers:
+    #1: com.csabafitzl.ScriptRunner.helper
+
+ #18:
+                 UUID: AA964DA1-9116-4D15-AF27-44848A030133
+                 Name: com.csabafitzl.ScriptRunner.helper
+       Developer Name: (null)
+                 Type: daemon (0x10)
+          Disposition: [enabled, allowed, visible, notified] (11)
+           Identifier: com.csabafitzl.ScriptRunner.helper
+                  URL: Contents/Library/LaunchDaemons/com.csabafitzl.ScriptRunner.helper.plist
+      Executable Path: Contents/Resources/com.csabafitzl.ScriptRunner.helper
+           Generation: 21
+    Parent Identifier: identifier &#34;com.csabafitzl.ScriptRunner&#34; and anchor apple generic and certificate leaf[subject.CN] = &#34;Apple Development: Csaba Fitzl (RQGUDM4LR2)&#34; and certificate 1[field.1.2.840.113635.100.6.2.1] /* exists */
+
+========================
+ Records for UID 501 : 682D46F7-0B3D-4439-9602-F02250338E0D
+========================
+
+ #21:
+                 UUID: B6DF59C7-508F-4057-B529-0C0F64BBC6A4
+                 Name: ScriptRunner
+       Developer Name: Csaba Fitzl
+      Team Identifier: 33YRLYRBYV
+                 Type: app (0x2)
+          Disposition: [disabled, allowed, visible, notified] (10)
+           Identifier: identifier &#34;com.csabafitzl.ScriptRunner&#34; and anchor apple generic and certificate leaf[subject.CN] = &#34;Apple Development: Csaba Fitzl (RQGUDM4LR2)&#34; and certificate 1[field.1.2.840.113635.100.6.2.1] /* exists */
+                  URL: file:///Applications/ScriptRunner.app/
+           Generation: 3
+    Bundle Identifier: com.csabafitzl.ScriptRunner
+</code></pre><p>I think it worth a closer look. We will find that we have entries for the main app for both my regular user and the root, which are disabled. We also find an entry for the launch daemon for the root user, which is enabled. You might notice that the PLIST and executable path is relative. This is because from now on launch daemons and their associated plist files are expected to be within the application bundle itself, and they won&rsquo;t get moved to <code>/Library/Launch*</code> and <code>/Library/PrivilegedHelperTools/</code>. This is very important as security tools should expect looking for persistence also inside the app bundles.</p>
+<p>Now if we unregister the daemon, the daemon&rsquo;s status will be changed to disabled.</p>
+<pre tabindex="0"><code>                 UUID: AA964DA1-9116-4D15-AF27-44848A030133
+                 Name: com.csabafitzl.ScriptRunner.helper
+       Developer Name: (null)
+                 Type: daemon (0x10)
+          Disposition: [disabled, allowed, visible, notified] (10)
+           Identifier: com.csabafitzl.ScriptRunner.helper
+                  URL: Contents/Library/LaunchDaemons/com.csabafitzl.ScriptRunner.helper.plist
+      Executable Path: Contents/Resources/com.csabafitzl.ScriptRunner.helper
+           Generation: 22
+    Parent Identifier: identifier &#34;com.csabafitzl.ScriptRunner&#34; and anchor apple generic and certificate leaf[subject.CN] = &#34;Apple Development: Csaba Fitzl (RQGUDM4LR2)&#34; and certificate 1[field.1.2.840.113635.100.6.2.1] /* exists */
+</code></pre><p>It will also go away from launchd&rsquo;s list.</p>
+<pre tabindex="0"><code>csaby@max ~ % sudo launchctl list | grep Script 
+csaby@max ~ % 
+</code></pre><p>Interestingly, if the daemon was approved once, unregistering and registering it again doesn&rsquo;t require further authentication.</p>
+<p>If we enable it bask, and now go to System Settings and disable it from there we will find the following.</p>
+<pre tabindex="0"><code> #18:
+                 UUID: AA964DA1-9116-4D15-AF27-44848A030133
+                 Name: com.csabafitzl.ScriptRunner.helper
+       Developer Name: (null)
+                 Type: daemon (0x10)
+          Disposition: [enabled, disallowed, visible, notified] (9)
+           Identifier: com.csabafitzl.ScriptRunner.helper
+                  URL: Contents/Library/LaunchDaemons/com.csabafitzl.ScriptRunner.helper.plist
+      Executable Path: Contents/Resources/com.csabafitzl.ScriptRunner.helper
+           Generation: 26
+    Parent Identifier: identifier &#34;com.csabafitzl.ScriptRunner&#34; and anchor apple generic and certificate leaf[subject.CN] = &#34;Apple Development: Csaba Fitzl (RQGUDM4LR2)&#34; and certificate 1[field.1.2.840.113635.100.6.2.1] /* exists */
+</code></pre><p>It will show as &ldquo;enabled&rdquo; but at the same time &ldquo;disallowed&rdquo;. It will also go away from launchd.</p>
+<blockquote>
+<p>There is a bug in macOS Ventura 13.6, the launchd job won&rsquo;t be disable even if the user disables the service. I submitted a bug to Apple, the Feedback ID is FB13206906.</p>
+</blockquote>
+<p>The Service Management developers docs are available here: <a href="https://developer.apple.com/documentation/servicemanagement/smappservice?language=objc">SMAppService | Apple Developer Documentation</a></p>
+<p>At the time of this writing none of my apps, which has a registered daemon appears to use this API as their daemons are still in the old (now legacy) location and not inside the bundle.</p>
+
+      </div>
+
+      <footer>
+        
+
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+     © 2023
+    
+       · 
+      Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.
+    
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-151008930-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+  </body>
+
+</html>

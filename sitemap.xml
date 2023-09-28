@@ -3,7 +3,40 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://theevilbit.github.io/year/2023/</loc>
-    <lastmod>2023-05-26T00:00:00+00:00</lastmod>
+    <lastmod>2023-09-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/tags/api/</loc>
+    <lastmod>2023-09-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/categories/blog/</loc>
+    <lastmod>2023-09-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/categories/</loc>
+    <lastmod>2023-09-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/tags/developer/</loc>
+    <lastmod>2023-09-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/tags/macos/</loc>
+    <lastmod>2023-09-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/posts/smappservice/</loc>
+    <lastmod>2023-09-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/tags/malware/</loc>
+    <lastmod>2023-09-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/posts/</loc>
+    <lastmod>2023-09-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/tags/</loc>
+    <lastmod>2023-09-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/</loc>
+    <lastmod>2023-09-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/year/</loc>
+    <lastmod>2023-09-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/tags/beyond/</loc>
     <lastmod>2023-05-26T00:00:00+00:00</lastmod>
@@ -17,40 +50,19 @@
     <loc>https://theevilbit.github.io/beyond/</loc>
     <lastmod>2023-05-26T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://theevilbit.github.io/categories/</loc>
-    <lastmod>2023-05-26T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/tags/macos/</loc>
-    <lastmod>2023-05-26T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://theevilbit.github.io/tags/persistence/</loc>
     <lastmod>2023-05-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/categories/persistence/</loc>
     <lastmod>2023-05-26T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://theevilbit.github.io/tags/</loc>
-    <lastmod>2023-05-26T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/</loc>
-    <lastmod>2023-05-26T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/year/</loc>
-    <lastmod>2023-05-26T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://theevilbit.github.io/beyond/beyond_0030/</loc>
     <lastmod>2023-05-10T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/categories/blog/</loc>
-    <lastmod>2023-02-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/tags/cve/</loc>
     <lastmod>2023-02-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/posts/cve-2022-22655/</loc>
-    <lastmod>2023-02-13T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/posts/</loc>
     <lastmod>2023-02-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/tags/tcc/</loc>

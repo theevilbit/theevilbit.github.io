@@ -6,7 +6,17 @@
     <description>Recent content in persistence on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 26 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/categories/persistence/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 29 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/categories/persistence/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 32 - Dock Tile Plugins</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0032/</link>
+      <pubDate>Fri, 29 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/beyond/beyond_0032/</guid>
+      <description>This is part 32 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+When you write a series about something, there are some episodes which are less interesting, many boring stuff, but sometimes there are some true gems. While doing some research yesterday, I run into the Dock Tile Plugin feature in macOS, which turned out to be truly amazing from persistence point of view.</description>
+    </item>
+    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 31 - BSM audit framework</title>
       <link>https://theevilbit.github.io/beyond/beyond_0031/</link>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Csaba Fitzl">
+    
+    
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 32 - Dock Tile Plugins"/>
+<meta name="twitter:description" content="This is part 32 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+When you write a series about something, there are some episodes which are less interesting, many boring stuff, but sometimes there are some true gems. While doing some research yesterday, I run into the Dock Tile Plugin feature in macOS, which turned out to be truly amazing from persistence point of view."/>
+
+    <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 32 - Dock Tile Plugins" />
+<meta property="og:description" content="This is part 32 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+When you write a series about something, there are some episodes which are less interesting, many boring stuff, but sometimes there are some true gems. While doing some research yesterday, I run into the Dock Tile Plugin feature in macOS, which turned out to be truly amazing from persistence point of view." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0032/" /><meta property="article:section" content="beyond" />
+<meta property="article:published_time" content="2023-09-29T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-09-29T00:00:00+00:00" />
+
+
+    
+      <base href="https://theevilbit.github.io/beyond/beyond_0032/">
+    
+    <title>
+  Beyond the good ol&#39; LaunchAgents - 32 - Dock Tile Plugins · theevilbit blog
+</title>
+
+    
+      <link rel="canonical" href="https://theevilbit.github.io/beyond/beyond_0032/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+
+    
+    
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.119.0">
+  </head>
+
+  <body class=" ">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://theevilbit.github.io/">
+      theevilbit blog
+    </a>
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/categories/">Categories</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+          </li>
+        
+      
+      
+    </ul>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Beyond the good ol&#39; LaunchAgents - 32 - Dock Tile Plugins</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2023-09-29T00:00:00Z'>
+                September 29, 2023
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              8 minutes read
+            </span>
+          </div>
+          <div class="categories">
+  <i class="fas fa-folder"></i>
+    <a href="https://theevilbit.github.io/categories/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/categories/beyond/">beyond</a></div>
+
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/persistence/">persistence</a>
+      <span class="separator">•</span>
+    <a href="https://theevilbit.github.io/tags/beyond/">beyond</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        <blockquote>
+<p>This is part 32 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+</blockquote>
+<p>When you write a series about something, there are some episodes which are less interesting, many boring stuff, but sometimes there are some true gems. While doing some research yesterday, I run into the Dock Tile Plugin feature in macOS, which turned out to be truly amazing from persistence point of view.</p>
+<p>Dock tile plugins are available since macOS Snow Leopard (10.6), which is considered by many people one of the best edition ever. Dock tiles are the small icons that appear on your Dock, when the application runs. Apple writes the following about these plugins in their <a href="https://developer.apple.com/documentation/appkit/nsdocktileplugin?language=objc">Developer Documentation</a>:</p>
+<blockquote>
+<p>A set of methods implemented by plug-ins that allow an app’s Dock tile to be customized while the app is not running.</p>
+</blockquote>
+<p>So it&rsquo;s a plugin that will run when your app is not running, that sounds really - really interesting.</p>
+<p>They also write:</p>
+<blockquote>
+<p>The plugin is loaded in a system process at login time or when the application tile is added to the Dock. When the plugin is loaded, the principal class&rsquo; implementation of <a href="https://developer.apple.com/documentation/appkit/nsdocktileplugin/1534120-setdocktile?language=objc">setDockTile:</a> is invoked, passing an <a href="https://developer.apple.com/documentation/appkit/nsdocktile?language=objc">NSDockTile</a> for the plug-in to customize. If the principal class implements <a href="https://developer.apple.com/documentation/appkit/nsdocktileplugin/1527547-dockmenu?language=objc">dockMenu</a> it is invoked whenever the user causes the application&rsquo;s dock menu to be shown. When the dock tile is no longer valid (for example,. the application has been removed from the dock) -<a href="https://developer.apple.com/documentation/appkit/nsdocktileplugin/1534120-setdocktile?language=objc">setDockTile:</a> is invoked with nil.</p>
+</blockquote>
+<p>&ldquo;plugin is loaded in a system process at login time&rdquo; - this is fantastic. It is persistence, no matter how it&rsquo;s framed. Basically it&rsquo;s a plugin that can react to various system events, and update the tile on the Dock, how it looks, add custom menus, etc&hellip; Let&rsquo;s see how we can create one.</p>
+<h2 id="creating-a-plugin">Creating a plugin</h2>
+<p>The plugins are embedded inside an application, so first we need to create a macOS App that will host the plugin. There are two sample codes I found on GitHub, that I also used as a base to learn how to create them. One is <a href="https://github.com/CartBlanche/MacDockTileSample">CartBlanche/MacDockTileSample</a> which is written in Objective-C and the other is <a href="https://github.com/rrroyal/AutomaticDockTile">rrroyal/AutomaticDockTile</a> which is written in Swift. I will show here how to create a simple one in Objective-C.</p>
+<p>I will release the app and the source code, but you might want to follow this guide.</p>
+<p>To start we will need a macOS app. You can name it whatever you like, I gave it a name &ldquo;DuckDockTile&rdquo;. Once it&rsquo;s created, add a new target to Xcode, and it should be a bundle. I used the name DuckDockTilePlugin.docktileplugin. I will show it later, but based on reversing the process which will load it, it can have any extension or name.</p>
+<p>Once the new target is created we will need to add a header file first.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objective-c" data-lang="objective-c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@interface</span> <span style="color:#0a8;font-weight:bold">DuckDockTilePlugIn</span> : <span style="color:#0a8;font-weight:bold">NSObject</span> <span style="color:#555">&lt;</span>NSDockTilePlugIn<span style="color:#555">&gt;</span> {
+</span></span><span style="display:flex;"><span>    NSMenu <span style="color:#555">*</span>dockMenu;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@property</span>(<span style="color:#069;font-weight:bold">retain</span>) <span style="color:#078;font-weight:bold">id</span> observer;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@end</span>
+</span></span></code></pre></div><p>There we define our class (DuckDockTilePlugIn in my case), which will implement the <code>NSDockTilePlugIn</code> protocol. We will also need a property for the class, which will hold an observer object. More on this soon.</p>
+<p>Next we can create the main file, where we implement our class. According the documentation we need to implement the following functions.</p>
+<p><a href="https://developer.apple.com/documentation/appkit/nsdocktileplugin/1534120-setdocktile?language=objc">- setDockTile:</a> - Invoked when the plug-in is first loaded and when the application is removed from the Dock. This is required.
+<a href="https://developer.apple.com/documentation/appkit/nsdocktileplugin/1527547-dockmenu?language=objc">- dockMenu</a> - Invoked when the user causes the application&rsquo;s dock menu to be shown. This is optional.</p>
+<p>The best if we implement both. I used the previously mentioned samples to get an idea what we can do. So I did the following.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objective-c" data-lang="objective-c"><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&#34;DuckDockTilePlugIn.h&#34;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@implementation</span> <span style="color:#0a8;font-weight:bold">DuckDockTilePlugIn</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@synthesize</span> observer;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">doSomething</span>(<span style="color:#078;font-weight:bold">void</span>) {
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;%@&#34;</span>, <span style="color:#c30">@&#34;BEYOND doSomething was called&#34;</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setDockTile:</span>(NSDockTile <span style="color:#555">*</span>)<span style="color:#033">dockTile</span> {
+</span></span><span style="display:flex;"><span>        observer <span style="color:#555">=</span> [[NSDistributedNotificationCenter defaultCenter] <span style="color:#99f">addObserverForName</span>:<span style="color:#c30">@&#34;com.apple.screenIsLocked&#34;</span> <span style="color:#99f">object</span>:<span style="color:#366">nil</span> <span style="color:#99f">queue</span>:<span style="color:#366">nil</span> <span style="color:#99f">usingBlock</span>:<span style="color:#555">^</span>(NSNotification <span style="color:#555">*</span>notification) {
+</span></span><span style="display:flex;"><span>            doSomething();
+</span></span><span style="display:flex;"><span>        }];
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;%@&#34;</span>, <span style="color:#c30">@&#34;BEYOND setDockTile was called&#34;</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@end</span>
+</span></span></code></pre></div><p>While implementing our logic in the setDockTile would be sufficient based on the documentation, I found the observer idea very interesting from the samples. Basically we can subscribe to various system notifications, and define a function that will be executed every single time that event is happening. This is awesome, as we can cause our plugin to be executed multiple times, and we can make it very granular based on the events we subscribe to. In theory if we provide &ldquo;nil&rdquo; for the observer name we subscribe to everything (but maybe I&rsquo;m wrong here) but that didn&rsquo;t work for me.</p>
+<p>I have spent some time looking for a good name, and eventually found the <code>com.apple.screenIsLocked</code> event, which is called when the screen is getting locked. I think under normal use, we can expect it to be invoked a few times during the day. Also, it is invoked when the screen is locked, so the user doesn&rsquo;t see what we are doing&hellip;. * evil laugh *.</p>
+<p>Once we are done with this, we need to do a few more things, so our plugin ends up inside the app.</p>
+<p>First for the plugin&rsquo;s <em>Info.plist</em> file (which is now simply the Info menu in Xcode 15), we need to define the &ldquo;Principal class&rdquo;, which is the name of the class we used for our plugin. In this case it&rsquo;s &ldquo;DuckDockTilePlugin&rdquo;.</p>
+<p><img src="https://theevilbit.github.io/images/beyond/beyond_0032_0.png" alt="Principal class"></p>
+<p>In the <em>Info.plist</em> file it will show up as:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>NSPrincipalClass<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;string&gt;</span>DuckDockTilePlugin<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span></code></pre></div><p>Next we need to go to the Info tab of our main application and define the &ldquo;Dock Tile plugin path&rdquo;, which should be the bundle name we used.</p>
+<p><img src="https://theevilbit.github.io/images/beyond/beyond_0032_1.png" alt="Dock Tile plugin path"></p>
+<p>In the <em>Info.plist</em> it will show up as:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>NSDockTilePlugIn<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;string&gt;</span>DuckDockTilePlugin.docktileplugin<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span></code></pre></div><p>Lastly we need to create a &ldquo;Copy Files&rdquo; action in the main app&rsquo;s Build Phases menu. This is shown below.</p>
+<p><img src="https://theevilbit.github.io/images/beyond/beyond_0032_2.png" alt="Copy Files"></p>
+<p>We need to copy the bundle inside the app. The destination should be &ldquo;PlugIns and Foundation Extensions&rdquo;.</p>
+<p>That&rsquo;s it, we can build it.</p>
+<h3 id="using-the-plugin">Using the PlugIn</h3>
+<p>As our app is built, we can copy it to wherever we want, it will be recognized by launch services, registered, and the plugin will be loaded!!!! We don&rsquo;t even need to start the app, the Dock tile doesn&rsquo;t need to show up, we don&rsquo;t need to do anything. That is so cool.</p>
+<blockquote>
+<p>There is one exception. If the app is downloaded and has the quarantine attribute the plugin won&rsquo;t be started until the app is started and the user approves it, so this can&rsquo;t be used to bypass GateKeeper. Also in my testing, it might require a reboot for the plugin to be started even if the user approved the app. So the best is to drop the app without the Q flags.</p>
+</blockquote>
+<p>Once our plugin is loaded we can lock the screen, and observe the logs, that indeed our function is being called again and again.</p>
+<pre tabindex="0"><code>csaby@max ~ % log stream | grep DuckDockTilePlugin
+2023-09-28 22:43:31.633798+0200 0x1d67     Default     0x0                  948    0    com.apple.dock.external.extra.arm64: (DuckDockTilePlugin) BEYOND doSomething was called
+2023-09-28 22:43:51.787426+0200 0x1d67     Default     0x0                  948    0    com.apple.dock.external.extra.arm64: (DuckDockTilePlugin) BEYOND doSomething was called
+</code></pre><p>The process responsible for loading it is <code>com.apple.dock.external.extra.arm64</code> which is located at <code>/System/Library/CoreServices/Dock.app/Contents/XPCServices/com.apple.dock.external.extra.arm64.xpc/Contents/MacOS/com.apple.dock.external.extra.arm64</code>.</p>
+<pre tabindex="0"><code>Executable=/System/Library/CoreServices/Dock.app/Contents/XPCServices/com.apple.dock.external.extra.arm64.xpc/Contents/MacOS/com.apple.dock.external.extra.arm64
+Identifier=com.apple.dock.external.extra.arm64
+Format=bundle with Mach-O thin (arm64e)
+CodeDirectory v=20400 size=924 flags=0x0(none) hashes=18+7 location=embedded
+Platform identifier=15
+Signature size=4442
+Signed Time=Aug 11, 2023 at 08:05:59
+Info.plist entries=32
+TeamIdentifier=not set
+Sealed Resources version=2 rules=2 files=0
+Internal requirements count=1 size=84
+[Dict]
+	[Key] com.apple.private.responsibility.set-to-self.at-launch
+	[Value]
+		[Bool] true
+	[Key] com.apple.security.cs.disable-library-validation
+	[Value]
+		[Bool] true
+</code></pre><p>If we observe its code signing properties we will find that it&rsquo;s not sandboxed, that it it has library validation disabled, that is why it can load our plugin.</p>
+<h2 id="the-xpc-process">The XPC Process</h2>
+<p>As I mentioned before we can use any bundle name. Loading the <code>com.apple.dock.external.extra.arm64</code> binary in IDA and looking at the load function reveals the following:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objective-c" data-lang="objective-c"><span style="display:flex;"><span> <span style="color:#078;font-weight:bold">id</span> <span style="color:#069;font-weight:bold">__cdecl</span> <span style="color:#555">-</span>[DockExtraService <span style="color:#99f">_loadPluginAtPath</span>:<span style="color:#99f">withSize</span>:<span style="color:#99f">andScale</span>:](
+</span></span><span style="display:flex;"><span>        DockExtraService <span style="color:#555">*</span><span style="color:#366">self</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#078;font-weight:bold">SEL</span> a2,
+</span></span><span style="display:flex;"><span>        <span style="color:#078;font-weight:bold">id</span> a3,
+</span></span><span style="display:flex;"><span>        <span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#069;font-weight:bold">__int64</span> a4,
+</span></span><span style="display:flex;"><span>        <span style="color:#078;font-weight:bold">float</span> a5)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Value <span style="color:#555">=</span> (<span style="color:#069;font-weight:bold">const</span> __CFString <span style="color:#555">*</span>)CFDictionaryGetValue(v11, CFSTR(<span style="color:#c30">&#34;NSDockTilePlugIn&#34;</span>));
+</span></span><span style="display:flex;"><span>  v14 <span style="color:#555">=</span> Value;
+</span></span><span style="display:flex;"><span>  <span style="color:#069;font-weight:bold">if</span> ( <span style="color:#555">!</span>Value <span style="color:#555">||</span> TypeID <span style="color:#555">!=</span> CFGetTypeID(Value) )
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#555">&amp;</span>CFSTR(<span style="color:#c30">&#34;Could not get resource for NSDockTilePlugIn (check spelling?) for Dock Extra&#34;</span>).isa);
+</span></span><span style="display:flex;"><span><span style="color:#99f">LABEL_11</span>:
+</span></span><span style="display:flex;"><span>    v26 <span style="color:#555">=</span> <span style="color:#f60">0LL</span>;
+</span></span><span style="display:flex;"><span>    v27 <span style="color:#555">=</span> <span style="color:#f60">0LL</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">goto</span> LABEL_12;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  v16 <span style="color:#555">=</span> objc_msgSend_stringWithFormat_(<span style="color:#555">&amp;</span>OBJC_CLASS___NSString, v15, CFSTR(<span style="color:#c30">&#34;/Contents/PlugIns/%@&#34;</span>), v14);
+</span></span><span style="display:flex;"><span>  v18 <span style="color:#555">=</span> objc_msgSend_URLByAppendingPathComponent_(v8, v17, v16);
+</span></span><span style="display:flex;"><span>  v19 <span style="color:#555">=</span> objc_retain(v18);
+</span></span><span style="display:flex;"><span>  v21 <span style="color:#555">=</span> objc_msgSend_defaultManager(<span style="color:#555">&amp;</span>OBJC_CLASS___NSFileManager, v20);
+</span></span><span style="display:flex;"><span>  v23 <span style="color:#555">=</span> objc_msgSend_path(v19, v22);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>...
+</span></span></code></pre></div><p>It will use the <code>NSDockTilePlugIn</code> property of the main app to find the plugin name, and it will be appended to <code>/Contents/PlugIns/</code>. So the plugin must be placed inside that directory, but the name is arbitrary.</p>
+<h2 id="detection">Detection</h2>
+<p>I think there are a few trivial ways to detect such plugins.</p>
+<p>First, if we scan through the applications, any app which has the <code>NSDockTilePlugIn</code> in their <em>Info.plist</em> is suspicious, or deserves a second look.</p>
+<p>Second, using the Endpoint Security Framework, we have two further options.</p>
+<p>The <code>com.apple.dock.external.extra.arm64</code> process only loads external Dock tile plugins, so even its execution can raise suspicion, as it&rsquo;s not typically loaded. We can catch this with monitoring <strong>ES_EVENT_TYPE_NOTIFY_EXEC</strong> events.</p>
+<p><img src="https://theevilbit.github.io/images/beyond/beyond_0032_3.png" alt="ES_EVENT_TYPE_NOTIFY_EXEC"></p>
+<p>Further more we can monitor the load of bundles with subscribing to the <strong>ES_EVENT_TYPE_NOTIFY_MMAP</strong> events. If an external library is loaded into <code>com.apple.dock.external.extra.arm64</code> that will also require further investigation.</p>
+<p><img src="https://theevilbit.github.io/images/beyond/beyond_0032_4.png" alt="ES_EVENT_TYPE_NOTIFY_MMAP"></p>
+<h2 id="sum-up">Sum Up</h2>
+<p>So basically we have a way to drop an app with a custom plugin, which:</p>
+<ul>
+<li>is not visible to the user</li>
+<li>can react to various system events, and will be loaded at each login, so persists across reboots</li>
+<li>runs inside a legitimate system process which is not sandboxed</li>
+<li>doesn&rsquo;t show up in Sonoma&rsquo;s new Background Task Management menu</li>
+<li>is not detected (yet) by BlockBlock and KnockKnock</li>
+</ul>
+<p>And detection is also trivial based on:</p>
+<ul>
+<li>the main App&rsquo;s <em>Info.plist</em> file</li>
+<li>using ESF events to monitor the <code>com.apple.dock.external.extra.arm64</code> process</li>
+</ul>
+<p>I think this is pretty damn cool for both sides.</p>
+<p>Sample on GitHub: <a href="https://github.com/theevilbit/DuckDockTile">theevilbit/DuckDockTile</a></p>
+
+      </div>
+
+      <footer>
+        
+
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+     © 2023
+    
+       · 
+      Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.
+    
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-151008930-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+  </body>
+
+</html>

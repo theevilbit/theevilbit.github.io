@@ -6,7 +6,34 @@
     <description>Recent content in Tags on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 28 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 29 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>beyond</title>
+      <link>https://theevilbit.github.io/tags/beyond/</link>
+      <pubDate>Fri, 29 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/tags/beyond/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>macos</title>
+      <link>https://theevilbit.github.io/tags/macos/</link>
+      <pubDate>Fri, 29 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/tags/macos/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>persistence</title>
+      <link>https://theevilbit.github.io/tags/persistence/</link>
+      <pubDate>Fri, 29 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/tags/persistence/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>api</title>
       <link>https://theevilbit.github.io/tags/api/</link>
@@ -26,38 +53,11 @@
     </item>
     
     <item>
-      <title>macos</title>
-      <link>https://theevilbit.github.io/tags/macos/</link>
-      <pubDate>Thu, 28 Sep 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://theevilbit.github.io/tags/macos/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>malware</title>
       <link>https://theevilbit.github.io/tags/malware/</link>
       <pubDate>Thu, 28 Sep 2023 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/tags/malware/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>beyond</title>
-      <link>https://theevilbit.github.io/tags/beyond/</link>
-      <pubDate>Fri, 26 May 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://theevilbit.github.io/tags/beyond/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>persistence</title>
-      <link>https://theevilbit.github.io/tags/persistence/</link>
-      <pubDate>Fri, 26 May 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://theevilbit.github.io/tags/persistence/</guid>
       <description></description>
     </item>
     

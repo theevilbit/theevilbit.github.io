@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Workshops on theevilbit blog</title>
+    <link>https://theevilbit.github.io/categories/workshops/</link>
+    <description>Recent content in Workshops on theevilbit blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 05 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/categories/workshops/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Talks and Workshops</title>
+      <link>https://theevilbit.github.io/talks/</link>
+      <pubDate>Thu, 05 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/talks/</guid>
+      <description>2023 Launch and Environment Constraints Deep Dive (MacSysAdmin)
+Presentation
+2022 20+ New Ways to Bypass Your macOS Privacy Mechanisms (BlackHat EU)
+Presentation
+macOS Vulnerabilities Hiding in Plain Sight (BlackHat Asia, Troopers, Zer0Con)
+Presentation
+The Achilles Heel of Endpoint Security (Objective By The Sea, MacSysAdmin)
+Presentation
+Whitepaper
+Beyond the Good Ol&amp;rsquo; LaunchAgents (SecurityFest, MacDevOpsYVR)
+Presentation
+2021 Mount(ain) of Bugs (Objective By The Sea, Hacktivity)
+Presentation
+Mitigating Exploits using Apple&amp;rsquo;s Endpoint Security Framework (Virus Bulletin, MacDevOpsYVR, ITBN)</description>
+    </item>
+    
+  </channel>
+</rss>

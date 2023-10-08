@@ -6,7 +6,29 @@
     <description>Recent content on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 29 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 05 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Talks and Workshops</title>
+      <link>https://theevilbit.github.io/talks/</link>
+      <pubDate>Thu, 05 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/talks/</guid>
+      <description>2023 Launch and Environment Constraints Deep Dive (MacSysAdmin)
+Presentation
+2022 20+ New Ways to Bypass Your macOS Privacy Mechanisms (BlackHat EU)
+Presentation
+macOS Vulnerabilities Hiding in Plain Sight (BlackHat Asia, Troopers, Zer0Con)
+Presentation
+The Achilles Heel of Endpoint Security (Objective By The Sea, MacSysAdmin)
+Presentation
+Whitepaper
+Beyond the Good Ol&amp;rsquo; LaunchAgents (SecurityFest, MacDevOpsYVR)
+Presentation
+2021 Mount(ain) of Bugs (Objective By The Sea, Hacktivity)
+Presentation
+Mitigating Exploits using Apple&amp;rsquo;s Endpoint Security Framework (Virus Bulletin, MacDevOpsYVR, ITBN)</description>
+    </item>
+    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 32 - Dock Tile Plugins</title>
       <link>https://theevilbit.github.io/beyond/beyond_0032/</link>

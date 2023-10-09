@@ -6,7 +6,17 @@
     <description>Recent content in internals on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 14 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/internals/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 09 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/internals/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Launch and Environment Constraints Deep Dive</title>
+      <link>https://theevilbit.github.io/posts/launch_constraints_deep_dive/</link>
+      <pubDate>Mon, 09 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/posts/launch_constraints_deep_dive/</guid>
+      <description>Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&amp;rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.
+Old macOS Vulnerabilities TCC bypass with imagent.app This vulnerability was discovered by Adam Chester (xpn) back in 2019 and documented on his blog post &amp;ldquo;Bypassing MacOS Privacy Controls&amp;rdquo;.</description>
+    </item>
+    
     <item>
       <title>AMFI Launch Constraints - First Quick Look</title>
       <link>https://theevilbit.github.io/posts/amfi_launch_constraints/</link>

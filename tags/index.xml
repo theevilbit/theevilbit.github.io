@@ -6,22 +6,40 @@
     <description>Recent content in Tags on theevilbit blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 29 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 09 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>beyond</title>
-      <link>https://theevilbit.github.io/tags/beyond/</link>
-      <pubDate>Fri, 29 Sep 2023 00:00:00 +0000</pubDate>
+      <title>amfi</title>
+      <link>https://theevilbit.github.io/tags/amfi/</link>
+      <pubDate>Mon, 09 Oct 2023 00:00:00 +0000</pubDate>
       
-      <guid>https://theevilbit.github.io/tags/beyond/</guid>
+      <guid>https://theevilbit.github.io/tags/amfi/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>internals</title>
+      <link>https://theevilbit.github.io/tags/internals/</link>
+      <pubDate>Mon, 09 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/tags/internals/</guid>
       <description></description>
     </item>
     
     <item>
       <title>macos</title>
       <link>https://theevilbit.github.io/tags/macos/</link>
-      <pubDate>Fri, 29 Sep 2023 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 09 Oct 2023 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/tags/macos/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>beyond</title>
+      <link>https://theevilbit.github.io/tags/beyond/</link>
+      <pubDate>Fri, 29 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://theevilbit.github.io/tags/beyond/</guid>
       <description></description>
     </item>
     
@@ -103,24 +121,6 @@
       <pubDate>Mon, 29 Aug 2022 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/tags/lpe/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>amfi</title>
-      <link>https://theevilbit.github.io/tags/amfi/</link>
-      <pubDate>Tue, 14 Jun 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://theevilbit.github.io/tags/amfi/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>internals</title>
-      <link>https://theevilbit.github.io/tags/internals/</link>
-      <pubDate>Tue, 14 Jun 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://theevilbit.github.io/tags/internals/</guid>
       <description></description>
     </item>
     

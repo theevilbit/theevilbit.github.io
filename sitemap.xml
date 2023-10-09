@@ -2,8 +2,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://theevilbit.github.io/year/2023/</loc>
+    <lastmod>2023-10-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/tags/amfi/</loc>
+    <lastmod>2023-10-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/categories/blog/</loc>
+    <lastmod>2023-10-09T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://theevilbit.github.io/categories/</loc>
-    <lastmod>2023-10-05T00:00:00+00:00</lastmod>
+    <lastmod>2023-10-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/tags/internals/</loc>
+    <lastmod>2023-10-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/posts/launch_constraints_deep_dive/</loc>
+    <lastmod>2023-10-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/tags/macos/</loc>
+    <lastmod>2023-10-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/posts/</loc>
+    <lastmod>2023-10-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/tags/</loc>
+    <lastmod>2023-10-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/</loc>
+    <lastmod>2023-10-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/year/</loc>
+    <lastmod>2023-10-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/categories/talk/</loc>
     <lastmod>2023-10-05T00:00:00+00:00</lastmod>
@@ -11,14 +41,8 @@
     <loc>https://theevilbit.github.io/talks/</loc>
     <lastmod>2023-10-05T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://theevilbit.github.io/</loc>
-    <lastmod>2023-10-05T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://theevilbit.github.io/categories/workshops/</loc>
     <lastmod>2023-10-05T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/year/2023/</loc>
-    <lastmod>2023-09-29T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/tags/beyond/</loc>
     <lastmod>2023-09-29T00:00:00+00:00</lastmod>
@@ -32,25 +56,13 @@
     <loc>https://theevilbit.github.io/beyond/</loc>
     <lastmod>2023-09-29T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://theevilbit.github.io/tags/macos/</loc>
-    <lastmod>2023-09-29T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://theevilbit.github.io/tags/persistence/</loc>
     <lastmod>2023-09-29T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/categories/persistence/</loc>
     <lastmod>2023-09-29T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://theevilbit.github.io/tags/</loc>
-    <lastmod>2023-09-29T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/year/</loc>
-    <lastmod>2023-09-29T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://theevilbit.github.io/tags/api/</loc>
-    <lastmod>2023-09-28T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/categories/blog/</loc>
     <lastmod>2023-09-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/tags/developer/</loc>
@@ -60,9 +72,6 @@
     <lastmod>2023-09-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/tags/malware/</loc>
-    <lastmod>2023-09-28T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/posts/</loc>
     <lastmod>2023-09-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/beyond/beyond_0031/</loc>
@@ -101,13 +110,7 @@
     <loc>https://theevilbit.github.io/tags/lpe/</loc>
     <lastmod>2022-08-29T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://theevilbit.github.io/tags/amfi/</loc>
-    <lastmod>2022-06-14T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://theevilbit.github.io/posts/amfi_launch_constraints/</loc>
-    <lastmod>2022-06-14T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/tags/internals/</loc>
     <lastmod>2022-06-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/beyond/beyond_0029/</loc>

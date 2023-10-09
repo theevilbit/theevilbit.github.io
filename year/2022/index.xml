@@ -13,7 +13,7 @@
       <pubDate>Mon, 14 Nov 2022 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/posts/cve-2022-32929/</guid>
-      <description>Intro Normally, when a users backup their iOS device, the backup is saved into ~/Library/Application Support/MobileSync/Backup directory. The MobileSync directory is properly protected by TCC, as the backup can contain photos, contact information, everything from the iOS device, and it might be unencrypted, so this is a whole lot of private information. It&amp;rsquo;s only accessible with Full Disk Access rights.
+      <description>Intro Link to heading Normally, when a users backup their iOS device, the backup is saved into ~/Library/Application Support/MobileSync/Backup directory. The MobileSync directory is properly protected by TCC, as the backup can contain photos, contact information, everything from the iOS device, and it might be unencrypted, so this is a whole lot of private information. It&amp;rsquo;s only accessible with Full Disk Access rights.
 The issue is that an attacker can invoke the AppleMobileBackup utility and make a backup to a custom location.</description>
     </item>
     
@@ -32,7 +32,7 @@ The issue is that an attacker can invoke the AppleMobileBackup utility and make 
       <pubDate>Mon, 29 Aug 2022 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/posts/cve-2017-2533/</guid>
-      <description>Intro CVE-2017-2533 was part of a chain of vulnerabilities, used at pwn2own 2017 found by the phoenhex team. They wrote a blogpost about it here. This vulnerability led me to find CVE-2022-32780, which I detailed at Black Hat Asia 2022. Although the nature of CVE-2017-2533 was discussed by the authors, but the actual code part was never truly revealed, and I always wondered about the full details. Now I took the time to dig up the details, including how it was fixed, and why the fix solves the problem.</description>
+      <description>Intro Link to heading CVE-2017-2533 was part of a chain of vulnerabilities, used at pwn2own 2017 found by the phoenhex team. They wrote a blogpost about it here. This vulnerability led me to find CVE-2022-32780, which I detailed at Black Hat Asia 2022. Although the nature of CVE-2017-2533 was discussed by the authors, but the actual code part was never truly revealed, and I always wondered about the full details.</description>
     </item>
     
     <item>

@@ -13,8 +13,8 @@
       <pubDate>Sun, 22 Sep 2019 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/shield/</guid>
-      <description>Shield - An app to protect against process injection on macOS In this post I would like to tell the story of the Shield.app development and also introduce its features. It&amp;rsquo;s been a ride over the past year, and I wasn&amp;rsquo;t sure always that it will happen.
-Motivation for limiting process injections In the past 2 years I started to dig into macOS security research, and along the way it became pretty clear that beyond memory corruption issues the alpha and omega of macOS exploits is to run code in the context of other applications.</description>
+      <description>Shield - An app to protect against process injection on macOS Link to heading In this post I would like to tell the story of the Shield.app development and also introduce its features. It&amp;rsquo;s been a ride over the past year, and I wasn&amp;rsquo;t sure always that it will happen.
+Motivation for limiting process injections Link to heading In the past 2 years I started to dig into macOS security research, and along the way it became pretty clear that beyond memory corruption issues the alpha and omega of macOS exploits is to run code in the context of other applications.</description>
     </item>
     
   </channel>

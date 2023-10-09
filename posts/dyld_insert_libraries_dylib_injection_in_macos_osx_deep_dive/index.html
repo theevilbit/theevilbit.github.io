@@ -1,21 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+  <title>
+  DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX · theevilbit blog
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 
-    <meta name="author" content="Csaba Fitzl">
-    
-    
 
-    <meta name="twitter:card" content="summary"/>
+
+
+<meta name="author" content="Csaba Fitzl">
+<meta name="description" content="After my recent blog post, my old mate @_Dark_Knight_ reached out to me and he asked me a question:
+“Do you typically callout user apps that allow dyld_insert_libraries?”
+And a few similar ones, and I will be honest, I had no idea what is he talking about, if only I understood the question :D Despite the fact that my recent blog posts and talks are about macOS, I deal much more with Windows on a daily basis, probably like 95%, and macOS is still a whole new territory for me.">
+<meta name="keywords" content="">
+
+<meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX"/>
 <meta name="twitter:description" content="After my recent blog post, my old mate @_Dark_Knight_ reached out to me and he asked me a question:
 “Do you typically callout user apps that allow dyld_insert_libraries?”
 And a few similar ones, and I will be honest, I had no idea what is he talking about, if only I understood the question :D Despite the fact that my recent blog posts and talks are about macOS, I deal much more with Windows on a daily basis, probably like 95%, and macOS is still a whole new territory for me."/>
 
-    <meta property="og:title" content="DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX" />
+<meta property="og:title" content="DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX" />
 <meta property="og:description" content="After my recent blog post, my old mate @_Dark_Knight_ reached out to me and he asked me a question:
 “Do you typically callout user apps that allow dyld_insert_libraries?”
 And a few similar ones, and I will be honest, I had no idea what is he talking about, if only I understood the question :D Despite the fact that my recent blog posts and talks are about macOS, I deal much more with Windows on a daily basis, probably like 95%, and macOS is still a whole new territory for me." />
@@ -25,127 +34,163 @@ And a few similar ones, and I will be honest, I had no idea what is he talking a
 <meta property="article:modified_time" content="2019-07-09T00:00:00+00:00" />
 
 
-    
-      <base href="https://theevilbit.github.io/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/">
-    
-    <title>
-  DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX · theevilbit blog
-</title>
 
-    
-      <link rel="canonical" href="https://theevilbit.github.io/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/">
-    
 
-    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+<link rel="canonical" href="https://theevilbit.github.io/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/">
 
-    
-      
-      
-      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
-    
 
-    
+<link rel="preload" href="https://theevilbit.github.io/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
 
-    
 
-    
+  
+  
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.135e22c97ff685fe983fc60048e309ced8f00d8d38f536aa67dba8a13a03dfa4.css" integrity="sha256-E14iyX/2hf6YP8YASOMJztjwDY049TaqZ9uooToD36Q=" crossorigin="anonymous" media="screen" />
 
-    
-    
-    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.119.0">
-  </head>
 
-  <body class=" ">
-    <main class="wrapper">
-      <nav class="navigation">
+
+
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+
+<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
+<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+<body class="preload-transitions colorscheme-light">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
   <section class="container">
     <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
-    <input type="checkbox" id="menu-toggle" />
-    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
-    <ul class="navigation-list">
-      
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
-          </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+            </li>
+          
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
-          </li>
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
-          </li>
-        
-      
-      
-    </ul>
+      </ul>
+    
   </section>
 </nav>
 
 
-      <div class="content">
-        
+    <div class="content">
+      
   <section class="container post">
     <article>
       <header>
         <div class="post-title">
-          <h1 class="title">DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX</h1>
+          <h1 class="title">
+            <a class="title-link" href="https://theevilbit.github.io/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/">
+              DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX
+            </a>
+          </h1>
         </div>
         <div class="post-meta">
           <div class="date">
             <span class="posted-on">
-              <i class="fas fa-calendar"></i>
-              <time datetime='2019-07-09T00:00:00Z'>
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="2019-07-09T00:00:00Z">
                 July 9, 2019
               </time>
             </span>
             <span class="reading-time">
-              <i class="fas fa-clock"></i>
-              17 minutes read
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              17-minute read
             </span>
           </div>
+          
           <div class="categories">
-  <i class="fas fa-folder"></i>
+  <i class="fa fa-folder" aria-hidden="true"></i>
     <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
 
           <div class="tags">
-  <i class="fas fa-tag"></i>
-    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+  <i class="fa fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+    </span>
       <span class="separator">•</span>
-    <a href="https://theevilbit.github.io/tags/injection/">injection</a>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/injection/">injection</a>
+    </span>
       <span class="separator">•</span>
-    <a href="https://theevilbit.github.io/tags/lpe/">lpe</a></div>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/lpe/">lpe</a>
+    </span></div>
 
         </div>
       </header>
 
-      <div>
-        <p>After my recent blog post, my old mate <a href="https://twitter.com/_Dark_Knight_">@_Dark_Knight_</a> reached out to me and he asked me a question:</p>
+      <div class="post-content">
+        
+        <p>After my recent blog post, my old mate <a href="https://twitter.com/_Dark_Knight_"  class="external-link" target="_blank" rel="noopener">@_Dark_Knight_</a> reached out to me and he asked me a question:</p>
 <blockquote>
 <p>“Do you typically callout user apps that allow dyld_insert_libraries?”</p>
 </blockquote>
 <p>And a few similar ones, and I will be honest, I had no idea what is he talking about, if only I understood the question :D Despite the fact that my recent blog posts and talks are about macOS, I deal much more with Windows on a daily basis, probably like 95%, and macOS is still a whole new territory for me. So I decided to dig into the question and learn a bit more about this.</p>
-<p>As it turns out there is a very well known injection technique for macOS utilizing <code>DYLD_INSERT_LIBRARIES</code> environment variable. Here is the description of the variable from the <a href="https://web.archive.org/web/20160409091449/https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/dyld.1.html">dyld man document</a>:</p>
+<p>As it turns out there is a very well known injection technique for macOS utilizing <code>DYLD_INSERT_LIBRARIES</code> environment variable. Here is the description of the variable from the <a href="https://web.archive.org/web/20160409091449/https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/dyld.1.html"  class="external-link" target="_blank" rel="noopener">dyld man document</a>:</p>
 <pre tabindex="0"><code>DYLD_INSERT_LIBRARIES
               This  is  a colon separated list of dynamic libraries to load before the ones specified in the
               program.  This lets you test new modules of existing dynamic shared libraries that are used in
@@ -176,16 +221,16 @@ And a few similar ones, and I will be honest, I had no idea what is he talking a
 </span></span></code></pre></div><p>We can also see all these events in the log (as our dylib puts there a message):</p>
 <p><img src="https://theevilbit.github.io/images/DYLD_INSERT_LIBRARIES_DYLIB_injection_in_macOS_OSX_deep_dive/Screenshot%202019-07-08%20at%2016.53.29.png" alt="image"></p>
 <p>There are two nice examples in the following blog posts about how to hook the application itself:</p>
-<p><a href="http://thomasfinch.me/blog/2015/07/24/Hooking-C-Functions-At-Runtime.html">Thomas Finch - Hooking C Functions at Runtime</a></p>
-<p><a href="https://blog.timac.org/2012/1218-simple-code-injection-using-dyld_insert_libraries/">Simple code injection using DYLD_INSERT_LIBRARIES</a></p>
+<p><a href="http://thomasfinch.me/blog/2015/07/24/Hooking-C-Functions-At-Runtime.html"  class="external-link" target="_blank" rel="noopener">Thomas Finch - Hooking C Functions at Runtime</a></p>
+<p><a href="https://blog.timac.org/2012/1218-simple-code-injection-using-dyld_insert_libraries/"  class="external-link" target="_blank" rel="noopener">Simple code injection using DYLD_INSERT_LIBRARIES</a></p>
 <p>I will not repeat those, so if you are interested please read those.</p>
-<p>Can you prevent this infection? Michael mentioned that you can do it by adding a RESTRICTED segment at compile time, so I decided to research it more. According to <a href="https://web.archive.org/web/20161007013145/http://pewpewthespells.com/blog/blocking_code_injection_on_ios_and_os_x.html">Blocking Code Injection on iOS and OS X</a> there are three cases when this environment variable will be ignored:</p>
+<p>Can you prevent this infection? Michael mentioned that you can do it by adding a RESTRICTED segment at compile time, so I decided to research it more. According to <a href="https://web.archive.org/web/20161007013145/http://pewpewthespells.com/blog/blocking_code_injection_on_ios_and_os_x.html"  class="external-link" target="_blank" rel="noopener">Blocking Code Injection on iOS and OS X</a> there are three cases when this environment variable will be ignored:</p>
 <ol>
 <li>setuid and/or setgid bits are set</li>
 <li>restricted by entitlements</li>
 <li>restricted segment</li>
 </ol>
-<p>We can actually see this in the source code of dyld - this is an older version, but it’s also more readable: <a href="https://opensource.apple.com/source/dyld/dyld-210.2.3/src/dyld.cpp">https://opensource.apple.com/source/dyld/dyld-210.2.3/src/dyld.cpp</a></p>
+<p>We can actually see this in the source code of dyld - this is an older version, but it’s also more readable: <a href="https://opensource.apple.com/source/dyld/dyld-210.2.3/src/dyld.cpp"  class="external-link" target="_blank" rel="noopener">https://opensource.apple.com/source/dyld/dyld-210.2.3/src/dyld.cpp</a></p>
 <p>The function <code>pruneEnvironmentVariables</code> will remove the environment variables:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">pruneEnvironmentVariables</span>(<span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span><span style="color:#555">*</span> envp[], <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span><span style="color:#555">***</span> applep)
 </span></span><span style="display:flex;"><span>{
@@ -300,7 +345,7 @@ And a few similar ones, and I will be honest, I had no idea what is he talking a
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">return</span> <span style="color:#366">false</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span><span style="color:#099">#endif
-</span></span></span></code></pre></div><p>Now, the above is the old source code, that was referred in the article above - since then it has evolved. The latest available code is <a href="https://opensource.apple.com/source/dyld/dyld-635.2/src/dyld.cpp.auto.html">dyld.cpp</a> looks slightly more complicated,  but essentially the same idea.  Here is the relevant code segment, that sets the restriction, and the one that returns it (<code>configureProcessRestrictions , processIsRestricted </code>):</p>
+</span></span></span></code></pre></div><p>Now, the above is the old source code, that was referred in the article above - since then it has evolved. The latest available code is <a href="https://opensource.apple.com/source/dyld/dyld-635.2/src/dyld.cpp.auto.html"  class="external-link" target="_blank" rel="noopener">dyld.cpp</a> looks slightly more complicated,  but essentially the same idea.  Here is the relevant code segment, that sets the restriction, and the one that returns it (<code>configureProcessRestrictions , processIsRestricted </code>):</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">configureProcessRestrictions</span>(<span style="color:#069;font-weight:bold">const</span> macho_header<span style="color:#555">*</span> mainExecutableMH)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">uint64_t</span> amfiInputFlags <span style="color:#555">=</span> <span style="color:#f60">0</span>;
@@ -371,8 +416,8 @@ And a few similar ones, and I will be honest, I had no idea what is he talking a
 <li>SIP is enabled (if anyone wonders <code>CSR_ALLOW_TASK_FOR_PID</code> is a SIP boot configuration flag, but I don’t know much more about it) and the  program has the <code>CS_RESTRICT</code> flag (on OSX = program was signed with entitlements)</li>
 </ol>
 <p>But! It’s unset if <code>CS_REQUIRE_LV</code> is set. What this flag does? If it’s set for the main binary, it means that the loader will verify every single dylib loaded into the application, if they were signed with the same key as the main executable. If we think about this it kinda makes sense, as you can only inject a dylib to the application that was developed by the same person. You can only abuse this if you have access to that code signing certificate - or not, more on that later ;).</p>
-<p>There is another option to protect the application, and it’s enabling <a href="https://developer.apple.com/documentation/security/hardened_runtime_entitlements">Hardened Runtime</a>. Then if you want, you can specifically enable DYLD environment variables: <a href="https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_security_cs_allow-dyld-environment-variables">Allow DYLD Environment Variables Entitlement - Entitlements</a>. The above source code seems to be dated back to 2013, and this option is only available since Mojave (10.14), which was released last year (2018), probably this is why we don’t see anything about this in the source code.</p>
-<p>For the record, these are the values of the CS flags, taken from <a href="https://opensource.apple.com/source/xnu/xnu-4903.221.2/osfmk/kern/cs_blobs.h.auto.html">cs_blobs.h</a></p>
+<p>There is another option to protect the application, and it’s enabling <a href="https://developer.apple.com/documentation/security/hardened_runtime_entitlements"  class="external-link" target="_blank" rel="noopener">Hardened Runtime</a>. Then if you want, you can specifically enable DYLD environment variables: <a href="https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_security_cs_allow-dyld-environment-variables"  class="external-link" target="_blank" rel="noopener">Allow DYLD Environment Variables Entitlement - Entitlements</a>. The above source code seems to be dated back to 2013, and this option is only available since Mojave (10.14), which was released last year (2018), probably this is why we don’t see anything about this in the source code.</p>
+<p>For the record, these are the values of the CS flags, taken from <a href="https://opensource.apple.com/source/xnu/xnu-4903.221.2/osfmk/kern/cs_blobs.h.auto.html"  class="external-link" target="_blank" rel="noopener">cs_blobs.h</a></p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#define CS_RESTRICT		0x0000800	</span><span style="color:#09f;font-style:italic">/* tell dyld to treat restricted */</span><span style="color:#099">
 </span></span></span><span style="display:flex;"><span><span style="color:#099">#define CS_REQUIRE_LV		0x0002000	</span><span style="color:#09f;font-style:italic">/* require library validation */</span><span style="color:#099">
 </span></span></span><span style="display:flex;"><span><span style="color:#099">#define CS_RUNTIME		0x00010000  </span><span style="color:#09f;font-style:italic">/* Apply hardened runtime policies */</span><span style="color:#099">
@@ -399,7 +444,7 @@ And a few similar ones, and I will be honest, I had no idea what is he talking a
 </span></span><span style="display:flex;"><span>Hello from dylib!
 </span></span><span style="display:flex;"><span>Hello world
 </span></span></code></pre></div><p>Interestingly, in the past, there was an LPE bug from incorrectly handling one of the environment variables, and with SUID files, you could achieve privilege escalation, here you can read the details:
-<a href="https://www.sektioneins.de/blog/15-07-07-dyld_print_to_file_lpe.html">OS X 10.10 DYLD_PRINT_TO_FILE Local Privilege Escalation Vulnerability | SektionEins GmbH</a></p>
+<a href="https://www.sektioneins.de/blog/15-07-07-dyld_print_to_file_lpe.html"  class="external-link" target="_blank" rel="noopener">OS X 10.10 DYLD_PRINT_TO_FILE Local Privilege Escalation Vulnerability | SektionEins GmbH</a></p>
 <p>I created a complete blank Cocoa App for testing the other stuff. I also export the environment variable, so we don’t need to specify it always:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#366">export</span> <span style="color:#033">DYLD_INSERT_LIBRARIES</span><span style="color:#555">=</span>inject.dylib
 </span></span></code></pre></div><p>If we compile it, and run as default, we can see that dylib is injected:</p>
@@ -440,7 +485,7 @@ Segment __RESTRICT: 0x0 (vmaddr 0x100003000 fileoff 12288)
 Segment __LINKEDIT: 0x6000 (vmaddr 0x100003000 fileoff 12288)
 total 0x100009000
 </code></pre><p>Alternatively we can use the <code>otool -l [path to the binary]</code> command for the same purpose, the output will be slightly different.</p>
-<p>Next one is setting the app to have  ( <a href="https://developer.apple.com/documentation/security/hardened_runtime_entitlements">hardened runtime</a> ), we can do this at the <code>Build Settings -&gt; Signing -&gt; Enable Hardened Runtime</code> or at the Capabilities section. If we do this and rebuild the app, and try to run it, we get the following error:</p>
+<p>Next one is setting the app to have  ( <a href="https://developer.apple.com/documentation/security/hardened_runtime_entitlements"  class="external-link" target="_blank" rel="noopener">hardened runtime</a> ), we can do this at the <code>Build Settings -&gt; Signing -&gt; Enable Hardened Runtime</code> or at the Capabilities section. If we do this and rebuild the app, and try to run it, we get the following error:</p>
 <pre tabindex="0"><code>dyld: warning: could not load inserted library &#39;inject.dylib&#39; into hardened process because no suitable image found.  Did find:
 	inject.dylib: code signature in (inject.dylib) not valid for use in process using Library Validation: mapped file has no cdhash, completely unsigned? Code has to be at least ad-hoc signed.
 	inject.dylib: stat() failed with errno=1
@@ -627,14 +672,19 @@ com.apple.quarantine: 0081;5d248e35;Chrome;CE4482F1-0AD8-4387-ABF6-C05A4443CAF4
 	inject.dylib: stat() failed with errno=1
 </code></pre><p>I think applications should protect themselves against this type of dylib injection, and as it stands, it’s pretty easy to do, you have a handful of options, so there is really no reason not to do so. As Apple is moving towards notarization hardened runtime will be enabled slowly for most/all applications (it is mandatory for notarised apps), so hopefully this injection technique will fade away slowly. If you develop an app where you set the SUID bit, be sure to properly set permissions for the parent folder.</p>
 <p>GIST link to codes:
-<a href="https://gist.github.com/theevilbit/3574df063cf9e2c3ba6c57aca5dff022">DYLD_INSERT_LIBRARIES  DYLIB injection in macOS / OSX deep dive · GitHub</a></p>
+<a href="https://gist.github.com/theevilbit/3574df063cf9e2c3ba6c57aca5dff022"  class="external-link" target="_blank" rel="noopener">DYLD_INSERT_LIBRARIES  DYLIB injection in macOS / OSX deep dive · GitHub</a></p>
 
       </div>
+
 
       <footer>
         
 
 
+        
+        
+        
+        
         
       </footer>
     </article>
@@ -642,23 +692,36 @@ com.apple.quarantine: 0081;5d248e35;Chrome;CE4482F1-0AD8-4387-ABF6-C05A4443CAF4
     
   </section>
 
-      </div>
+    </div>
 
-      <footer class="footer">
+    <footer class="footer">
   <section class="container">
+    ©
     
-     © 2023
+    2023
+     Csaba Fitzl 
+    ·
     
-       · 
-      Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.
-    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
     
   </section>
 </footer>
 
-    </main>
+  </main>
 
-    
+  
+
+  
+  
+  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -672,6 +735,31 @@ if (!doNotTrack) {
 }
 </script>
 
-  </body>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
 
 </html>

@@ -1,21 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+  <title>
+  CVE-2020-9771 - mount_apfs TCC bypass and privilege escalation · theevilbit blog
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 
-    <meta name="author" content="Csaba Fitzl">
-    
-    
 
-    <meta name="twitter:card" content="summary"/>
+
+
+<meta name="author" content="Csaba Fitzl">
+<meta name="description" content="TL;DR Link to heading We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc&hellip;) of every user on the system, including those protected by Apple&rsquo;s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
+This could be achieved with a single command, for example: mount_apfs -o noowners -s com.">
+<meta name="keywords" content="">
+
+<meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="CVE-2020-9771 - mount_apfs TCC bypass and privilege escalation"/>
-<meta name="twitter:description" content="TL;DR We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc&hellip;) of every user on the system, including those protected by Apple&rsquo;s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
+<meta name="twitter:description" content="TL;DR Link to heading We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc&hellip;) of every user on the system, including those protected by Apple&rsquo;s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
 This could be achieved with a single command, for example: mount_apfs -o noowners -s com."/>
 
-    <meta property="og:title" content="CVE-2020-9771 - mount_apfs TCC bypass and privilege escalation" />
-<meta property="og:description" content="TL;DR We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc&hellip;) of every user on the system, including those protected by Apple&rsquo;s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
+<meta property="og:title" content="CVE-2020-9771 - mount_apfs TCC bypass and privilege escalation" />
+<meta property="og:description" content="TL;DR Link to heading We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc&hellip;) of every user on the system, including those protected by Apple&rsquo;s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
 This could be achieved with a single command, for example: mount_apfs -o noowners -s com." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/cve_2020_9771/" /><meta property="article:section" content="posts" />
@@ -23,137 +31,195 @@ This could be achieved with a single command, for example: mount_apfs -o noowner
 <meta property="article:modified_time" content="2020-07-03T00:00:00+00:00" />
 
 
-    
-      <base href="https://theevilbit.github.io/posts/cve_2020_9771/">
-    
-    <title>
-  CVE-2020-9771 - mount_apfs TCC bypass and privilege escalation · theevilbit blog
-</title>
 
-    
-      <link rel="canonical" href="https://theevilbit.github.io/posts/cve_2020_9771/">
-    
 
-    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+<link rel="canonical" href="https://theevilbit.github.io/posts/cve_2020_9771/">
 
-    
-      
-      
-      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
-    
 
-    
+<link rel="preload" href="https://theevilbit.github.io/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
 
-    
 
-    
+  
+  
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.135e22c97ff685fe983fc60048e309ced8f00d8d38f536aa67dba8a13a03dfa4.css" integrity="sha256-E14iyX/2hf6YP8YASOMJztjwDY049TaqZ9uooToD36Q=" crossorigin="anonymous" media="screen" />
 
-    
-    
-    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.119.0">
-  </head>
 
-  <body class=" ">
-    <main class="wrapper">
-      <nav class="navigation">
+
+
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+
+<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
+<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+<body class="preload-transitions colorscheme-light">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
   <section class="container">
     <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
-    <input type="checkbox" id="menu-toggle" />
-    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
-    <ul class="navigation-list">
-      
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
-          </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+            </li>
+          
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
-          </li>
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
-          </li>
-        
-      
-      
-    </ul>
+      </ul>
+    
   </section>
 </nav>
 
 
-      <div class="content">
-        
+    <div class="content">
+      
   <section class="container post">
     <article>
       <header>
         <div class="post-title">
-          <h1 class="title">CVE-2020-9771 - mount_apfs TCC bypass and privilege escalation</h1>
+          <h1 class="title">
+            <a class="title-link" href="https://theevilbit.github.io/posts/cve_2020_9771/">
+              CVE-2020-9771 - mount_apfs TCC bypass and privilege escalation
+            </a>
+          </h1>
         </div>
         <div class="post-meta">
           <div class="date">
             <span class="posted-on">
-              <i class="fas fa-calendar"></i>
-              <time datetime='2020-07-03T00:00:00Z'>
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="2020-07-03T00:00:00Z">
                 July 3, 2020
               </time>
             </span>
             <span class="reading-time">
-              <i class="fas fa-clock"></i>
-              7 minutes read
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              7-minute read
             </span>
           </div>
+          
           <div class="categories">
-  <i class="fas fa-folder"></i>
+  <i class="fa fa-folder" aria-hidden="true"></i>
     <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
 
           <div class="tags">
-  <i class="fas fa-tag"></i>
-    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+  <i class="fa fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+    </span>
       <span class="separator">•</span>
-    <a href="https://theevilbit.github.io/tags/lpe/">lpe</a>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/lpe/">lpe</a>
+    </span>
       <span class="separator">•</span>
-    <a href="https://theevilbit.github.io/tags/tcc/">tcc</a>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/tcc/">tcc</a>
+    </span>
       <span class="separator">•</span>
-    <a href="https://theevilbit.github.io/tags/vulnerability/">vulnerability</a>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/vulnerability/">vulnerability</a>
+    </span>
       <span class="separator">•</span>
-    <a href="https://theevilbit.github.io/tags/cve/">cve</a></div>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/cve/">cve</a>
+    </span></div>
 
         </div>
       </header>
 
-      <div>
-        <h2 id="tldr">TL;DR</h2>
+      <div class="post-content">
+        
+        <h2 id="tldr">
+  TL;DR
+  <a class="heading-link" href="#tldr">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>We could mount the entire file system through APFS snapshots as read-only, with the <code>noowners</code> flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc&hellip;) of every user on the system, including those protected by Apple&rsquo;s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱</p>
 <p>This could be achieved with a single command, for example:
 <code>mount_apfs -o noowners -s com.apple.TimeMachine.2019-11-17-141812.local /System/Volumes/Data /tmp/snap</code></p>
 <p>This has been fixed in macOS Catalina 10.15.4 and on Mojave on the 26th of May.</p>
-<h2 id="the-issues">The Issues</h2>
+<h2 id="the-issues">
+  The Issues
+  <a class="heading-link" href="#the-issues">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>There were two separate issues in this bug, and the combination of those became a very powerful system wide access.</p>
 <ol>
 <li>TCC privacy is not enforced on mounted local snapshots allowing someone to mount it and access any file inside, including those normally privacy protected</li>
 <li>Initiating an APFS snapshot is available for all users, even low privileged ones, as well as listing of those. Beyond that, all users can mount local APFS snapshots, even a low privilege ones, and if used with the <code>noowners</code> flag, the low privilege user can access all data through the local snapshot, including every other users’ data (even high privileged one).</li>
 </ol>
-<h2 id="1-privacy-bypass">1. Privacy bypass</h2>
+<h2 id="1-privacy-bypass">
+  1. Privacy bypass
+  <a class="heading-link" href="#1-privacy-bypass">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>From Terminal we can get a list of local snapshots available:</p>
 <pre tabindex="0"><code>% tmutil listlocalsnapshots /System/Volumes/Data
 Snapshots for volume group containing disk /System/Volumes/Data:
@@ -187,7 +253,13 @@ ls: Messages: Operation not permitted
 <pre tabindex="0"><code>csaby@mac ~ % tmutil localsnapshot
 Created local snapshot with date: 2019-11-17-140728
 </code></pre><p>In short with <code>mount_apfs</code> we can completely bypass privacy protected folders.</p>
-<h2 id="2--privilege-escalation">2.  &ldquo;Privilege escalation&rdquo;</h2>
+<h2 id="2--privilege-escalation">
+  2.  &ldquo;Privilege escalation&rdquo;
+  <a class="heading-link" href="#2--privilege-escalation">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>Although this method is not a full privilege escalation, as we don’t get higher privileges, however we can access files that belong to higher privilege users, and with the previous finding, this will include TCC protected data.</p>
 <p>First, as a low privilege user we can create a local snapshot, and later list it to get its ID (this is not a bug). Although the second is not a hard requirement, as its ID can be figured out based on the time. Also snapshots are auto created by the system, so even if we can&rsquo;t create one we can find one, and its ID is guessable, because it uses the following format: <code>yyyy-mm-dd-hhmmss</code>.</p>
 <p>Here follows the demonstration of the issue. This is the low privileged ID I used:</p>
@@ -219,7 +291,13 @@ total 4704
 -rw-r--r--  1 n00b  staff    32768 Nov 17 13:29 chat.db-shm
 -rw-r--r--  1 n00b  staff  1507952 Nov  9 14:41 chat.db-wal
 </code></pre><p>We can perform this attack even as a <code>Guest</code> account if FileVault is not turned ON. If FileVault is ON, Guest can only run Safari (after a reboot), and also the user data will be encrypted, so even if someone can break out the kiosk mode and start <code>Terminal</code> and run the above commands, he/she wouldn&rsquo;t see the contents.</p>
-<h2 id="the-fix-">The &ldquo;Fix&rdquo; 😭</h2>
+<h2 id="the-fix-">
+  The &ldquo;Fix&rdquo; 😭
+  <a class="heading-link" href="#the-fix-">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>This requires some longer explanation as IMO the fix provided by Apple is not right.</p>
 <p>At the beginning of March 2020, Apple said that the fix is shipped in Catalina 10.15.4 beta, they didn&rsquo;t tell a word how they fixed it. I quickly jumped on it, and I found that the trick still works. I was puzzled. After some testing it turned out that they tied this to the Full Disk Access (FDA) right in TCC (<code>kTCCServiceSystemPolicyAllfiles</code>), which I found wrong. This is what I wrote them on the 13th of March:</p>
 <blockquote>
@@ -231,28 +309,39 @@ total 4704
 <blockquote>
 <p>Thank you for providing additional information. We will investigate.</p>
 </blockquote>
-<p>After this point we went into, what I call &ldquo;black hole mode&rdquo;, I never got replies to my emails, and than <code>CVE-2020-9771</code> became public on the 26th of May. They shipped the fix to Mojave on that day (<a href="https://support.apple.com/en-us/HT211170)">https://support.apple.com/en-us/HT211170)</a>, and retroactively updated the 10.15.4 security notes the same day with this CVE (<a href="https://support.apple.com/en-us/HT211100">https://support.apple.com/en-us/HT211100</a>). I tested this again, and I found the same behavior. At this point I still didn&rsquo;t know if they considered this fixed or not, as no one came back to me. Their description &ldquo;This issue was addressed with a new entitlement.&rdquo; is extremely misleading.</p>
+<p>After this point we went into, what I call &ldquo;black hole mode&rdquo;, I never got replies to my emails, and than <code>CVE-2020-9771</code> became public on the 26th of May. They shipped the fix to Mojave on that day (<a href="https://support.apple.com/en-us/HT211170%29"  class="external-link" target="_blank" rel="noopener">https://support.apple.com/en-us/HT211170)</a>, and retroactively updated the 10.15.4 security notes the same day with this CVE (<a href="https://support.apple.com/en-us/HT211100"  class="external-link" target="_blank" rel="noopener">https://support.apple.com/en-us/HT211100</a>). I tested this again, and I found the same behavior. At this point I still didn&rsquo;t know if they considered this fixed or not, as no one came back to me. Their description &ldquo;This issue was addressed with a new entitlement.&rdquo; is extremely misleading.</p>
 <p>I sent an email again on May 27th (still in &ldquo;black hole mode&rdquo;):</p>
 <blockquote>
 <p>I want to ask again if you consider this fixed via controlling this &ldquo;exploit&rdquo; via the &ldquo;Full Disk Access&rdquo; permission in TCC. As noted earlier I think it&rsquo;s not right.</p>
 </blockquote>
 <p>Finally on the 29th of June I got a reply:</p>
 <blockquote>
-<p>This issue was addressed with macOS Catalina 10.15.5 and assigned CVE-2020-9771 -&gt;  <a href="https://support.apple.com/HT211170">https://support.apple.com/HT211170</a> . We are not planning any additional changes in this area.</p>
+<p>This issue was addressed with macOS Catalina 10.15.5 and assigned CVE-2020-9771 -&gt;  <a href="https://support.apple.com/HT211170"  class="external-link" target="_blank" rel="noopener">https://support.apple.com/HT211170</a> . We are not planning any additional changes in this area.</p>
 <p>macOS Catalina has improvements which have reduced the need for applications run through Terminal to require Full-Disk Access, and it should not be enabled by a user unless necessary.</p>
 </blockquote>
 <p>That&rsquo;s it, not much I can do about this anymore, I only hope that it will get enough public attention, with many disappointed users about the fix, that 🍎 will reconsider the fix.</p>
-<h2 id="conclusion">Conclusion</h2>
+<h2 id="conclusion">
+  Conclusion
+  <a class="heading-link" href="#conclusion">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>The &ldquo;Full Disk Access&rdquo; right starts to get too much power these days, beyond controlling file access now it controls mounting, and also EndpointSecurity extensions.</p>
 <p>This means that a user must be extremely careful which app is granted FDA right, because that will be able to access every user file on the system. If we grant for example <code>Terminal</code> this right, a low privilege user will be able to read our files through the app.</p>
 <p>So until this is changed, please triple check what gets this right and what not.</p>
 
       </div>
 
+
       <footer>
         
 
 
+        
+        
+        
+        
         
       </footer>
     </article>
@@ -260,23 +349,36 @@ total 4704
     
   </section>
 
-      </div>
+    </div>
 
-      <footer class="footer">
+    <footer class="footer">
   <section class="container">
+    ©
     
-     © 2023
+    2023
+     Csaba Fitzl 
+    ·
     
-       · 
-      Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.
-    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
     
   </section>
 </footer>
 
-    </main>
+  </main>
 
-    
+  
+
+  
+  
+  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -290,6 +392,31 @@ if (!doNotTrack) {
 }
 </script>
 
-  </body>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
 
 </html>

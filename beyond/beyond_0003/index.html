@@ -1,21 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+  <title>
+  Beyond the good ol&#39; LaunchAgents - 3 - Login Items · theevilbit blog
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 
-    <meta name="author" content="Csaba Fitzl">
-    
-    
 
-    <meta name="twitter:card" content="summary"/>
+
+
+<meta name="author" content="Csaba Fitzl">
+<meta name="description" content="This is part 3 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+To clear up some expectations. The below tweet is not about this method, that is deferred for now. :)
+Login items are probably one of the most well documented methods to persist on macOS. It&rsquo;s widely used by various application to launch themselves upon user login.">
+<meta name="keywords" content="">
+
+<meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 3 - Login Items"/>
 <meta name="twitter:description" content="This is part 3 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
 To clear up some expectations. The below tweet is not about this method, that is deferred for now. :)
 Login items are probably one of the most well documented methods to persist on macOS. It&rsquo;s widely used by various application to launch themselves upon user login."/>
 
-    <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 3 - Login Items" />
+<meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 3 - Login Items" />
 <meta property="og:description" content="This is part 3 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
 To clear up some expectations. The below tweet is not about this method, that is deferred for now. :)
 Login items are probably one of the most well documented methods to persist on macOS. It&rsquo;s widely used by various application to launch themselves upon user login." />
@@ -25,132 +34,135 @@ Login items are probably one of the most well documented methods to persist on m
 <meta property="article:modified_time" content="2021-03-17T00:00:00+00:00" />
 
 
-    
-      <base href="https://theevilbit.github.io/beyond/beyond_0003/">
-    
-    <title>
-  Beyond the good ol&#39; LaunchAgents - 3 - Login Items · theevilbit blog
-</title>
 
-    
-      <link rel="canonical" href="https://theevilbit.github.io/beyond/beyond_0003/">
-    
 
-    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+<link rel="canonical" href="https://theevilbit.github.io/beyond/beyond_0003/">
 
-    
-      
-      
-      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
-    
 
-    
+<link rel="preload" href="https://theevilbit.github.io/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
 
-    
 
-    
+  
+  
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.135e22c97ff685fe983fc60048e309ced8f00d8d38f536aa67dba8a13a03dfa4.css" integrity="sha256-E14iyX/2hf6YP8YASOMJztjwDY049TaqZ9uooToD36Q=" crossorigin="anonymous" media="screen" />
 
-    
-    
-    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.119.0">
-  </head>
 
-  <body class=" ">
-    <main class="wrapper">
-      <nav class="navigation">
+
+
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+
+<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
+<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+<body class="preload-transitions colorscheme-light">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
   <section class="container">
     <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
-    <input type="checkbox" id="menu-toggle" />
-    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
-    <ul class="navigation-list">
-      
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
-          </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+            </li>
+          
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
-          </li>
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
-          </li>
-        
-      
-      
-    </ul>
+      </ul>
+    
   </section>
 </nav>
 
 
-      <div class="content">
-        
-  <section class="container post">
-    <article>
-      <header>
-        <div class="post-title">
-          <h1 class="title">Beyond the good ol&#39; LaunchAgents - 3 - Login Items</h1>
-        </div>
-        <div class="post-meta">
-          <div class="date">
-            <span class="posted-on">
-              <i class="fas fa-calendar"></i>
-              <time datetime='2021-03-17T00:00:00Z'>
-                March 17, 2021
-              </time>
-            </span>
-            <span class="reading-time">
-              <i class="fas fa-clock"></i>
-              3 minutes read
-            </span>
-          </div>
-          <div class="categories">
-  <i class="fas fa-folder"></i>
-    <a href="https://theevilbit.github.io/categories/persistence/">persistence</a>
-      <span class="separator">•</span>
-    <a href="https://theevilbit.github.io/categories/beyond/">beyond</a></div>
+    <div class="content">
+      
+  <section class="container page">
+  <article>
+    <header>
+      <h1 class="title">
+        <a class="title-link" href="https://theevilbit.github.io/beyond/beyond_0003/">
+          Beyond the good ol&#39; LaunchAgents - 3 - Login Items
+        </a>
+      </h1>
+    </header>
 
-          <div class="tags">
-  <i class="fas fa-tag"></i>
-    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
-      <span class="separator">•</span>
-    <a href="https://theevilbit.github.io/tags/persistence/">persistence</a>
-      <span class="separator">•</span>
-    <a href="https://theevilbit.github.io/tags/beyond/">beyond</a></div>
-
-        </div>
-      </header>
-
-      <div>
-        <blockquote>
-<p>This is part 3 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+    <blockquote>
+<p>This is part 3 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p>
 </blockquote>
 <p>To clear up some expectations. The below tweet is not about this method, that is deferred for now. :)</p>
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0003_0.png" alt="Twitter"></p>
 <p>Login items are probably one of the most well documented methods to persist on macOS. It&rsquo;s widely used by various application to launch themselves upon user login. These applications show up in the menubar most of the time.</p>
 <p>There are two ways of setting up Login Items.</p>
-<h2 id="launch-services-framework">Launch Services Framework</h2>
-<p>The first method is using the <strong>Launch Services Framework</strong>, to which the API reference can be found <a href="https://developer.apple.com/documentation/coreservices/launch_services">here</a>.  There was a great document, which details how to use the API. Luckily it&rsquo;s still available through arhive.org: <a href="https://web.archive.org/web/20150706043550/http://rhult.github.io/articles/preference-to-launch-on-login/">Adding a preference to launch app on login using the Shared File List API – Rhult&rsquo;s Blog</a></p>
+<h2 id="launch-services-framework">
+  Launch Services Framework
+  <a class="heading-link" href="#launch-services-framework">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>The first method is using the <strong>Launch Services Framework</strong>, to which the API reference can be found <a href="https://developer.apple.com/documentation/coreservices/launch_services"  class="external-link" target="_blank" rel="noopener">here</a>.  There was a great document, which details how to use the API. Luckily it&rsquo;s still available through arhive.org: <a href="https://web.archive.org/web/20150706043550/http://rhult.github.io/articles/preference-to-launch-on-login/"  class="external-link" target="_blank" rel="noopener">Adding a preference to launch app on login using the Shared File List API – Rhult&rsquo;s Blog</a></p>
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0003_1.png" alt="Login Items in System Preferences"></p>
 <p>Login Items installed via the LS framework typically show up under <em>System Preferences</em> -&gt; <em>Users &amp; Groups</em> -&gt; <em>Login Items</em>. We can use this menu to either add or remove something from the list.</p>
 <p>We can also use some scripting to get the same information.</p>
@@ -158,10 +170,16 @@ Login items are probably one of the most well documented methods to persist on m
 6
 csaby@mac ~ % osascript -e &#39;tell application &#34;System Events&#34; to get the name of every login item&#39;
 Do Not Disturb Helper, Backup and sync from Google, LuLu, BlockBlock Helper, OverSight Helper, ReiKey Helper
-</code></pre><p>However as noted, this is not the complete picture. For example my <a href="https://theevilbit.github.io/shield/">Shield.app</a> doesn&rsquo;t show up in the list. We have another framework to interact with Login Items.</p>
-<h2 id="service-management-framework">Service Management Framework</h2>
-<p>The other is called the the <strong>Service Management Framework</strong>, and there is great documentation from Apple about how to use it. The document can be found <a href="https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLoginItems.html#//apple_ref/doc/uid/10000172i-SW5-BAJJBJEG">here</a>. If the application is sandboxed, this is the only option to install a login item, the other method won&rsquo;t work.</p>
-<p>Adding and removing items can be done via a single API call, <a href="https://developer.apple.com/documentation/servicemanagement/1501557-smloginitemsetenabled?language=objc">SMLoginItemSetEnabled</a>. This is what I use for Shield at the time of this writing.</p>
+</code></pre><p>However as noted, this is not the complete picture. For example my <a href="https://theevilbit.github.io/shield/"  class="external-link" target="_blank" rel="noopener">Shield.app</a> doesn&rsquo;t show up in the list. We have another framework to interact with Login Items.</p>
+<h2 id="service-management-framework">
+  Service Management Framework
+  <a class="heading-link" href="#service-management-framework">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>The other is called the the <strong>Service Management Framework</strong>, and there is great documentation from Apple about how to use it. The document can be found <a href="https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLoginItems.html#//apple_ref/doc/uid/10000172i-SW5-BAJJBJEG"  class="external-link" target="_blank" rel="noopener">here</a>. If the application is sandboxed, this is the only option to install a login item, the other method won&rsquo;t work.</p>
+<p>Adding and removing items can be done via a single API call, <a href="https://developer.apple.com/documentation/servicemanagement/1501557-smloginitemsetenabled?language=objc"  class="external-link" target="_blank" rel="noopener">SMLoginItemSetEnabled</a>. This is what I use for Shield at the time of this writing.</p>
 <p>The Apple developer guide says:</p>
 <blockquote>
 <p>Login items installed using the Service Management framework are not visible in System Preferences and can only be removed by the application that installed them.</p>
@@ -187,40 +205,45 @@ drwxr-xr-x  2 root  wheel   64 Jan  1  2020 config
 &lt;/dict&gt;
 &lt;/plist&gt;
 </code></pre><p>We can note, that Shield is indeed listed there.</p>
-<p>We can also find Login Items installed via the SM framework using Objective-See&rsquo;s <a href="https://objective-see.com/products/knockknock.html">KnockKnock</a>.</p>
+<p>We can also find Login Items installed via the SM framework using Objective-See&rsquo;s <a href="https://objective-see.com/products/knockknock.html"  class="external-link" target="_blank" rel="noopener">KnockKnock</a>.</p>
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0003_2.png" alt="Using KnockKnock to detect Login Items"></p>
-<p>As we can see it does find all Login Items, not just those visible at <em>System Preferences</em>. Its source code is open, so you can check how it does it: <a href="https://github.com/objective-see/KnockKnock/blob/main/Plugins/LoginItems.m">KnockKnock/LoginItems.m</a></p>
+<p>As we can see it does find all Login Items, not just those visible at <em>System Preferences</em>. Its source code is open, so you can check how it does it: <a href="https://github.com/objective-see/KnockKnock/blob/main/Plugins/LoginItems.m"  class="external-link" target="_blank" rel="noopener">KnockKnock/LoginItems.m</a></p>
 
-      </div>
+  </article>
+</section>
 
-      <footer>
-        
+  
 
+    </div>
 
-        
-      </footer>
-    </article>
-
-    
-  </section>
-
-      </div>
-
-      <footer class="footer">
+    <footer class="footer">
   <section class="container">
+    ©
     
-     © 2023
+    2023
+     Csaba Fitzl 
+    ·
     
-       · 
-      Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.
-    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
     
   </section>
 </footer>
 
-    </main>
+  </main>
 
-    
+  
+
+  
+  
+  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -234,6 +257,31 @@ if (!doNotTrack) {
 }
 </script>
 
-  </body>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
 
 </html>

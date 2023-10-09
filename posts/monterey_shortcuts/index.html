@@ -1,19 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+  <title>
+  macOS Monterey Shortcuts - First look · theevilbit blog
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 
-    <meta name="author" content="Csaba Fitzl">
-    
-    
 
-    <meta name="twitter:card" content="summary"/>
+
+
+<meta name="author" content="Csaba Fitzl">
+<meta name="description" content="Apple announced macOS Monterey (macOS 12) this week at WWDC, and one of its new features that caught my eye is Shortcuts. It&rsquo;s already available on iOS, but it made its way to macOS. My security focused brain immediately thought about how cool this feature could be for red teamers or pentesters to persist on macOS :) So I decided to take a quick look on the new functionality, focusing on how it works.">
+<meta name="keywords" content="">
+
+<meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="macOS Monterey Shortcuts - First look"/>
 <meta name="twitter:description" content="Apple announced macOS Monterey (macOS 12) this week at WWDC, and one of its new features that caught my eye is Shortcuts. It&rsquo;s already available on iOS, but it made its way to macOS. My security focused brain immediately thought about how cool this feature could be for red teamers or pentesters to persist on macOS :) So I decided to take a quick look on the new functionality, focusing on how it works."/>
 
-    <meta property="og:title" content="macOS Monterey Shortcuts - First look" />
+<meta property="og:title" content="macOS Monterey Shortcuts - First look" />
 <meta property="og:description" content="Apple announced macOS Monterey (macOS 12) this week at WWDC, and one of its new features that caught my eye is Shortcuts. It&rsquo;s already available on iOS, but it made its way to macOS. My security focused brain immediately thought about how cool this feature could be for red teamers or pentesters to persist on macOS :) So I decided to take a quick look on the new functionality, focusing on how it works." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/monterey_shortcuts/" /><meta property="article:section" content="posts" />
@@ -21,123 +28,165 @@
 <meta property="article:modified_time" content="2021-06-10T00:00:00+00:00" />
 
 
-    
-      <base href="https://theevilbit.github.io/posts/monterey_shortcuts/">
-    
-    <title>
-  macOS Monterey Shortcuts - First look · theevilbit blog
-</title>
 
-    
-      <link rel="canonical" href="https://theevilbit.github.io/posts/monterey_shortcuts/">
-    
 
-    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+<link rel="canonical" href="https://theevilbit.github.io/posts/monterey_shortcuts/">
 
-    
-      
-      
-      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
-    
 
-    
+<link rel="preload" href="https://theevilbit.github.io/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
 
-    
 
-    
+  
+  
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.135e22c97ff685fe983fc60048e309ced8f00d8d38f536aa67dba8a13a03dfa4.css" integrity="sha256-E14iyX/2hf6YP8YASOMJztjwDY049TaqZ9uooToD36Q=" crossorigin="anonymous" media="screen" />
 
-    
-    
-    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.119.0">
-  </head>
 
-  <body class=" ">
-    <main class="wrapper">
-      <nav class="navigation">
+
+
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+
+<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
+<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+<body class="preload-transitions colorscheme-light">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
   <section class="container">
     <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
-    <input type="checkbox" id="menu-toggle" />
-    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
-    <ul class="navigation-list">
-      
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
-          </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+            </li>
+          
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
-          </li>
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
-          </li>
-        
-      
-      
-    </ul>
+      </ul>
+    
   </section>
 </nav>
 
 
-      <div class="content">
-        
+    <div class="content">
+      
   <section class="container post">
     <article>
       <header>
         <div class="post-title">
-          <h1 class="title">macOS Monterey Shortcuts - First look</h1>
+          <h1 class="title">
+            <a class="title-link" href="https://theevilbit.github.io/posts/monterey_shortcuts/">
+              macOS Monterey Shortcuts - First look
+            </a>
+          </h1>
         </div>
         <div class="post-meta">
           <div class="date">
             <span class="posted-on">
-              <i class="fas fa-calendar"></i>
-              <time datetime='2021-06-10T00:00:00Z'>
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="2021-06-10T00:00:00Z">
                 June 10, 2021
               </time>
             </span>
             <span class="reading-time">
-              <i class="fas fa-clock"></i>
-              6 minutes read
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              6-minute read
             </span>
           </div>
+          
           <div class="categories">
-  <i class="fas fa-folder"></i>
+  <i class="fa fa-folder" aria-hidden="true"></i>
     <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
 
           <div class="tags">
-  <i class="fas fa-tag"></i>
-    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+  <i class="fa fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+    </span>
       <span class="separator">•</span>
-    <a href="https://theevilbit.github.io/tags/internals/">internals</a>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/internals/">internals</a>
+    </span>
       <span class="separator">•</span>
-    <a href="https://theevilbit.github.io/tags/shortcuts/">shortcuts</a></div>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/shortcuts/">shortcuts</a>
+    </span></div>
 
         </div>
       </header>
 
-      <div>
+      <div class="post-content">
+        
         <p>Apple announced macOS Monterey (macOS 12) this week at WWDC, and one of its new features that caught my eye is <strong>Shortcuts</strong>. It&rsquo;s already available on iOS, but it made its way to macOS. My security focused brain immediately thought about how cool this feature could be for red teamers or pentesters to persist on macOS :) So I decided to take a quick look on the new functionality, focusing on how it works. All of the below information is based on macOS Monterey Developer Beta 1.</p>
-<h2 id="the-shortcutsapp">The Shortcuts.app</h2>
+<h2 id="the-shortcutsapp">
+  The Shortcuts.app
+  <a class="heading-link" href="#the-shortcutsapp">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>Shortcuts can be created by the <code>Shortcuts.app</code>. I created a new shortcut, named it &ldquo;testcut&rdquo; and added a shell script as an action, which will create the file <code>/tmp/testcut</code>. This is shown below.</p>
 <p><img src="https://theevilbit.github.io/images/monterey_shortcuts/demo.png" alt=""></p>
 <p>I will use this example along the way, when I explore the internals of Shortcuts.</p>
@@ -350,7 +399,13 @@ Internal requirements count=1 size=68
 	&lt;/dict&gt;
 &lt;/plist&gt;
 </code></pre><p>The above XML has been beautified, as the embedded one, has no new line characters or spaces, and it&rsquo;s unreadable. As we can see, the application is very rich in entitlements, most notably it&rsquo;s sandboxed (<code>com.apple.security.app-sandbox</code>), has quite a few TCC exceptions (<code>kTCCServiceAddressBook</code>,&hellip;.) and also one that suggest it has access to a SIP protected location <code>com.apple.rootless.storage.shortcuts</code>. This is what I will cover next.</p>
-<h2 id="shortcuts-database--configuration">Shortcuts Database &amp; Configuration</h2>
+<h2 id="shortcuts-database--configuration">
+  Shortcuts Database &amp; Configuration
+  <a class="heading-link" href="#shortcuts-database--configuration">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>All of the Shortcuts files are stored under the user&rsquo;s HOME folder at <code>~/Library/Shortcuts</code>. This location is protected by the Sandbox (SIP), as we can&rsquo;t access it unless we have Full Disk Access permissions granted or the entitlement <code>com.apple.rootless.storage.shortcuts</code>.</p>
 <p>We find the following files in this location:</p>
 <pre tabindex="0"><code>csaby@macos12 ~ % ls -l Library/Shortcuts
@@ -377,7 +432,7 @@ total 4696
 &lt;/plist&gt;
 </code></pre><p>It can be mapped one-to-one to the options on the advanced configuration preferences pane.</p>
 <p><img src="https://theevilbit.github.io/images/monterey_shortcuts/settings.png" alt=""></p>
-<p>Let&rsquo;s take a look on the database. I&rsquo;m sure <a href="https://twitter.com/iamevltwin">Sarah Edwards</a> will come up with some awesome queries for her Apollo 4n6 project. :) I won&rsquo;t go too crazy here.</p>
+<p>Let&rsquo;s take a look on the database. I&rsquo;m sure <a href="https://twitter.com/iamevltwin"  class="external-link" target="_blank" rel="noopener">Sarah Edwards</a> will come up with some awesome queries for her Apollo 4n6 project. :) I won&rsquo;t go too crazy here.</p>
 <pre tabindex="0"><code>csaby@macos12 ~ % sqlite3 Library/Shortcuts/Shortcuts.sqlite
 SQLite version 3.35.3 2021-03-26 16:31:39
 Enter &#34;.help&#34; for usage hints.
@@ -420,7 +475,13 @@ Z_PK|Z_ENT|Z_OPT|ZSHORTCUT|ZDATA
 <blockquote>
 <p>Forensics note: deleted shortcut actions will remain in the database!</p>
 </blockquote>
-<h2 id="shortcuts-cli">shortcuts CLI</h2>
+<h2 id="shortcuts-cli">
+  shortcuts CLI
+  <a class="heading-link" href="#shortcuts-cli">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>Shortcuts also has a command line utility, located at <code>/usr/bin/shortcuts</code>. We can use it to list, view and execute shortcuts. Listing will display the available shortcuts.</p>
 <pre tabindex="0"><code>csaby@macos12 ~ % shortcuts list
 testcut
@@ -465,8 +526,14 @@ Internal requirements count=1 size=88
 &lt;/plist&gt;
 </code></pre><p>It also has the <code>com.apple.rootless.storage.shortcuts</code> entitlement, along with <code>com.apple.security.temporary-exception.files.home-relative-path.read-write</code> rule which allows it to access the shortcut database.</p>
 <p>Next let&rsquo;s take a look what happens when we execute our shortcut.</p>
-<h2 id="execution">Execution</h2>
-<p>I used Patrick Wardle&rsquo;s <a href="https://objective-see.com/products/utilities.html#ProcessMonitor">ProcessMonitor</a> to watch what happens when I run <code>shortcuts run testcut</code>.</p>
+<h2 id="execution">
+  Execution
+  <a class="heading-link" href="#execution">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>I used Patrick Wardle&rsquo;s <a href="https://objective-see.com/products/utilities.html#ProcessMonitor"  class="external-link" target="_blank" rel="noopener">ProcessMonitor</a> to watch what happens when I run <code>shortcuts run testcut</code>.</p>
 <p>The relevant events are the following:</p>
 <pre tabindex="0"><code>{&#34;event&#34;:&#34;ES_EVENT_TYPE_NOTIFY_EXEC&#34;,&#34;process&#34;:{&#34;pid&#34;:27552,&#34;path&#34;:&#34;/usr/bin/shortcuts&#34;,&#34;uid&#34;:501,&#34;arguments&#34;:[&#34;shortcuts&#34;,&#34;run&#34;,&#34;testcut&#34;],&#34;ppid&#34;:19388,&#34;ancestors&#34;:[19388,19387,19385,1],&#34;signing info&#34;:{&#34;csFlags&#34;:570522385,&#34;signatureIdentifier&#34;:&#34;com.apple.shortcuts.ShortcutsCommandLine&#34;,&#34;cdHash&#34;:&#34;89E43245F73BDFB56F80B23B43353C519D1AE2&#34;,&#34;isPlatformBinary&#34;:1}}}
 
@@ -508,16 +575,27 @@ Internal requirements count=1 size=80
 	&lt;/dict&gt;
 &lt;/plist&gt;
 </code></pre><p>Yet, its shell child process doesn&rsquo;t inherit its rights, so our script won&rsquo;t run with FDA rights.</p>
-<h2 id="conclusion">Conclusion</h2>
+<h2 id="conclusion">
+  Conclusion
+  <a class="heading-link" href="#conclusion">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>I think there will be plenty of interesting items uncovered later regarding Shortcuts. This is just a first glimpse, and as we are still at the 1st Beta things might change.</p>
-<p>I also recommend watching <a href="https://developer.apple.com/videos/play/wwdc2021/10232/">Meet Shortcuts for macOS - WWDC 2021 - Videos - Apple Developer</a>.</p>
+<p>I also recommend watching <a href="https://developer.apple.com/videos/play/wwdc2021/10232/"  class="external-link" target="_blank" rel="noopener">Meet Shortcuts for macOS - WWDC 2021 - Videos - Apple Developer</a>.</p>
 
       </div>
+
 
       <footer>
         
 
 
+        
+        
+        
+        
         
       </footer>
     </article>
@@ -525,23 +603,36 @@ Internal requirements count=1 size=80
     
   </section>
 
-      </div>
+    </div>
 
-      <footer class="footer">
+    <footer class="footer">
   <section class="container">
+    ©
     
-     © 2023
+    2023
+     Csaba Fitzl 
+    ·
     
-       · 
-      Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.
-    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
     
   </section>
 </footer>
 
-    </main>
+  </main>
 
-    
+  
+
+  
+  
+  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -555,6 +646,31 @@ if (!doNotTrack) {
 }
 </script>
 
-  </body>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
 
 </html>

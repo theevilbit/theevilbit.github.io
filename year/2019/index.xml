@@ -13,7 +13,7 @@
       <pubDate>Fri, 25 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/posts/gatekeeper_bypass_or_not_bypass/</guid>
-      <description>TL;DR On macOS Mojave Gatekeeper only verifies executables, which are run with the open command or the user double clicks. It won’t verify files, that are executed through other means like, directly executing a binary ./myapp regardless of the quarantine attribute. If you can place a plist file inside LaunchAgents/LaunchDaemons, the command inside will also be executed. Prior to Catalina there is a way to trick users to drag &amp;amp; drop files in the LaunchAgents folder.</description>
+      <description>TL;DR Link to heading On macOS Mojave Gatekeeper only verifies executables, which are run with the open command or the user double clicks. It won’t verify files, that are executed through other means like, directly executing a binary ./myapp regardless of the quarantine attribute. If you can place a plist file inside LaunchAgents/LaunchDaemons, the command inside will also be executed. Prior to Catalina there is a way to trick users to drag &amp;amp; drop files in the LaunchAgents folder.</description>
     </item>
     
     <item>
@@ -34,8 +34,8 @@ With “Unlock &amp;amp; Delete”, “Unlock &amp;amp; Rename”, “Unlock &am
       <pubDate>Sat, 05 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/posts/few_click_rce_via_github_desktop_macos_client_with_gatekeeper_bypass_and_custom_url_handlers/</guid>
-      <description>TL;DR The GitHub Desktop app doesn’t add the quarantine extended attribute to files downloaded from the web, and this along with macOS’s URL handler auto-registration feature allows an attacker to execute arbitrary, even unsigned code on a macOS system. If we don’t count the clicks required to open the GitHub App, and cloning an external repository, then this is a 2 click RCE.
-The idea I recently came across a very good blog post about an RCE vulnerability on GitHub Desktop: GitHub Desktop RCE (OSX) - André Baptista via its custom URL handlers.</description>
+      <description>TL;DR Link to heading The GitHub Desktop app doesn’t add the quarantine extended attribute to files downloaded from the web, and this along with macOS’s URL handler auto-registration feature allows an attacker to execute arbitrary, even unsigned code on a macOS system. If we don’t count the clicks required to open the GitHub App, and cloning an external repository, then this is a 2 click RCE.
+The idea Link to heading I recently came across a very good blog post about an RCE vulnerability on GitHub Desktop: GitHub Desktop RCE (OSX) - André Baptista via its custom URL handlers.</description>
     </item>
     
     <item>
@@ -55,7 +55,7 @@ In case an application is installed for the current user and not for all user, t
       
       <guid>https://theevilbit.github.io/posts/a_simple_protection_against_hmvalidatehandle_technique/</guid>
       <description>In the recent days I was reading technical analysis of win32k exploits from recent years, and it caught my eyes, that the HMValidateHandle technique is very heavily used almost everywhere. Then I had an idea how to protect against this family of exploits, which I think is very simple. This post will be about that.
-What is HMValidateHandle? HMValidateHandle is an internal, unexported function of user32.dll. It takes a handle and a handle type as arguments, and by looking up the handle table, if the handle is matching with the type it will copy the object to user memory.</description>
+What is HMValidateHandle? Link to heading HMValidateHandle is an internal, unexported function of user32.dll. It takes a handle and a handle type as arguments, and by looking up the handle table, if the handle is matching with the type it will copy the object to user memory.</description>
     </item>
     
     <item>
@@ -94,7 +94,7 @@ And a few similar ones, and I will be honest, I had no idea what is he talking a
       <pubDate>Sun, 31 Mar 2019 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/posts/vmware_fusion_11_guest_vm_rce_cve-2019-5514/</guid>
-      <description>TL;DR You can run an arbitrary command on a VMware Fusion guest VM through a website without any priory knowledge. Basically VMware Fusion is starting up a websocket listening only on the localhost. You can fully control all the VMs (also create/delete snapshots, whatever you want) through this websocket interface, including launching apps. You need to have VMware Tools installed on the guest for launching apps, but honestly who doesn’t have it installed.</description>
+      <description>TL;DR Link to heading You can run an arbitrary command on a VMware Fusion guest VM through a website without any priory knowledge. Basically VMware Fusion is starting up a websocket listening only on the localhost. You can fully control all the VMs (also create/delete snapshots, whatever you want) through this websocket interface, including launching apps. You need to have VMware Tools installed on the guest for launching apps, but honestly who doesn’t have it installed.</description>
     </item>
     
   </channel>

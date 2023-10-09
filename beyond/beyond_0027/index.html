@@ -1,21 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+  <title>
+  Beyond the good ol&#39; LaunchAgents - 27 - Dock shortcuts · theevilbit blog
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 
-    <meta name="author" content="Csaba Fitzl">
-    
-    
 
-    <meta name="twitter:card" content="summary"/>
+
+
+<meta name="author" content="Csaba Fitzl">
+<meta name="description" content="This is part 27 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+This persistence is another gem I found in Leo Pitt&rsquo;s Modern macOS Persistence talk.
+macOS Dock stores shortcuts for applications, that we would like to access through the, well&hellip; Dock. It stores all settings in ~/Library/Preferences/com.apple.dock.plist. Although we can edit this PLIST directly, we can also use the defaults utility to change it.">
+<meta name="keywords" content="">
+
+<meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 27 - Dock shortcuts"/>
 <meta name="twitter:description" content="This is part 27 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
 This persistence is another gem I found in Leo Pitt&rsquo;s Modern macOS Persistence talk.
 macOS Dock stores shortcuts for applications, that we would like to access through the, well&hellip; Dock. It stores all settings in ~/Library/Preferences/com.apple.dock.plist. Although we can edit this PLIST directly, we can also use the defaults utility to change it."/>
 
-    <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 27 - Dock shortcuts" />
+<meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 27 - Dock shortcuts" />
 <meta property="og:description" content="This is part 27 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
 This persistence is another gem I found in Leo Pitt&rsquo;s Modern macOS Persistence talk.
 macOS Dock stores shortcuts for applications, that we would like to access through the, well&hellip; Dock. It stores all settings in ~/Library/Preferences/com.apple.dock.plist. Although we can edit this PLIST directly, we can also use the defaults utility to change it." />
@@ -25,127 +34,124 @@ macOS Dock stores shortcuts for applications, that we would like to access throu
 <meta property="article:modified_time" content="2022-02-08T00:00:00+00:00" />
 
 
-    
-      <base href="https://theevilbit.github.io/beyond/beyond_0027/">
-    
-    <title>
-  Beyond the good ol&#39; LaunchAgents - 27 - Dock shortcuts · theevilbit blog
-</title>
 
-    
-      <link rel="canonical" href="https://theevilbit.github.io/beyond/beyond_0027/">
-    
 
-    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+<link rel="canonical" href="https://theevilbit.github.io/beyond/beyond_0027/">
 
-    
-      
-      
-      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
-    
 
-    
+<link rel="preload" href="https://theevilbit.github.io/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
 
-    
 
-    
+  
+  
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.135e22c97ff685fe983fc60048e309ced8f00d8d38f536aa67dba8a13a03dfa4.css" integrity="sha256-E14iyX/2hf6YP8YASOMJztjwDY049TaqZ9uooToD36Q=" crossorigin="anonymous" media="screen" />
 
-    
-    
-    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.119.0">
-  </head>
 
-  <body class=" ">
-    <main class="wrapper">
-      <nav class="navigation">
+
+
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+
+<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
+<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+<body class="preload-transitions colorscheme-light">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
   <section class="container">
     <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
-    <input type="checkbox" id="menu-toggle" />
-    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
-    <ul class="navigation-list">
-      
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
-          </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+            </li>
+          
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
-          </li>
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
-          </li>
-        
-      
-      
-    </ul>
+      </ul>
+    
   </section>
 </nav>
 
 
-      <div class="content">
-        
-  <section class="container post">
-    <article>
-      <header>
-        <div class="post-title">
-          <h1 class="title">Beyond the good ol&#39; LaunchAgents - 27 - Dock shortcuts</h1>
-        </div>
-        <div class="post-meta">
-          <div class="date">
-            <span class="posted-on">
-              <i class="fas fa-calendar"></i>
-              <time datetime='2022-02-08T00:00:00Z'>
-                February 8, 2022
-              </time>
-            </span>
-            <span class="reading-time">
-              <i class="fas fa-clock"></i>
-              2 minutes read
-            </span>
-          </div>
-          <div class="categories">
-  <i class="fas fa-folder"></i>
-    <a href="https://theevilbit.github.io/categories/persistence/">persistence</a>
-      <span class="separator">•</span>
-    <a href="https://theevilbit.github.io/categories/beyond/">beyond</a></div>
+    <div class="content">
+      
+  <section class="container page">
+  <article>
+    <header>
+      <h1 class="title">
+        <a class="title-link" href="https://theevilbit.github.io/beyond/beyond_0027/">
+          Beyond the good ol&#39; LaunchAgents - 27 - Dock shortcuts
+        </a>
+      </h1>
+    </header>
 
-          <div class="tags">
-  <i class="fas fa-tag"></i>
-    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
-      <span class="separator">•</span>
-    <a href="https://theevilbit.github.io/tags/persistence/">persistence</a>
-      <span class="separator">•</span>
-    <a href="https://theevilbit.github.io/tags/beyond/">beyond</a></div>
-
-        </div>
-      </header>
-
-      <div>
-        <blockquote>
-<p>This is part 27 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+    <blockquote>
+<p>This is part 27 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p>
 </blockquote>
-<p>This persistence is another gem I found in <a href="https://twitter.com/_D00mfist">Leo Pitt</a>&rsquo;s <a href="https://www.youtube.com/watch?v=OFQYTJiAmxs">Modern macOS Persistence</a> talk.</p>
+<p>This persistence is another gem I found in <a href="https://twitter.com/_D00mfist"  class="external-link" target="_blank" rel="noopener">Leo Pitt</a>&rsquo;s <a href="https://www.youtube.com/watch?v=OFQYTJiAmxs"  class="external-link" target="_blank" rel="noopener">Modern macOS Persistence</a> talk.</p>
 <p>macOS Dock stores shortcuts for applications, that we would like to access through the, well&hellip; Dock. It stores all settings in <code>~/Library/Preferences/com.apple.dock.plist</code>. Although we can edit this PLIST directly, we can also use the <code>defaults</code> utility to change it. For example adding a new entry:</p>
 <pre tabindex="0"><code>defaults write com.apple.dock persistent-apps -array-add &#39;&lt;dict&gt;&lt;key&gt;tile-data&lt;/key&gt;&lt;dict&gt;&lt;key&gt;file-data&lt;/key&gt;&lt;dict&gt;&lt;key&gt;_CFURLString&lt;/key&gt;&lt;string&gt;/System/Applications/Books.app&lt;/string&gt;&lt;key&gt;_CFURLStringType&lt;/key&gt;&lt;integer&gt;0&lt;/integer&gt;&lt;/dict&gt;&lt;/dict&gt;&lt;/dict&gt;&#39;
 
@@ -164,40 +170,45 @@ killall Dock
 14:51:53    WrData[A]       /_hwnkhn904xg_pwlhb83_k040000gn/T/TemporaryItems/com.apple.dock.plist.I5zYdrH    0.000154 W cfprefsd 
 </code></pre><p>The other thing we can do, if we don&rsquo;t want to rely on <code>defaults</code>, is calling the Preferences API directly to change the file, or even <code>cfprefsd</code>&rsquo;s XPC service. Thus as an attacker we can mask the change of this file to appear as legitimate. I leave this as an exercise to the reader how to do these.</p>
 <p>macOS admins work a lot with Dock preferences, so you can find other tricks in their blogposts, here are a few for example:</p>
-<p><a href="https://krypted.com/mac-os-x/adding-objects-to-the-dock/">Adding Objects To The Dock - krypted</a>
-<a href="https://eshop.macsales.com/blog/39524-terminal-tricks-mastering-the-iconic-macos-dock-part-3/">Terminal Tricks: Mastering the Iconic macOS Dock, Part 3</a>
-<a href="https://github.com/kcrawford/dockutil">GitHub - kcrawford/dockutil: command line tool for managing dock items</a></p>
+<p><a href="https://krypted.com/mac-os-x/adding-objects-to-the-dock/"  class="external-link" target="_blank" rel="noopener">Adding Objects To The Dock - krypted</a>
+<a href="https://eshop.macsales.com/blog/39524-terminal-tricks-mastering-the-iconic-macos-dock-part-3/"  class="external-link" target="_blank" rel="noopener">Terminal Tricks: Mastering the Iconic macOS Dock, Part 3</a>
+<a href="https://github.com/kcrawford/dockutil"  class="external-link" target="_blank" rel="noopener">GitHub - kcrawford/dockutil: command line tool for managing dock items</a></p>
 
-      </div>
+  </article>
+</section>
 
-      <footer>
-        
+  
 
+    </div>
 
-        
-      </footer>
-    </article>
-
-    
-  </section>
-
-      </div>
-
-      <footer class="footer">
+    <footer class="footer">
   <section class="container">
+    ©
     
-     © 2023
+    2023
+     Csaba Fitzl 
+    ·
     
-       · 
-      Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.
-    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
     
   </section>
 </footer>
 
-    </main>
+  </main>
 
-    
+  
+
+  
+  
+  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -211,6 +222,31 @@ if (!doNotTrack) {
 }
 </script>
 
-  </body>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
 
 </html>

@@ -42,7 +42,7 @@ The goal of the post is to cover many aspects of authorization, which I found in
       <pubDate>Fri, 03 Jul 2020 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/posts/cve_2020_9771/</guid>
-      <description>TL;DR We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc&amp;hellip;) of every user on the system, including those protected by Apple&amp;rsquo;s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
+      <description>TL;DR Link to heading We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc&amp;hellip;) of every user on the system, including those protected by Apple&amp;rsquo;s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
 This could be achieved with a single command, for example: mount_apfs -o noowners -s com.</description>
     </item>
     
@@ -53,7 +53,7 @@ This could be achieved with a single command, for example: mount_apfs -o noowner
       
       <guid>https://theevilbit.github.io/posts/secure_coding_xpc_part5/</guid>
       <description>In the last post of the series we will see another typical issue, where XPC services using the connecting process&amp;rsquo;s ID (PID) to verify the client instead of the audit token. We will use F-Secure SAFE again for our case study, the vulnerability was fixed in 17.8 and it was assigned CVE-2020-14977.
-The root cause The XPC services of F-Secure SAFE use the process ID (PID) to verify the client&amp;rsquo;s signature, as can be seen in the code below.</description>
+The root cause Link to heading The XPC services of F-Secure SAFE use the process ID (PID) to verify the client&amp;rsquo;s signature, as can be seen in the code below.</description>
     </item>
     
     <item>
@@ -62,7 +62,7 @@ The root cause The XPC services of F-Secure SAFE use the process ID (PID) to ver
       <pubDate>Fri, 12 Jun 2020 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/posts/secure_coding_xpc_part4/</guid>
-      <description>F-Secure SAFE XPC service exploitation (CVE-2020-14978) Intro In this post we will look into an other case study which will show us (again) why XPC client verification is crucial in XPC security, and how added authorization checks can slightly improve (but not fix) the problem. The F-Secure SAFE XPC services installed on macOS were not sufficiently hardened, and a malicious actor had the ability to interact with them. The vulnerability was fixed in version 17.</description>
+      <description>F-Secure SAFE XPC service exploitation (CVE-2020-14978) Link to heading Intro Link to heading In this post we will look into an other case study which will show us (again) why XPC client verification is crucial in XPC security, and how added authorization checks can slightly improve (but not fix) the problem. The F-Secure SAFE XPC services installed on macOS were not sufficiently hardened, and a malicious actor had the ability to interact with them.</description>
     </item>
     
     <item>
@@ -81,7 +81,7 @@ Several limitations apply to when this injection technique can be used and when 
       <pubDate>Fri, 29 May 2020 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/posts/secure_coding_xpc_part3/</guid>
-      <description>Microsoft AutoUpdate macOS privilege escalation vulnerability (CVE-2020-0984) Introduction This is the third post in my series which is trying to help Apple developers to avoid typical insecure coding practices. This one will highlight why XPC client hardening and proper verification is extremely important when we use XPC messaging on macOS between clients that run as a normal user and services that run as root. If this validation is not right, it opens up the possibility for an attacker to run privileged commands or worse case, achieve full privilege escalation on the system.</description>
+      <description>Microsoft AutoUpdate macOS privilege escalation vulnerability (CVE-2020-0984) Link to heading Introduction Link to heading This is the third post in my series which is trying to help Apple developers to avoid typical insecure coding practices. This one will highlight why XPC client hardening and proper verification is extremely important when we use XPC messaging on macOS between clients that run as a normal user and services that run as root.</description>
     </item>
     
     <item>

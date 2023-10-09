@@ -23,7 +23,7 @@ In contrary to what people would expect, clients which can access location servi
       <pubDate>Mon, 14 Nov 2022 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/posts/cve-2022-32929/</guid>
-      <description>Intro Normally, when a users backup their iOS device, the backup is saved into ~/Library/Application Support/MobileSync/Backup directory. The MobileSync directory is properly protected by TCC, as the backup can contain photos, contact information, everything from the iOS device, and it might be unencrypted, so this is a whole lot of private information. It&amp;rsquo;s only accessible with Full Disk Access rights.
+      <description>Intro Link to heading Normally, when a users backup their iOS device, the backup is saved into ~/Library/Application Support/MobileSync/Backup directory. The MobileSync directory is properly protected by TCC, as the backup can contain photos, contact information, everything from the iOS device, and it might be unencrypted, so this is a whole lot of private information. It&amp;rsquo;s only accessible with Full Disk Access rights.
 The issue is that an attacker can invoke the AppleMobileBackup utility and make a backup to a custom location.</description>
     </item>
     
@@ -33,8 +33,8 @@ The issue is that an attacker can invoke the AppleMobileBackup utility and make 
       <pubDate>Fri, 29 Oct 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/posts/cve-2021-30808/</guid>
-      <description>Intro CVE-2021-1784 was a vulnerability that allowed an attacker to bypass TCC by mounting over the ~/Library/Application Support/com.apple.TCC directory and providing a new TCC database. We covered this with Wojciech Regula in or 20+ ways to bypass your mac os privacy mechanisms BlackHat USA talk. This was properly fixed in Big Sur.
-The Vulnerability I don&amp;rsquo;t know why but I started to experiment with it again in the very first version of Monterey beta, and found that although the exploit doesn&amp;rsquo;t work, we can mount over the ~/Library directory.</description>
+      <description>Intro Link to heading CVE-2021-1784 was a vulnerability that allowed an attacker to bypass TCC by mounting over the ~/Library/Application Support/com.apple.TCC directory and providing a new TCC database. We covered this with Wojciech Regula in or 20+ ways to bypass your mac os privacy mechanisms BlackHat USA talk. This was properly fixed in Big Sur.
+The Vulnerability Link to heading I don&amp;rsquo;t know why but I started to experiment with it again in the very first version of Monterey beta, and found that although the exploit doesn&amp;rsquo;t work, we can mount over the ~/Library directory.</description>
     </item>
     
     <item>
@@ -43,7 +43,7 @@ The Vulnerability I don&amp;rsquo;t know why but I started to experiment with it
       <pubDate>Fri, 03 Jul 2020 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/posts/cve_2020_9771/</guid>
-      <description>TL;DR We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc&amp;hellip;) of every user on the system, including those protected by Apple&amp;rsquo;s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
+      <description>TL;DR Link to heading We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc&amp;hellip;) of every user on the system, including those protected by Apple&amp;rsquo;s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
 This could be achieved with a single command, for example: mount_apfs -o noowners -s com.</description>
     </item>
     

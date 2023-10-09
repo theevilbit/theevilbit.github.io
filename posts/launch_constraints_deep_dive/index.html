@@ -1,147 +1,203 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+  <title>
+  Launch and Environment Constraints Deep Dive · theevilbit blog
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 
-    <meta name="author" content="Csaba Fitzl">
-    
-    
 
-    <meta name="twitter:card" content="summary"/>
+
+
+<meta name="author" content="Csaba Fitzl">
+<meta name="description" content="Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.
+Old macOS Vulnerabilities Link to heading TCC bypass with imagent.app Link to heading This vulnerability was discovered by Adam Chester (xpn) back in 2019 and documented on his blog post &ldquo;Bypassing MacOS Privacy Controls&rdquo;.">
+<meta name="keywords" content="">
+
+<meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Launch and Environment Constraints Deep Dive"/>
 <meta name="twitter:description" content="Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.
-Old macOS Vulnerabilities TCC bypass with imagent.app This vulnerability was discovered by Adam Chester (xpn) back in 2019 and documented on his blog post &ldquo;Bypassing MacOS Privacy Controls&rdquo;."/>
+Old macOS Vulnerabilities Link to heading TCC bypass with imagent.app Link to heading This vulnerability was discovered by Adam Chester (xpn) back in 2019 and documented on his blog post &ldquo;Bypassing MacOS Privacy Controls&rdquo;."/>
 
-    <meta property="og:title" content="Launch and Environment Constraints Deep Dive" />
+<meta property="og:title" content="Launch and Environment Constraints Deep Dive" />
 <meta property="og:description" content="Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.
-Old macOS Vulnerabilities TCC bypass with imagent.app This vulnerability was discovered by Adam Chester (xpn) back in 2019 and documented on his blog post &ldquo;Bypassing MacOS Privacy Controls&rdquo;." />
+Old macOS Vulnerabilities Link to heading TCC bypass with imagent.app Link to heading This vulnerability was discovered by Adam Chester (xpn) back in 2019 and documented on his blog post &ldquo;Bypassing MacOS Privacy Controls&rdquo;." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/launch_constraints_deep_dive/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2023-10-09T00:00:00+00:00" />
 <meta property="article:modified_time" content="2023-10-09T00:00:00+00:00" />
 
 
-    
-      <base href="https://theevilbit.github.io/posts/launch_constraints_deep_dive/">
-    
-    <title>
-  Launch and Environment Constraints Deep Dive · theevilbit blog
-</title>
 
-    
-      <link rel="canonical" href="https://theevilbit.github.io/posts/launch_constraints_deep_dive/">
-    
 
-    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+<link rel="canonical" href="https://theevilbit.github.io/posts/launch_constraints_deep_dive/">
 
-    
-      
-      
-      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
-    
 
-    
+<link rel="preload" href="https://theevilbit.github.io/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
 
-    
 
-    
+  
+  
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.135e22c97ff685fe983fc60048e309ced8f00d8d38f536aa67dba8a13a03dfa4.css" integrity="sha256-E14iyX/2hf6YP8YASOMJztjwDY049TaqZ9uooToD36Q=" crossorigin="anonymous" media="screen" />
 
-    
-    
-    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.119.0">
-  </head>
 
-  <body class=" ">
-    <main class="wrapper">
-      <nav class="navigation">
+
+
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+
+<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
+<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+<body class="preload-transitions colorscheme-light">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
   <section class="container">
     <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
-    <input type="checkbox" id="menu-toggle" />
-    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
-    <ul class="navigation-list">
-      
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
-          </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+            </li>
+          
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
-          </li>
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
-          </li>
-        
-      
-      
-    </ul>
+      </ul>
+    
   </section>
 </nav>
 
 
-      <div class="content">
-        
+    <div class="content">
+      
   <section class="container post">
     <article>
       <header>
         <div class="post-title">
-          <h1 class="title">Launch and Environment Constraints Deep Dive</h1>
+          <h1 class="title">
+            <a class="title-link" href="https://theevilbit.github.io/posts/launch_constraints_deep_dive/">
+              Launch and Environment Constraints Deep Dive
+            </a>
+          </h1>
         </div>
         <div class="post-meta">
           <div class="date">
             <span class="posted-on">
-              <i class="fas fa-calendar"></i>
-              <time datetime='2023-10-09T00:00:00Z'>
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="2023-10-09T00:00:00Z">
                 October 9, 2023
               </time>
             </span>
             <span class="reading-time">
-              <i class="fas fa-clock"></i>
-              15 minutes read
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              16-minute read
             </span>
           </div>
+          
           <div class="categories">
-  <i class="fas fa-folder"></i>
+  <i class="fa fa-folder" aria-hidden="true"></i>
     <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
 
           <div class="tags">
-  <i class="fas fa-tag"></i>
-    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+  <i class="fa fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+    </span>
       <span class="separator">•</span>
-    <a href="https://theevilbit.github.io/tags/internals/">internals</a>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/internals/">internals</a>
+    </span>
       <span class="separator">•</span>
-    <a href="https://theevilbit.github.io/tags/amfi/">amfi</a></div>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/amfi/">amfi</a>
+    </span></div>
 
         </div>
       </header>
 
-      <div>
+      <div class="post-content">
+        
         <p>Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.</p>
-<h2 id="old-macos-vulnerabilities">Old macOS Vulnerabilities</h2>
-<h3 id="tcc-bypass-with-imagentapp">TCC bypass with imagent.app</h3>
-<p>This vulnerability was discovered by Adam Chester (<a href="https://twitter.com/_xpn_"><em>xpn</em></a>) back in 2019 and documented on his blog post <a href="https://blog.xpnsec.com/bypassing-macos-privacy-controls/">&ldquo;Bypassing MacOS Privacy Controls&rdquo;</a>. The idea is that the <code>imagent.app</code>, located at <code>/System/Library/PrivateFrameworks/IMCore.framework/imagent.app</code> had some very interesting entitlements, which allowed it to access the contacts and some entries in the keychain. This is shown below.</p>
+<h2 id="old-macos-vulnerabilities">
+  Old macOS Vulnerabilities
+  <a class="heading-link" href="#old-macos-vulnerabilities">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<h3 id="tcc-bypass-with-imagentapp">
+  TCC bypass with imagent.app
+  <a class="heading-link" href="#tcc-bypass-with-imagentapp">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>This vulnerability was discovered by Adam Chester (<a href="https://twitter.com/_xpn_"  class="external-link" target="_blank" rel="noopener"><em>xpn</em></a>) back in 2019 and documented on his blog post <a href="https://blog.xpnsec.com/bypassing-macos-privacy-controls/"  class="external-link" target="_blank" rel="noopener">&ldquo;Bypassing MacOS Privacy Controls&rdquo;</a>. The idea is that the <code>imagent.app</code>, located at <code>/System/Library/PrivateFrameworks/IMCore.framework/imagent.app</code> had some very interesting entitlements, which allowed it to access the contacts and some entries in the keychain. This is shown below.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.private.tcc.allow.overridable<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;array&gt;</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#309;font-weight:bold">&lt;string&gt;</span>kTCCServiceAddressBook<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
@@ -157,21 +213,39 @@ Old macOS Vulnerabilities TCC bypass with imagent.app This vulnerability was dis
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
 </span></span></code></pre></div><p>Adam found that this application will try to load plugins from <code>imagent.app/Contents/PlugIns</code>, and its code signing properties allowed to load any third party, non Apple signed plugins. The only issue was that the application resided in a SIP protected directory. However nothing prevented us from making a copy of it, for example into <code>/tmp/</code>, create a plugin, and launch it from there.</p>
 <p>This way we could load an arbitrary plugin into this powerful application and inherit its entitlements and so bypass TCC and keychain.</p>
-<h3 id="tcc-bypass-using-directory-utilityapp-cve-2020-27937">TCC bypass using Directory Utility.app, CVE-2020-27937</h3>
-<p>This vulnerability was discovered by Wojciech Reguła (<a href="https://twitter.com/_r3ggi">_r3ggi</a>) back in 2020, and it&rsquo;s similar to the previous one. It was also documented in Wojciech&rsquo;s blog post, <a href="https://wojciechregula.blog/post/change-home-directory-and-bypass-tcc-aka-cve-2020-27937/">&ldquo;Change home directory and bypass TCC aka CVE-2020-27937&rdquo;</a>. Directory Utility had some very powerful entitlement, which granted it rights to change the user&rsquo;s properties, like HOME folder.</p>
+<h3 id="tcc-bypass-using-directory-utilityapp-cve-2020-27937">
+  TCC bypass using Directory Utility.app, CVE-2020-27937
+  <a class="heading-link" href="#tcc-bypass-using-directory-utilityapp-cve-2020-27937">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>This vulnerability was discovered by Wojciech Reguła (<a href="https://twitter.com/_r3ggi"  class="external-link" target="_blank" rel="noopener">_r3ggi</a>) back in 2020, and it&rsquo;s similar to the previous one. It was also documented in Wojciech&rsquo;s blog post, <a href="https://wojciechregula.blog/post/change-home-directory-and-bypass-tcc-aka-cve-2020-27937/"  class="external-link" target="_blank" rel="noopener">&ldquo;Change home directory and bypass TCC aka CVE-2020-27937&rdquo;</a>. Directory Utility had some very powerful entitlement, which granted it rights to change the user&rsquo;s properties, like HOME folder.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span> <span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.private.tcc.allow<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
 </span></span><span style="display:flex;"><span> <span style="color:#309;font-weight:bold">&lt;array&gt;</span>
 </span></span><span style="display:flex;"><span>     <span style="color:#309;font-weight:bold">&lt;string&gt;</span>kTCCServiceSystemPolicySysAdminFiles<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
 </span></span><span style="display:flex;"><span> <span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
 </span></span></code></pre></div><p>Similarly to imagent, the application&rsquo;s code signing properties were not restrictive enough, and allowed us injecting code into the application by creating plugins. So we could make a copy again, and inject code into the app. This again allowed us inheriting the utility&rsquo;s entitlements. By changing the HOME directory, we can plant a new TCC database with our custom rules.</p>
-<h3 id="tcc-bypass-using-configd-powerdir">TCC bypass using configd, &ldquo;powerdir&rdquo;</h3>
-<p>This vulnerability was discovered by Jonathan Bar Or (<a href="https://twitter.com/yo_yo_yo_jbo">yo_yo_yo_jbo</a>) back in 2021, and was documented on Microsoft&rsquo;s security blog under the title, <a href="https://www.microsoft.com/en-us/security/blog/2022/01/10/new-macos-vulnerability-powerdir-could-lead-to-unauthorized-user-data-access/">New macOS vulnerability, “powerdir,” could lead to unauthorized user data access</a>. Here the exploitable utility was <code>configd</code>, which is located at <code>/usr/libexec/configd</code>. Among many powerful entitlements it also had one TCC related, namely the following.</p>
+<h3 id="tcc-bypass-using-configd-powerdir">
+  TCC bypass using configd, &ldquo;powerdir&rdquo;
+  <a class="heading-link" href="#tcc-bypass-using-configd-powerdir">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>This vulnerability was discovered by Jonathan Bar Or (<a href="https://twitter.com/yo_yo_yo_jbo"  class="external-link" target="_blank" rel="noopener">yo_yo_yo_jbo</a>) back in 2021, and was documented on Microsoft&rsquo;s security blog under the title, <a href="https://www.microsoft.com/en-us/security/blog/2022/01/10/new-macos-vulnerability-powerdir-could-lead-to-unauthorized-user-data-access/"  class="external-link" target="_blank" rel="noopener">New macOS vulnerability, “powerdir,” could lead to unauthorized user data access</a>. Here the exploitable utility was <code>configd</code>, which is located at <code>/usr/libexec/configd</code>. Among many powerful entitlements it also had one TCC related, namely the following.</p>
 <pre tabindex="0"><code>[Key] com.apple.private.tcc.allow
 [Value]
 	[Array]
 		[String] kTCCServiceSystemPolicySysAdminFiles
 </code></pre><p>This allows the tool to change the HOME directory of a user, which ultimately leads to a full TCC bypass as we can plan an arbitrary database. The tool&rsquo;s code signing properties again allowed injecting a custom bundle. However in this case instead of making a plugin, we could specify the bundle to be loaded by a command line switch. Although this tool is normally launched by <code>launchd</code> upon startup, there was nothing preventing us launching it again through the command line.</p>
-<h2 id="introducing-launch-constraints">Introducing Launch Constraints</h2>
+<h2 id="introducing-launch-constraints">
+  Introducing Launch Constraints
+  <a class="heading-link" href="#introducing-launch-constraints">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>The above three vulnerabilities, is just a small subset of similar issues that have been found over the years. As we can see there are some common attack patterns, like executing binaries the way they were not expected to be launched or executing them from alternative places. Apple introduced Launch Constraints in macOS Ventura to mitigate these type of exploitation scenarios. It can control, who, how and from where a process can be launched.</p>
 <p>Each system binary is assigned to a constraint category, which are defined inside the trust cache. Trust cache is a list of all system binaries, their hashes, and now with version 2, their launch constraint category. The various Launch Constraints categories are defined inside AMFI (AppleMobileFileIntegrity).</p>
 <p>Categories are consists of three different parts:</p>
@@ -189,14 +263,20 @@ Responsible Constraints - These are constraints related to the process which is 
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>csaby@max /tmp % log stream | grep AMFI
 </span></span><span style="display:flex;"><span>2023-09-19 14:18:21.273482+0200 0x2e3486   Default     0x0                  <span style="color:#f60">0</span>      <span style="color:#f60">0</span>    kernel: <span style="color:#555">(</span>AppleMobileFileIntegrity<span style="color:#555">)</span> AMFI: Launch Constraint Violation <span style="color:#555">(</span>enforcing<span style="color:#555">)</span>, error info: c<span style="color:#555">[</span>1<span style="color:#555">]</span>p<span style="color:#555">[</span>1<span style="color:#555">]</span>m<span style="color:#555">[</span>1<span style="color:#555">]</span>e<span style="color:#555">[</span>2<span style="color:#555">]</span>, <span style="color:#555">(</span>Constraint not matched<span style="color:#555">)</span> launching proc<span style="color:#555">[</span>vc: <span style="color:#f60">1</span> pid: 52468<span style="color:#555">]</span>: /private/tmp/FindMy.app/Contents/MacOS/FindMy, launch <span style="color:#366">type</span> 0, failure proc <span style="color:#555">[</span>vc: <span style="color:#f60">1</span> pid: 52468<span style="color:#555">]</span>: /private/tmp/FindMy.app/Contents/MacOS/FindMy
 </span></span></code></pre></div><p>We see that we violated Launch Constraints.</p>
-<h3 id="launch-constraints-categories">Launch Constraints Categories</h3>
-<p>As noted before categories are defined inside AMFI. It was first reversed by Linus Henze, and the initial categories can be found on his Github Gist, <a href="https://gist.github.com/LinusHenze/4cd5d7ef057a144cda7234e2c247c056">Description of the Launch Constraints introduced in iOS 16</a>. Let&rsquo;s analyze two of them.</p>
+<h3 id="launch-constraints-categories">
+  Launch Constraints Categories
+  <a class="heading-link" href="#launch-constraints-categories">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>As noted before categories are defined inside AMFI. It was first reversed by Linus Henze, and the initial categories can be found on his Github Gist, <a href="https://gist.github.com/LinusHenze/4cd5d7ef057a144cda7234e2c247c056"  class="external-link" target="_blank" rel="noopener">Description of the Launch Constraints introduced in iOS 16</a>. Let&rsquo;s analyze two of them.</p>
 <pre tabindex="0"><code>Category 1:
 
      Self Constraint: (on-authorized-authapfs-volume || on-system-volume) &amp;&amp; launch-type == 1 &amp;&amp; validation-category == 1
 
      Parent Constraint: is-init-proc
-</code></pre><p>Self constraint refers to the application itself. <em>on-authorized-authapfs-volume || on-system-volume</em> is descriptive: the application must reside either on the System volume or an authorized APFS volume, which likely refers to the cryptex volumes, which are used for RSR (Rapid Security Response) updates. Launch types are documented on Apple&rsquo;s developer documentation, <a href="https://developer.apple.com/documentation/kernel/cs_launch_type_t?changes=latest_major&amp;language=objc">cs_launch_type_t</a>. Currently (as of macOS 14) there are four different types. 1 refers to a system service, thus this is a binary that should be launched as a service. Validation category 1 means it must present in the trust cache.</p>
+</code></pre><p>Self constraint refers to the application itself. <em>on-authorized-authapfs-volume || on-system-volume</em> is descriptive: the application must reside either on the System volume or an authorized APFS volume, which likely refers to the cryptex volumes, which are used for RSR (Rapid Security Response) updates. Launch types are documented on Apple&rsquo;s developer documentation, <a href="https://developer.apple.com/documentation/kernel/cs_launch_type_t?changes=latest_major&amp;language=objc"  class="external-link" target="_blank" rel="noopener">cs_launch_type_t</a>. Currently (as of macOS 14) there are four different types. 1 refers to a system service, thus this is a binary that should be launched as a service. Validation category 1 means it must present in the trust cache.</p>
 <p>The parent constraint refers to the parent, and <code>is-init-proc</code> refers to launchd.</p>
 <p>In summary, this is a binary that should reside on the System volume or an authorized APFS volume, and be launched as a system service by launchd.</p>
 <p>Let&rsquo;s examine Category 2.</p>
@@ -205,12 +285,18 @@ Responsible Constraints - These are constraints related to the process which is 
      Self Constraint: on-authorized-authapfs-volume || on-system-volume
 </code></pre><p>This is less restrictive, it only says that the binary should be on the system volume or an authorized APFS volume.</p>
 <p>Let&rsquo;s find a few binaries that are assigned to these categories.</p>
-<h3 id="the-trust-cache">The Trust Cache</h3>
+<h3 id="the-trust-cache">
+  The Trust Cache
+  <a class="heading-link" href="#the-trust-cache">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>The launch policy can be found in multiple places:</p>
 <pre tabindex="0"><code>/System/Library/Security/OSLaunchPolicyData
 /System/Volumes/Preboot/[uuid]/boot/[long hex]/usr/standalone/firmware/FUD/BaseSystemTrustCache.img4
 /System/Volumes/Preboot/[uuid]/boot/[long hex]/usr/standalone/firmware/FUD/StaticTrustCache.img4
-</code></pre><p><code>OSLaunchPolicyData</code> is an IM4P (Image4 Payload) data file, we need to extract the actual content from it. We can use the <a href="https://github.com/m1stadev/PyIMG4">PyIMG4</a> Python library for that.</p>
+</code></pre><p><code>OSLaunchPolicyData</code> is an IM4P (Image4 Payload) data file, we need to extract the actual content from it. We can use the <a href="https://github.com/m1stadev/PyIMG4"  class="external-link" target="_blank" rel="noopener">PyIMG4</a> Python library for that.</p>
 <pre tabindex="0"><code>csaby@max /tmp % pyimg4 im4p info -i /System/Library/Security/OSLaunchPolicyData 
 Reading /System/Library/Security/OSLaunchPolicyData...
 Image4 payload info:
@@ -225,7 +311,7 @@ Extracted Image4 payload data to: OSLaunchPolicyData.data
 </code></pre><p>We can also use the other trust caches, but they are IMG4 files, so first we need to extract the IM4 Payload, for which we can also use <code>pyimg4</code>:</p>
 <pre tabindex="0"><code>pyimg4 img4 extract -i BaseSystemTrustCache.img4 -p BaseSystemTrustCache.im4p
 pyimg4 img4 extract -i StaticTrustCache.img4 -p StaticTrustCache.im4p
-</code></pre><p>Once we have the data extracted we can use the <a href="https://github.com/CRKatri/trustcache">trustcache</a> utility to work with the data.</p>
+</code></pre><p>Once we have the data extracted we can use the <a href="https://github.com/CRKatri/trustcache"  class="external-link" target="_blank" rel="noopener">trustcache</a> utility to work with the data.</p>
 <pre tabindex="0"><code>csaby@max /tmp % trustcache_macos_arm64 info OSLaunchPolicyData.data | head   
 version = 2
 uuid = CCC03EBE-7949-460E-A335-14C6396FC927
@@ -264,8 +350,14 @@ entry count = 13713
 /usr/bin/batch
 ...
 </code></pre><p>Based on the analysis we have done, this is all expected.</p>
-<h3 id="reversing-constraints">Reversing Constraints</h3>
-<p>While on macOS 13 we had 7 constraint categories on macOS Sonoma we have 18. As there was no public information on that I decided to reverse it, and currently it&rsquo;s documented on my GitHub Gist, <a href="https://gist.github.com/theevilbit/a6fef1e0397425a334d064f7b6e1be53">macOS Sonoma (14) Launch Constraints</a>. But how can we find and reverse the categories.</p>
+<h3 id="reversing-constraints">
+  Reversing Constraints
+  <a class="heading-link" href="#reversing-constraints">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>While on macOS 13 we had 7 constraint categories on macOS Sonoma we have 18. As there was no public information on that I decided to reverse it, and currently it&rsquo;s documented on my GitHub Gist, <a href="https://gist.github.com/theevilbit/a6fef1e0397425a334d064f7b6e1be53"  class="external-link" target="_blank" rel="noopener">macOS Sonoma (14) Launch Constraints</a>. But how can we find and reverse the categories.</p>
 <p>First, we need to access the <code>AppleMobileFileIntegrity</code> (AMFI) kernel extension, where this information sits. The easiest way is to download Apple&rsquo;s Kernel Development Kit (KDK), where we will have the binary of the <code>AppleMobileFileIntegrity</code> kernel extension. It defines many symbols starting with the prefix <code>kConstraintCategory</code>. They are sequentially followed by each other and based on the names we can find the category number and if it&rsquo;s Self or Parent type. Here is a list of the symbols from Sonoma Beta 1 (although they didn&rsquo;t appear to change in number).</p>
 <pre tabindex="0"><code>kConstraintCategory1_Self
 kConstraintCategory2_Self
@@ -296,7 +388,7 @@ kConstraintCategory16_Parent
 kConstraintCategory18_Parent
 </code></pre><p>We can dump all of them, and eventually we get a big blob of stream.</p>
 <pre tabindex="0"><code>7075020101B07030420C03246F72B03B30220C1D6F6E2D617574686F72697A65642D61757468617066732D766F6C756D650101FF30150C106F6E2D73797374656D2D766F6C756D650101FF30100C0B6C61756E63682D7479706502010130180C1376616C69646174696F6E2D63617465676F72790201017049020101B04430420C03246F72B03B30220C1D6F6E2D617574686F72697A65642D61757468617066732D766F6C756D650101FF30150C106F6E2D73797374656D2D766F6C756D650101FF708183020101B07E30420C03246F72B03B30220C1D6F6E2D617574686F72697A65642D61757468617066732D766F6C756D650101FF30150C106F6E2D73797374656D2D766F6C756D650101FF301E0C0B6C61756E63682D74797065B00F300D0C0324696E300602010002010130180C1376616C69646174696F6E2D63617465676F7279020101708183020101B07E30420C03246F72B03B30220C1D6F6E2D617574686F72697A65642D61757468617066732D766F6C756D650101FF30150C106F6E2D73797374656D2D766F6C756D650101FF301E0C0B6C61756E63682D74797065B00F300D0C0324696E300602010002010130180C1376616C69646174696F6E2D63617465676F7279020101701F020101B01A30180C1376616C69646174696F6E2D63617465676F72790201017081B2020101B081AC307E0C03246F72B07730230C1E696E2D74632D776974682D636F6E73747261696E742D63617465676F727901010030150C1069732D7369702D70726F7465637465640101FF30220C1D6F6E2D617574686F72697A65642D61757468617066732D766F6C756D650101FF30150C106F6E2D73797374656D2D766F6C756D650101FF30100C0B6C61756E63682D7479706502010130180C1376616C69646174696F6E2D63617465676F7279020101701F020101B01A30180C1376616C69646174696F6E2D63617465676F72790201017075020101B07030420C03246F72B03B30220C1D6F6E2D617574686F72697A65642D61757468617066732D766F6C756D650101FF30150C106F6E2D73797374656D2D766F6C756D650101FF30100C0B6C61756E63682D7479706502010230180C1376616C69646174696F6E2D63617465676F7279020101708199020101B0819330420C03246F72B03B30220C1D6F6E2D617574686F72697A65642D61757468617066732D766F6C756D650101FF30150C106F6E2D73797374656D2D766F6C756D650101FF30130C0E6170706C652D696E7465726E616C0101FF301E0C0B6C61756E63682D74797065B00F300D0C0324696E300602010002010230180C1376616C69646174696F6E2D63617465676F7279020101708183020101B07E30420C03246F72B03B30220C1D6F6E2D617574686F72697A65642D61757468617066732D766F6C756D650101FF30150C106F6E2D73797374656D2D766F6C756D650101FF301E0C0B6C61756E63682D74797065B00F300D0C0324696E300602010002010230180C1376616C69646174696F6E2D63617465676F7279020101708187020101B0818130420C03246F72B03B30220C1D6F6E2D617574686F72697A65642D61757468617066732D766F6C756D650101FF30150C106F6E2D73797374656D2D766F6C756D650101FF30210C0B6C61756E63682D74797065B01230100C0324696E300902010002010102010230180C1376616C69646174696F6E2D63617465676F7279020101703F020101B03A301E0C0B6C61756E63682D74797065B00F300D0C0324696E300602010002010230180C1376616C69646174696F6E2D63617465676F72790201017075020101B07030420C03246F72B03B30220C1D6F6E2D617574686F72697A65642D61757468617066732D766F6C756D650101FF30150C106F6E2D73797374656D2D766F6C756D650101FF30100C0B6C61756E63682D7479706502010330180C1376616C69646174696F6E2D63617465676F7279020101708183020101B07E30420C03246F72B03B30220C1D6F6E2D617574686F72697A65642D61757468617066732D766F6C756D650101FF30150C106F6E2D73797374656D2D766F6C756D650101FF301E0C0B6C61756E63682D74797065B00F300D0C0324696E300602010102010330180C1376616C69646174696F6E2D63617465676F72790201017031020101B02C30100C0B6C61756E63682D7479706502010330180C1376616C69646174696F6E2D63617465676F72790201017081B7020101B081B130819C0C03246F72B08194307D0C0424616E64B07530590C03246F72B05230150C1069732D7369702D70726F7465637465640101FF30220C1D6F6E2D617574686F72697A65642D61757468617066732D766F6C756D650101FF30150C106F6E2D73797374656D2D766F6C756D650101FF30180C1376616C69646174696F6E2D63617465676F727902010130130C0E6170706C652D696E7465726E616C0101FF30100C0B6C61756E63682D747970650201027078020101B07330420C03246F72B03B30220C1D6F6E2D617574686F72697A65642D61757468617066732D766F6C756D650101FF30150C106F6E2D73797374656D2D766F6C756D650101FF30130C0E646576656C6F7065722D6D6F64650101FF30180C1376616C69646174696F6E2D63617465676F7279020101708187020101B0818130420C03246F72B03B30220C1D6F6E2D617574686F72697A65642D61757468617066732D766F6C756D650101FF30150C106F6E2D73797374656D2D766F6C756D650101FF30210C0B6C61756E63682D74797065B01230100C0324696E300902010002010102010330180C1376616C69646174696F6E2D63617465676F72790201017018020101B01330110C0C69732D696E69742D70726F630101FF70818A020101B081843081810C03246F72B07A30650C0424616E64B05D30150C106F6E2D73797374656D2D766F6C756D650101FF302A0C127369676E696E672D6964656E7469666965720C14636F6D2E6170706C652E6D62666C6F6167656E7430180C1376616C69646174696F6E2D63617465676F727902010130110C0C69732D696E69742D70726F630101FF70818A020101B081843081810C03246F72B07A30650C0424616E64B05D30150C106F6E2D73797374656D2D766F6C756D650101FF302A0C127369676E696E672D6964656E7469666965720C14636F6D2E6170706C652E6D62666C6F6167656E7430180C1376616C69646174696F6E2D63617465676F727902010130110C0C69732D696E69742D70726F630101FF70819A020101B081943081910C03246F72B0818930740C0424616E64B06C30130C0E6170706C652D696E7465726E616C0101FF30550C0C656E7469746C656D656E7473B04530430C062471756572793039302F0201010C2A636F6D2E6170706C652E707269766174652E7365742D6C61756E63682D747970652E696E7465726E616C300602010A02010130110C0C69732D696E69742D70726F630101FF7081B4020101B081AE30420C03246F72B03B30220C1D6F6E2D617574686F72697A65642D61757468617066732D766F6C756D650101FF30150C106F6E2D73797374656D2D766F6C756D650101FF304E0C127369676E696E672D6964656E746966696572B03830360C0324696E302F0C15636F6D2E6170706C652E737973646961676E6F73650C16636F6D2E6170706C652E737973646961676E6F73656430180C1376616C69646174696F6E2D63617465676F72790201017018020101B01330110C0C69732D696E69742D70726F630101FF7018020101B01330110C0C69732D696E69742D70726F630101FF7018020101B01330110C0C69732D696E69742D70726F630101FF7081A0020101B0819A3081970C03246F72B0818F30780C0424616E64B07030540C03246F72B04D30110C0C69732D696E69742D70726F630101FF30380C127369676E696E672D6964656E7469666965720C22636F6D2E6170706C652E436F72654465766963652E6474646562756770726F78796430180C1376616C69646174696F6E2D63617465676F727902010130130C0E6170706C652D696E7465726E616C0101FF
-</code></pre><p>This data is DER (ASN.1) encoded stream. There are plenty of tools that can decode DER encoded HEX stream into ASN.1 text representation. For example online: <a href="https://holtstrom.com/michael/tools/asn1decoder.php">ASN.1 Decoder</a> or the python-asn1 library and its <code>dump.py</code> script, <a href="https://github.com/andrivet/python-asn1/tree/master">andrivet/python-asn1</a>.</p>
+</code></pre><p>This data is DER (ASN.1) encoded stream. There are plenty of tools that can decode DER encoded HEX stream into ASN.1 text representation. For example online: <a href="https://holtstrom.com/michael/tools/asn1decoder.php"  class="external-link" target="_blank" rel="noopener">ASN.1 Decoder</a> or the python-asn1 library and its <code>dump.py</code> script, <a href="https://github.com/andrivet/python-asn1/tree/master"  class="external-link" target="_blank" rel="noopener">andrivet/python-asn1</a>.</p>
 <p>For example the following stream:</p>
 <pre tabindex="0"><code>7075020101B07030420C03246F72B03B30220C1D6F6E2D617574686F72697A65642D61757468617066732D766F6C756D650101FF30150C106F6E2D73797374656D2D766F6C756D650101FF30100C0B6C61756E63682D7479706502010130180C1376616C69646174696F6E2D63617465676F7279020101
 </code></pre><p>Translates to:</p>
@@ -320,7 +412,13 @@ kConstraintCategory18_Parent
       [U] INTEGER: 1
 </code></pre><p>And this can be reconstructed into:</p>
 <pre tabindex="0"><code>Self Constraint: (on-authorized-authapfs-volume || on-system-volume) &amp;&amp; launch-type == 1 &amp;&amp; validation-category == 1
-</code></pre><h3 id="attack-mitigation">Attack Mitigation</h3>
+</code></pre><h3 id="attack-mitigation">
+  Attack Mitigation
+  <a class="heading-link" href="#attack-mitigation">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>Now that we understand Launch Constraints let&rsquo;s explore why they mitigate the exploits discussed before.</p>
 <p>Both the TCC bypass with <code>imagent.app</code> and TCC bypass using <code>Directory Utility.app</code> (CVE-2020-27937) are mitigated by having the <code>(on-authorized-authapfs-volume || on-system-volume)</code> requirement in the executable&rsquo;s self constraint, which means that if we make a copy of these apps, we won&rsquo;t be able to execute them. This essentially prevents us to load any plugin into these apps.</p>
 <p>&ldquo;TCC bypass using configd&rdquo; is mitigated by having the <code>Parent Constraint: is-init-proc</code> in <code>configd</code>&rsquo;s requirement. This means that we won&rsquo;t be able to run it from the command line, and load an arbitrary bundle.</p>
@@ -328,19 +426,31 @@ kConstraintCategory18_Parent
 <blockquote>
 <p>Although unrelated but the trust cache helps to mitigate common downgrade attacks, when someone used an old and vulnerable binary from an old macOS version on a newer one. As the old one was still properly signed and entitled, it could be used to execute attacks again.</p>
 </blockquote>
-<h2 id="old-3rd-party-vulnerabilities">Old 3rd party Vulnerabilities</h2>
+<h2 id="old-3rd-party-vulnerabilities">
+  Old 3rd party Vulnerabilities
+  <a class="heading-link" href="#old-3rd-party-vulnerabilities">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>Now let&rsquo;s review some common attacks involving third party software. There are two big groups nowadays, one is exploiting XPC services and the other is injecting code into Electron based applications to bypass TCC.</p>
-<h3 id="xpc-attacks">XPC Attacks</h3>
+<h3 id="xpc-attacks">
+  XPC Attacks
+  <a class="heading-link" href="#xpc-attacks">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>One of the main issue with XPC connections is that by default anyone can talk to them if not sandboxed. As often times there are third party XPC services running as root on the system (they typically come in the form of Privileged Helper Tools) they are often abused.</p>
 <p>Both myself and Wojcieh Regula talked and wrote about such attacks in the past, we both have a series of blogposts about the subject:</p>
-<p><a href="https://theevilbit.github.io/posts/secure_coding_xpc_part1/">CVE-2019-20057 - Secure coding XPC services - Part 1 - Why EvenBetterAuthorization is not enough?</a></p>
-<p><a href="https://theevilbit.github.io/posts/secure_coding_xpc_part2/">Secure coding XPC Services - Part 2 - Checking CS (CodeSigning) flags of the client</a></p>
-<p><a href="https://theevilbit.github.io/posts/secure_coding_xpc_part3/">CVE-2020-0984 - Secure coding XPC Services - Part 3 - Incorrect client verification</a></p>
-<p><a href="https://theevilbit.github.io/posts/secure_coding_xpc_part4/">CVE-2020-14978 - Secure coding XPC Services - Part 4 - Improved client authorization</a></p>
-<p><a href="https://theevilbit.github.io/posts/secure_coding_xpc_part5/">CVE-2020-14977 - Secure coding XPC Services - Part 5 - PID reuse attacks</a></p>
-<p><a href="https://wojciechregula.blog/post/learn-xpc-exploitation-part-1-broken-cryptography/">Learn XPC exploitation - Part 1: Broken cryptography</a></p>
-<p><a href="https://wojciechregula.blog/post/learn-xpc-exploitation-part-2-say-no-to-the-pid/">Learn XPC exploitation - Part 2: Say no to the PID!</a></p>
-<p><a href="https://wojciechregula.blog/post/learn-xpc-exploitation-part-3-code-injections/">Learn XPC exploitation - Part 3: Code injections</a></p>
+<p><a href="https://theevilbit.github.io/posts/secure_coding_xpc_part1/"  class="external-link" target="_blank" rel="noopener">CVE-2019-20057 - Secure coding XPC services - Part 1 - Why EvenBetterAuthorization is not enough?</a></p>
+<p><a href="https://theevilbit.github.io/posts/secure_coding_xpc_part2/"  class="external-link" target="_blank" rel="noopener">Secure coding XPC Services - Part 2 - Checking CS (CodeSigning) flags of the client</a></p>
+<p><a href="https://theevilbit.github.io/posts/secure_coding_xpc_part3/"  class="external-link" target="_blank" rel="noopener">CVE-2020-0984 - Secure coding XPC Services - Part 3 - Incorrect client verification</a></p>
+<p><a href="https://theevilbit.github.io/posts/secure_coding_xpc_part4/"  class="external-link" target="_blank" rel="noopener">CVE-2020-14978 - Secure coding XPC Services - Part 4 - Improved client authorization</a></p>
+<p><a href="https://theevilbit.github.io/posts/secure_coding_xpc_part5/"  class="external-link" target="_blank" rel="noopener">CVE-2020-14977 - Secure coding XPC Services - Part 5 - PID reuse attacks</a></p>
+<p><a href="https://wojciechregula.blog/post/learn-xpc-exploitation-part-1-broken-cryptography/"  class="external-link" target="_blank" rel="noopener">Learn XPC exploitation - Part 1: Broken cryptography</a></p>
+<p><a href="https://wojciechregula.blog/post/learn-xpc-exploitation-part-2-say-no-to-the-pid/"  class="external-link" target="_blank" rel="noopener">Learn XPC exploitation - Part 2: Say no to the PID!</a></p>
+<p><a href="https://wojciechregula.blog/post/learn-xpc-exploitation-part-3-code-injections/"  class="external-link" target="_blank" rel="noopener">Learn XPC exploitation - Part 3: Code injections</a></p>
 <p>The main issue is that the XPC service must ensure that only the real XPC client can connect to it, otherwise others can abuse the service. Often time this is missed, as it&rsquo;s not trivial to do. Typically all of the following must be ensured:</p>
 <ol>
 <li>Code signing verification of the client must happen based on the Audit token</li>
@@ -348,27 +458,51 @@ kConstraintCategory18_Parent
 <li>To avoid downgrade attacks the client&rsquo;s version must be checked</li>
 <li>To avoid injection it must be verified that the client doesn&rsquo;t posses any insecure entitlements, like <code>disable-library-valdation</code>.</li>
 </ol>
-<h3 id="electron-attacks">Electron attacks</h3>
+<h3 id="electron-attacks">
+  Electron attacks
+  <a class="heading-link" href="#electron-attacks">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>The Electron framework became very popular as it allows developers to develop to multiple platforms at once, and all the source is HTML and JavaScript based, basically creating a web application as a thick client.</p>
 <p>Many people wrote about such attack, here are two posts from Wojciech Regula and Adam Chester.</p>
-<p><a href="https://wojciechregula.blog/post/abusing-electron-apps-to-bypass-macos-security-controls/">Abusing Electron apps to bypass macOS&rsquo; security controls</a></p>
-<p><a href="https://blog.xpnsec.com/macos-injection-via-third-party-frameworks/">MacOS Injection via Third Party Frameworks</a></p>
+<p><a href="https://wojciechregula.blog/post/abusing-electron-apps-to-bypass-macos-security-controls/"  class="external-link" target="_blank" rel="noopener">Abusing Electron apps to bypass macOS&rsquo; security controls</a></p>
+<p><a href="https://blog.xpnsec.com/macos-injection-via-third-party-frameworks/"  class="external-link" target="_blank" rel="noopener">MacOS Injection via Third Party Frameworks</a></p>
 <p>The basic idea is that using environment variables like <code>ELECTRON_RUN_AS_NODE</code> allows someone to interact with the application from the command line and run any JS code on behalf of the app, or using the <code>--remote-debugging-port</code> or the <code>--inspect</code> options someone can connect a debugger and again inject custom code.</p>
 <p>This is often used to bypass TCC controls, as such apps often have camera, screen capture or similar exceptions.</p>
-<h2 id="launch-and-environment-constraints">Launch and Environment Constraints</h2>
-<p>With macOS Sonoma (or in fact at later versions of macOS Ventura) Apple introduced Launch Environment Constraints for third party apps. This means that now anyone can create self, parent and responsible constraints for their apps. Moreover we can also define a &ldquo;Library Load Constraint&rdquo;, which allows us defining developers IDs from which our app can load external libraries or bundles. Apple made very good documentation about how to use it, which can be found on their developer website, at <a href="https://developer.apple.com/documentation/security/applying_launch_environment_and_library_constraints?language=objc">Applying launch environment and library constraints</a> and <a href="https://developer.apple.com/documentation/security/defining_launch_environment_and_library_constraints?language=objc">Defining launch environment and library constraints</a>.</p>
+<h2 id="launch-and-environment-constraints">
+  Launch and Environment Constraints
+  <a class="heading-link" href="#launch-and-environment-constraints">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>With macOS Sonoma (or in fact at later versions of macOS Ventura) Apple introduced Launch Environment Constraints for third party apps. This means that now anyone can create self, parent and responsible constraints for their apps. Moreover we can also define a &ldquo;Library Load Constraint&rdquo;, which allows us defining developers IDs from which our app can load external libraries or bundles. Apple made very good documentation about how to use it, which can be found on their developer website, at <a href="https://developer.apple.com/documentation/security/applying_launch_environment_and_library_constraints?language=objc"  class="external-link" target="_blank" rel="noopener">Applying launch environment and library constraints</a> and <a href="https://developer.apple.com/documentation/security/defining_launch_environment_and_library_constraints?language=objc"  class="external-link" target="_blank" rel="noopener">Defining launch environment and library constraints</a>.</p>
 <p>Applying it is rather simple. We make a new &ldquo;coderequirement&rdquo; property list file in our Xcode project for our target, and in the &ldquo;Build Settings&rdquo;, under &ldquo;Signing&rdquo;, we can apply it.</p>
 <p><img src="https://theevilbit.github.io/images/posts/launch_constraints_deep_dive_00.png" alt="Xcode"></p>
 <p>Now let&rsquo;s explore how these constraints (supposed to) mitigate our exploits.</p>
-<h3 id="securing-xpc-connection">Securing XPC Connection</h3>
-<p>In Apple&rsquo;s <a href="https://developer.apple.com/videos/play/wwdc2023/10266/?time=326">Protect your Mac app with environment constraints</a> WWDC 2023 talk Robert says the following:</p>
+<h3 id="securing-xpc-connection">
+  Securing XPC Connection
+  <a class="heading-link" href="#securing-xpc-connection">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>In Apple&rsquo;s <a href="https://developer.apple.com/videos/play/wwdc2023/10266/?time=326"  class="external-link" target="_blank" rel="noopener">Protect your Mac app with environment constraints</a> WWDC 2023 talk Robert says the following:</p>
 <blockquote>
 <p>Now let&rsquo;s walk through some process relationships and talk about how you can use launch constraints to secure them. First assume that MyDemo.app is your app. You can set a self constraint on my MyDemo.app to require that it launch as an application from Launch Services. When your app requests a connection to your XPC service, launchd spawns the XPC service and is the parent of that XPC service but your app is &ldquo;responsible&rdquo; for that XPC service. You could set a responsible process constraint on MyXPCDemo.xpc to indicate that only MyDemo.app should be responsible for it.</p>
 </blockquote>
 <p>This suggests that if you set your main app as the responsible for launching the XPC service makes the service secure. This is only partially true. You won&rsquo;t be able to launch the XPC service in your attacker code, but if it&rsquo;s active already (maybe because it was invoked by the original app), there is nothing preventing you from connecting to it. So while setting the constraint is a good idea, and will limit the attack timeframe, it doesn&rsquo;t solve the main issue, and your XPC service should still properly validate the connecting client. We are back to square 1.</p>
 <p>There is another problem. As of the time of this writing (Sonoma release) there is a bug in the system, as the responsible process for the XPC service is the XPC service itself instead of the connecting client. (Submitted bug: FB13206884)</p>
-<h3 id="securing-electron-applications">Securing Electron Applications</h3>
-<p>In Apple&rsquo;s <a href="https://developer.apple.com/videos/play/wwdc2023/10266/?time=326">Protect your Mac app with environment constraints</a> WWDC 2023 talk Robert says the following:</p>
+<h3 id="securing-electron-applications">
+  Securing Electron Applications
+  <a class="heading-link" href="#securing-electron-applications">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>In Apple&rsquo;s <a href="https://developer.apple.com/videos/play/wwdc2023/10266/?time=326"  class="external-link" target="_blank" rel="noopener">Protect your Mac app with environment constraints</a> WWDC 2023 talk Robert says the following:</p>
 <blockquote>
 <p>Just like in real parent-child relationships, parent processes have a huge amount of influence over how a child behaves. On macOS, the power to posix_spawn another process gives the parent the ability to control nearly all input to the child. The parent process can also limit the child’s access to system resources. This level of control can cause the child to load unexpected code, to run unexpected features, or to behave in ways that make the process more vulnerable to attack.</p>
 </blockquote>
@@ -381,23 +515,40 @@ kConstraintCategory18_Parent
 </span></span><span style="display:flex;"><span>                               <span style="color:#99f">configuration</span>:conf
 </span></span><span style="display:flex;"><span>                               <span style="color:#99f">completionHandler</span>:<span style="color:#366">nil</span>];
 </span></span></code></pre></div><p>Although it&rsquo;s not the same as <code>posix_spawn</code> and it&rsquo;s somewhat more limited, we can still control crucial parts (arguments and environmental variables) of the application. So our Electron app issue is not quite solved yet.</p>
-<h3 id="apples-example">Apple&rsquo;s Example</h3>
+<h3 id="apples-example">
+  Apple&rsquo;s Example
+  <a class="heading-link" href="#apples-example">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>In the previously mentioned talk Apple shows an example of a helper tool, which is invoked from the command line, and that it&rsquo;s effectively limited to be launched by the main app only. I think the example is really not right, for two reasons:</p>
 <ol>
 <li>Such tools rarely exists, as Apple suggests to implement such thing in XPC service. If it was an application only XPC service, the whole launch constraint wouldn&rsquo;t be needed at all.</li>
 <li>In the past such helpers had the SUID bit set, but again that is a very bad practice and for that people should also use XPC daemons.</li>
 </ol>
 <p>Thus, I think the example we saw is just not realistic.</p>
-<h2 id="final-thoughts">Final thoughts</h2>
+<h2 id="final-thoughts">
+  Final thoughts
+  <a class="heading-link" href="#final-thoughts">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>Launch Constraints introduced in macOS Ventura effectively mitigate many logic attacks that were found before, and makes the attacker&rsquo;s life much harder. I think that it was a huge thing and a very good engineering and design success.</p>
 <p>Launch Constraints for third party apps, while useful, and do limit the attack surface, it doesn&rsquo;t solve it completely and provides a false sense of security. There are still ways around it, and attackers will still be able to exploit logic vulnerabilities, but in somewhat more limited fashion. It&rsquo;s a step in a good direction, but we are not there yet. It&rsquo;s a good idea to start implementing this, as it will be more common, and will become more relevant as time goes on. I hope that Apple will tune and add further restrictions to the constraints available for third parties.</p>
 
       </div>
 
+
       <footer>
         
 
 
+        
+        
+        
+        
         
       </footer>
     </article>
@@ -405,23 +556,36 @@ kConstraintCategory18_Parent
     
   </section>
 
-      </div>
+    </div>
 
-      <footer class="footer">
+    <footer class="footer">
   <section class="container">
+    ©
     
-     © 2023
+    2023
+     Csaba Fitzl 
+    ·
     
-       · 
-      Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.
-    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
     
   </section>
 </footer>
 
-    </main>
+  </main>
 
-    
+  
+
+  
+  
+  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -435,6 +599,31 @@ if (!doNotTrack) {
 }
 </script>
 
-  </body>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
 
 </html>

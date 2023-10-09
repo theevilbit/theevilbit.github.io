@@ -1,144 +1,196 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+  <title>
+  A simple protection against HMValidateHandle technique · theevilbit blog
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 
-    <meta name="author" content="Csaba Fitzl">
-    
-    
 
-    <meta name="twitter:card" content="summary"/>
+
+
+<meta name="author" content="Csaba Fitzl">
+<meta name="description" content="In the recent days I was reading technical analysis of win32k exploits from recent years, and it caught my eyes, that the HMValidateHandle technique is very heavily used almost everywhere. Then I had an idea how to protect against this family of exploits, which I think is very simple. This post will be about that.
+What is HMValidateHandle? Link to heading HMValidateHandle is an internal, unexported function of user32.dll. It takes a handle and a handle type as arguments, and by looking up the handle table, if the handle is matching with the type it will copy the object to user memory.">
+<meta name="keywords" content="">
+
+<meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="A simple protection against HMValidateHandle technique"/>
 <meta name="twitter:description" content="In the recent days I was reading technical analysis of win32k exploits from recent years, and it caught my eyes, that the HMValidateHandle technique is very heavily used almost everywhere. Then I had an idea how to protect against this family of exploits, which I think is very simple. This post will be about that.
-What is HMValidateHandle? HMValidateHandle is an internal, unexported function of user32.dll. It takes a handle and a handle type as arguments, and by looking up the handle table, if the handle is matching with the type it will copy the object to user memory."/>
+What is HMValidateHandle? Link to heading HMValidateHandle is an internal, unexported function of user32.dll. It takes a handle and a handle type as arguments, and by looking up the handle table, if the handle is matching with the type it will copy the object to user memory."/>
 
-    <meta property="og:title" content="A simple protection against HMValidateHandle technique" />
+<meta property="og:title" content="A simple protection against HMValidateHandle technique" />
 <meta property="og:description" content="In the recent days I was reading technical analysis of win32k exploits from recent years, and it caught my eyes, that the HMValidateHandle technique is very heavily used almost everywhere. Then I had an idea how to protect against this family of exploits, which I think is very simple. This post will be about that.
-What is HMValidateHandle? HMValidateHandle is an internal, unexported function of user32.dll. It takes a handle and a handle type as arguments, and by looking up the handle table, if the handle is matching with the type it will copy the object to user memory." />
+What is HMValidateHandle? Link to heading HMValidateHandle is an internal, unexported function of user32.dll. It takes a handle and a handle type as arguments, and by looking up the handle table, if the handle is matching with the type it will copy the object to user memory." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/a_simple_protection_against_hmvalidatehandle_technique/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2019-07-31T00:00:00+00:00" />
 <meta property="article:modified_time" content="2019-07-31T00:00:00+00:00" />
 
 
-    
-      <base href="https://theevilbit.github.io/posts/a_simple_protection_against_hmvalidatehandle_technique/">
-    
-    <title>
-  A simple protection against HMValidateHandle technique · theevilbit blog
-</title>
 
-    
-      <link rel="canonical" href="https://theevilbit.github.io/posts/a_simple_protection_against_hmvalidatehandle_technique/">
-    
 
-    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+<link rel="canonical" href="https://theevilbit.github.io/posts/a_simple_protection_against_hmvalidatehandle_technique/">
 
-    
-      
-      
-      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
-    
 
-    
+<link rel="preload" href="https://theevilbit.github.io/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
 
-    
 
-    
+  
+  
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.135e22c97ff685fe983fc60048e309ced8f00d8d38f536aa67dba8a13a03dfa4.css" integrity="sha256-E14iyX/2hf6YP8YASOMJztjwDY049TaqZ9uooToD36Q=" crossorigin="anonymous" media="screen" />
 
-    
-    
-    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.119.0">
-  </head>
 
-  <body class=" ">
-    <main class="wrapper">
-      <nav class="navigation">
+
+
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+
+<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
+<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+<body class="preload-transitions colorscheme-light">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
   <section class="container">
     <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
-    <input type="checkbox" id="menu-toggle" />
-    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
-    <ul class="navigation-list">
-      
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
-          </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+            </li>
+          
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
-          </li>
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
-          </li>
-        
-      
-      
-    </ul>
+      </ul>
+    
   </section>
 </nav>
 
 
-      <div class="content">
-        
+    <div class="content">
+      
   <section class="container post">
     <article>
       <header>
         <div class="post-title">
-          <h1 class="title">A simple protection against HMValidateHandle technique</h1>
+          <h1 class="title">
+            <a class="title-link" href="https://theevilbit.github.io/posts/a_simple_protection_against_hmvalidatehandle_technique/">
+              A simple protection against HMValidateHandle technique
+            </a>
+          </h1>
         </div>
         <div class="post-meta">
           <div class="date">
             <span class="posted-on">
-              <i class="fas fa-calendar"></i>
-              <time datetime='2019-07-31T00:00:00Z'>
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="2019-07-31T00:00:00Z">
                 July 31, 2019
               </time>
             </span>
             <span class="reading-time">
-              <i class="fas fa-clock"></i>
-              8 minutes read
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              8-minute read
             </span>
           </div>
+          
           <div class="categories">
-  <i class="fas fa-folder"></i>
+  <i class="fa fa-folder" aria-hidden="true"></i>
     <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
 
           <div class="tags">
-  <i class="fas fa-tag"></i>
-    <a href="https://theevilbit.github.io/tags/kernel-exploitation/">kernel exploitation</a></div>
+  <i class="fa fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/kernel-exploitation/">kernel exploitation</a>
+    </span></div>
 
         </div>
       </header>
 
-      <div>
+      <div class="post-content">
+        
         <p>In the recent days I was reading technical analysis of win32k exploits from recent years, and it caught my eyes, that the HMValidateHandle technique is very heavily used almost everywhere. Then I had an idea how to protect against this family of exploits, which I think is very simple. This post will be about that.</p>
-<h2 id="what-is-hmvalidatehandle">What is HMValidateHandle?</h2>
-<p>HMValidateHandle is an internal, unexported function of <code>user32.dll</code>. It takes a handle and a handle type as arguments, and by looking up the handle table, if the handle is matching with the type it will copy the object to user memory. If the object contains a pointer to itself, like <code>tagWND</code> it can be used to leak memory addresses from the kernel. This has been a known technique for very long time, I think the first mention of this was in Tarjei Mandt’s 2011 BlackHat US talk, you can find the PDF here: <a href="https://media.blackhat.com/bh-us-11/Mandt/BH_US_11_Mandt_win32k_WP.pdf">https://media.blackhat.com/bh-us-11/Mandt/BH_US_11_Mandt_win32k_WP.pdf</a>
+<h2 id="what-is-hmvalidatehandle">
+  What is HMValidateHandle?
+  <a class="heading-link" href="#what-is-hmvalidatehandle">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>HMValidateHandle is an internal, unexported function of <code>user32.dll</code>. It takes a handle and a handle type as arguments, and by looking up the handle table, if the handle is matching with the type it will copy the object to user memory. If the object contains a pointer to itself, like <code>tagWND</code> it can be used to leak memory addresses from the kernel. This has been a known technique for very long time, I think the first mention of this was in Tarjei Mandt’s 2011 BlackHat US talk, you can find the PDF here: <a href="https://media.blackhat.com/bh-us-11/Mandt/BH_US_11_Mandt_win32k_WP.pdf"  class="external-link" target="_blank" rel="noopener">https://media.blackhat.com/bh-us-11/Mandt/BH_US_11_Mandt_win32k_WP.pdf</a>
 There are awful lot of documentation about this, and it was widely abused in many-many Windows kernel exploits, as you could reliably leak kernel object addresses, especially useful for kernel pool spraying. Thus Microsoft decided to finally close this, and so this technique doesn’t work beyond Windows 10 RS4.</p>
-<h3 id="getting-the-address-of-hmvalidatehandle">Getting the address of HMValidateHandle</h3>
+<h3 id="getting-the-address-of-hmvalidatehandle">
+  Getting the address of HMValidateHandle
+  <a class="heading-link" href="#getting-the-address-of-hmvalidatehandle">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>Conceptually it’s very simple. This function is frequently called from inside <code>user32.dll</code> so we just need to parse through it, and grab / calculate its address. The most common technique is locating the <code>IsMenu</code> function in <code>user32.dll</code>:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>HMODULE hUser32 <span style="color:#555">=</span> <span style="color:#c0f">LoadLibraryA</span>(<span style="color:#c30">&#34;user32.dll&#34;</span>);
 </span></span><span style="display:flex;"><span>BYTE<span style="color:#555">*</span> pIsMenu <span style="color:#555">=</span> (BYTE <span style="color:#555">*</span>)<span style="color:#c0f">GetProcAddress</span>(hUser32, <span style="color:#c30">&#34;IsMenu&#34;</span>);
@@ -156,7 +208,7 @@ There are awful lot of documentation about this, and it was widely abused in man
 </span></span><span style="display:flex;"><span>	<span style="color:#09f;font-style:italic">//The +11 is to skip the padding bytes as on Windows 10 these aren&#39;t nops
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>	pHmValidateHandle <span style="color:#555">=</span> (lHMValidateHandle)((ULONG_PTR)hUser32 <span style="color:#555">+</span> offset <span style="color:#555">+</span> <span style="color:#f60">11</span>);
 </span></span></code></pre></div><p>The most well known implementation (from where the above code is also taken) can be found here:
-<a href="https://github.com/sam-b/windows_kernel_address_leaks/tree/master/HMValidateHandle">windows_kernel_address_leaks/HMValidateHandle at master · sam-b/windows_kernel_address_leaks · GitHub</a></p>
+<a href="https://github.com/sam-b/windows_kernel_address_leaks/tree/master/HMValidateHandle"  class="external-link" target="_blank" rel="noopener">windows_kernel_address_leaks/HMValidateHandle at master · sam-b/windows_kernel_address_leaks · GitHub</a></p>
 <p>Here is how <code>IsMenu</code> function looks like in the latest Windows 10 version:
 <img src="https://theevilbit.github.io/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.05.04.png" alt="image"></p>
 <p>Simple enough? Likely this is why this was chosen. However you could chose many other functions, as you can see below.
@@ -170,14 +222,32 @@ There are awful lot of documentation about this, and it was widely abused in man
 </span></span></code></pre></div><p>and maybe the offset calculation at the end because of some nops, but otherwise easy-peasy.</p>
 <p>In older versions of Windows it was a bit less used, but still pretty good, this one is from Windows 7 x86:
 <img src="https://theevilbit.github.io/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.23.05.png" alt="image"></p>
-<h2 id="protecting-against-the-technique">Protecting against the technique</h2>
+<h2 id="protecting-against-the-technique">
+  Protecting against the technique
+  <a class="heading-link" href="#protecting-against-the-technique">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>Although with Windows 10 RS4 the problem is gone, there are still a big amount of machines out there, which are affected. The idea is very simple. Under normal circumstances <code>HMValidateHandle</code> will be only called from inside <code>user32.dll</code>. If we hook this function in user mode, and then check the call stack, we can easily spot if the call is a valid call, or an exploit abusing it with directly calling it from outside <code>user32.dll</code>. Most AV vendors implement user mode hooks as you can’t hook everything in kernel mode (like this), so adding one more, really shouldn’t be that difficult and it would significantly increase protection against such exploits.</p>
 <p>I personally never implemented hooking in Windows, so wanted to experiment with this and see if my idea works or not. I saw earlier that some AV products use Microsoft’s Detours, so I thought that will be good for me as well.</p>
-<h3 id="detours-installation">Detours installation</h3>
-<p>You can get the Microsoft Detours source code from here: <a href="https://github.com/microsoft/Detours/releases">Releases · microsoft/Detours · GitHub</a>. Once downloaded, open a VS Developer Command Prompt, and type:
+<h3 id="detours-installation">
+  Detours installation
+  <a class="heading-link" href="#detours-installation">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>You can get the Microsoft Detours source code from here: <a href="https://github.com/microsoft/Detours/releases"  class="external-link" target="_blank" rel="noopener">Releases · microsoft/Detours · GitHub</a>. Once downloaded, open a VS Developer Command Prompt, and type:
 <code>nmake</code>
 This will build all the examples, create the <code>lib</code> files, etc… Now repeat the same with the x86 / x64 version of the Developer Command Prompt, in case you need both versions. Place the include and lib files to the location of your choice.</p>
-<h3 id="integrate-with-visual-studio">Integrate with Visual Studio</h3>
+<h3 id="integrate-with-visual-studio">
+  Integrate with Visual Studio
+  <a class="heading-link" href="#integrate-with-visual-studio">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>In you C / C++ code you need to include the header:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;detours.h&gt;</span><span style="color:#099">
 </span></span></span></code></pre></div><p>In the <code>Project -&gt; C/C++ -&gt; General -&gt; Additional Include Directories</code> add the folder where the header files present.
@@ -185,8 +255,14 @@ This will build all the examples, create the <code>lib</code> files, etc… Now 
 <p>And under <code>Project -&gt; Linker -&gt; General -&gt; Additional Library Directories</code> add the folder where the compiled lib files present.
 <img src="https://theevilbit.github.io/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.25.08.png" alt="image"></p>
 <p>That’s all you need.</p>
-<h3 id="using-detours">Using Detours</h3>
-<p>It is super easy. I’m not a coder at all, but it was easy even for me. Essentially you can take this example from the official WiKi page: <a href="https://github.com/Microsoft/Detours/wiki/Using-Detours">Using Detours · microsoft/Detours Wiki · GitHub</a> and change it. This is what I did.
+<h3 id="using-detours">
+  Using Detours
+  <a class="heading-link" href="#using-detours">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>It is super easy. I’m not a coder at all, but it was easy even for me. Essentially you can take this example from the official WiKi page: <a href="https://github.com/Microsoft/Detours/wiki/Using-Detours"  class="external-link" target="_blank" rel="noopener">Using Detours · microsoft/Detours Wiki · GitHub</a> and change it. This is what I did.
 This is how you hook:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#c0f">DetourRestoreAfterWith</span>();
 </span></span><span style="display:flex;"><span><span style="color:#c0f">DetourTransactionBegin</span>();
@@ -199,8 +275,14 @@ This is how you hook:</p>
 </span></span><span style="display:flex;"><span><span style="color:#c0f">DetourDetach</span>(<span style="color:#555">&amp;</span>(PVOID<span style="color:#555">&amp;</span>)pHmValidateHandle, ProtectHMValidateHandle);
 </span></span><span style="display:flex;"><span><span style="color:#c0f">DetourTransactionCommit</span>();
 </span></span></code></pre></div><p><code>pHmValidateHandle</code> contains the address of the original function you want to hook and <code>ProtectHMValidateHandle</code> is my function which is implementing the alternate functionality.</p>
-<h3 id="implementing-the-protection">Implementing the protection</h3>
-<p>Again the basic idea is to verify if the call is coming from <code>user32.dll</code> vs. somewhere else. For this we need to verify the call stack. First I was afraid that I will need to do some assembly magic for that, but luckily Windows has an API to retrieve items from the stack, and the function is: <code>CaptureStackBackTrace</code>, MSDN: <a href="https://docs.microsoft.com/en-us/windows/win32/debug/capturestackbacktrace">CaptureStackBackTrace function - Windows applications | Microsoft Docs</a>. It looks like this:</p>
+<h3 id="implementing-the-protection">
+  Implementing the protection
+  <a class="heading-link" href="#implementing-the-protection">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>Again the basic idea is to verify if the call is coming from <code>user32.dll</code> vs. somewhere else. For this we need to verify the call stack. First I was afraid that I will need to do some assembly magic for that, but luckily Windows has an API to retrieve items from the stack, and the function is: <code>CaptureStackBackTrace</code>, MSDN: <a href="https://docs.microsoft.com/en-us/windows/win32/debug/capturestackbacktrace"  class="external-link" target="_blank" rel="noopener">CaptureStackBackTrace function - Windows applications | Microsoft Docs</a>. It looks like this:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>USHORT WINAPI <span style="color:#c0f">CaptureStackBackTrace</span>(
 </span></span><span style="display:flex;"><span>  _In_      ULONG  FramesToSkip,
 </span></span><span style="display:flex;"><span>  _In_      ULONG  FramesToCapture,
@@ -255,12 +337,18 @@ This is how you hook:</p>
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>	<span style="color:#069;font-weight:bold">return</span> <span style="color:#c0f">pHmValidateHandle</span>(h, type);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>If I see an exploit attempt, I simply quit the process. I put the entire code to GitHub under my <code>kex</code> library:
-<a href="https://github.com/theevilbit/kex/tree/master/HookHMVH">kex/HookHMVH at master · theevilbit/kex · GitHub</a></p>
+<a href="https://github.com/theevilbit/kex/tree/master/HookHMVH"  class="external-link" target="_blank" rel="noopener">kex/HookHMVH at master · theevilbit/kex · GitHub</a></p>
 <p>I also put there a tester code, which is mainly this, with a few changes:
-<a href="https://github.com/sam-b/windows_kernel_address_leaks/blob/master/HMValidateHandle/HMValidateHandle/HMValidateHandle.cpp">windows_kernel_address_leaks/HMValidateHandle.cpp at master · sam-b/windows_kernel_address_leaks · GitHub</a></p>
-<h3 id="testing">Testing</h3>
+<a href="https://github.com/sam-b/windows_kernel_address_leaks/blob/master/HMValidateHandle/HMValidateHandle/HMValidateHandle.cpp"  class="external-link" target="_blank" rel="noopener">windows_kernel_address_leaks/HMValidateHandle.cpp at master · sam-b/windows_kernel_address_leaks · GitHub</a></p>
+<h3 id="testing">
+  Testing
+  <a class="heading-link" href="#testing">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>To test it with a real world exploit, not just a test app I picked up a recent exploit for <code>CVE-2019-1132</code> which can be downloaded from here:
-<a href="https://github.com/Vlad-tri/CVE-2019-1132">GitHub - Vlad-tri/CVE-2019-1132: EoP POC for CVE-2019-1132</a>
+<a href="https://github.com/Vlad-tri/CVE-2019-1132"  class="external-link" target="_blank" rel="noopener">GitHub - Vlad-tri/CVE-2019-1132: EoP POC for CVE-2019-1132</a>
 To simulate the hook of an AV vendor I put a line to the beginning of the exploit, to load my DLL:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#c0f">LoadLibraryA</span>(<span style="color:#c30">&#34;HookHMVH.dll&#34;</span>);
 </span></span></code></pre></div><p>and compiled it again with that.
@@ -270,26 +358,49 @@ The normal version worked as expected:
 <img src="https://theevilbit.github.io/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.55.54.png" alt="image"></p>
 <p><code>(…)</code></p>
 <p><img src="https://theevilbit.github.io/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.56.06.png" alt="image"></p>
-<h3 id="hook-every-process">Hook every process</h3>
+<h3 id="hook-every-process">
+  Hook every process
+  <a class="heading-link" href="#hook-every-process">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>It was outside of my attempt to universal hook every process in the system, you will likely need a kernel driver for that. <code>AppInit_DLLs</code> won’t work here, because it’s being loaded when <code>DLL_PROCESS_ATTACH</code> is hit in <code>user32.dll</code>, so that DLL is not loaded yet, in fact you can rely only on <code>ntdll.dll</code> and <code>kernel32.dll</code> at that stage.</p>
-<h3 id="conclusion-of-the-protection">Conclusion of the protection</h3>
+<h3 id="conclusion-of-the-protection">
+  Conclusion of the protection
+  <a class="heading-link" href="#conclusion-of-the-protection">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>Although I didn’t test it extensively if it creates false positives or not - although if yes I would take a look at that binary - I’m pretty confident that it should work universally. It will handle all cases, no matter from where you get <code>HMValidateHandle</code>’s address.
 Not sure if any exploit protection products are using this trick, but it should be pretty easy.</p>
-<h2 id="note---update-20190801">Note - UPDATE 2019.08.01.</h2>
+<h2 id="note---update-20190801">
+  Note - UPDATE 2019.08.01.
+  <a class="heading-link" href="#note---update-20190801">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>As noted by others, I almost forget to mention one thing. Obviously you can bypass this protection if you mimic what the function does, and never call it. Essentially there is another well known technique for achieving the same, which is getting to the DesktopHeap where all these structures are stored and parse the heap. This method is beyond the scope of this post, but if you want to read about it, here are some awesome resources:</p>
-<p><a href="https://www.blackhat.com/docs/us-17/wednesday/us-17-Schenk-Taking-Windows-10-Kernel-Exploitation-To-The-Next-Level%E2%80%93Leveraging-Write-What-Where-Vulnerabilities-In-Creators-Update.pdf">https://www.blackhat.com/docs/us-17/wednesday/us-17-Schenk-Taking-Windows-10-Kernel-Exploitation-To-The-Next-Level%E2%80%93Leveraging-Write-What-Where-Vulnerabilities-In-Creators-Update.pdf
+<p><a href="https://www.blackhat.com/docs/us-17/wednesday/us-17-Schenk-Taking-Windows-10-Kernel-Exploitation-To-The-Next-Level%E2%80%93Leveraging-Write-What-Where-Vulnerabilities-In-Creators-Update.pdf"  class="external-link" target="_blank" rel="noopener">https://www.blackhat.com/docs/us-17/wednesday/us-17-Schenk-Taking-Windows-10-Kernel-Exploitation-To-The-Next-Level%E2%80%93Leveraging-Write-What-Where-Vulnerabilities-In-Creators-Update.pdf
 </a></p>
-<p><a href="https://www.fuzzysecurity.com/tutorials/expDev/22.html">FuzzySecurity | Windows ExploitDev: Part 18</a></p>
-<p><a href="https://www.offensive-security.com/vulndev/development-of-a-new-windows-10-kaslr-bypass-in-one-windbg-command/">https://www.offensive-security.com/vulndev/development-of-a-new-windows-10-kaslr-bypass-in-one-windbg-command/</a></p>
-<p><a href="https://twitter.com/blomster81/status/844544024224710656">https://twitter.com/blomster81/status/844544024224710656</a></p>
-<p><a href="https://github.com/sam-b/windows_kernel_address_leaks/tree/master/DesktopHeap">windows_kernel_address_leaks/DesktopHeap at master · sam-b/windows_kernel_address_leaks · GitHub</a></p>
+<p><a href="https://www.fuzzysecurity.com/tutorials/expDev/22.html"  class="external-link" target="_blank" rel="noopener">FuzzySecurity | Windows ExploitDev: Part 18</a></p>
+<p><a href="https://www.offensive-security.com/vulndev/development-of-a-new-windows-10-kaslr-bypass-in-one-windbg-command/"  class="external-link" target="_blank" rel="noopener">https://www.offensive-security.com/vulndev/development-of-a-new-windows-10-kaslr-bypass-in-one-windbg-command/</a></p>
+<p><a href="https://twitter.com/blomster81/status/844544024224710656"  class="external-link" target="_blank" rel="noopener">https://twitter.com/blomster81/status/844544024224710656</a></p>
+<p><a href="https://github.com/sam-b/windows_kernel_address_leaks/tree/master/DesktopHeap"  class="external-link" target="_blank" rel="noopener">windows_kernel_address_leaks/DesktopHeap at master · sam-b/windows_kernel_address_leaks · GitHub</a></p>
 
       </div>
+
 
       <footer>
         
 
 
+        
+        
+        
+        
         
       </footer>
     </article>
@@ -297,23 +408,36 @@ Not sure if any exploit protection products are using this trick, but it should 
     
   </section>
 
-      </div>
+    </div>
 
-      <footer class="footer">
+    <footer class="footer">
   <section class="container">
+    ©
     
-     © 2023
+    2023
+     Csaba Fitzl 
+    ·
     
-       · 
-      Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.
-    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
     
   </section>
 </footer>
 
-    </main>
+  </main>
 
-    
+  
+
+  
+  
+  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -327,6 +451,31 @@ if (!doNotTrack) {
 }
 </script>
 
-  </body>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
 
 </html>

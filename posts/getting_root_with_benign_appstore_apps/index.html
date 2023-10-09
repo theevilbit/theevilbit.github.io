@@ -1,19 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+  <title>
+  TALK - macOS - Getting root with benign AppStore apps · theevilbit blog
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 
-    <meta name="author" content="Csaba Fitzl">
-    
-    
 
-    <meta name="twitter:card" content="summary"/>
+
+
+<meta name="author" content="Csaba Fitzl">
+<meta name="description" content="This writeup is intended to be a bit of storytelling. I would like to show how I went down the rabbit hole in a quick ’research’ I wanted to do, and eventually found a local privilege escalation vulnerability in macOS. I also want to show, tell about all the obstacles and failures I run into, stuff that people don’t talk about usually, but I feel it’s part of the process all of us go through, when we try to create something.">
+<meta name="keywords" content="">
+
+<meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="TALK - macOS - Getting root with benign AppStore apps"/>
 <meta name="twitter:description" content="This writeup is intended to be a bit of storytelling. I would like to show how I went down the rabbit hole in a quick ’research’ I wanted to do, and eventually found a local privilege escalation vulnerability in macOS. I also want to show, tell about all the obstacles and failures I run into, stuff that people don’t talk about usually, but I feel it’s part of the process all of us go through, when we try to create something."/>
 
-    <meta property="og:title" content="TALK - macOS - Getting root with benign AppStore apps" />
+<meta property="og:title" content="TALK - macOS - Getting root with benign AppStore apps" />
 <meta property="og:description" content="This writeup is intended to be a bit of storytelling. I would like to show how I went down the rabbit hole in a quick ’research’ I wanted to do, and eventually found a local privilege escalation vulnerability in macOS. I also want to show, tell about all the obstacles and failures I run into, stuff that people don’t talk about usually, but I feel it’s part of the process all of us go through, when we try to create something." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/getting_root_with_benign_appstore_apps/" /><meta property="article:section" content="posts" />
@@ -21,140 +28,188 @@
 <meta property="article:modified_time" content="2019-06-01T00:00:00+00:00" />
 
 
-    
-      <base href="https://theevilbit.github.io/posts/getting_root_with_benign_appstore_apps/">
-    
-    <title>
-  TALK - macOS - Getting root with benign AppStore apps · theevilbit blog
-</title>
 
-    
-      <link rel="canonical" href="https://theevilbit.github.io/posts/getting_root_with_benign_appstore_apps/">
-    
 
-    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+<link rel="canonical" href="https://theevilbit.github.io/posts/getting_root_with_benign_appstore_apps/">
 
-    
-      
-      
-      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
-    
 
-    
+<link rel="preload" href="https://theevilbit.github.io/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
 
-    
 
-    
+  
+  
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.135e22c97ff685fe983fc60048e309ced8f00d8d38f536aa67dba8a13a03dfa4.css" integrity="sha256-E14iyX/2hf6YP8YASOMJztjwDY049TaqZ9uooToD36Q=" crossorigin="anonymous" media="screen" />
 
-    
-    
-    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.119.0">
-  </head>
 
-  <body class=" ">
-    <main class="wrapper">
-      <nav class="navigation">
+
+
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+
+<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
+<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+<body class="preload-transitions colorscheme-light">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
   <section class="container">
     <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
-    <input type="checkbox" id="menu-toggle" />
-    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
-    <ul class="navigation-list">
-      
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
-          </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+            </li>
+          
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
-          </li>
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
-          </li>
-        
-      
-      
-    </ul>
+      </ul>
+    
   </section>
 </nav>
 
 
-      <div class="content">
-        
+    <div class="content">
+      
   <section class="container post">
     <article>
       <header>
         <div class="post-title">
-          <h1 class="title">TALK - macOS - Getting root with benign AppStore apps</h1>
+          <h1 class="title">
+            <a class="title-link" href="https://theevilbit.github.io/posts/getting_root_with_benign_appstore_apps/">
+              TALK - macOS - Getting root with benign AppStore apps
+            </a>
+          </h1>
         </div>
         <div class="post-meta">
           <div class="date">
             <span class="posted-on">
-              <i class="fas fa-calendar"></i>
-              <time datetime='2019-06-01T00:00:00Z'>
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="2019-06-01T00:00:00Z">
                 June 1, 2019
               </time>
             </span>
             <span class="reading-time">
-              <i class="fas fa-clock"></i>
-              24 minutes read
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              24-minute read
             </span>
           </div>
+          
           <div class="categories">
-  <i class="fas fa-folder"></i>
+  <i class="fa fa-folder" aria-hidden="true"></i>
     <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
 
           <div class="tags">
-  <i class="fas fa-tag"></i>
-    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+  <i class="fa fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+    </span>
       <span class="separator">•</span>
-    <a href="https://theevilbit.github.io/tags/vulnerability/">vulnerability</a>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/vulnerability/">vulnerability</a>
+    </span>
       <span class="separator">•</span>
-    <a href="https://theevilbit.github.io/tags/lpe/">lpe</a></div>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/lpe/">lpe</a>
+    </span></div>
 
         </div>
       </header>
 
-      <div>
+      <div class="post-content">
+        
         <p>This writeup is intended to be a bit of storytelling. I would like to show how I went down the rabbit hole in a quick ’research’ I wanted to do, and eventually found a local privilege escalation vulnerability in macOS. I also want to show, tell about all the obstacles and failures I run into, stuff that people don’t talk about usually, but I feel it’s part of the process all of us go through, when we try to create something.</p>
 <p>If you prefer to watch this as a talk, you can se it here:
-<a href="https://www.youtube.com/watch?v=mj__QxLpVD8">Csaba Fitzl - macOS: Gaining root with Harmless AppStore Apps - SecurityFest 2019 - YouTube</a></p>
+<a href="https://www.youtube.com/watch?v=mj__QxLpVD8"  class="external-link" target="_blank" rel="noopener">Csaba Fitzl - macOS: Gaining root with Harmless AppStore Apps - SecurityFest 2019 - YouTube</a></p>
 <p>Slides are here:
-<a href="https://www.slideshare.net/CsabaFitzl/getting-root-with-benign-app-store-apps-vsecurityfest">Getting root with benign app store apps</a></p>
-<h2 id="dylib-hijacking-on-macos">DYLIB Hijacking on macOS</h2>
+<a href="https://www.slideshare.net/CsabaFitzl/getting-root-with-benign-app-store-apps-vsecurityfest"  class="external-link" target="_blank" rel="noopener">Getting root with benign app store apps</a></p>
+<h2 id="dylib-hijacking-on-macos">
+  DYLIB Hijacking on macOS
+  <a class="heading-link" href="#dylib-hijacking-on-macos">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>This entire story started with me trying to find dylib hijacking vulnerability in a specific application, which I can’t name here. Well, I didn’t find any in that app, but found plenty in many others.</p>
 <p>If you are not familiar with dylib hijacking on macOS, read Patrick Wardle’s great writeup:
-<a href="https://www.virusbulletin.com/virusbulletin/2015/03/dylib-hijacking-os-x">Virus Bulletin :: Dylib hijacking on OS X</a>
+<a href="https://www.virusbulletin.com/virusbulletin/2015/03/dylib-hijacking-os-x"  class="external-link" target="_blank" rel="noopener">Virus Bulletin :: Dylib hijacking on OS X</a>
 or watch his talk on the subject:
-<a href="https://www.youtube.com/watch?v=PGVNja2MNws">DEF CON 23 - Patrick Wardle  - DLL Hijacking on OS X - YouTube</a></p>
+<a href="https://www.youtube.com/watch?v=PGVNja2MNws"  class="external-link" target="_blank" rel="noopener">DEF CON 23 - Patrick Wardle  - DLL Hijacking on OS X - YouTube</a></p>
 <p>I would go for the talk, as he is a great presenter, and will explain the subject in a very user friendly way, so you will understand all the details.</p>
 <p>But just to sum it up here, in very short, there are 2 type of dylib hijackings possible:</p>
 <ol>
 <li>weak loading of dylibs - in this case the OS will use the LC_LOAD_WEAK_DYLIB function, and if the dylib is not found the application will still run and won’t error out. So if there is an app that refers to a dylib with this method and that is not present, you can go ahead place yours there and profit.</li>
 <li>rpath (run-path dependent) dylibs - in this case the dylibs are referenced with the @rpath prefix, which will point to the current running location of the mach-o file, and will try to find the dylibs based on this search path. It’s useful if you don’t know where your app will end up after installation. Developers can specify multiple search paths, and in case the first or first couple doesn’t exists, you can place your malicious dylib there, as the loader will search through these paths in sequential order. In its logic this is similar to classic DLL hijacking on Windows.</li>
 </ol>
-<h3 id="finding-vulnerable-apps">Finding vulnerable apps</h3>
-<p>It couldn’t be easier, you go download Patrick’s DHS tool, run the scan and wait. Link: <a href="https://objective-see.com/products/dhs.html">Objective-See</a> There is also a command line version: <a href="https://github.com/synack/DylibHijack">GitHub - synack/DylibHijack: python utilities related to dylib hijacking on OS X</a></p>
+<h3 id="finding-vulnerable-apps">
+  Finding vulnerable apps
+  <a class="heading-link" href="#finding-vulnerable-apps">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>It couldn’t be easier, you go download Patrick’s DHS tool, run the scan and wait. Link: <a href="https://objective-see.com/products/dhs.html"  class="external-link" target="_blank" rel="noopener">Objective-See</a> There is also a command line version: <a href="https://github.com/synack/DylibHijack"  class="external-link" target="_blank" rel="noopener">GitHub - synack/DylibHijack: python utilities related to dylib hijacking on OS X</a></p>
 <ol>
 <li>For the walkthrough I will use the Tresorit app as an example as they already fixed the problem, and big kudos for them, as they not only responded but also fixed this in a couple of days after reporting. I will not mention all of the apps here, but you will be amazed how many are out there.</li>
 </ol>
@@ -180,7 +235,13 @@ or watch his talk on the subject:
 </span></span><span style="display:flex;"><span><span style="color:#033">Format</span><span style="color:#555">=</span>bundle with Mach-O thin <span style="color:#555">(</span>x86_64<span style="color:#555">)</span>
 </span></span><span style="display:flex;"><span>CodeDirectory <span style="color:#033">v</span><span style="color:#555">=</span><span style="color:#f60">20200</span> <span style="color:#033">size</span><span style="color:#555">=</span><span style="color:#f60">754</span> <span style="color:#033">flags</span><span style="color:#555">=</span>0x0<span style="color:#555">(</span>none<span style="color:#555">)</span> <span style="color:#033">hashes</span><span style="color:#555">=</span>15+5 <span style="color:#033">location</span><span style="color:#555">=</span>embedded
 </span></span><span style="display:flex;"><span><span style="color:#555">(</span>...<span style="color:#555">)</span>
-</span></span></code></pre></div><h3 id="utilizing-the-vulnerability">Utilizing the vulnerability</h3>
+</span></span></code></pre></div><h3 id="utilizing-the-vulnerability">
+  Utilizing the vulnerability
+  <a class="heading-link" href="#utilizing-the-vulnerability">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>It’s also something that is super easy based on the talk above, but here it is in short. I made the following POC:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
 </span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdlib.h&gt;</span><span style="color:#099">
@@ -218,9 +279,21 @@ or watch his talk on the subject:
 </span></span><span style="display:flex;"><span> <span style="color:#555">[</span>+<span style="color:#555">]</span> updating embedded re-export via exec<span style="color:#a00;background-color:#faa">&#39;</span>ing: /usr/bin/install_name_tool -change
 </span></span><span style="display:flex;"><span> <span style="color:#555">[</span>+<span style="color:#555">]</span> copying configured .dylib to /Users/csaby/Downloads/DylibHijack/UtilsMac
 </span></span></code></pre></div><p>Once that is done, you can just copy the file over and start the app.</p>
-<h3 id="other-apps">Other apps</h3>
+<h3 id="other-apps">
+  Other apps
+  <a class="heading-link" href="#other-apps">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>Considering the amount of vulnerable apps, I didn’t even take the time to report all these issues, only a few. Beside Tresorit I reported one to Avira, and they promised a fix but with low priority as you had to get root for utilising this, and the others were in MS Office 2016, where MS said they don’t consider this as a security bug as you need root privileges to exploit it, they said I can submit as a product bug. I don’t agree, cause this is a way for persistence, but I suppose I have to live with it.</p>
-<h3 id="the-privilege-problem">The privilege problem</h3>
+<h3 id="the-privilege-problem">
+  The privilege problem
+  <a class="heading-link" href="#the-privilege-problem">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>My original ‘research’ was done, but this is the point where I went beyond what I expected in the beginning.</p>
 <p>There is a problem in case of many apps, in theory you just need to drop your dylib into the right place, but there can be a two main scenarios in terms of privileges required for utilising the vulnerability.</p>
 <ol>
@@ -229,13 +302,31 @@ or watch his talk on the subject:
 </ol>
 <p>Typically applications you drag and drop to the <code>/Application</code> directory will fall into the first category. All applications from the App Store will fall into the 2nd category, it’s because they will be installed by the installd daemon which is running as root . Apps that you install from a package will typically also fall into the 2nd category, as typically those require elevation of privilege.</p>
 <p>I wasn’t quite happy with all vendor responses, and also didn’t like that exploitation is limited to root most of the times, so I started to think: Can we bypass root folder permissions? Spoiler: YES, otherwise this would be a very short post. :)</p>
-<h2 id="tools-for-monitoring">Tools for monitoring</h2>
+<h2 id="tools-for-monitoring">
+  Tools for monitoring
+  <a class="heading-link" href="#tools-for-monitoring">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>Before moving on, I want to mention a couple of tools, that I found useful for event monitoring.</p>
-<h3 id="fireeye---monitorapp">FireEye - Monitor.app</h3>
-<p>This is a procmon like app created by FireEye, it can be downloaded from here: <a href="https://www.fireeye.com/services/freeware/monitor.html">Monitor.app | Free Security Software | FireEye</a>
+<h3 id="fireeye---monitorapp">
+  FireEye - Monitor.app
+  <a class="heading-link" href="#fireeye---monitorapp">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>This is a procmon like app created by FireEye, it can be downloaded from here: <a href="https://www.fireeye.com/services/freeware/monitor.html"  class="external-link" target="_blank" rel="noopener">Monitor.app | Free Security Software | FireEye</a>
 It’s quite good!</p>
 <p><img src="https://theevilbit.github.io/images/Getting_root_with_benign_AppStore_apps/Screenshot%202019-03-11%20at%2021.10.47.png" alt="image2"></p>
-<h3 id="objective-sees-procinfo-library--procinfoexample">Objective-See’s ProcInfo library &amp; ProcInfoExample</h3>
+<h3 id="objective-sees-procinfo-library--procinfoexample">
+  Objective-See’s ProcInfo library &amp; ProcInfoExample
+  <a class="heading-link" href="#objective-sees-procinfo-library--procinfoexample">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>This is an open source library for monitoring process creation and termination on macOS. I used the demo project of this library, called ProcInfoExample. It’s a command line utility and will log every process creation, with all the related details, like arguments, signature info, etc… It will give you more information than FE’s Monitor app. It’s output is like:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>2019-03-11 21:18:05.770 procInfoExample<span style="color:#555">[</span>32903:4117446<span style="color:#555">]</span> process start:
 </span></span><span style="display:flex;"><span>pid: <span style="color:#f60">32906</span>
@@ -280,7 +371,13 @@ It’s quite good!</p>
 </span></span><span style="display:flex;"><span>    <span style="color:#033">NSFileType</span> <span style="color:#555">=</span> NSFileTypeRegular;
 </span></span><span style="display:flex;"><span><span style="color:#555">}</span>
 </span></span><span style="display:flex;"><span>signing info: <span style="color:#555">(</span>null<span style="color:#555">)</span> 
-</span></span></code></pre></div><h3 id="built-in-fs_usage-utility">Built-in fs_usage utility</h3>
+</span></span></code></pre></div><h3 id="built-in-fs_usage-utility">
+  Built-in fs_usage utility
+  <a class="heading-link" href="#built-in-fs_usage-utility">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>The <code>fs_usage</code> utility can monitor file system event very detailed, I would say even too detailed, you need to do some good filtering if you want to get useful data out of it. You get something like this:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#555">(</span>standard input<span style="color:#555">)</span>:21:27:01.229709  getxattr               <span style="color:#555">[</span> 93<span style="color:#555">]</span>           /Applications/Parcel.app                                                                                                                                              0.000017   lsd.4123091
 </span></span><span style="display:flex;"><span><span style="color:#555">(</span>standard input<span style="color:#555">)</span>:21:27:01.229719  access                       <span style="color:#555">(</span>___F<span style="color:#555">)</span>    /Applications/Parcel.app/Contents                                                                                                                                     0.000005   lsd.4123091
@@ -290,18 +387,30 @@ It’s quite good!</p>
 </span></span><span style="display:flex;"><span><span style="color:#555">(</span>standard input<span style="color:#555">)</span>:21:27:01.229939  getattrlist                            /Applications/Parcel.app/Contents/MacOS                                                                                                                               0.000005   lsd.4123091
 </span></span><span style="display:flex;"><span><span style="color:#555">(</span>standard input<span style="color:#555">)</span>:21:27:01.229945  getattrlist                            /Applications/Parcel.app/Contents/MacOS/Parcel                                                                                                                        0.000005   lsd.4123091
 </span></span><span style="display:flex;"><span><span style="color:#555">(</span>standard input<span style="color:#555">)</span>:21:27:01.229957  getattrlist                            /Applications/Parcel.app                                                                                                                                              0.000005   lsd.4123091
-</span></span></code></pre></div><h2 id="bypassing-root-folder-permissions-in-app-store-installed-apps">Bypassing root folder permissions in App Store installed apps</h2>
+</span></span></code></pre></div><h2 id="bypassing-root-folder-permissions-in-app-store-installed-apps">
+  Bypassing root folder permissions in App Store installed apps
+  <a class="heading-link" href="#bypassing-root-folder-permissions-in-app-store-installed-apps">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>The goal here is to write any file inside an AppStore installed application, which is by default only accessible for root. The bypass will only work if the application was installed already at least once (since when you buy it, you need to authenticate to the AppStore even if it’s free or if the user checked in ‘Save Password’ for free apps, you can get those as well. What I ‘noticed’ first is that you can create folders in the “/Applications” folder - obviously as you can also drag and drop apps there. But what happens if I create folders for the to-be-installed app? Here is what happens and the steps to bypass the root folder permissions:</p>
 <ol>
 <li>Before you delete the app take a note of the folder structure - you have read access to that. This is just for knowing what to recreate later.</li>
 <li>Start Launchpad locate the app, and delete it if installed currently. Interestingly it will remove the application, although you interact with Launchpad as normal user. Note that it can only do that for apps installed from the App Store.</li>
 <li>Create the folder structure with your regular ID in the /Applications folder, you can do that without root access. It’s enough to create the folders you need, no need for all, and place your dylib (or whatever you want) there</li>
-<li>Go back to the AppStore and on the Purchased tab, locate the app, and install it. You don’t need to authenticate in this case. You can also use the command line utility available from Github: <a href="https://github.com/mas-cli/mas">GitHub - mas-cli/mas: Mac App Store command line interface</a></li>
+<li>Go back to the AppStore and on the Purchased tab, locate the app, and install it. You don’t need to authenticate in this case. You can also use the command line utility available from Github: <a href="https://github.com/mas-cli/mas"  class="external-link" target="_blank" rel="noopener">GitHub - mas-cli/mas: Mac App Store command line interface</a></li>
 </ol>
 <p>At this point the app will be installed and you can use it, and you have your files there, which you couldn’t place there originally without root permissions.</p>
 <p>This was fixed in Mojave 10.14.5, I will talk about that later.</p>
 <p>To compare, it’s like having write access to the “Program Files” folder on Windows. Admin users do have it, but only if they run as HIGH integrity, so that means you need to bypass UAC from the default MEDIUM integrity mode. But in Windows, MEDIUM integrity Admin to HIGH integrity Admin elevation is not a security boundary, but in macOS admin to root is a boundary.</p>
-<h2 id="taking-it-further---dropping-appstore-files-anywhere">Taking it further - Dropping AppStore files anywhere</h2>
+<h2 id="taking-it-further---dropping-appstore-files-anywhere">
+  Taking it further - Dropping AppStore files anywhere
+  <a class="heading-link" href="#taking-it-further---dropping-appstore-files-anywhere">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>At this point I had another idea. Since installd runs as root, can we use it to place the app somewhere else or certain parts of it? The answer is YES. Let’s say I want to drop the App’s main mach-o file in a folder where only root has access, e.g.: <code>/opt</code> (folders protected by SIP, like <code>/System</code> won’t work, as even root doesn’t have access there). Here are the steps to reproduce it:
 Step 1-2 is the same as in the previous case.
 3. Create the following folder structure: <code>/Applications/Example.app/Contents</code>
@@ -311,7 +420,13 @@ The main mach-o file is typically in the following folder: <code>/Applications/E
 5. Install the App</p>
 <p>What happens at this point, is that the App will install normally, except that any files under <code>/Applications/Example.app/Contents/MacOS</code> will go to <code>/opt</code>. If there was a file with the name of the mach-o file, that will be overwritten.
 Essentially what we can achieve with this is to drop any files that can be found in an AppStore app to a location we control.</p>
-<h3 id="what-cant-we-do-or-at-least-i-didnt-find-a-way">What can’t we do? (Or at least I didn’t find a way)</h3>
+<h3 id="what-cant-we-do-or-at-least-i-didnt-find-a-way">
+  What can’t we do? (Or at least I didn’t find a way)
+  <a class="heading-link" href="#what-cant-we-do-or-at-least-i-didnt-find-a-way">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <ol>
 <li>Change the name of the file being dropped, or with other words, put the contents of one file into another one with different name. If we create a symlink for the actual mach-o file, like:
 <code>ln -s /opt/myname /Applications/Example.app/Contents/MacOS/Example</code>
@@ -348,7 +463,13 @@ What will happen is that the symlink will be overwritten, when the installd daem
 <li>Even if we create a hardlink instead of symlink, that will be overwritten like in the 1st case.</li>
 <li>As noted earlier we can’t write to folder protected by SIP.</li>
 </ol>
-<h3 id="ideas-for-using-this-for-privilege-escalation">Ideas for using this for privilege escalation</h3>
+<h3 id="ideas-for-using-this-for-privilege-escalation">
+  Ideas for using this for privilege escalation
+  <a class="heading-link" href="#ideas-for-using-this-for-privilege-escalation">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>Based on the above I had the following ideas for privilege escalation from admin to root:</p>
 <ol>
 <li>Find a file in the AppStore that has the same name as a process that runs as root, and replace that file.</li>
@@ -356,7 +477,13 @@ What will happen is that the symlink will be overwritten, when the installd daem
 <li>If you don’t find one, you can potentially create a totally harmless App, that will give you an interactive prompt, or something similar, upload it to the AppStore (it should bypass Apple’s vetting process as it will nothing do any harm). For example your file could contain an example root crontab file, which start Terminal every hour. You could place that in the crontab folder.</li>
 <li>Make a malicious dylib, upload it as part of an app to the Appstore and drop that, so an app running as root will load it</li>
 </ol>
-<h3 id="reporting-to-apple">Reporting to Apple</h3>
+<h3 id="reporting-to-apple">
+  Reporting to Apple
+  <a class="heading-link" href="#reporting-to-apple">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>I will admit that at this point I took the lazy approach and reported the above to Apple, mainly because:</p>
 <ul>
 <li>I found it very unlikely that I will find a suitable file that satisfies either #1 or #2
@@ -370,27 +497,57 @@ What will happen is that the symlink will be overwritten, when the installd daem
 <p>So I reported and then Apple came back at one point for my privilege escalation ideas:
 “The App Review process helps prevent malicious applications from becoming available on the Mac and iOS App Stores.“</p>
 <p>Obviously Apple didn’t understood the problem for first, it was either my fault not explaining it properly or they didn’t understood it, but it was clear that there was a misunderstanding between us, so I felt that I have to prove my point if I want this fixed. So I took a deep breath and gone the “Try Harder” approach and decided to develop an App and submit it to the AppStore.</p>
-<h2 id="creating-an-app">Creating an App</h2>
+<h2 id="creating-an-app">
+  Creating an App
+  <a class="heading-link" href="#creating-an-app">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>After some thinking I decided that I will create an application that will have a crontab file for root, and I will drop it to the  <code>/usr/lib/cron/tabs</code>  folder. The app had to do something meaningful in order to submit it, and to be accepted, so I came up with the idea of creating a cronjob editor app. It’s also useful, and would also explain why I have a crontab files embedded. Here is my journey:</p>
-<h3 id="apple-developer-id">Apple developer ID</h3>
+<h3 id="apple-developer-id">
+  Apple developer ID
+  <a class="heading-link" href="#apple-developer-id">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>In order to submit any App to the store you have to sign up for the developer program. I signed up with a new Apple ID for the Apple developer program just because I had the fear that they will ban me, once I introduce an app that can be used for private escalation. In fact they didn’t. It’s 99$/ annum.</p>
-<h3 id="choosing-a-language">Choosing a language</h3>
+<h3 id="choosing-a-language">
+  Choosing a language
+  <a class="heading-link" href="#choosing-a-language">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>I had no prior knowledge of either Objective C or Swift, but looking on the following syntax for Obj-C, freaked me out:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>myFraction <span style="color:#555">=</span> [[Fraction alloc] init];
 </span></span></code></pre></div><p>This is how you call methods of objects and pass parameters. It’s against every syntax I ever knew and I just didn’t want to consume this. So I looked at Swift which looked much nicer in this space and decided to go with that. :)</p>
-<h3 id="learning-swift">Learning Swift</h3>
+<h3 id="learning-swift">
+  Learning Swift
+  <a class="heading-link" href="#learning-swift">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>My company has a subscription to one of the big online training portals, where I found a short, few hour long course about introduction to Cocoa app development with Swift. It was an interesting course, and it turned out to be sufficient, basically it covered how to put together a simple window based GUI. It also turned out that there is Swift 1 and 2 and 3 and 4, as the language evolved, and the syntax is also changed over time a bit, so you need to pick up the right training.</p>
-<h3 id="publishing-to-the-store---the-process">Publishing to the store - The Process</h3>
+<h3 id="publishing-to-the-store---the-process">
+  Publishing to the store - The Process
+  <a class="heading-link" href="#publishing-to-the-store---the-process">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <ol>
 <li>
 <p>Become an Apple Developer, costs 99$/year</p>
 </li>
 <li>
-<p>Login to App Store Connect and create a Bundle ID: <a href="https://developer.apple.com/account/mac/identifier/bundle/create">https://developer.apple.com/account/mac/identifier/bundle/create</a>
+<p>Login to App Store Connect and create a Bundle ID: <a href="https://developer.apple.com/account/mac/identifier/bundle/create"  class="external-link" target="_blank" rel="noopener">https://developer.apple.com/account/mac/identifier/bundle/create</a>
 <img src="https://theevilbit.github.io/images/Getting_root_with_benign_AppStore_apps/Screenshot%202019-03-11%20at%2018.50.08.png" alt="image3"></p>
 </li>
 <li>
-<p>Go back and create a new App referring the Bundle ID you created: <a href="https://appstoreconnect.apple.com/WebObjects/iTunesConnect.woa/ra/ng/app">https://appstoreconnect.apple.com/WebObjects/iTunesConnect.woa/ra/ng/app</a>
+<p>Go back and create a new App referring the Bundle ID you created: <a href="https://appstoreconnect.apple.com/WebObjects/iTunesConnect.woa/ra/ng/app"  class="external-link" target="_blank" rel="noopener">https://appstoreconnect.apple.com/WebObjects/iTunesConnect.woa/ra/ng/app</a>
 <img src="https://theevilbit.github.io/images/Getting_root_with_benign_AppStore_apps/Screenshot%202019-03-11%20at%2018.50.55.png" alt="image4"></p>
 </li>
 <li>
@@ -406,14 +563,32 @@ What will happen is that the symlink will be overwritten, when the installd daem
 <p>Submit for review</p>
 </li>
 </ol>
-<h3 id="publishing-to-the-store---the-error-problem">Publishing to the store - The error problem</h3>
+<h3 id="publishing-to-the-store---the-error-problem">
+  Publishing to the store - The error problem
+  <a class="heading-link" href="#publishing-to-the-store---the-error-problem">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>Developing the App was pretty quick, but publishing it was really annoying, because I really wanted to see that my idea is indeed works. So once I pushed it, I had to wait ~24 hours for it being reviewed. I was really impatient and nervous about if I can truly make it to the store :) The clock ticked, and it was rejected! :( The reason was that when I clicked the close button, the app didn’t exit and the user had now way to bring back the window. I fixed it, resubmit, wait again ~24 hours. Approved! I quickly went to the store, prepared the exploit, and clicked install. Meanwhile during the development I upgraded myself to Mojave, and never really did any other tests with other apps. So it was really embarrassing to notice, that in Mojave this exploit path doesn’t work :( No problem, I have a High Sierra VM, let’s install it there! There I got a popup, that the minimum version required for the App is 10.14 (Mojave), and I can’t put it on HS… :( damn, it’s an easy fix, but that means resubmit again, wait ~24 hours. Finally it got approved again, and the exploit worked on High Sierra! :) It was a really annoying process, as every time I made a small mistake, fixing it meant 24 hours, even if the actual fix in the code, took 1 minute.</p>
-<h3 id="the-app">The App</h3>
+<h3 id="the-app">
+  The App
+  <a class="heading-link" href="#the-app">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>The application I developed, is called “Crontab Creator”, which is actually very useful for creating crontab files. It’s still there and available, and as it turns out, there are a few people using it.
-<a href="https://itunes.apple.com/ao/app/crontab-creator/id1438725196?mt=12">‎Crontab Creator on the Mac App Store</a></p>
+<a href="https://itunes.apple.com/ao/app/crontab-creator/id1438725196?mt=12"  class="external-link" target="_blank" rel="noopener">‎Crontab Creator on the Mac App Store</a></p>
 <p><img src="https://theevilbit.github.io/images/Getting_root_with_benign_AppStore_apps/Screenshot%202018-10-14%20at%2010.12.46.png" alt="image5"></p>
 <p>The application is absolutely benign! However it contains different examples for crontab files, which are all stored as separate files within the application. The only reason I didn’t store the strings embedded in the source code is to be able to use it for exploitation :) Among these there is one called ‘root’, which will try to execute a script from the _Applications_Scripts folder.</p>
-<h2 id="privilege-escalation-on-high-sierra">Privilege Escalation on High Sierra</h2>
+<h2 id="privilege-escalation-on-high-sierra">
+  Privilege Escalation on High Sierra
+  <a class="heading-link" href="#privilege-escalation-on-high-sierra">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>The Crontab Creator app contains a file named ‘root’ as an example for crontab file, along with 9 others. The content is the following:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>* * * * * /Applications/Scripts/backup-apps.sh
 </span></span></code></pre></div><p>Obviously this script doesn’t exists by default, but you can easily create it in the <code>/Application</code> folder, as you have write access, and at that point you can put anything you want into it.</p>
@@ -436,14 +611,26 @@ What will happen is that the symlink will be overwritten, when the installd daem
 </span></span><span style="display:flex;"><span>brew install mas
 </span></span><span style="display:flex;"><span>mas install <span style="color:#f60">1438725196</span>
 </span></span></code></pre></div><p>In summary utilizing the previous vulnerabilities we can drop the file into the crontab folder, create the script with starting Terminal inside it, and in a minute we got a popup and root access.</p>
-<h3 id="the-fix">The fix</h3>
+<h3 id="the-fix">
+  The fix
+  <a class="heading-link" href="#the-fix">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>As noted before, Apple fixed this exploit path in Mojave. This was in 2018 October, my POC didn’t work anymore, and without further testing I honestly thought that the privilege escalation issue is fixed - yes you could still drop files inside the app, but I thought that the symlink issue is solved. I couldn’t have been more wrong! But this turned out only later.</p>
-<h2 id="infecting-installers-without-breaking-the-applications-signature">Infecting installers without breaking the Application’s signature</h2>
+<h2 id="infecting-installers-without-breaking-the-applications-signature">
+  Infecting installers without breaking the Application’s signature
+  <a class="heading-link" href="#infecting-installers-without-breaking-the-applications-signature">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>The next part is where we want to bypass root folder permission for manually installed apps. We can’t do a true bypass / privilege escalation here, as during the installation the user have to enter his/her password, but we can still apply the previous idea. However here I want to show another method, and that’s how to embed our custom file into an installer package. If we can MITM a pkg download, we could replace it with our own one, or we can simply deliver it to the user via email or something.</p>
 <p>As a side note, interestingly AppStore apps are downloaded through HTTP, you can’t really alter it, as the hash is downloaded via HTTPS and the signature will also verified.</p>
 <p>Here are the steps, how to include your custom file in a valid package:</p>
 <ol>
-<li>Grab an installer pkg, for example from the AppStore (<a href="https://derflounder.wordpress.com/2015/11/19/downloading-installer-packages-from-the-mac-app-store-with-appstoreextract/">Downloading installer packages from the Mac App Store with AppStoreExtract | Der Flounder</a>)</li>
+<li>Grab an installer pkg, for example from the AppStore (<a href="https://derflounder.wordpress.com/2015/11/19/downloading-installer-packages-from-the-mac-app-store-with-appstoreextract/"  class="external-link" target="_blank" rel="noopener">Downloading installer packages from the Mac App Store with AppStoreExtract | Der Flounder</a>)</li>
 <li>Unpack the pkg:
 <code>pkgutil --expand example.pkg myfolder</code></li>
 <li>Enter the folder, and decompress the embedded Payload (inside the embedded pkg folder):
@@ -460,16 +647,40 @@ What will happen is that the symlink will be overwritten, when the installd daem
 <code>pkgutil --flatten myfolder/ mypackage.pkg</code></li>
 </ol>
 <p>The package’s digital signature will be lost, so you will need a method to bypass Gatekeeper. The embedded App’s signature will be also broken, as these days every single file inside an .app bundle must be digitally signed. Typically the main mach-o file is signed, and it has the hash of the _CodeSignatures plist file. The file will contain all the hashes for the other files. If you place a new file inside the .app bundle that will invalidate the signature. However this is not a problem here, as if you can bypass Gatekeeper for the .pkg file, the installed Application will not be subject to Gatekeeper’s verification.</p>
-<h2 id="redistributing-paid-apps">Redistributing paid apps</h2>
+<h2 id="redistributing-paid-apps">
+  Redistributing paid apps
+  <a class="heading-link" href="#redistributing-paid-apps">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>Using the same tool as in the previous example we can grab the installer for a given application. If you keep a paid app this way, it will still work somewhere else even if that person didn’t pay for the app. There is no default verification in an application if it was purchased or not, it also doesn’t contain anything that tracks this. With that, if you buy an application, you can easily distribute it somewhere else.
 In-App purchases probably won’t work as those are tied to the Apple ID, and if there is another activation needed, that could be also a good countermeasure. But apps that doesn’t have these can be easily stolen.
 Developers should build-in some verification of Apple IDs. I’m not sure that it’s possible but would be useful for them.</p>
-<h2 id="privilege-escalation-returns-on-mojave">Privilege escalation returns on Mojave</h2>
-<h3 id="the-fix-1">The fix</h3>
+<h2 id="privilege-escalation-returns-on-mojave">
+  Privilege escalation returns on Mojave
+  <a class="heading-link" href="#privilege-escalation-returns-on-mojave">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<h3 id="the-fix-1">
+  The fix
+  <a class="heading-link" href="#the-fix-1">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>This year (2019) I’ve been talking to a few people about this, and it hit me, that I didn’t do any further checks if symlinks are completely broken (during the installation) or not. It turned out that they are still a thing.</p>
 <p>The way the fix is working is that <code>installd</code> has no longer access to the crontab folder (<code>/usr/lib/cron/tabs</code>) even running as root, so it won’t be able to create files there. I’m not even sure that this is a direct fix for my POC or some other coincidence. We can find the related error message in <code>/var/log/install.log</code> (you can use the Console app for viewing logs):</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>2019-01-31 20:44:49+01 csabymac shove<span style="color:#555">[</span>1057<span style="color:#555">]</span>: <span style="color:#555">[</span><span style="color:#033">source</span><span style="color:#555">=</span>file<span style="color:#555">]</span> failed _RelinkFile<span style="color:#555">(</span>/var/folders/zz/zyxvpxvq6csfxvn_n0000000000000/C/PKInstallSandboxManager/401FEDFC-1D7B-4E47-A6E9-E26B83F8988F.activeSandbox/Root/Applications/Crontab Creator.app/Contents/Resources/peter, /private/var/at/tabs/peter<span style="color:#555">)</span>: Operation not permitted
-</span></span></code></pre></div><h3 id="the-problem">The problem</h3>
+</span></span></code></pre></div><h3 id="the-problem">
+  The problem
+  <a class="heading-link" href="#the-problem">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>The <code>installd</code> process had still access to other folders, and can drop files there during the redirection, and those could be abused as well. I tested and you could redirect file writes to the following potentially dangerous folders:</p>
 <p><code>/var/root/Library/Preferences/</code></p>
 <p>Someone could drop a file called <code>com.apple.loginwindow.plist</code>, which can contain a LoginHook, which will run as root.</p>
@@ -479,9 +690,15 @@ Developers should build-in some verification of Apple IDs. I’m not sure that i
 <p>Dropping a file here will also execute as root.</p>
 <p>You can also write to <code>/etc</code>.</p>
 <p>Dropping files into these locations are essentially the same idea as dropping a file to the crontab folder. Potentially many other folders are also affected, so you can craft malicious dylib files, etc… but I didn’t explore other options.</p>
-<h3 id="the-2nd-poc">The 2nd POC</h3>
+<h3 id="the-2nd-poc">
+  The 2nd POC
+  <a class="heading-link" href="#the-2nd-poc">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>With that, and now being an ‘experienced’ :D macOS developer, I made a new POC, called StartUp. It’s this:
-<a href="https://itunes.apple.com/us/app/startup/id1452212620">‎StartUp on the Mac App Store</a></p>
+<a href="https://itunes.apple.com/us/app/startup/id1452212620"  class="external-link" target="_blank" rel="noopener">‎StartUp on the Mac App Store</a></p>
 <p><img src="https://theevilbit.github.io/images/Getting_root_with_benign_AppStore_apps/Screenshot%202019-02-12%20at%2010.39.44.png" alt="image6"></p>
 <p>It is really built along the same line as the previous one, but in this case for LaunchDaemons.</p>
 <p>The way to utilize it is:</p>
@@ -524,9 +741,21 @@ Developers should build-in some verification of Apple IDs. I’m not sure that i
 </span></span><span style="display:flex;"><span>	
 </span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">if</span> __name__ <span style="color:#555">==</span> <span style="color:#c30">&#34;__main__&#34;</span>:
 </span></span><span style="display:flex;"><span>    main()
-</span></span></code></pre></div><h3 id="reporting-to-apple-1">Reporting to Apple</h3>
+</span></span></code></pre></div><h3 id="reporting-to-apple-1">
+  Reporting to Apple
+  <a class="heading-link" href="#reporting-to-apple-1">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>I reported this around February to Apple, and tried to explain again in very detailed why I think the entire installation process is still broken, and could be abused.</p>
-<h3 id="the-security-enhancement">The security enhancement</h3>
+<h3 id="the-security-enhancement">
+  The security enhancement
+  <a class="heading-link" href="#the-security-enhancement">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>Apple never admitted this as a security bug, they never assigned a CVE, they considered it as an enhancement. Finally this came with Mojave 10.14.5, and they even mentioned my name on their website.</p>
 <p><img src="https://theevilbit.github.io/images/Getting_root_with_benign_AppStore_apps/Screenshot%202019-05-13%20at%2020.42.59.png" alt="image7"></p>
 <p>I made a quick test, and it turned out that they eventually managed to fix it properly. If you create the App’s folder, place there files, those will be all wiped. Using FireEye’s Monitor.app we can actually see it. The first event shows that they move the entire folder.</p>
@@ -538,15 +767,26 @@ Developers should build-in some verification of Apple IDs. I’m not sure that i
 <p>So you can no longer drop there your files, etc…</p>
 <p>I like the way this got fixed eventually, and I would like to thank Apple for that.</p>
 <p>I would like to also thank for Patrick Wardle who was really helpful whenever I turned to him with my n00b macOS questions.</p>
-<h3 id="to-be-continued">To be continued…</h3>
+<h3 id="to-be-continued">
+  To be continued…
+  <a class="heading-link" href="#to-be-continued">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>The story goes on, as I bypassed Apple’s fix. An update will follow once they fixed the issue.</p>
 
       </div>
+
 
       <footer>
         
 
 
+        
+        
+        
+        
         
       </footer>
     </article>
@@ -554,23 +794,36 @@ Developers should build-in some verification of Apple IDs. I’m not sure that i
     
   </section>
 
-      </div>
+    </div>
 
-      <footer class="footer">
+    <footer class="footer">
   <section class="container">
+    ©
     
-     © 2023
+    2023
+     Csaba Fitzl 
+    ·
     
-       · 
-      Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.
-    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
     
   </section>
 </footer>
 
-    </main>
+  </main>
 
-    
+  
+
+  
+  
+  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -584,6 +837,31 @@ if (!doNotTrack) {
 }
 </script>
 
-  </body>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
 
 </html>

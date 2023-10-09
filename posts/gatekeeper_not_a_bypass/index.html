@@ -1,145 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+  <title>
+  GateKeeper - Not a Bypass (Again) · theevilbit blog
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 
-    <meta name="author" content="Csaba Fitzl">
-    
-    
 
-    <meta name="twitter:card" content="summary"/>
+
+
+<meta name="author" content="Csaba Fitzl">
+<meta name="description" content="This post is about two techniques that can be useful for someone to evade GateKeeper in a red team engagement or pentest. According to Apple these are not considered bypasses, and everything works as expected.
+mmap Link to heading Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel extension. It uses the MAC policy framework to insert hooks on the system on various points. These functions are named as hook*.">
+<meta name="keywords" content="">
+
+<meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="GateKeeper - Not a Bypass (Again)"/>
 <meta name="twitter:description" content="This post is about two techniques that can be useful for someone to evade GateKeeper in a red team engagement or pentest. According to Apple these are not considered bypasses, and everything works as expected.
-mmap Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel extension. It uses the MAC policy framework to insert hooks on the system on various points. These functions are named as hook*. Let&rsquo;s take a look on what is implemented."/>
+mmap Link to heading Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel extension. It uses the MAC policy framework to insert hooks on the system on various points. These functions are named as hook*."/>
 
-    <meta property="og:title" content="GateKeeper - Not a Bypass (Again)" />
+<meta property="og:title" content="GateKeeper - Not a Bypass (Again)" />
 <meta property="og:description" content="This post is about two techniques that can be useful for someone to evade GateKeeper in a red team engagement or pentest. According to Apple these are not considered bypasses, and everything works as expected.
-mmap Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel extension. It uses the MAC policy framework to insert hooks on the system on various points. These functions are named as hook*. Let&rsquo;s take a look on what is implemented." />
+mmap Link to heading Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel extension. It uses the MAC policy framework to insert hooks on the system on various points. These functions are named as hook*." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/gatekeeper_not_a_bypass/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2021-06-29T00:00:00+00:00" />
 <meta property="article:modified_time" content="2021-06-29T00:00:00+00:00" />
 
 
-    
-      <base href="https://theevilbit.github.io/posts/gatekeeper_not_a_bypass/">
-    
-    <title>
-  GateKeeper - Not a Bypass (Again) · theevilbit blog
-</title>
 
-    
-      <link rel="canonical" href="https://theevilbit.github.io/posts/gatekeeper_not_a_bypass/">
-    
 
-    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+<link rel="canonical" href="https://theevilbit.github.io/posts/gatekeeper_not_a_bypass/">
 
-    
-      
-      
-      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
-    
 
-    
+<link rel="preload" href="https://theevilbit.github.io/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
 
-    
 
-    
+  
+  
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.135e22c97ff685fe983fc60048e309ced8f00d8d38f536aa67dba8a13a03dfa4.css" integrity="sha256-E14iyX/2hf6YP8YASOMJztjwDY049TaqZ9uooToD36Q=" crossorigin="anonymous" media="screen" />
 
-    
-    
-    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.119.0">
-  </head>
 
-  <body class=" ">
-    <main class="wrapper">
-      <nav class="navigation">
+
+
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+
+<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
+<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+<body class="preload-transitions colorscheme-light">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
   <section class="container">
     <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
-    <input type="checkbox" id="menu-toggle" />
-    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
-    <ul class="navigation-list">
-      
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
-          </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+            </li>
+          
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
-          </li>
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
-          </li>
-        
-      
-      
-    </ul>
+      </ul>
+    
   </section>
 </nav>
 
 
-      <div class="content">
-        
+    <div class="content">
+      
   <section class="container post">
     <article>
       <header>
         <div class="post-title">
-          <h1 class="title">GateKeeper - Not a Bypass (Again)</h1>
+          <h1 class="title">
+            <a class="title-link" href="https://theevilbit.github.io/posts/gatekeeper_not_a_bypass/">
+              GateKeeper - Not a Bypass (Again)
+            </a>
+          </h1>
         </div>
         <div class="post-meta">
           <div class="date">
             <span class="posted-on">
-              <i class="fas fa-calendar"></i>
-              <time datetime='2021-06-29T00:00:00Z'>
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="2021-06-29T00:00:00Z">
                 June 29, 2021
               </time>
             </span>
             <span class="reading-time">
-              <i class="fas fa-clock"></i>
-              10 minutes read
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              10-minute read
             </span>
           </div>
+          
           <div class="categories">
-  <i class="fas fa-folder"></i>
+  <i class="fa fa-folder" aria-hidden="true"></i>
     <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
 
           <div class="tags">
-  <i class="fas fa-tag"></i>
-    <a href="https://theevilbit.github.io/tags/gatekeeper/">gatekeeper</a>
+  <i class="fa fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/gatekeeper/">gatekeeper</a>
+    </span>
       <span class="separator">•</span>
-    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+    </span>
       <span class="separator">•</span>
-    <a href="https://theevilbit.github.io/tags/redteam/">redteam</a></div>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/redteam/">redteam</a>
+    </span></div>
 
         </div>
       </header>
 
-      <div>
+      <div class="post-content">
+        
         <p>This post is about two techniques that can be useful for someone to evade GateKeeper in a red team engagement or pentest. According to Apple these are not considered bypasses, and everything works as expected.</p>
-<h2 id="mmap">mmap</h2>
+<h2 id="mmap">
+  mmap
+  <a class="heading-link" href="#mmap">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>Part of GateKeeper is implemented on macOS in the <code>Quarantine.kext</code>  kernel extension. It uses the MAC policy framework to insert hooks on the system on various points. These functions are named as hook*. Let&rsquo;s take a look on what is implemented.</p>
 <pre tabindex="0"><code>csaby@mac ~ % nm /System/Library/Extensions/Quarantine.kext/Contents/MacOS/Quarantine | grep hook 
 0000000000001a4a t _hook_cred_check_label_update
@@ -186,8 +236,14 @@ mmap Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel ex
 0000000000001cfa t _hook_vnode_notify_setutimes
 0000000000001d04 t _hook_vnode_notify_truncate
 </code></pre><p>What stands out that any hook related to memory mapping (mmap) is missing. This gave me the idea for a GK bypass.</p>
-<h3 id="not-a-vulnerability">Not a Vulnerability</h3>
-<p>Patrick Wardle had a talk a couple of years ago about GK issues, which can be found here: <a href="https://www.slideshare.net/Synack/gatekeeper-exposed">Gatekeeper Exposed</a> He showed that during that time someone could bypass GK with loading a dylib external to the main application.</p>
+<h3 id="not-a-vulnerability">
+  Not a Vulnerability
+  <a class="heading-link" href="#not-a-vulnerability">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>Patrick Wardle had a talk a couple of years ago about GK issues, which can be found here: <a href="https://www.slideshare.net/Synack/gatekeeper-exposed"  class="external-link" target="_blank" rel="noopener">Gatekeeper Exposed</a> He showed that during that time someone could bypass GK with loading a dylib external to the main application.</p>
 <p>Since then this has been fixed, and if someone calls <code>dlopen</code> from the application on any quarantined binary, it will fail. It will produce an error message like this.</p>
 <p><img src="https://theevilbit.github.io/images/posts/gatekeeper_not_a_bypass_01.png" alt=""></p>
 <p>The problem is that an attacker can load a dylib through other means as well, using the deprecated <code>NSCreateObjectFileImageFromMemory</code> API.</p>
@@ -216,7 +272,13 @@ mmap Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel ex
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>NSUnLinkModule(module, NSUNLINKMODULE_OPTION_NONE);
 </span></span><span style="display:flex;"><span>NSDestroyObjectFileImage(fileImage);
-</span></span></code></pre></div><h3 id="not-exploitation">Not Exploitation</h3>
+</span></span></code></pre></div><h3 id="not-exploitation">
+  Not Exploitation
+  <a class="heading-link" href="#not-exploitation">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>I developed a simple App, called QB.app, which I notarized and it will load this binary from the path above (<code>/Volumes/QB/test.bundle</code>). The app is packed inside a DMG with this <code>test.bundle</code>. The code of this binary is very simple.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
 </span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdlib.h&gt;</span><span style="color:#099">
@@ -240,13 +302,31 @@ mmap Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel ex
 </span></span></code></pre></div><p>When this is invoked we will get the popup shown above.</p>
 <p>However on the dynamic mapping it will be loaded and Calculator will be executed.</p>
 <p>Note, that <code>test.bundle</code> is unsigned!</p>
-<h3 id="implications">Implications</h3>
+<h3 id="implications">
+  Implications
+  <a class="heading-link" href="#implications">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>This allows someone to create a fully legitimate application, which runs <code>mmap</code>, notarize it and later  load any external bundle, dylib. If supplied through the network it doesn&rsquo;t even have to be included in the distributed package.</p>
 <p>I think Apple should really monitor <code>mmap</code> operation and disallow the load of quarantined code, or code dowloaded over the network.</p>
-<h2 id="dynamic-libraries-bypass-gatekeeper">Dynamic Libraries Bypass Gatekeeper</h2>
-<p>I found this odd behavior when I wrote about screensavers for my <a href="https://theevilbit.github.io/beyond/">Beyond the good ol&rsquo; LaunchAgents series</a>. I noticed that if I place a downloaded screensaver in its location, it will be loaded without any user prompts, which was really weird as I expected GateKeeper to shout in my face.</p>
+<h2 id="dynamic-libraries-bypass-gatekeeper">
+  Dynamic Libraries Bypass Gatekeeper
+  <a class="heading-link" href="#dynamic-libraries-bypass-gatekeeper">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>I found this odd behavior when I wrote about screensavers for my <a href="https://theevilbit.github.io/beyond/"  class="external-link" target="_blank" rel="noopener">Beyond the good ol&rsquo; LaunchAgents series</a>. I noticed that if I place a downloaded screensaver in its location, it will be loaded without any user prompts, which was really weird as I expected GateKeeper to shout in my face.</p>
 <p>Let&rsquo;s see what goes on.</p>
-<h3 id="screensavers">Screensavers</h3>
+<h3 id="screensavers">
+  Screensavers
+  <a class="heading-link" href="#screensavers">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>When users download a screen saver bundle (<code>.saver</code>) and instead of double clicking the screen saver for installation, directly place it in the <code>~/Library/Screen Saver</code> directory, the system will load the screen saver if the users select it in the screen saver preferences. There is no alert that they are trying to execute an app downloaded form the Internet.</p>
 <p>The screen saver has to be notarized, or signed with an old certificate in order to avoid a prompt. Even if an app is notarized an alert should be generated at first execution by Gatekeeper.</p>
 <p>I created a simple screen saver with the following code, to see which part is executed.</p>
@@ -326,17 +406,35 @@ mmap Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel ex
 2021-05-28 08:43:59.845980-0700 0x1eb6     Default     0x6b54               692    0    legacyScreenSaver: (DemoScreen) hello_screensaver -[DemoScreenView startAnimation]
 2021-05-28 08:43:59.846471-0700 0x1eb6     Default     0x6b54               692    0    legacyScreenSaver: (DemoScreen) hello_screensaver -[DemoScreenView animateOneFrame]
 </code></pre><p>If the screen saver wasn&rsquo;t installed through a double click it should generate an alert just as when it&rsquo;s not notarized.</p>
-<h3 id="colorpickers">ColorPickers</h3>
+<h3 id="colorpickers">
+  ColorPickers
+  <a class="heading-link" href="#colorpickers">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>I went on to explore other bundles, and noticed the same behavior with ColorPickers.</p>
 <p>System wide color picker plugins are loaded by the process <code>/System/Library/Frameworks/AppKit.framework/Versions/C/XPCServices/LegacyExternalColorPickerService-x86_64.xpc/Contents/MacOS/LegacyExternalColorPickerService-x86_64</code> . Plugins are stored in <code>~/Library/ColorPickers</code>.</p>
 <p>Similarly to screen savers, if a color picker is notarized (or signed with an old certificate), and we place the plugin in <code>~/Library/ColorPickers</code> it will be loaded. There is no user prompt generated.</p>
 <p>A user prompt will only be generated if the plugin is not notarized, and signed with a new certificate.</p>
 <p>Someone can easily fool a user to copy the plugin into the right folder, and from that point the code can run once they start any application that loads color pickers, like Pages.</p>
-<h3 id="preference-panes">Preference panes</h3>
+<h3 id="preference-panes">
+  Preference panes
+  <a class="heading-link" href="#preference-panes">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>The system preferences pane uses the <code>/System/Library/Frameworks/PreferencePanes.framework/Versions/A/XPCServices/legacyLoader-x86_64.xpc/Contents/MacOS/legacyLoader-x86_64</code> binary to load external plugin from <code>~/Library/PreferencePanes</code>.</p>
 <p>Similarly to screen savers, if a preference pane is notarized (or signed with an old certificate), and we place the plugin in <code>~/Library/PreferencePanes</code> it will be loaded. There is no user prompt generated. The same story.</p>
 <p>It started to show a pattern, that every bundle which is loaded into a process gets executed, so I decided to investigate it.</p>
-<h3 id="the-root-cause">The Root Cause</h3>
+<h3 id="the-root-cause">
+  The Root Cause
+  <a class="heading-link" href="#the-root-cause">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>To test my theory I created a dylib, which simply logs a message.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#099">#import &lt;Foundation/Foundation.h&gt;
 </span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
@@ -404,18 +502,35 @@ mmap Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel ex
 </span></span><span style="display:flex;"><span>      v14 <span style="color:#555">=</span> v13;
 </span></span><span style="display:flex;"><span>    }
 </span></span></code></pre></div><p>Here we can find the log messages that we saw in the logs.</p>
-<h3 id="implications-1">Implications</h3>
+<h3 id="implications-1">
+  Implications
+  <a class="heading-link" href="#implications-1">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>Shared libraries, like dylibs, frameworks, plugins, etc&hellip; will be loaded by macOS without any user prompt if they were notarized. This bypasses Gatekeeper effectively as an attacker has plenty of options to get the user to drag and drop a plugin to a certain location, or drag and drop a framework to an existing application overwriting a previous one. Once the shared library is in its place it can be loaded.</p>
 <p>Note that Gatekeeper will also accept libraries signed in the past pre-notarization. The only case it will generate a popup and refuse to load it, if it was signed recently and wasn&rsquo;t notarized or if it&rsquo;s unsigned. This is different from regular applications as in those cases the user <em>has to approve</em> load even if the app was notarized. This should be the case also for shared libraries.</p>
-<h2 id="conclusion">Conclusion</h2>
+<h2 id="conclusion">
+  Conclusion
+  <a class="heading-link" href="#conclusion">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>According to Apple these are not considered bypasses, which I disagree with. Any clever person can use these techniques to stay under the radar and get code execution on a user&rsquo;s box without generating prompts for the user.</p>
 
       </div>
+
 
       <footer>
         
 
 
+        
+        
+        
+        
         
       </footer>
     </article>
@@ -423,23 +538,36 @@ mmap Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel ex
     
   </section>
 
-      </div>
+    </div>
 
-      <footer class="footer">
+    <footer class="footer">
   <section class="container">
+    ©
     
-     © 2023
+    2023
+     Csaba Fitzl 
+    ·
     
-       · 
-      Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.
-    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
     
   </section>
 </footer>
 
-    </main>
+  </main>
 
-    
+  
+
+  
+  
+  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -453,6 +581,31 @@ if (!doNotTrack) {
 }
 </script>
 
-  </body>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
 
 </html>

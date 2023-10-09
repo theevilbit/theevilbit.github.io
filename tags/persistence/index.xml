@@ -207,7 +207,7 @@ The xsanctl binary can be found at /System/Library/Filesystems/acfs.</descriptio
       <guid>https://theevilbit.github.io/beyond/beyond_0014/</guid>
       <description>This is part 14 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
 The at command set is a heritage *nix job scheduler on macOS. Although it&amp;rsquo;s slowly being deprecated, it&amp;rsquo;s still available on Big Sur, although disabled by default.
-Enabling atrun As described by atrun&amp;rsquo;s man page, the scheduler can be enabled using the following command:</description>
+Enabling atrun Link to heading As described by atrun&amp;rsquo;s man page, the scheduler can be enabled using the following command:</description>
     </item>
     
     <item>
@@ -227,8 +227,8 @@ This is another one of my favorites for some reason. macOS being a popular audio
       
       <guid>https://theevilbit.github.io/beyond/beyond_0012/</guid>
       <description>This is part 12 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-TL;DR This technique is very similarly to Spotlight Importers, but heavily sandboxed. It’s even more limited as the user need to specifically want to preview the file.
-Intro This will be a short post and it goes hand in hand with my previous one that detailed the use of Spotlight Importers for persistence.</description>
+TL;DR Link to heading This technique is very similarly to Spotlight Importers, but heavily sandboxed. It’s even more limited as the user need to specifically want to preview the file.
+Intro Link to heading This will be a short post and it goes hand in hand with my previous one that detailed the use of Spotlight Importers for persistence.</description>
     </item>
     
     <item>
@@ -238,7 +238,7 @@ Intro This will be a short post and it goes hand in hand with my previous one th
       
       <guid>https://theevilbit.github.io/beyond/beyond_0011/</guid>
       <description>This is part 11 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-TL;DR It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware.</description>
+TL;DR Link to heading It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware.</description>
     </item>
     
     <item>

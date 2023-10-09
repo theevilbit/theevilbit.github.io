@@ -13,7 +13,7 @@
       <pubDate>Fri, 29 May 2020 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/posts/secure_coding_xpc_part3/</guid>
-      <description>Microsoft AutoUpdate macOS privilege escalation vulnerability (CVE-2020-0984) Introduction This is the third post in my series which is trying to help Apple developers to avoid typical insecure coding practices. This one will highlight why XPC client hardening and proper verification is extremely important when we use XPC messaging on macOS between clients that run as a normal user and services that run as root. If this validation is not right, it opens up the possibility for an attacker to run privileged commands or worse case, achieve full privilege escalation on the system.</description>
+      <description>Microsoft AutoUpdate macOS privilege escalation vulnerability (CVE-2020-0984) Link to heading Introduction Link to heading This is the third post in my series which is trying to help Apple developers to avoid typical insecure coding practices. This one will highlight why XPC client hardening and proper verification is extremely important when we use XPC messaging on macOS between clients that run as a normal user and services that run as root.</description>
     </item>
     
     <item>

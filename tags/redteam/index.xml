@@ -14,7 +14,7 @@
       
       <guid>https://theevilbit.github.io/posts/gatekeeper_not_a_bypass/</guid>
       <description>This post is about two techniques that can be useful for someone to evade GateKeeper in a red team engagement or pentest. According to Apple these are not considered bypasses, and everything works as expected.
-mmap Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel extension. It uses the MAC policy framework to insert hooks on the system on various points. These functions are named as hook*. Let&amp;rsquo;s take a look on what is implemented.</description>
+mmap Link to heading Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel extension. It uses the MAC policy framework to insert hooks on the system on various points. These functions are named as hook*.</description>
     </item>
     
   </channel>

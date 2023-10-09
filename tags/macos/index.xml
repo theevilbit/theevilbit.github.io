@@ -14,7 +14,7 @@
       
       <guid>https://theevilbit.github.io/posts/launch_constraints_deep_dive/</guid>
       <description>Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&amp;rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.
-Old macOS Vulnerabilities TCC bypass with imagent.app This vulnerability was discovered by Adam Chester (xpn) back in 2019 and documented on his blog post &amp;ldquo;Bypassing MacOS Privacy Controls&amp;rdquo;.</description>
+Old macOS Vulnerabilities Link to heading TCC bypass with imagent.app Link to heading This vulnerability was discovered by Adam Chester (xpn) back in 2019 and documented on his blog post &amp;ldquo;Bypassing MacOS Privacy Controls&amp;rdquo;.</description>
     </item>
     
     <item>
@@ -74,7 +74,7 @@ In contrary to what people would expect, clients which can access location servi
       <pubDate>Mon, 14 Nov 2022 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/posts/cve-2022-32929/</guid>
-      <description>Intro Normally, when a users backup their iOS device, the backup is saved into ~/Library/Application Support/MobileSync/Backup directory. The MobileSync directory is properly protected by TCC, as the backup can contain photos, contact information, everything from the iOS device, and it might be unencrypted, so this is a whole lot of private information. It&amp;rsquo;s only accessible with Full Disk Access rights.
+      <description>Intro Link to heading Normally, when a users backup their iOS device, the backup is saved into ~/Library/Application Support/MobileSync/Backup directory. The MobileSync directory is properly protected by TCC, as the backup can contain photos, contact information, everything from the iOS device, and it might be unencrypted, so this is a whole lot of private information. It&amp;rsquo;s only accessible with Full Disk Access rights.
 The issue is that an attacker can invoke the AppleMobileBackup utility and make a backup to a custom location.</description>
     </item>
     
@@ -93,7 +93,7 @@ The issue is that an attacker can invoke the AppleMobileBackup utility and make 
       <pubDate>Mon, 29 Aug 2022 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/posts/cve-2017-2533/</guid>
-      <description>Intro CVE-2017-2533 was part of a chain of vulnerabilities, used at pwn2own 2017 found by the phoenhex team. They wrote a blogpost about it here. This vulnerability led me to find CVE-2022-32780, which I detailed at Black Hat Asia 2022. Although the nature of CVE-2017-2533 was discussed by the authors, but the actual code part was never truly revealed, and I always wondered about the full details. Now I took the time to dig up the details, including how it was fixed, and why the fix solves the problem.</description>
+      <description>Intro Link to heading CVE-2017-2533 was part of a chain of vulnerabilities, used at pwn2own 2017 found by the phoenhex team. They wrote a blogpost about it here. This vulnerability led me to find CVE-2022-32780, which I detailed at Black Hat Asia 2022. Although the nature of CVE-2017-2533 was discussed by the authors, but the actual code part was never truly revealed, and I always wondered about the full details.</description>
     </item>
     
     <item>
@@ -197,8 +197,8 @@ LoginHooks and LogoutHooks have been widely documented by many people, so this p
       <pubDate>Fri, 29 Oct 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/posts/cve-2021-30808/</guid>
-      <description>Intro CVE-2021-1784 was a vulnerability that allowed an attacker to bypass TCC by mounting over the ~/Library/Application Support/com.apple.TCC directory and providing a new TCC database. We covered this with Wojciech Regula in or 20+ ways to bypass your mac os privacy mechanisms BlackHat USA talk. This was properly fixed in Big Sur.
-The Vulnerability I don&amp;rsquo;t know why but I started to experiment with it again in the very first version of Monterey beta, and found that although the exploit doesn&amp;rsquo;t work, we can mount over the ~/Library directory.</description>
+      <description>Intro Link to heading CVE-2021-1784 was a vulnerability that allowed an attacker to bypass TCC by mounting over the ~/Library/Application Support/com.apple.TCC directory and providing a new TCC database. We covered this with Wojciech Regula in or 20+ ways to bypass your mac os privacy mechanisms BlackHat USA talk. This was properly fixed in Big Sur.
+The Vulnerability Link to heading I don&amp;rsquo;t know why but I started to experiment with it again in the very first version of Monterey beta, and found that although the exploit doesn&amp;rsquo;t work, we can mount over the ~/Library directory.</description>
     </item>
     
     <item>
@@ -253,7 +253,7 @@ Periodic scripts have a FreeBSD origin. These scripts are doing some maintenance
       
       <guid>https://theevilbit.github.io/posts/gatekeeper_not_a_bypass/</guid>
       <description>This post is about two techniques that can be useful for someone to evade GateKeeper in a red team engagement or pentest. According to Apple these are not considered bypasses, and everything works as expected.
-mmap Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel extension. It uses the MAC policy framework to insert hooks on the system on various points. These functions are named as hook*. Let&amp;rsquo;s take a look on what is implemented.</description>
+mmap Link to heading Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel extension. It uses the MAC policy framework to insert hooks on the system on various points. These functions are named as hook*.</description>
     </item>
     
     <item>
@@ -303,8 +303,8 @@ Screen savers are macOS bundles with the bundle extension of .</description>
       <pubDate>Wed, 26 May 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/posts/teamviewer_lpe/</guid>
-      <description>Intro This is a rather old vulnerability I found in TeamViewer back in 2020, and reported it through VCP/iDefense. TeamViewer fixed the vulnerability last November, but somehow I missed it, and became aware of it only recently. Their advisory can be found here: November updates - Security patches — TeamViewer Support
-The TeamViewer macOS client used a PrivilegedHelperTool named com.teamviewer.Helper to perform specific tasks that require root permissions. Back in 2020 it used a deprecate model to perform IPC communication, called Distributed Objects.</description>
+      <description>Intro Link to heading This is a rather old vulnerability I found in TeamViewer back in 2020, and reported it through VCP/iDefense. TeamViewer fixed the vulnerability last November, but somehow I missed it, and became aware of it only recently. Their advisory can be found here: November updates - Security patches — TeamViewer Support
+The TeamViewer macOS client used a PrivilegedHelperTool named com.teamviewer.Helper to perform specific tasks that require root permissions.</description>
     </item>
     
     <item>
@@ -326,7 +326,7 @@ The xsanctl binary can be found at /System/Library/Filesystems/acfs.</descriptio
       <guid>https://theevilbit.github.io/beyond/beyond_0014/</guid>
       <description>This is part 14 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
 The at command set is a heritage *nix job scheduler on macOS. Although it&amp;rsquo;s slowly being deprecated, it&amp;rsquo;s still available on Big Sur, although disabled by default.
-Enabling atrun As described by atrun&amp;rsquo;s man page, the scheduler can be enabled using the following command:</description>
+Enabling atrun Link to heading As described by atrun&amp;rsquo;s man page, the scheduler can be enabled using the following command:</description>
     </item>
     
     <item>
@@ -365,8 +365,8 @@ This is another one of my favorites for some reason. macOS being a popular audio
       
       <guid>https://theevilbit.github.io/beyond/beyond_0012/</guid>
       <description>This is part 12 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-TL;DR This technique is very similarly to Spotlight Importers, but heavily sandboxed. It’s even more limited as the user need to specifically want to preview the file.
-Intro This will be a short post and it goes hand in hand with my previous one that detailed the use of Spotlight Importers for persistence.</description>
+TL;DR Link to heading This technique is very similarly to Spotlight Importers, but heavily sandboxed. It’s even more limited as the user need to specifically want to preview the file.
+Intro Link to heading This will be a short post and it goes hand in hand with my previous one that detailed the use of Spotlight Importers for persistence.</description>
     </item>
     
     <item>
@@ -376,7 +376,7 @@ Intro This will be a short post and it goes hand in hand with my previous one th
       
       <guid>https://theevilbit.github.io/beyond/beyond_0011/</guid>
       <description>This is part 11 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-TL;DR It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware.</description>
+TL;DR Link to heading It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware.</description>
     </item>
     
     <item>
@@ -499,8 +499,8 @@ In the past years as my interest in macOS grew, and now that I&amp;rsquo;m mostl
       <pubDate>Tue, 19 Jan 2021 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/posts/com.apple.private.security.clear-library-validation/</guid>
-      <description>TL;DR On macOS 10.15.2 Apple introduced the com.apple.private.security.clear-library-validation entitlement, which is slowly replacing the previously used com.apple.security.cs.disable-library-validation entitlement on system binaries. Although their impact is the about the same, the way they work is different. While library validation is automatically disabled using com.apple.security.cs.disable-library-validation, with com.apple.private.security.clear-library-validation, the application has to disable it for itself through a csops system call.
-Intro With the release of Big Sur, I noticed that many of the system binaries have a new entitlement, which I didn&amp;rsquo;t see before, and that is com.</description>
+      <description>TL;DR Link to heading On macOS 10.15.2 Apple introduced the com.apple.private.security.clear-library-validation entitlement, which is slowly replacing the previously used com.apple.security.cs.disable-library-validation entitlement on system binaries. Although their impact is the about the same, the way they work is different. While library validation is automatically disabled using com.apple.security.cs.disable-library-validation, with com.apple.private.security.clear-library-validation, the application has to disable it for itself through a csops system call.
+Intro Link to heading With the release of Big Sur, I noticed that many of the system binaries have a new entitlement, which I didn&amp;rsquo;t see before, and that is com.</description>
     </item>
     
     <item>
@@ -538,7 +538,7 @@ The goal of the post is to cover many aspects of authorization, which I found in
       <pubDate>Fri, 03 Jul 2020 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/posts/cve_2020_9771/</guid>
-      <description>TL;DR We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc&amp;hellip;) of every user on the system, including those protected by Apple&amp;rsquo;s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
+      <description>TL;DR Link to heading We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc&amp;hellip;) of every user on the system, including those protected by Apple&amp;rsquo;s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
 This could be achieved with a single command, for example: mount_apfs -o noowners -s com.</description>
     </item>
     
@@ -549,7 +549,7 @@ This could be achieved with a single command, for example: mount_apfs -o noowner
       
       <guid>https://theevilbit.github.io/posts/secure_coding_xpc_part5/</guid>
       <description>In the last post of the series we will see another typical issue, where XPC services using the connecting process&amp;rsquo;s ID (PID) to verify the client instead of the audit token. We will use F-Secure SAFE again for our case study, the vulnerability was fixed in 17.8 and it was assigned CVE-2020-14977.
-The root cause The XPC services of F-Secure SAFE use the process ID (PID) to verify the client&amp;rsquo;s signature, as can be seen in the code below.</description>
+The root cause Link to heading The XPC services of F-Secure SAFE use the process ID (PID) to verify the client&amp;rsquo;s signature, as can be seen in the code below.</description>
     </item>
     
     <item>
@@ -558,7 +558,7 @@ The root cause The XPC services of F-Secure SAFE use the process ID (PID) to ver
       <pubDate>Fri, 12 Jun 2020 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/posts/secure_coding_xpc_part4/</guid>
-      <description>F-Secure SAFE XPC service exploitation (CVE-2020-14978) Intro In this post we will look into an other case study which will show us (again) why XPC client verification is crucial in XPC security, and how added authorization checks can slightly improve (but not fix) the problem. The F-Secure SAFE XPC services installed on macOS were not sufficiently hardened, and a malicious actor had the ability to interact with them. The vulnerability was fixed in version 17.</description>
+      <description>F-Secure SAFE XPC service exploitation (CVE-2020-14978) Link to heading Intro Link to heading In this post we will look into an other case study which will show us (again) why XPC client verification is crucial in XPC security, and how added authorization checks can slightly improve (but not fix) the problem. The F-Secure SAFE XPC services installed on macOS were not sufficiently hardened, and a malicious actor had the ability to interact with them.</description>
     </item>
     
     <item>
@@ -577,7 +577,7 @@ Several limitations apply to when this injection technique can be used and when 
       <pubDate>Fri, 29 May 2020 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/posts/secure_coding_xpc_part3/</guid>
-      <description>Microsoft AutoUpdate macOS privilege escalation vulnerability (CVE-2020-0984) Introduction This is the third post in my series which is trying to help Apple developers to avoid typical insecure coding practices. This one will highlight why XPC client hardening and proper verification is extremely important when we use XPC messaging on macOS between clients that run as a normal user and services that run as root. If this validation is not right, it opens up the possibility for an attacker to run privileged commands or worse case, achieve full privilege escalation on the system.</description>
+      <description>Microsoft AutoUpdate macOS privilege escalation vulnerability (CVE-2020-0984) Link to heading Introduction Link to heading This is the third post in my series which is trying to help Apple developers to avoid typical insecure coding practices. This one will highlight why XPC client hardening and proper verification is extremely important when we use XPC messaging on macOS between clients that run as a normal user and services that run as root.</description>
     </item>
     
     <item>
@@ -623,7 +623,7 @@ There are many great posts describing how to set up kernel debugging between two
       <pubDate>Fri, 25 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/posts/gatekeeper_bypass_or_not_bypass/</guid>
-      <description>TL;DR On macOS Mojave Gatekeeper only verifies executables, which are run with the open command or the user double clicks. It won’t verify files, that are executed through other means like, directly executing a binary ./myapp regardless of the quarantine attribute. If you can place a plist file inside LaunchAgents/LaunchDaemons, the command inside will also be executed. Prior to Catalina there is a way to trick users to drag &amp;amp; drop files in the LaunchAgents folder.</description>
+      <description>TL;DR Link to heading On macOS Mojave Gatekeeper only verifies executables, which are run with the open command or the user double clicks. It won’t verify files, that are executed through other means like, directly executing a binary ./myapp regardless of the quarantine attribute. If you can place a plist file inside LaunchAgents/LaunchDaemons, the command inside will also be executed. Prior to Catalina there is a way to trick users to drag &amp;amp; drop files in the LaunchAgents folder.</description>
     </item>
     
     <item>
@@ -632,8 +632,8 @@ There are many great posts describing how to set up kernel debugging between two
       <pubDate>Sat, 05 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/posts/few_click_rce_via_github_desktop_macos_client_with_gatekeeper_bypass_and_custom_url_handlers/</guid>
-      <description>TL;DR The GitHub Desktop app doesn’t add the quarantine extended attribute to files downloaded from the web, and this along with macOS’s URL handler auto-registration feature allows an attacker to execute arbitrary, even unsigned code on a macOS system. If we don’t count the clicks required to open the GitHub App, and cloning an external repository, then this is a 2 click RCE.
-The idea I recently came across a very good blog post about an RCE vulnerability on GitHub Desktop: GitHub Desktop RCE (OSX) - André Baptista via its custom URL handlers.</description>
+      <description>TL;DR Link to heading The GitHub Desktop app doesn’t add the quarantine extended attribute to files downloaded from the web, and this along with macOS’s URL handler auto-registration feature allows an attacker to execute arbitrary, even unsigned code on a macOS system. If we don’t count the clicks required to open the GitHub App, and cloning an external repository, then this is a 2 click RCE.
+The idea Link to heading I recently came across a very good blog post about an RCE vulnerability on GitHub Desktop: GitHub Desktop RCE (OSX) - André Baptista via its custom URL handlers.</description>
     </item>
     
     <item>

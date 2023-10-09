@@ -1,19 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+  <title>
+  CVE-2020-9771 - Reversing Engineering the Fix · theevilbit blog
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 
-    <meta name="author" content="Csaba Fitzl">
-    
-    
 
-    <meta name="twitter:card" content="summary"/>
+
+
+<meta name="author" content="Csaba Fitzl">
+<meta name="description" content="When I originally found the mount_apfs bug back in December, 2019, I honestly had no idea what was the root cause of it, nor had a clue how to even start looking into it. The only thing I knew for sure that the answer is within kernel. My macOS knowledge was still quite fresh that time (and even today), and was busy with so many other stuff that I never had the time to start looking into it.">
+<meta name="keywords" content="">
+
+<meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="CVE-2020-9771 - Reversing Engineering the Fix"/>
 <meta name="twitter:description" content="When I originally found the mount_apfs bug back in December, 2019, I honestly had no idea what was the root cause of it, nor had a clue how to even start looking into it. The only thing I knew for sure that the answer is within kernel. My macOS knowledge was still quite fresh that time (and even today), and was busy with so many other stuff that I never had the time to start looking into it."/>
 
-    <meta property="og:title" content="CVE-2020-9771 - Reversing Engineering the Fix" />
+<meta property="og:title" content="CVE-2020-9771 - Reversing Engineering the Fix" />
 <meta property="og:description" content="When I originally found the mount_apfs bug back in December, 2019, I honestly had no idea what was the root cause of it, nor had a clue how to even start looking into it. The only thing I knew for sure that the answer is within kernel. My macOS knowledge was still quite fresh that time (and even today), and was busy with so many other stuff that I never had the time to start looking into it." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/reversing_cve_2020_9771/" /><meta property="article:section" content="posts" />
@@ -21,129 +28,173 @@
 <meta property="article:modified_time" content="2020-12-13T00:00:00+00:00" />
 
 
-    
-      <base href="https://theevilbit.github.io/posts/reversing_cve_2020_9771/">
-    
-    <title>
-  CVE-2020-9771 - Reversing Engineering the Fix · theevilbit blog
-</title>
 
-    
-      <link rel="canonical" href="https://theevilbit.github.io/posts/reversing_cve_2020_9771/">
-    
 
-    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+<link rel="canonical" href="https://theevilbit.github.io/posts/reversing_cve_2020_9771/">
 
-    
-      
-      
-      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
-    
 
-    
+<link rel="preload" href="https://theevilbit.github.io/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
 
-    
 
-    
+  
+  
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.135e22c97ff685fe983fc60048e309ced8f00d8d38f536aa67dba8a13a03dfa4.css" integrity="sha256-E14iyX/2hf6YP8YASOMJztjwDY049TaqZ9uooToD36Q=" crossorigin="anonymous" media="screen" />
 
-    
-    
-    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.119.0">
-  </head>
 
-  <body class=" ">
-    <main class="wrapper">
-      <nav class="navigation">
+
+
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+
+<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
+<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+<body class="preload-transitions colorscheme-light">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
   <section class="container">
     <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
-    <input type="checkbox" id="menu-toggle" />
-    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
-    <ul class="navigation-list">
-      
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
-          </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+            </li>
+          
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
-          </li>
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
-          </li>
-        
-      
-      
-    </ul>
+      </ul>
+    
   </section>
 </nav>
 
 
-      <div class="content">
-        
+    <div class="content">
+      
   <section class="container post">
     <article>
       <header>
         <div class="post-title">
-          <h1 class="title">CVE-2020-9771 - Reversing Engineering the Fix</h1>
+          <h1 class="title">
+            <a class="title-link" href="https://theevilbit.github.io/posts/reversing_cve_2020_9771/">
+              CVE-2020-9771 - Reversing Engineering the Fix
+            </a>
+          </h1>
         </div>
         <div class="post-meta">
           <div class="date">
             <span class="posted-on">
-              <i class="fas fa-calendar"></i>
-              <time datetime='2020-12-13T00:00:00Z'>
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="2020-12-13T00:00:00Z">
                 December 13, 2020
               </time>
             </span>
             <span class="reading-time">
-              <i class="fas fa-clock"></i>
-              14 minutes read
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              14-minute read
             </span>
           </div>
+          
           <div class="categories">
-  <i class="fas fa-folder"></i>
+  <i class="fa fa-folder" aria-hidden="true"></i>
     <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
 
           <div class="tags">
-  <i class="fas fa-tag"></i>
-    <a href="https://theevilbit.github.io/tags/lpe/">lpe</a>
+  <i class="fa fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/lpe/">lpe</a>
+    </span>
       <span class="separator">•</span>
-    <a href="https://theevilbit.github.io/tags/vulnerability/">vulnerability</a>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/vulnerability/">vulnerability</a>
+    </span>
       <span class="separator">•</span>
-    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+    </span>
       <span class="separator">•</span>
-    <a href="https://theevilbit.github.io/tags/reverse-engineering/">reverse engineering</a></div>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/reverse-engineering/">reverse engineering</a>
+    </span></div>
 
         </div>
       </header>
 
-      <div>
+      <div class="post-content">
+        
         <p>When I originally found the <code>mount_apfs</code> bug back in December, 2019, I honestly had no idea what was the root cause of it, nor had a clue how to even start looking into it. The only thing I knew for sure that the answer is within kernel. My macOS knowledge was still quite fresh that time (and even today), and was busy with so many other stuff that I never had the time to start looking into it.</p>
-<p>Spring came, and Apple <a href="https://support.apple.com/en-us/HT211100">fixed</a> the bug in macOS Catalina 10.15.4, and they attributed this issue to the &ldquo;Sandbox&rdquo;. I changed jobs, summer came, and still didn&rsquo;t have time for it.</p>
-<p>Now we are into one year since I originally reported this. Recently I came across an article about APFS snapshots, which was written back in 2017 by Adam Leventhal for Ars Technica. It&rsquo;s titled as <a href="https://arstechnica.com/gadgets/2017/02/testing-out-snapshots-in-apples-next-generation-apfs-file-system/">Testing out snapshots in Apple’s next-generation APFS file system</a>. This showed some system calls, which could be used for making APFS snapshots, and finally gave me a boost, and a pointer where to start looking.</p>
-<p>I <a href="https://theevilbit.github.io/posts/cve_2020_9771/">previously</a> wrote about the vulnerability, which allowed someone to mount an APFS snapshot and gain read access to all files within the system, included those protected by privacy. The bug was fixed by only allowing apps having &ldquo;Full Disk Access&rdquo; right to make this mount operation.</p>
+<p>Spring came, and Apple <a href="https://support.apple.com/en-us/HT211100"  class="external-link" target="_blank" rel="noopener">fixed</a> the bug in macOS Catalina 10.15.4, and they attributed this issue to the &ldquo;Sandbox&rdquo;. I changed jobs, summer came, and still didn&rsquo;t have time for it.</p>
+<p>Now we are into one year since I originally reported this. Recently I came across an article about APFS snapshots, which was written back in 2017 by Adam Leventhal for Ars Technica. It&rsquo;s titled as <a href="https://arstechnica.com/gadgets/2017/02/testing-out-snapshots-in-apples-next-generation-apfs-file-system/"  class="external-link" target="_blank" rel="noopener">Testing out snapshots in Apple’s next-generation APFS file system</a>. This showed some system calls, which could be used for making APFS snapshots, and finally gave me a boost, and a pointer where to start looking.</p>
+<p>I <a href="https://theevilbit.github.io/posts/cve_2020_9771/"  class="external-link" target="_blank" rel="noopener">previously</a> wrote about the vulnerability, which allowed someone to mount an APFS snapshot and gain read access to all files within the system, included those protected by privacy. The bug was fixed by only allowing apps having &ldquo;Full Disk Access&rdquo; right to make this mount operation.</p>
 <p>So I finally decided to sit down and take an in-depth look into how Apple fixed it, and find out what&rsquo;s going on.</p>
-<h2 id="chapter-1---the-source">Chapter 1 - The Source</h2>
+<h2 id="chapter-1---the-source">
+  Chapter 1 - The Source
+  <a class="heading-link" href="#chapter-1---the-source">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>Although Apple doesn&rsquo;t open source everything, there is still a decent amount source code available, largely the XNU kernel, which is very useful for any similar investigation. Since image mounting is done via system calls, the source code of the XNU kernel can be very fruitful.</p>
 <p><img src="https://theevilbit.github.io/images/Reversing_CVE_2020_9771/yoda.jpg" alt=""></p>
 <p>During the past year Apple released the source code for XNU till macOS 10.15.6, so I decided to start looking there. I keep a copy of all tarballs, so extracted an earlier version of XNU, 6153.41.3 and also the one used in macOS 10.15.4, which is 6153.141.1. If any changes were made in the open source part we should see that. Let&rsquo;s try to find out if anything changed.</p>
@@ -380,9 +431,15 @@
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>vfc_name
 </span></span><span style="display:flex;"><span>	);
 </span></span></code></pre></div><p>It says <code>@return Return 0 if access is granted</code>. This is generally true for all MACF calls, not just this.</p>
-<p>An interesting thing I found is that in order to use the  <code>fs_snaphot</code> system call, which is also used by <a href="https://github.com/ahl/apfs">snapUtil</a>, and not get denied, you need the <code>com.apple.developer.vfs.snapshot</code> entitlement.</p>
+<p>An interesting thing I found is that in order to use the  <code>fs_snaphot</code> system call, which is also used by <a href="https://github.com/ahl/apfs"  class="external-link" target="_blank" rel="noopener">snapUtil</a>, and not get denied, you need the <code>com.apple.developer.vfs.snapshot</code> entitlement.</p>
 <p>Now that we now that there is a MACF call, time to take a look on the Sandbox. For this we will use the Sandbox extension from Big Sur instead of Catalina.</p>
-<h2 id="chapter-2---the-sandbox">Chapter 2 - The Sandbox</h2>
+<h2 id="chapter-2---the-sandbox">
+  Chapter 2 - The Sandbox
+  <a class="heading-link" href="#chapter-2---the-sandbox">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>The <code>mount_check_snapshot_mount</code> Sandbox hook is implemented by the <code>hook_mount_check_snapshot_mount</code> function.</p>
 <pre tabindex="0"><code class="language-clike" data-lang="clike">int _hook_mount_check_snapshot_mount(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
     var_30 = **qword_44080;
@@ -427,7 +484,7 @@
     return rax;
 }
 </code></pre><p><code>cred_sb_evaluate</code> is also not very long and it further calls into <code>sb_evaluate_internal</code>, passing the opcode. This is a massive, and very complex function, and ultimately this is what will determine if the operation is allowed or not. Most hook operations end up calling into this internal function. It&rsquo;s over 1000 lines of code even if decompiled.</p>
-<p>I decided not to fully reverse engineer this as in itself it would be weeks of work, but I still wanted to see the decision making process, so jumped into kernel debugging. I wrote about how to do kernel debugging on macOS earlier, which can be found in my company&rsquo;s website, here: <a href="https://www.offensive-security.com/offsec/kernel-debugging-macos-with-sip/">Kernel Debugging macOS with SIP</a>.</p>
+<p>I decided not to fully reverse engineer this as in itself it would be weeks of work, but I still wanted to see the decision making process, so jumped into kernel debugging. I wrote about how to do kernel debugging on macOS earlier, which can be found in my company&rsquo;s website, here: <a href="https://www.offensive-security.com/offsec/kernel-debugging-macos-with-sip/"  class="external-link" target="_blank" rel="noopener">Kernel Debugging macOS with SIP</a>.</p>
 <blockquote>
 <p>A small detour. Kernel debugging on Big Sur, with VMware Fusion 12.1 doesn&rsquo;t work well if the VM has more than 1 vCPU. No matter if we use VMware&rsquo;s GDB stub or proper XNU kernel debugging, when we &ldquo;continue&rdquo; after a breakpoint, the VM will hang forever and the &ldquo;vmware-vmx&rdquo; process will go high on CPU. This could also happen with 1 vCPU, but rarely.</p>
 </blockquote>
@@ -511,17 +568,28 @@ Target 0: (kernel) stopped.
      rax = 0x0000000000000000
 </code></pre><p>Once we hit our breakpoint we will set a new breakpoint which is hit upon returning from <code>sb_evaluate_internal</code>. Now if we check the value of <code>RAX</code>, we will find that the return value is &ldquo;0&rdquo;, and our operation will indeed be successful. This confirms that indeed this is where the decision happens, and this check was missing prior Catalina 10.15.4.</p>
 <p>If we do a binary diffing on the Sandbox between macOS version 10.15.3 and 10.15.4 we will see that the function <code>hook_mount_check_snapshot_mount</code> was introduced at this version.</p>
-<h2 id="conclusion">Conclusion</h2>
+<h2 id="conclusion">
+  Conclusion
+  <a class="heading-link" href="#conclusion">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>In this rather long post we explored the secrets behind the fix for CVE-2020-9771. We started with reviewing the changes in the XNU source code, and found that a new MACF policy check, <code>mac_mount_check_snapshot_mount</code> was introduced for snapshot mounting. Then we moved over the Sandbox, where we examined the <code>hook_mount_check_snapshot_mount</code> function, which implements this check by calling into <code>sb_evaluate_internal</code>. Lastly we used kernel debugging to confirm the decision made by the Sandbox and compare the results of having and not having FDA rights.</p>
 <p>I hope this was a useful article, I certainly learned a lot by going through this process. I think I will always feel like a n00b, no matter what, but now at least I&rsquo;m one step forward.</p>
 <p><img src="https://theevilbit.github.io/images/Reversing_CVE_2020_9771/babyyoda.jpg" alt=""></p>
 
       </div>
 
+
       <footer>
         
 
 
+        
+        
+        
+        
         
       </footer>
     </article>
@@ -529,23 +597,36 @@ Target 0: (kernel) stopped.
     
   </section>
 
-      </div>
+    </div>
 
-      <footer class="footer">
+    <footer class="footer">
   <section class="container">
+    ©
     
-     © 2023
+    2023
+     Csaba Fitzl 
+    ·
     
-       · 
-      Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.
-    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
     
   </section>
 </footer>
 
-    </main>
+  </main>
 
-    
+  
+
+  
+  
+  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -559,6 +640,31 @@ if (!doNotTrack) {
 }
 </script>
 
-  </body>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
 
 </html>

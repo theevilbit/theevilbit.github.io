@@ -1,156 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+  <title>
+  Beyond the good ol&#39; LaunchAgents - 11 - Spotlight Importers · theevilbit blog
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 
-    <meta name="author" content="Csaba Fitzl">
-    
-    
 
-    <meta name="twitter:card" content="summary"/>
+
+
+<meta name="author" content="Csaba Fitzl">
+<meta name="description" content="This is part 11 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+TL;DR Link to heading It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware.">
+<meta name="keywords" content="">
+
+<meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 11 - Spotlight Importers"/>
 <meta name="twitter:description" content="This is part 11 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-TL;DR It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware."/>
+TL;DR Link to heading It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware."/>
 
-    <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 11 - Spotlight Importers" />
+<meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 11 - Spotlight Importers" />
 <meta property="og:description" content="This is part 11 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-TL;DR It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware." />
+TL;DR Link to heading It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0011/" /><meta property="article:section" content="beyond" />
 <meta property="article:published_time" content="2021-04-03T00:00:00+00:00" />
 <meta property="article:modified_time" content="2021-04-03T00:00:00+00:00" />
 
 
-    
-      <base href="https://theevilbit.github.io/beyond/beyond_0011/">
-    
-    <title>
-  Beyond the good ol&#39; LaunchAgents - 11 - Spotlight Importers · theevilbit blog
-</title>
 
-    
-      <link rel="canonical" href="https://theevilbit.github.io/beyond/beyond_0011/">
-    
 
-    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+<link rel="canonical" href="https://theevilbit.github.io/beyond/beyond_0011/">
 
-    
-      
-      
-      <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
-    
 
-    
+<link rel="preload" href="https://theevilbit.github.io/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
 
-    
 
-    
+  
+  
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.135e22c97ff685fe983fc60048e309ced8f00d8d38f536aa67dba8a13a03dfa4.css" integrity="sha256-E14iyX/2hf6YP8YASOMJztjwDY049TaqZ9uooToD36Q=" crossorigin="anonymous" media="screen" />
 
-    
-    
-    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.119.0">
-  </head>
 
-  <body class=" ">
-    <main class="wrapper">
-      <nav class="navigation">
+
+
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+
+<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
+<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+<body class="preload-transitions colorscheme-light">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
   <section class="container">
     <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
-    <input type="checkbox" id="menu-toggle" />
-    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
-    <ul class="navigation-list">
-      
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
-          </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+            </li>
+          
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
-          </li>
         
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
-          </li>
-        
-          <li class="navigation-item">
-            <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
-          </li>
-        
-      
-      
-    </ul>
+      </ul>
+    
   </section>
 </nav>
 
 
-      <div class="content">
-        
-  <section class="container post">
-    <article>
-      <header>
-        <div class="post-title">
-          <h1 class="title">Beyond the good ol&#39; LaunchAgents - 11 - Spotlight Importers</h1>
-        </div>
-        <div class="post-meta">
-          <div class="date">
-            <span class="posted-on">
-              <i class="fas fa-calendar"></i>
-              <time datetime='2021-04-03T00:00:00Z'>
-                April 3, 2021
-              </time>
-            </span>
-            <span class="reading-time">
-              <i class="fas fa-clock"></i>
-              10 minutes read
-            </span>
-          </div>
-          <div class="categories">
-  <i class="fas fa-folder"></i>
-    <a href="https://theevilbit.github.io/categories/persistence/">persistence</a>
-      <span class="separator">•</span>
-    <a href="https://theevilbit.github.io/categories/beyond/">beyond</a></div>
+    <div class="content">
+      
+  <section class="container page">
+  <article>
+    <header>
+      <h1 class="title">
+        <a class="title-link" href="https://theevilbit.github.io/beyond/beyond_0011/">
+          Beyond the good ol&#39; LaunchAgents - 11 - Spotlight Importers
+        </a>
+      </h1>
+    </header>
 
-          <div class="tags">
-  <i class="fas fa-tag"></i>
-    <a href="https://theevilbit.github.io/tags/macos/">macos</a>
-      <span class="separator">•</span>
-    <a href="https://theevilbit.github.io/tags/persistence/">persistence</a>
-      <span class="separator">•</span>
-    <a href="https://theevilbit.github.io/tags/beyond/">beyond</a></div>
-
-        </div>
-      </header>
-
-      <div>
-        <blockquote>
-<p>This is part 11 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/">introduction</a>.</p>
+    <blockquote>
+<p>This is part 11 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p>
 </blockquote>
-<h2 id="tldr">TL;DR</h2>
+<h2 id="tldr">
+  TL;DR
+  <a class="heading-link" href="#tldr">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware.</p>
-<h2 id="intro">Intro</h2>
-<p>I’m reading Jonathan Levin’s *OS Internals Vol I. book (user mode - <a href="http://newosxbook.com/index.php">*OS Internals: - Welcome!</a>), and I got to the chapter where he talks about Spotlight importers, and my first thought was that it would be an awesome way to persist on macOS. Typically there is nothing new in InfoSec, so after a quick Google search I found that Patrick Wardle already mentioned this in his BlackHat USA / Immunity talk back in 2015.
-Slides: <a href="https://www.blackhat.com/docs/us-15/materials/us-15-Wardle-Writing-Bad-A-Malware-For-OS-X.pdf">https://www.blackhat.com/docs/us-15/materials/us-15-Wardle-Writing-Bad-A-Malware-For-OS-X.pdf</a>
-Talk: <a href="https://vimeo.com/129435995">Patrick Wardle Writing Bad@ss OS X Malware on Vimeo</a> (This is the Immunity one, as he cut this part from the actual BH talk)
+<h2 id="intro">
+  Intro
+  <a class="heading-link" href="#intro">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>I’m reading Jonathan Levin’s *OS Internals Vol I. book (user mode - <a href="http://newosxbook.com/index.php"  class="external-link" target="_blank" rel="noopener">*OS Internals: - Welcome!</a>), and I got to the chapter where he talks about Spotlight importers, and my first thought was that it would be an awesome way to persist on macOS. Typically there is nothing new in InfoSec, so after a quick Google search I found that Patrick Wardle already mentioned this in his BlackHat USA / Immunity talk back in 2015.
+Slides: <a href="https://www.blackhat.com/docs/us-15/materials/us-15-Wardle-Writing-Bad-A-Malware-For-OS-X.pdf"  class="external-link" target="_blank" rel="noopener">https://www.blackhat.com/docs/us-15/materials/us-15-Wardle-Writing-Bad-A-Malware-For-OS-X.pdf</a>
+Talk: <a href="https://vimeo.com/129435995"  class="external-link" target="_blank" rel="noopener">Patrick Wardle Writing Bad@ss OS X Malware on Vimeo</a> (This is the Immunity one, as he cut this part from the actual BH talk)
 But I didn’t find anything beyond this, nothing about how to persist this way. So I decided to experiment with it and see what can or cannot be done.</p>
-<h2 id="what-are-spotlight-importers">What are Spotlight importers?</h2>
+<h2 id="what-are-spotlight-importers">
+  What are Spotlight importers?
+  <a class="heading-link" href="#what-are-spotlight-importers">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>Spotlight on OSX / macOS is basically an indexing / search service. When you press CMD+SPACE a searcher comes up (that’s Spotlight) and you can type in whatever you look for. Spotlight will search in its index, and that index is being built by Spotlight Importers. These importers are made for various filetypes, typically documents, which will be able to parse the file and extract useful, indexable content from it. There are a bunch of these included in macOS, but you can also write your own, and extend the system’s capabilities. You can check your current list of importers with <code>mdimport -L</code> command. This is how my system looks like:</p>
 <pre tabindex="0"><code>csaby@mac scripts % mdimport -L
 Paths: id(501) (
@@ -187,14 +210,26 @@ Paths: id(501) (
 <li>Inside an application bundle. This bundle can be almost anywhere, I tried <code>Desktop</code>, <code>Downloads</code>, <code>/Applications</code> and all worked - most of the time.
 The <code>/System/Library/Spotlight</code> contains the built in importers and as it’s protected by SIP you can’t add/modify/delete these.</li>
 </ol>
-<h2 id="creating-an-mdimporter">Creating an .mdimporter</h2>
-<h3 id="basics">Basics</h3>
-<p>I’m not a developer in general and definitely not a macOS developer, although I had a tiny exposure in the past, I’m far from being able to code anything. Apple’s most recent article on the subject is 6 years old: <a href="https://developer.apple.com/library/archive/documentation/Carbon/Conceptual/MDImporters/Concepts/WritingAnImp.html">Writing a Spotlight Importer</a> If you Google for how to create Spotlight Importers, all of the articles will say that open Xcode, and create a Spotlight Importer project, there is a template for it. NOPE, it’s gone. It was there up-until Xcode 9, and right now we are at Xcode 11, so you either download the old one, or look for an existing project to modify. I did the second, searched Github, and eventually found several projects, and I chose this: <a href="https://github.com/GenjiApp/EPUB-Plugins">GitHub - GenjiApp/EPUB-Plugins: OS X Spotlight / Quick Look plugins for EPUBs</a>
+<h2 id="creating-an-mdimporter">
+  Creating an .mdimporter
+  <a class="heading-link" href="#creating-an-mdimporter">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<h3 id="basics">
+  Basics
+  <a class="heading-link" href="#basics">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>I’m not a developer in general and definitely not a macOS developer, although I had a tiny exposure in the past, I’m far from being able to code anything. Apple’s most recent article on the subject is 6 years old: <a href="https://developer.apple.com/library/archive/documentation/Carbon/Conceptual/MDImporters/Concepts/WritingAnImp.html"  class="external-link" target="_blank" rel="noopener">Writing a Spotlight Importer</a> If you Google for how to create Spotlight Importers, all of the articles will say that open Xcode, and create a Spotlight Importer project, there is a template for it. NOPE, it’s gone. It was there up-until Xcode 9, and right now we are at Xcode 11, so you either download the old one, or look for an existing project to modify. I did the second, searched Github, and eventually found several projects, and I chose this: <a href="https://github.com/GenjiApp/EPUB-Plugins"  class="external-link" target="_blank" rel="noopener">GitHub - GenjiApp/EPUB-Plugins: OS X Spotlight / Quick Look plugins for EPUBs</a>
 It’s pretty old, but works. First I just compiled it to see if this importer is working at all or not, and it did. It indexed ePub files, with extra attributes, like Author.</p>
 <blockquote>
 <p>You can use the <code>mdls /path/to/file</code> command to view attributes of the file.</p>
 </blockquote>
-<p>What I did after that is cleaning up the project, I removed the other targets (like Quicklook) and also cleaned up the metadata generator function. Here are the mandatory building blocks your importer will have to have, I will try to explain them to the best of my understanding, but please bear in mind that I’m a n00b for Objective-C or macOS development. If you want to follow here is the one I made / modified: <a href="https://github.com/theevilbit/macos/tree/master/PersistentImporter">macos/PersistentImporter at master · theevilbit/macos · GitHub</a></p>
+<p>What I did after that is cleaning up the project, I removed the other targets (like Quicklook) and also cleaned up the metadata generator function. Here are the mandatory building blocks your importer will have to have, I will try to explain them to the best of my understanding, but please bear in mind that I’m a n00b for Objective-C or macOS development. If you want to follow here is the one I made / modified: <a href="https://github.com/theevilbit/macos/tree/master/PersistentImporter"  class="external-link" target="_blank" rel="noopener">macos/PersistentImporter at master · theevilbit/macos · GitHub</a></p>
 <ol>
 <li>schema.xml - this will contain the attributes your importer will support. The attributes are the metadata buckets your importer can extract data into, and which will be indexed by Spotlight. For the above project I actually made it mostly intact, but I could likely clean it completely.</li>
 </ol>
@@ -252,7 +287,7 @@ It’s pretty old, but works. First I just compiled it to see if this importer i
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/schema&gt;</span>
 </span></span></code></pre></div><ol start="2">
 <li>main.c file - This is a standard file, typically generated by Xcode, you don’t need to modify it. I will not paste it here, as it’s quite long, but you can get it from my GitHub project (link above).</li>
-<li>Info.plist file - Here you must define (along some other standard things) what kind of files your importer will support. It should contain file extensions, and the <a href="https://en.wikipedia.org/wiki/Uniform_Type_Identifier">Uniform Type Identifier</a>. Below is the one related to epub from the Info.plist. As mentioned by Patrick you can also specify all files, but I opted to stick with epubs, I didn’t want my importer to run always, as my goal was only experimenting.</li>
+<li>Info.plist file - Here you must define (along some other standard things) what kind of files your importer will support. It should contain file extensions, and the <a href="https://en.wikipedia.org/wiki/Uniform_Type_Identifier"  class="external-link" target="_blank" rel="noopener">Uniform Type Identifier</a>. Below is the one related to epub from the Info.plist. As mentioned by Patrick you can also specify all files, but I opted to stick with epubs, I didn’t want my importer to run always, as my goal was only experimenting.</li>
 </ol>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>UTImportedTypeDeclarations<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
 </span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
@@ -331,15 +366,27 @@ It’s pretty old, but works. First I just compiled it to see if this importer i
 </span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span> <span style="color:#366">true</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>As it turned out during my research, since OSX 10.8 you can’t use the standard <code>/tmp/</code> folder, as you have no access to that, you need to query your sandboxed <code>tmp</code> directory, you can do that with <code>NSTemporaryDirectory()</code>. More on that:</p>
-<p><a href="https://web.archive.org/web/20170615173848/http://www.cocoabuilder.com/archive/cocoa/328611-creating-temp-files-or-temp-folders-in-standard-temp-file-locations-in-mdimporter-on-mac-os-10-8-3.html">creating temp files or temp folders in standard temp file locations in mdimporter on Mac OS X 10.8.3 | Cocoabuilder</a></p>
-<p><a href="https://stackoverflow.com/questions/50939980/creating-temp-files-in-spotlight-module-mdimporter">objective c - Creating temp files in Spotlight Module / MDimporter - Stack Overflow</a></p>
-<h3 id="installation">Installation</h3>
+<p><a href="https://web.archive.org/web/20170615173848/http://www.cocoabuilder.com/archive/cocoa/328611-creating-temp-files-or-temp-folders-in-standard-temp-file-locations-in-mdimporter-on-mac-os-10-8-3.html"  class="external-link" target="_blank" rel="noopener">creating temp files or temp folders in standard temp file locations in mdimporter on Mac OS X 10.8.3 | Cocoabuilder</a></p>
+<p><a href="https://stackoverflow.com/questions/50939980/creating-temp-files-in-spotlight-module-mdimporter"  class="external-link" target="_blank" rel="noopener">objective c - Creating temp files in Spotlight Module / MDimporter - Stack Overflow</a></p>
+<h3 id="installation">
+  Installation
+  <a class="heading-link" href="#installation">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>Once you build it, you get an <code>.mdimporter</code> plugin. You should place it into one of the <code>Spotlight</code> directories, and eventually after a few minutes it will be discovered by the system and it will show up in the list of your importers. You can also force an import with <code>mdimport -r /path/to/your/mdimporter</code> but it still have to live in the right place otherwise it won’t be used / imported. Once that’s done, you can force an indexing with running <code>mdimport /path/to/epub</code>. If you check the device log, you will see something like this:</p>
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0011_0.png" alt=""></p>
 <p>The <code>URL:(null)</code> indicates the failed network connection. You can also see that the copy of the file was successful.</p>
 <p>There is really nothing much more your importer can do, I tried it also on Yosemite, but essentially the same results. Actually even worse, as likely I need to do the file copy differently.</p>
-<p>Side track: if you need to install older macOS VMs on Fusion, here you can find the links to the installer packages from 10.10 (Yosemite) to 10.15 (Catalina): <a href="https://tidbits.com/2019/10/28/redownload-archived-macos-installers-to-address-expired-certificates/">Redownload Archived macOS Installers to Address Expired Certificates - TidBITS</a> Once you download the installer, run it, and it will extract the actual OS installer to <code>/Applications</code>, which can be used by VMware Fusion. As an addition to Yosemite: Use USB 2.0 as the last security update will mess up VMware, and neither the keyboard nor the mouse will work. More on the bug: <a href="https://communities.vmware.com/thread/568561">Solved: OS X 10.10.5 Yosemite VM freezes after … |VMware Communities</a></p>
-<h3 id="adding-an-app-bundle">Adding an App bundle</h3>
+<p>Side track: if you need to install older macOS VMs on Fusion, here you can find the links to the installer packages from 10.10 (Yosemite) to 10.15 (Catalina): <a href="https://tidbits.com/2019/10/28/redownload-archived-macos-installers-to-address-expired-certificates/"  class="external-link" target="_blank" rel="noopener">Redownload Archived macOS Installers to Address Expired Certificates - TidBITS</a> Once you download the installer, run it, and it will extract the actual OS installer to <code>/Applications</code>, which can be used by VMware Fusion. As an addition to Yosemite: Use USB 2.0 as the last security update will mess up VMware, and neither the keyboard nor the mouse will work. More on the bug: <a href="https://communities.vmware.com/thread/568561"  class="external-link" target="_blank" rel="noopener">Solved: OS X 10.10.5 Yosemite VM freezes after … |VMware Communities</a></p>
+<h3 id="adding-an-app-bundle">
+  Adding an App bundle
+  <a class="heading-link" href="#adding-an-app-bundle">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>As we saw earlier another way to install an importer is part of an <code>.app</code> bundle. This was super tricky, and it required heavy Google-Fu from my side to figure out :) The above GitHub project already has it, but here is a short writeup how to do it on your own.</p>
 <ol>
 <li>
@@ -362,43 +409,66 @@ Add your importer below.
 </li>
 </ol>
 <p>If you copy that app now somewhere, most likely it will be consumed and the mdimporter will be added to the list of your available Spotlight Importers.</p>
-<h4 id="download---unzip---rce---nope">Download - unzip - RCE? - NOPE</h4>
+<h4 id="download---unzip---rce---nope">
+  Download - unzip - RCE? - NOPE
+  <a class="heading-link" href="#download---unzip---rce---nope">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h4>
 <p>Since the app bundle seems to be auto-parsed just like in the case of URL handlers, and the Spotlight importer is auto registered, I thought that someone could gain RCE with a drive by download, as Safari will auto-extract the ZIP file, which could contain an application that could contain an importer. Luckily it seems that macOS won’t import a Spotlight importer in this case. Hallelujah! :)</p>
-<h3 id="gatekeeper-on-catalina">Gatekeeper on Catalina</h3>
+<h3 id="gatekeeper-on-catalina">
+  Gatekeeper on Catalina
+  <a class="heading-link" href="#gatekeeper-on-catalina">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
 <p>I also tried what happens if I download an mdimporter and manually place it into the Spotlight folder. It will be imported in that case, however due to the quarantine flag (download!!), GateKeeper will actually generate a popup, which is really nice. It seems that Apple significantly improved it indeed.</p>
-<h2 id="closing-thoughts">Closing thoughts</h2>
+<h2 id="closing-thoughts">
+  Closing thoughts
+  <a class="heading-link" href="#closing-thoughts">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>I think plugins, like this is a bit unexplored space for persisting on macOS systems, there might be more similar ones. For example you could also use a Spotlight Quicklook plugin which is invoked, whenever someone hits the spacebar on a file in <code>Finder.app</code> for a quick preview of the file. Likely it would have the same level of access, and it’s much more limited cause you need the user to preview something, but it could still work.</p>
 
-      </div>
+  </article>
+</section>
 
-      <footer>
-        
+  
 
+    </div>
 
-        
-      </footer>
-    </article>
-
-    
-  </section>
-
-      </div>
-
-      <footer class="footer">
+    <footer class="footer">
   <section class="container">
+    ©
     
-     © 2023
+    2023
+     Csaba Fitzl 
+    ·
     
-       · 
-      Blog created by <a href="https://twitter.com/theevilbit">@theevilbit</a>.
-    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
     
   </section>
 </footer>
 
-    </main>
+  </main>
 
-    
+  
+
+  
+  
+  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -412,6 +482,31 @@ if (!doNotTrack) {
 }
 </script>
 
-  </body>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
 
 </html>

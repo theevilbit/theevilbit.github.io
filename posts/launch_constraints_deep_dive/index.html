@@ -13,18 +13,18 @@
 
 
 <meta name="author" content="Csaba Fitzl">
-<meta name="description" content="Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.
-Old macOS Vulnerabilities Link to heading TCC bypass with imagent.app Link to heading This vulnerability was discovered by Adam Chester (xpn) back in 2019 and documented on his blog post &ldquo;Bypassing MacOS Privacy Controls&rdquo;.">
+<meta name="description" content="UPDATE 2023.10.10.: After chatting with Thijs Alkemade, @xnyhps, updated the XPC part of the post as I originally misunderstood Apple&rsquo;s intent.
+Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.">
 <meta name="keywords" content="">
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Launch and Environment Constraints Deep Dive"/>
-<meta name="twitter:description" content="Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.
-Old macOS Vulnerabilities Link to heading TCC bypass with imagent.app Link to heading This vulnerability was discovered by Adam Chester (xpn) back in 2019 and documented on his blog post &ldquo;Bypassing MacOS Privacy Controls&rdquo;."/>
+<meta name="twitter:description" content="UPDATE 2023.10.10.: After chatting with Thijs Alkemade, @xnyhps, updated the XPC part of the post as I originally misunderstood Apple&rsquo;s intent.
+Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present."/>
 
 <meta property="og:title" content="Launch and Environment Constraints Deep Dive" />
-<meta property="og:description" content="Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.
-Old macOS Vulnerabilities Link to heading TCC bypass with imagent.app Link to heading This vulnerability was discovered by Adam Chester (xpn) back in 2019 and documented on his blog post &ldquo;Bypassing MacOS Privacy Controls&rdquo;." />
+<meta property="og:description" content="UPDATE 2023.10.10.: After chatting with Thijs Alkemade, @xnyhps, updated the XPC part of the post as I originally misunderstood Apple&rsquo;s intent.
+Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://theevilbit.github.io/posts/launch_constraints_deep_dive/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2023-10-09T00:00:00+00:00" />
@@ -182,7 +182,10 @@ Old macOS Vulnerabilities Link to heading TCC bypass with imagent.app Link to he
 
       <div class="post-content">
         
-        <p>Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.</p>
+        <blockquote>
+<p>UPDATE 2023.10.10.: After chatting with Thijs Alkemade, <a href="https://mastodon.social/@xnyhps@infosec.exchange"  class="external-link" target="_blank" rel="noopener">@xnyhps</a>, updated the XPC part of the post as I originally misunderstood Apple&rsquo;s intent.</p>
+</blockquote>
+<p>Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.</p>
 <h2 id="old-macos-vulnerabilities">
   Old macOS Vulnerabilities
   <a class="heading-link" href="#old-macos-vulnerabilities">
@@ -191,7 +194,7 @@ Old macOS Vulnerabilities Link to heading TCC bypass with imagent.app Link to he
   </a>
 </h2>
 <h3 id="tcc-bypass-with-imagentapp">
-  TCC bypass with imagent.app
+  TCC Bypass with imagent.app
   <a class="heading-link" href="#tcc-bypass-with-imagentapp">
     <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
@@ -214,7 +217,7 @@ Old macOS Vulnerabilities Link to heading TCC bypass with imagent.app Link to he
 </span></span></code></pre></div><p>Adam found that this application will try to load plugins from <code>imagent.app/Contents/PlugIns</code>, and its code signing properties allowed to load any third party, non Apple signed plugins. The only issue was that the application resided in a SIP protected directory. However nothing prevented us from making a copy of it, for example into <code>/tmp/</code>, create a plugin, and launch it from there.</p>
 <p>This way we could load an arbitrary plugin into this powerful application and inherit its entitlements and so bypass TCC and keychain.</p>
 <h3 id="tcc-bypass-using-directory-utilityapp-cve-2020-27937">
-  TCC bypass using Directory Utility.app, CVE-2020-27937
+  TCC Bypass Using Directory Utility.app, CVE-2020-27937
   <a class="heading-link" href="#tcc-bypass-using-directory-utilityapp-cve-2020-27937">
     <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
@@ -227,7 +230,7 @@ Old macOS Vulnerabilities Link to heading TCC bypass with imagent.app Link to he
 </span></span><span style="display:flex;"><span> <span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
 </span></span></code></pre></div><p>Similarly to imagent, the application&rsquo;s code signing properties were not restrictive enough, and allowed us injecting code into the application by creating plugins. So we could make a copy again, and inject code into the app. This again allowed us inheriting the utility&rsquo;s entitlements. By changing the HOME directory, we can plant a new TCC database with our custom rules.</p>
 <h3 id="tcc-bypass-using-configd-powerdir">
-  TCC bypass using configd, &ldquo;powerdir&rdquo;
+  TCC Bypass Using configd, &ldquo;powerdir&rdquo;
   <a class="heading-link" href="#tcc-bypass-using-configd-powerdir">
     <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
@@ -426,22 +429,22 @@ kConstraintCategory18_Parent
 <blockquote>
 <p>Although unrelated but the trust cache helps to mitigate common downgrade attacks, when someone used an old and vulnerable binary from an old macOS version on a newer one. As the old one was still properly signed and entitled, it could be used to execute attacks again.</p>
 </blockquote>
-<h2 id="old-3rd-party-vulnerabilities">
-  Old 3rd party Vulnerabilities
-  <a class="heading-link" href="#old-3rd-party-vulnerabilities">
+<h2 id="old-third-party-vulnerabilities">
+  Old Third Party Vulnerabilities
+  <a class="heading-link" href="#old-third-party-vulnerabilities">
     <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
 <p>Now let&rsquo;s review some common attacks involving third party software. There are two big groups nowadays, one is exploiting XPC services and the other is injecting code into Electron based applications to bypass TCC.</p>
-<h3 id="xpc-attacks">
-  XPC Attacks
-  <a class="heading-link" href="#xpc-attacks">
+<h3 id="global-xpc-daemon-attacks">
+  Global XPC Daemon Attacks
+  <a class="heading-link" href="#global-xpc-daemon-attacks">
     <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h3>
-<p>One of the main issue with XPC connections is that by default anyone can talk to them if not sandboxed. As often times there are third party XPC services running as root on the system (they typically come in the form of Privileged Helper Tools) they are often abused.</p>
+<p>One of the main issue with Mach type XPC connections is that by default anyone can talk to them if not sandboxed. As often times there are third party XPC services running as root on the system (they typically come in the form of Privileged Helper Tools) they are often abused.</p>
 <p>Both myself and Wojcieh Regula talked and wrote about such attacks in the past, we both have a series of blogposts about the subject:</p>
 <p><a href="https://theevilbit.github.io/posts/secure_coding_xpc_part1/"  class="external-link" target="_blank" rel="noopener">CVE-2019-20057 - Secure coding XPC services - Part 1 - Why EvenBetterAuthorization is not enough?</a></p>
 <p><a href="https://theevilbit.github.io/posts/secure_coding_xpc_part2/"  class="external-link" target="_blank" rel="noopener">Secure coding XPC Services - Part 2 - Checking CS (CodeSigning) flags of the client</a></p>
@@ -458,8 +461,18 @@ kConstraintCategory18_Parent
 <li>To avoid downgrade attacks the client&rsquo;s version must be checked</li>
 <li>To avoid injection it must be verified that the client doesn&rsquo;t posses any insecure entitlements, like <code>disable-library-valdation</code>.</li>
 </ol>
+<p>One can use the <a href="https://developer.apple.com/documentation/foundation/nsxpcconnection/3943309-setcodesigningrequirement?language=objc"  class="external-link" target="_blank" rel="noopener">NSXPCConnection setCodeSigningRequirement:</a> method for this.</p>
+<h3 id="embedded-xpc-service-attacks">
+  Embedded XPC Service Attacks
+  <a class="heading-link" href="#embedded-xpc-service-attacks">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>This type of attack tries to abuse XPC services, which are embedded in the application, and typically not available system wide. The way we can abuse it, is embedding the XPCService in our application bundle, thus it will become part of our process domain, and so we can call it. Alternatively we can use the <code>xpc_add_bundles_for_domain</code> function to add it to our bundle. This might be an intersting attack if the specified service has an entitlement we need.</p>
+<p>There are not many attacks exploiting this behaviour, especially on third party software. There has been some attacks on Apple binaries in the past, like CVE-2020-9971 found by Zhipeng Huo, <a href="https://twitter.com/R3dF09"  class="external-link" target="_blank" rel="noopener">R3dF09</a> and documented on <a href="https://xlab.tencent.com/en/2021/01/11/cve-2020-9971-abusing-xpc-service-to-elevate-privilege/"  class="external-link" target="_blank" rel="noopener">Tencent&rsquo;s blog</a>.</p>
 <h3 id="electron-attacks">
-  Electron attacks
+  Electron Attacks
   <a class="heading-link" href="#electron-attacks">
     <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
@@ -493,8 +506,11 @@ kConstraintCategory18_Parent
 <blockquote>
 <p>Now let&rsquo;s walk through some process relationships and talk about how you can use launch constraints to secure them. First assume that MyDemo.app is your app. You can set a self constraint on my MyDemo.app to require that it launch as an application from Launch Services. When your app requests a connection to your XPC service, launchd spawns the XPC service and is the parent of that XPC service but your app is &ldquo;responsible&rdquo; for that XPC service. You could set a responsible process constraint on MyXPCDemo.xpc to indicate that only MyDemo.app should be responsible for it.</p>
 </blockquote>
-<p>This suggests that if you set your main app as the responsible for launching the XPC service makes the service secure. This is only partially true. You won&rsquo;t be able to launch the XPC service in your attacker code, but if it&rsquo;s active already (maybe because it was invoked by the original app), there is nothing preventing you from connecting to it. So while setting the constraint is a good idea, and will limit the attack timeframe, it doesn&rsquo;t solve the main issue, and your XPC service should still properly validate the connecting client. We are back to square 1.</p>
-<p>There is another problem. As of the time of this writing (Sonoma release) there is a bug in the system, as the responsible process for the XPC service is the XPC service itself instead of the connecting client. (Submitted bug: FB13206884)</p>
+<p>This suggests that if we set our main app as the responsible for launching the XPC service makes the service secure. After talking to Thijs I realized that Apple talks about embedded XPC services here and not global daemon type services. In that case setting the responsible process to the main app can likely* mitigate attacks abusing these services.</p>
+<blockquote>
+<p>*Although I&rsquo;m not sure what happens if we add an XPC bundle to an app using xpc_add_bundles_for_domain, if that bundle is inside another app. Can it belong to two domains? If yes, can we connect to it if it&rsquo;s already launched? Lot&rsquo;s of questions to dig into.</p>
+</blockquote>
+<p>If we look at global XPC services the story is different. Responsible process for global XPC services might be meaningless really, as there can be many events starting it (monitored folders, etc&hellip;), thus at this point I&rsquo;m not sure if the following behaviour is intentional or not. At the time of this writing (Sonoma release) the responsible process for the daemon XPC service is the XPC service itself instead of the connecting client. (Submitted FB: FB13206884). Assuming for a second that it&rsquo;s a bug, we still won&rsquo;t be able to launch the XPC service in our attacker code, but if it&rsquo;s active already (maybe because it was invoked by the original app), there is nothing preventing us from connecting to it. So while setting the constraint might be a good idea, and would limit the attack timeframe, it doesn&rsquo;t solve the main issue, and our XPC service should still properly validate the connecting client. That is still the only way to secure it. Also as mentioned in the beginning it doesn&rsquo;t even work this way now.</p>
 <h3 id="securing-electron-applications">
   Securing Electron Applications
   <a class="heading-link" href="#securing-electron-applications">
@@ -515,19 +531,6 @@ kConstraintCategory18_Parent
 </span></span><span style="display:flex;"><span>                               <span style="color:#99f">configuration</span>:conf
 </span></span><span style="display:flex;"><span>                               <span style="color:#99f">completionHandler</span>:<span style="color:#366">nil</span>];
 </span></span></code></pre></div><p>Although it&rsquo;s not the same as <code>posix_spawn</code> and it&rsquo;s somewhat more limited, we can still control crucial parts (arguments and environmental variables) of the application. So our Electron app issue is not quite solved yet.</p>
-<h3 id="apples-example">
-  Apple&rsquo;s Example
-  <a class="heading-link" href="#apples-example">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>In the previously mentioned talk Apple shows an example of a helper tool, which is invoked from the command line, and that it&rsquo;s effectively limited to be launched by the main app only. I think the example is really not right, for two reasons:</p>
-<ol>
-<li>Such tools rarely exists, as Apple suggests to implement such thing in XPC service. If it was an application only XPC service, the whole launch constraint wouldn&rsquo;t be needed at all.</li>
-<li>In the past such helpers had the SUID bit set, but again that is a very bad practice and for that people should also use XPC daemons.</li>
-</ol>
-<p>Thus, I think the example we saw is just not realistic.</p>
 <h2 id="final-thoughts">
   Final thoughts
   <a class="heading-link" href="#final-thoughts">
@@ -536,7 +539,7 @@ kConstraintCategory18_Parent
   </a>
 </h2>
 <p>Launch Constraints introduced in macOS Ventura effectively mitigate many logic attacks that were found before, and makes the attacker&rsquo;s life much harder. I think that it was a huge thing and a very good engineering and design success.</p>
-<p>Launch Constraints for third party apps, while useful, and do limit the attack surface, it doesn&rsquo;t solve it completely and provides a false sense of security. There are still ways around it, and attackers will still be able to exploit logic vulnerabilities, but in somewhat more limited fashion. It&rsquo;s a step in a good direction, but we are not there yet. It&rsquo;s a good idea to start implementing this, as it will be more common, and will become more relevant as time goes on. I hope that Apple will tune and add further restrictions to the constraints available for third parties.</p>
+<p>Launch Constraints for third party apps, while useful, and does limit the attack surface, it doesn&rsquo;t solve it completely and it&rsquo;s simply not an answer to many of the common attacks. It can easily provide a false sense of security. There are still ways around it, and attackers will still be able to exploit logic vulnerabilities, but in somewhat more limited fashion. It&rsquo;s a step in a good direction, but we are not there yet. It&rsquo;s a good idea to start implementing this, as it will be more common, and will become more relevant as time goes on. I hope that Apple will tune and add further restrictions to the constraints available for third parties.</p>
 
       </div>
 

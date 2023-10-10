@@ -13,8 +13,8 @@
       <pubDate>Mon, 09 Oct 2023 00:00:00 +0000</pubDate>
       
       <guid>https://theevilbit.github.io/posts/launch_constraints_deep_dive/</guid>
-      <description>Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&amp;rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.
-Old macOS Vulnerabilities Link to heading TCC bypass with imagent.app Link to heading This vulnerability was discovered by Adam Chester (xpn) back in 2019 and documented on his blog post &amp;ldquo;Bypassing MacOS Privacy Controls&amp;rdquo;.</description>
+      <description>UPDATE 2023.10.10.: After chatting with Thijs Alkemade, @xnyhps, updated the XPC part of the post as I originally misunderstood Apple&amp;rsquo;s intent.
+Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&amp;rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.</description>
     </item>
     
     <item>

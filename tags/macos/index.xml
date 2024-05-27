@@ -1,670 +1,481 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>macos on theevilbit blog</title>
+    <title>Macos on theevilbit blog</title>
     <link>https://theevilbit.github.io/tags/macos/</link>
-    <description>Recent content in macos on theevilbit blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Macos on theevilbit blog</description>
+    <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 09 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/macos/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 24 May 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://theevilbit.github.io/tags/macos/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CVE-2023-40424 - How Malware Can Bypass Transparency Consent and Control</title>
+      <link>https://theevilbit.github.io/posts/cve-2023-40424/</link>
+      <pubDate>Fri, 24 May 2024 00:00:00 +0000</pubDate>
+      <guid>https://theevilbit.github.io/posts/cve-2023-40424/</guid>
+      <description>Intro Link to heading CVE-2023-40424 is a vulnerability that allows a root-level user to create a new user with a custom Transparency Consent and Control (TCC) database in macOS, which can then be used to access other users’ private data.&#xA;First discovered back in 2022, the vulnerability was fixed by Apple in 2023 in macOS Sonoma’s initial release. But it was not fixed in earlier versions of macOS—one more reason users and admins should update their Mac computers to Sonoma.</description>
+    </item>
+    <item>
+      <title>How Apple Mitigates Vulnerabilities in Installer Scripts</title>
+      <link>https://theevilbit.github.io/posts/apple-mitigates-vulnerabilities-installer-scripts/</link>
+      <pubDate>Fri, 15 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>https://theevilbit.github.io/posts/apple-mitigates-vulnerabilities-installer-scripts/</guid>
+      <description>Intro Link to heading Vulnerabilities are hot topics inside the world of security research and—because of their potentially dramatic impacts—outside as well. Unfortunately, the strategies and tactics that companies like Apple take to prevent specific vulnerabilities—or even entire families of exploits—typically attract less attention. But the fact is that engineering high-impact mitigations is typically more challenging than finding a single vulnerability.&#xA;In this post, we’ll look at Apple&amp;rsquo;s recent efforts to mitigate an entire class of installer-script vulnerabilities.</description>
+    </item>
     <item>
       <title>Launch and Environment Constraints Deep Dive</title>
       <link>https://theevilbit.github.io/posts/launch_constraints_deep_dive/</link>
       <pubDate>Mon, 09 Oct 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/launch_constraints_deep_dive/</guid>
-      <description>UPDATE 2023.10.10.: After chatting with Thijs Alkemade, @xnyhps, updated the XPC part of the post as I originally misunderstood Apple&amp;rsquo;s intent.
-Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&amp;rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.</description>
+      <description>UPDATE 2023.10.10.: After chatting with Thijs Alkemade, @xnyhps, updated the XPC part of the post as I originally misunderstood Apple&amp;rsquo;s intent.&#xA;Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&amp;rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 32 - Dock Tile Plugins</title>
       <link>https://theevilbit.github.io/beyond/beyond_0032/</link>
       <pubDate>Fri, 29 Sep 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0032/</guid>
-      <description>This is part 32 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-When you write a series about something, there are some episodes which are less interesting, many boring stuff, but sometimes there are some true gems. While doing some research yesterday, I run into the Dock Tile Plugin feature in macOS, which turned out to be truly amazing from persistence point of view.</description>
+      <description>This is part 32 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;When you write a series about something, there are some episodes which are less interesting, many boring stuff, but sometimes there are some true gems. While doing some research yesterday, I run into the Dock Tile Plugin feature in macOS, which turned out to be truly amazing from persistence point of view.</description>
     </item>
-    
     <item>
       <title>macOS Service Management - The SMAppService API - Quick Notes</title>
       <link>https://theevilbit.github.io/posts/smappservice/</link>
       <pubDate>Thu, 28 Sep 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/smappservice/</guid>
-      <description>This is just a super quick post and some notes, about my experiences with SMAppService.
-Apple introduced the SMAppService API in macOS Ventura (13) to replace the older SMJobBless and SMLoginItemSetEnabled APIs. SMAppService should be used now to register any new Login Item, Launch Agent or Daemon.
-The API is super easy to use, even I could learn it from the developer docs, which is a big thing, and it means that it is indeed really easy as I suck as a developer.</description>
+      <description>This is just a super quick post and some notes, about my experiences with SMAppService.&#xA;Apple introduced the SMAppService API in macOS Ventura (13) to replace the older SMJobBless and SMLoginItemSetEnabled APIs. SMAppService should be used now to register any new Login Item, Launch Agent or Daemon.&#xA;The API is super easy to use, even I could learn it from the developer docs, which is a big thing, and it means that it is indeed really easy as I suck as a developer.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 31 - BSM audit framework</title>
       <link>https://theevilbit.github.io/beyond/beyond_0031/</link>
       <pubDate>Fri, 26 May 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0031/</guid>
-      <description>This is part 31 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-macOS implements the OpenBSM audit framework created by McAfee, which allows someone to audit system events, like login, file access, etc… This has been part of the system for very long time. Auditing has several components, the main one being the kernel, which handles all the events.</description>
+      <description>This is part 31 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;macOS implements the OpenBSM audit framework created by McAfee, which allows someone to audit system events, like login, file access, etc… This has been part of the system for very long time. Auditing has several components, the main one being the kernel, which handles all the events.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 30 - The man config file - man.conf</title>
       <link>https://theevilbit.github.io/beyond/beyond_0030/</link>
       <pubDate>Wed, 10 May 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0030/</guid>
-      <description>This is part 30 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-I was watching an old BSidesLuxemburg 2019 talk by Aaron Jewitt, called &amp;ldquo;Threat Hunting On Linux And Mac With Auditbeat System Module&amp;rdquo;, it&amp;rsquo;s up on YouTube. Aaron mentioned in one of the slides that you can persist using man.conf files. It looked really odd, I tried to quickly Google it, but haven’t found anything about it.</description>
+      <description>This is part 30 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;I was watching an old BSidesLuxemburg 2019 talk by Aaron Jewitt, called &amp;ldquo;Threat Hunting On Linux And Mac With Auditbeat System Module&amp;rdquo;, it&amp;rsquo;s up on YouTube. Aaron mentioned in one of the slides that you can persist using man.conf files. It looked really odd, I tried to quickly Google it, but haven’t found anything about it.</description>
     </item>
-    
     <item>
       <title>CVE-2022-22655 - TCC - Location Services Bypass</title>
       <link>https://theevilbit.github.io/posts/cve-2022-22655/</link>
       <pubDate>Mon, 13 Feb 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/cve-2022-22655/</guid>
-      <description>This is a quick blogpost about a vulnerability I covered in our Black Hat Europe 2022 talk with Wojciech Regula.
-In contrary to what people would expect, clients which can access location services are not maintained in one of the TCC databased, but in a separate location, and it&amp;rsquo;s maintained by locationd. This has been also recently covered by Howard Oakley, in his Privacy: what TCC does and doesn’t blogpost.</description>
+      <description>This is a quick blogpost about a vulnerability I covered in our Black Hat Europe 2022 talk with Wojciech Regula.&#xA;In contrary to what people would expect, clients which can access location services are not maintained in one of the TCC databased, but in a separate location, and it&amp;rsquo;s maintained by locationd. This has been also recently covered by Howard Oakley, in his Privacy: what TCC does and doesn’t blogpost.</description>
     </item>
-    
     <item>
       <title>CVE-2022-32929 - Bypass iOS backup&#39;s TCC protection</title>
       <link>https://theevilbit.github.io/posts/cve-2022-32929/</link>
       <pubDate>Mon, 14 Nov 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/cve-2022-32929/</guid>
-      <description>Intro Link to heading Normally, when a users backup their iOS device, the backup is saved into ~/Library/Application Support/MobileSync/Backup directory. The MobileSync directory is properly protected by TCC, as the backup can contain photos, contact information, everything from the iOS device, and it might be unencrypted, so this is a whole lot of private information. It&amp;rsquo;s only accessible with Full Disk Access rights.
-The issue is that an attacker can invoke the AppleMobileBackup utility and make a backup to a custom location.</description>
+      <description>Intro Link to heading Normally, when a users backup their iOS device, the backup is saved into ~/Library/Application Support/MobileSync/Backup directory. The MobileSync directory is properly protected by TCC, as the backup can contain photos, contact information, everything from the iOS device, and it might be unencrypted, so this is a whole lot of private information. It&amp;rsquo;s only accessible with Full Disk Access rights.&#xA;The issue is that an attacker can invoke the AppleMobileBackup utility and make a backup to a custom location.</description>
     </item>
-    
     <item>
       <title>Prologue - The Lord of The Rules</title>
       <link>https://theevilbit.github.io/posts/prologue/</link>
       <pubDate>Mon, 24 Oct 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/prologue/</guid>
       <description>The world is changed: I feel it in the Sandbox, I feel it in the entitlements, I smell it in the kernel... Much that once was is lost, only a few live now who remember it. Lord of the Rules It began with the forging of the Great Privacy Rules. Three were given to the root user, immortal, wisest...fairest of all beings. Seven to the users, great people and clients of the Apple spaceship.</description>
     </item>
-    
     <item>
       <title>CVE-2017-2533 - The details behind</title>
       <link>https://theevilbit.github.io/posts/cve-2017-2533/</link>
       <pubDate>Mon, 29 Aug 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/cve-2017-2533/</guid>
       <description>Intro Link to heading CVE-2017-2533 was part of a chain of vulnerabilities, used at pwn2own 2017 found by the phoenhex team. They wrote a blogpost about it here. This vulnerability led me to find CVE-2022-32780, which I detailed at Black Hat Asia 2022. Although the nature of CVE-2017-2533 was discussed by the authors, but the actual code part was never truly revealed, and I always wondered about the full details.</description>
     </item>
-    
     <item>
       <title>AMFI Launch Constraints - First Quick Look</title>
       <link>https://theevilbit.github.io/posts/amfi_launch_constraints/</link>
       <pubDate>Tue, 14 Jun 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/amfi_launch_constraints/</guid>
-      <description>Dropping some initial quick notes for a new security feature I ran into on macOS Ventura. It&amp;rsquo;s called &amp;ldquo;Launch Constraints&amp;rdquo; and lives inside AMFI.
-Do the following experiment: Copy Terminal.app to your HOME folder and try to run it on Monterey and Ventura. On the former it will work without any issues, on the other it will fail, and we will get the following error:
-2022-06-14 05:59:55.254678+0200 0x5481 Default 0x0 0 0 kernel: (AppleMobileFileIntegrity) AMFI: Launch Constraint Violation (enforcing), error info: c[1]p[1]m[1]e[2], (Constraint not matched) launching proc[vc: 1 pid: 1112]: /Users/ace/Terminal.</description>
+      <description>Dropping some initial quick notes for a new security feature I ran into on macOS Ventura. It&amp;rsquo;s called &amp;ldquo;Launch Constraints&amp;rdquo; and lives inside AMFI.&#xA;Do the following experiment: Copy Terminal.app to your HOME folder and try to run it on Monterey and Ventura. On the former it will work without any issues, on the other it will fail, and we will get the following error:&#xA;2022-06-14 05:59:55.254678+0200 0x5481 Default 0x0 0 0 kernel: (AppleMobileFileIntegrity) AMFI: Launch Constraint Violation (enforcing), error info: c[1]p[1]m[1]e[2], (Constraint not matched) launching proc[vc: 1 pid: 1112]: /Users/ace/Terminal.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 29 - amstoold</title>
       <link>https://theevilbit.github.io/beyond/beyond_0029/</link>
       <pubDate>Tue, 08 Mar 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0029/</guid>
-      <description>This is part 29 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-When doing some research on macOS I came across the following LaunchAgent: /System/Library/LaunchAgents/com.apple.amstoold.plist. Its content is the following.
-&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt; &amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt; &amp;lt;plist version=&amp;#34;1.0&amp;#34;&amp;gt; &amp;lt;dict&amp;gt; &amp;lt;key&amp;gt;EnablePressuredExit&amp;lt;/key&amp;gt; &amp;lt;true/&amp;gt; &amp;lt;key&amp;gt;EnableTransactions&amp;lt;/key&amp;gt; &amp;lt;true/&amp;gt; &amp;lt;key&amp;gt;Label&amp;lt;/key&amp;gt; &amp;lt;string&amp;gt;com.apple.amstoold&amp;lt;/string&amp;gt; &amp;lt;key&amp;gt;LaunchEvents&amp;lt;/key&amp;gt; &amp;lt;dict&amp;gt; &amp;lt;key&amp;gt;com.apple.distnoted.matching&amp;lt;/key&amp;gt; &amp;lt;dict&amp;gt; &amp;lt;key&amp;gt;com.</description>
+      <description>This is part 29 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;When doing some research on macOS I came across the following LaunchAgent: /System/Library/LaunchAgents/com.apple.amstoold.plist. Its content is the following.&#xA;&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt; &amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt; &amp;lt;plist version=&amp;#34;1.0&amp;#34;&amp;gt; &amp;lt;dict&amp;gt; &amp;lt;key&amp;gt;EnablePressuredExit&amp;lt;/key&amp;gt; &amp;lt;true/&amp;gt; &amp;lt;key&amp;gt;EnableTransactions&amp;lt;/key&amp;gt; &amp;lt;true/&amp;gt; &amp;lt;key&amp;gt;Label&amp;lt;/key&amp;gt; &amp;lt;string&amp;gt;com.apple.amstoold&amp;lt;/string&amp;gt; &amp;lt;key&amp;gt;LaunchEvents&amp;lt;/key&amp;gt; &amp;lt;dict&amp;gt; &amp;lt;key&amp;gt;com.apple.distnoted.matching&amp;lt;/key&amp;gt; &amp;lt;dict&amp;gt; &amp;lt;key&amp;gt;com.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 28 - Authorization Plugins</title>
       <link>https://theevilbit.github.io/beyond/beyond_0028/</link>
       <pubDate>Wed, 09 Feb 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0028/</guid>
-      <description>This is part 28 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-This persistence mechanism was described in very detail by Chris Ross in his blogpost: Persistent Credential Theft with Authorization Plugins. He also developed sample code, which can be found on his GitHub. Thus this blog will only focus on the high level summary, and some changes that happened since he wrote that post.</description>
+      <description>This is part 28 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;This persistence mechanism was described in very detail by Chris Ross in his blogpost: Persistent Credential Theft with Authorization Plugins. He also developed sample code, which can be found on his GitHub. Thus this blog will only focus on the high level summary, and some changes that happened since he wrote that post.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 27 - Dock shortcuts</title>
       <link>https://theevilbit.github.io/beyond/beyond_0027/</link>
       <pubDate>Tue, 08 Feb 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0027/</guid>
-      <description>This is part 27 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-This persistence is another gem I found in Leo Pitt&amp;rsquo;s Modern macOS Persistence talk.
-macOS Dock stores shortcuts for applications, that we would like to access through the, well&amp;hellip; Dock. It stores all settings in ~/Library/Preferences/com.apple.dock.plist. Although we can edit this PLIST directly, we can also use the defaults utility to change it.</description>
+      <description>This is part 27 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;This persistence is another gem I found in Leo Pitt&amp;rsquo;s Modern macOS Persistence talk.&#xA;macOS Dock stores shortcuts for applications, that we would like to access through the, well&amp;hellip; Dock. It stores all settings in ~/Library/Preferences/com.apple.dock.plist. Although we can edit this PLIST directly, we can also use the defaults utility to change it.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 26 - Finder Sync Plugins</title>
       <link>https://theevilbit.github.io/beyond/beyond_0026/</link>
       <pubDate>Sat, 05 Feb 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0026/</guid>
-      <description>This is part 26 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-This method was documented very detailed by Patrick Wardle in his blogpost back in 2016. It was also covered by Leo Pitt in his Modern macOS Persistence talk, and he also made a POC, which can be found at his GitHub.</description>
+      <description>This is part 26 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;This method was documented very detailed by Patrick Wardle in his blogpost back in 2016. It was also covered by Leo Pitt in his Modern macOS Persistence talk, and he also made a POC, which can be found at his GitHub.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 25 - Apache2 modules</title>
       <link>https://theevilbit.github.io/beyond/beyond_0025/</link>
       <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0025/</guid>
-      <description>This is part 25 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-Possibly a less known feature that macOS has a built-in Apache2 web server, which can be enabled anytime. Just as other Apache2 servers, it also supports the load of custom modules, and this is what we will explore here briefly for persistence.</description>
+      <description>This is part 25 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;Possibly a less known feature that macOS has a built-in Apache2 web server, which can be enabled anytime. Just as other Apache2 servers, it also supports the load of custom modules, and this is what we will explore here briefly for persistence.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 24 - Folder Actions</title>
       <link>https://theevilbit.github.io/beyond/beyond_0024/</link>
       <pubDate>Thu, 02 Dec 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0024/</guid>
-      <description>This is part 24 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-Folder action persistence has been documented by Cody Thomas back in 2019 in his blog. I think he did an awesome job, and everything he wrote still applies today. I wanted to take it a bit further and see if I can persist without any user prompts, and it turned out it is possible.</description>
+      <description>This is part 24 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;Folder action persistence has been documented by Cody Thomas back in 2019 in his blog. I think he did an awesome job, and everything he wrote still applies today. I wanted to take it a bit further and see if I can persist without any user prompts, and it turned out it is possible.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 23 - emond, The Event Monitor Daemon</title>
       <link>https://theevilbit.github.io/beyond/beyond_0023/</link>
       <pubDate>Sat, 27 Nov 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0023/</guid>
-      <description>This is part 23 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-This post will be about emond, Apple&amp;rsquo;s Event Monitor daemon.
-I think almost everything has been already told about this method and emond in general by James Reynolds here and xorrior here so really not much left for me. There is no point for me replicating their awesome posts, so please just read them.</description>
+      <description>This is part 23 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;This post will be about emond, Apple&amp;rsquo;s Event Monitor daemon.&#xA;I think almost everything has been already told about this method and emond in general by James Reynolds here and xorrior here so really not much left for me. There is no point for me replicating their awesome posts, so please just read them.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 22 - LoginHook and LogoutHook</title>
       <link>https://theevilbit.github.io/beyond/beyond_0022/</link>
       <pubDate>Wed, 24 Nov 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0022/</guid>
-      <description>This is part 22 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-This method is considered deprecated by Apple, yet it still works.
-LoginHooks and LogoutHooks have been widely documented by many people, so this post is mostly for completeness. The official, Apple documentation can be found here: Customizing Login and Logout</description>
+      <description>This is part 22 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;This method is considered deprecated by Apple, yet it still works.&#xA;LoginHooks and LogoutHooks have been widely documented by many people, so this post is mostly for completeness. The official, Apple documentation can be found here: Customizing Login and Logout</description>
     </item>
-    
     <item>
       <title>CVE-2021-30808 - CVE-2021-1784 strikes back - TCC bypass via mounting</title>
       <link>https://theevilbit.github.io/posts/cve-2021-30808/</link>
       <pubDate>Fri, 29 Oct 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/cve-2021-30808/</guid>
-      <description>Intro Link to heading CVE-2021-1784 was a vulnerability that allowed an attacker to bypass TCC by mounting over the ~/Library/Application Support/com.apple.TCC directory and providing a new TCC database. We covered this with Wojciech Regula in or 20+ ways to bypass your mac os privacy mechanisms BlackHat USA talk. This was properly fixed in Big Sur.
-The Vulnerability Link to heading I don&amp;rsquo;t know why but I started to experiment with it again in the very first version of Monterey beta, and found that although the exploit doesn&amp;rsquo;t work, we can mount over the ~/Library directory.</description>
+      <description>Intro Link to heading CVE-2021-1784 was a vulnerability that allowed an attacker to bypass TCC by mounting over the ~/Library/Application Support/com.apple.TCC directory and providing a new TCC database. We covered this with Wojciech Regula in or 20+ ways to bypass your mac os privacy mechanisms BlackHat USA talk. This was properly fixed in Big Sur.&#xA;The Vulnerability Link to heading I don&amp;rsquo;t know why but I started to experiment with it again in the very first version of Monterey beta, and found that although the exploit doesn&amp;rsquo;t work, we can mount over the ~/Library directory.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 21 - Re-opened Applications</title>
       <link>https://theevilbit.github.io/beyond/beyond_0021/</link>
       <pubDate>Tue, 12 Oct 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0021/</guid>
-      <description>This is part 21 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-This method was also documented by Patrick Wardle, in his original Methods of Malware Persistence white paper and also at MITRE ATT&amp;amp;CK®.
-When we restart macOS, we are presented with the following window:
-I guess, most users keep it selected, and then macOS will reopen all apps.</description>
+      <description>This is part 21 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;This method was also documented by Patrick Wardle, in his original Methods of Malware Persistence white paper and also at MITRE ATT&amp;amp;CK®.&#xA;When we restart macOS, we are presented with the following window:&#xA;I guess, most users keep it selected, and then macOS will reopen all apps.</description>
     </item>
-    
     <item>
       <title>Getting started in macOS security</title>
       <link>https://theevilbit.github.io/posts/getting_started_in_macos_security/</link>
       <pubDate>Mon, 27 Sep 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/getting_started_in_macos_security/</guid>
-      <description>Many people used to ask me where to start learning about macOS security or exploitation, what are the trainings or books out there that can help with this topic. Nowadays there are a few trainings, which can get you started. Other great resources for macOS security are blog posts and conference talks.
-I thought I will try to collect some resources that can help people to get started in this field.</description>
+      <description>Many people used to ask me where to start learning about macOS security or exploitation, what are the trainings or books out there that can help with this topic. Nowadays there are a few trainings, which can get you started. Other great resources for macOS security are blog posts and conference talks.&#xA;I thought I will try to collect some resources that can help people to get started in this field.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 20 - Terminal Preferences</title>
       <link>https://theevilbit.github.io/beyond/beyond_0020/</link>
       <pubDate>Wed, 22 Sep 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0020/</guid>
-      <description>This is part 20 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-This is another application specific persistence method, related to the Terminal application.
-In the Terminal Preferences, under the Profiles tab, we can set a command that will be executed upon Terminal&amp;rsquo;s startup. This is shown in the screen below.
-This is stored inside Terminal&amp;rsquo;s preferences PLIST file, located at ~/Library/Preferences/com.</description>
+      <description>This is part 20 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;This is another application specific persistence method, related to the Terminal application.&#xA;In the Terminal Preferences, under the Profiles tab, we can set a command that will be executed upon Terminal&amp;rsquo;s startup. This is shown in the screen below.&#xA;This is stored inside Terminal&amp;rsquo;s preferences PLIST file, located at ~/Library/Preferences/com.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 19 - Periodic Scripts</title>
       <link>https://theevilbit.github.io/beyond/beyond_0019/</link>
       <pubDate>Fri, 06 Aug 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0019/</guid>
-      <description>This is part 19 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-This post has been long due, as it&amp;rsquo;s one of my favorite persistence tricks. Up until Big Sur 11.5 you could also exploit it for privilege escalation if Homebrew was installed on the system.
-Periodic scripts have a FreeBSD origin. These scripts are doing some maintenance tasks on the system, and scheduled to be run on a daily, weekly and monthly basis.</description>
+      <description>This is part 19 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;This post has been long due, as it&amp;rsquo;s one of my favorite persistence tricks. Up until Big Sur 11.5 you could also exploit it for privilege escalation if Homebrew was installed on the system.&#xA;Periodic scripts have a FreeBSD origin. These scripts are doing some maintenance tasks on the system, and scheduled to be run on a daily, weekly and monthly basis.</description>
     </item>
-    
     <item>
       <title>GateKeeper - Not a Bypass (Again)</title>
       <link>https://theevilbit.github.io/posts/gatekeeper_not_a_bypass/</link>
       <pubDate>Tue, 29 Jun 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/gatekeeper_not_a_bypass/</guid>
-      <description>This post is about two techniques that can be useful for someone to evade GateKeeper in a red team engagement or pentest. According to Apple these are not considered bypasses, and everything works as expected.
-mmap Link to heading Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel extension. It uses the MAC policy framework to insert hooks on the system on various points. These functions are named as hook*.</description>
+      <description>This post is about two techniques that can be useful for someone to evade GateKeeper in a red team engagement or pentest. According to Apple these are not considered bypasses, and everything works as expected.&#xA;mmap Link to heading Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel extension. It uses the MAC policy framework to insert hooks on the system on various points. These functions are named as hook*.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 18 - X11 and XQuartz</title>
       <link>https://theevilbit.github.io/beyond/beyond_0018/</link>
       <pubDate>Mon, 28 Jun 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0018/</guid>
-      <description>This is part 18 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-I learned about XQuartz while reading Armin Briegel&amp;rsquo;s ‎macOS Terminal and shell book. It&amp;rsquo;s one of the alternative third party terminals we can install on macOS. As most terminals, this one also offers unique options to persist on the system.</description>
+      <description>This is part 18 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;I learned about XQuartz while reading Armin Briegel&amp;rsquo;s ‎macOS Terminal and shell book. It&amp;rsquo;s one of the alternative third party terminals we can install on macOS. As most terminals, this one also offers unique options to persist on the system.</description>
     </item>
-    
     <item>
       <title>macOS Monterey Shortcuts - First look</title>
       <link>https://theevilbit.github.io/posts/monterey_shortcuts/</link>
       <pubDate>Thu, 10 Jun 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/monterey_shortcuts/</guid>
       <description>Apple announced macOS Monterey (macOS 12) this week at WWDC, and one of its new features that caught my eye is Shortcuts. It&amp;rsquo;s already available on iOS, but it made its way to macOS. My security focused brain immediately thought about how cool this feature could be for red teamers or pentesters to persist on macOS :) So I decided to take a quick look on the new functionality, focusing on how it works.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 17 - Color Pickers</title>
       <link>https://theevilbit.github.io/beyond/beyond_0017/</link>
       <pubDate>Mon, 31 May 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0017/</guid>
-      <description>This is part 17 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-Color pickers??? It&amp;rsquo;s this menu, where we can select a color:
-To my surprise we can install our own color pickers on the system, and add custom ones. There are quite a few of these, some are even open source, like this: GitHub - viktorstrate/color-picker-plus: An Improved Color Picker for macOS.</description>
+      <description>This is part 17 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;Color pickers??? It&amp;rsquo;s this menu, where we can select a color:&#xA;To my surprise we can install our own color pickers on the system, and add custom ones. There are quite a few of these, some are even open source, like this: GitHub - viktorstrate/color-picker-plus: An Improved Color Picker for macOS.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 16 - Screen Saver</title>
       <link>https://theevilbit.github.io/beyond/beyond_0016/</link>
       <pubDate>Sun, 30 May 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0016/</guid>
-      <description>This is part 16 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-Screen savers have been detailed recently by Leo Pitton his blog post: &amp;ldquo;Saving Your Access&amp;rdquo;. Considering that he already wrote most of the interesting stuff, I will try to show some new information, but there will be some overlap.
-Screen savers are macOS bundles with the bundle extension of .</description>
+      <description>This is part 16 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;Screen savers have been detailed recently by Leo Pitton his blog post: &amp;ldquo;Saving Your Access&amp;rdquo;. Considering that he already wrote most of the interesting stuff, I will try to show some new information, but there will be some overlap.&#xA;Screen savers are macOS bundles with the bundle extension of .</description>
     </item>
-    
     <item>
       <title>NOCVE - TeamViewer Local Privilege Escalation Vulnerability</title>
       <link>https://theevilbit.github.io/posts/teamviewer_lpe/</link>
       <pubDate>Wed, 26 May 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/teamviewer_lpe/</guid>
-      <description>Intro Link to heading This is a rather old vulnerability I found in TeamViewer back in 2020, and reported it through VCP/iDefense. TeamViewer fixed the vulnerability last November, but somehow I missed it, and became aware of it only recently. Their advisory can be found here: November updates - Security patches — TeamViewer Support
-The TeamViewer macOS client used a PrivilegedHelperTool named com.teamviewer.Helper to perform specific tasks that require root permissions.</description>
+      <description>Intro Link to heading This is a rather old vulnerability I found in TeamViewer back in 2020, and reported it through VCP/iDefense. TeamViewer fixed the vulnerability last November, but somehow I missed it, and became aware of it only recently. Their advisory can be found here: November updates - Security patches — TeamViewer Support&#xA;The TeamViewer macOS client used a PrivilegedHelperTool named com.teamviewer.Helper to perform specific tasks that require root permissions.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 15 - xsanctl</title>
       <link>https://theevilbit.github.io/beyond/beyond_0015/</link>
       <pubDate>Wed, 12 May 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0015/</guid>
-      <description>This is part 15 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-I run into this not so exciting persistent method when I was investigating xsanctl for&amp;hellip; other&amp;hellip; reasons&amp;hellip; xsanctl is a &amp;ldquo;Xsan file system control utility&amp;rdquo;, which allows us to mount and manage Xsans.
-The xsanctl binary can be found at /System/Library/Filesystems/acfs.</description>
+      <description>This is part 15 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;I run into this not so exciting persistent method when I was investigating xsanctl for&amp;hellip; other&amp;hellip; reasons&amp;hellip; xsanctl is a &amp;ldquo;Xsan file system control utility&amp;rdquo;, which allows us to mount and manage Xsans.&#xA;The xsanctl binary can be found at /System/Library/Filesystems/acfs.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 14 - atrun</title>
       <link>https://theevilbit.github.io/beyond/beyond_0014/</link>
       <pubDate>Tue, 27 Apr 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0014/</guid>
-      <description>This is part 14 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-The at command set is a heritage *nix job scheduler on macOS. Although it&amp;rsquo;s slowly being deprecated, it&amp;rsquo;s still available on Big Sur, although disabled by default.
-Enabling atrun Link to heading As described by atrun&amp;rsquo;s man page, the scheduler can be enabled using the following command:</description>
+      <description>This is part 14 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;The at command set is a heritage *nix job scheduler on macOS. Although it&amp;rsquo;s slowly being deprecated, it&amp;rsquo;s still available on Big Sur, although disabled by default.&#xA;Enabling atrun Link to heading As described by atrun&amp;rsquo;s man page, the scheduler can be enabled using the following command:</description>
     </item>
-    
     <item>
       <title>Experiences with Apple Security Bounty</title>
       <link>https://theevilbit.github.io/posts/experiences_with_asb/</link>
       <pubDate>Fri, 23 Apr 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/experiences_with_asb/</guid>
-      <description>Since Apple started their Apple Security Bounty program I have submitted around 50 cases to their product security team. I thought I will share my experiences working with Apple in the past 2 years. This will be useful to anyone thinking about participating in the program, and will help setting up expectations.
-Beyond Apple I do bug bounties also in other programs, like HackerOne, BugCrowd, VCP, ZDI or sometimes just working directly with vendors, so I have a good pool of other cases I can compare to.</description>
+      <description>Since Apple started their Apple Security Bounty program I have submitted around 50 cases to their product security team. I thought I will share my experiences working with Apple in the past 2 years. This will be useful to anyone thinking about participating in the program, and will help setting up expectations.&#xA;Beyond Apple I do bug bounties also in other programs, like HackerOne, BugCrowd, VCP, ZDI or sometimes just working directly with vendors, so I have a good pool of other cases I can compare to.</description>
     </item>
-    
     <item>
       <title>CVE-2020-9900 &amp; CVE-2021-1786 - Abusing macOS Crash Reporter</title>
       <link>https://theevilbit.github.io/posts/macos_crashreporter/</link>
       <pubDate>Tue, 20 Apr 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/macos_crashreporter/</guid>
       <description>I plan to discuss two symlink attacks in this blog post. The first, more severe one, CVE-2020-9900 was reported by Zhongcheng Li (CK01) of Zero-dayits Team of Legendsec at Qi&amp;rsquo;anxin Group, and fixed in Catalina 10.15.6. Apple&amp;rsquo;s advisory said that with a symlink attack it was possible to elevate privileges. I never saw a public document about this bug, so I only assume that I will describe the actual issue here.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 13 - Audio Plugins</title>
       <link>https://theevilbit.github.io/beyond/beyond_0013/</link>
       <pubDate>Mon, 19 Apr 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0013/</guid>
-      <description>This is part 13 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-This is another one of my favorites for some reason. macOS being a popular audio editing device, supports external audio drivers and plugins. @xorrior wrote a very extensive blog post about these at his website, here: Audio Unit Plug-ins. Legitimate Un-signed Code Execution | by Christopher Ross | Posts By SpecterOps Team Members</description>
+      <description>This is part 13 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;This is another one of my favorites for some reason. macOS being a popular audio editing device, supports external audio drivers and plugins. @xorrior wrote a very extensive blog post about these at his website, here: Audio Unit Plug-ins. Legitimate Un-signed Code Execution | by Christopher Ross | Posts By SpecterOps Team Members</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 12 - QuickLook Plugins</title>
       <link>https://theevilbit.github.io/beyond/beyond_0012/</link>
       <pubDate>Mon, 05 Apr 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0012/</guid>
-      <description>This is part 12 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-TL;DR Link to heading This technique is very similarly to Spotlight Importers, but heavily sandboxed. It’s even more limited as the user need to specifically want to preview the file.
-Intro Link to heading This will be a short post and it goes hand in hand with my previous one that detailed the use of Spotlight Importers for persistence.</description>
+      <description>This is part 12 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;TL;DR Link to heading This technique is very similarly to Spotlight Importers, but heavily sandboxed. It’s even more limited as the user need to specifically want to preview the file.&#xA;Intro Link to heading This will be a short post and it goes hand in hand with my previous one that detailed the use of Spotlight Importers for persistence.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 11 - Spotlight Importers</title>
       <link>https://theevilbit.github.io/beyond/beyond_0011/</link>
       <pubDate>Sat, 03 Apr 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0011/</guid>
-      <description>This is part 11 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-TL;DR Link to heading It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware.</description>
+      <description>This is part 11 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;TL;DR Link to heading It works, but very limited due to heavy sandboxing, you can only read and copy files to your sandbox folder or consume some CPU power. If you have a way to escape sandbox then go for it, or could be used as part of a multi-part malware.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 10 - Application script files</title>
       <link>https://theevilbit.github.io/beyond/beyond_0010/</link>
       <pubDate>Fri, 02 Apr 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0010/</guid>
-      <description>This is part 10 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-I started to explore to possibility of persisting on macOS through script files contained in an application. The basic idea is that if we find a script file, which is being executed by a given application, we can edit that script file, put our code inside, and wait for an execution.</description>
+      <description>This is part 10 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;I started to explore to possibility of persisting on macOS through script files contained in an application. The basic idea is that if we find a script file, which is being executed by a given application, we can edit that script file, put our code inside, and wait for an execution.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 9 - Preference Pane</title>
       <link>https://theevilbit.github.io/beyond/beyond_0009/</link>
       <pubDate>Thu, 25 Mar 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0009/</guid>
-      <description>This is part 9 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-Preference panes on macOS are plugins to the System Preferences.app. These panes can extend the functionality of the app, and typically allow you to modify configuration settings for your app. These admins are loaded when the user selects them, so they are not perfect from persistence point of view, as it requires user interaction, but can still be a thing.</description>
+      <description>This is part 9 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;Preference panes on macOS are plugins to the System Preferences.app. These panes can extend the functionality of the app, and typically allow you to modify configuration settings for your app. These admins are loaded when the user selects them, so they are not perfect from persistence point of view, as it requires user interaction, but can still be a thing.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 8 - Hammerspoon</title>
       <link>https://theevilbit.github.io/beyond/beyond_0008/</link>
       <pubDate>Tue, 23 Mar 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0008/</guid>
-      <description>This is part 8 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-This idea came from my colleague @dejandayoff. It&amp;rsquo;s another application specific persistence option, related to Hammerspoon. The app is an automation tool, that allows macOS scripting through LUA scripting language. We can even embed full AppleScript code as well as run shell scripts.</description>
+      <description>This is part 8 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;This idea came from my colleague @dejandayoff. It&amp;rsquo;s another application specific persistence option, related to Hammerspoon. The app is an automation tool, that allows macOS scripting through LUA scripting language. We can even embed full AppleScript code as well as run shell scripts.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 7 - xbar plugins</title>
       <link>https://theevilbit.github.io/beyond/beyond_0007/</link>
       <pubDate>Mon, 22 Mar 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0007/</guid>
-      <description>This is part 7 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-This technique came from @bradleyjkemp in one of his Twitter posts.
-xbar is an application that can put the output of a script into the menubar. The scripts should be placed in ~/Library/Application\ Support/xbar/plugins/. Standard shell scripts are supported, and so I tried the one listed on their GitHub page as an example.</description>
+      <description>This is part 7 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;This technique came from @bradleyjkemp in one of his Twitter posts.&#xA;xbar is an application that can put the output of a script into the menubar. The scripts should be placed in ~/Library/Application\ Support/xbar/plugins/. Standard shell scripts are supported, and so I tried the one listed on their GitHub page as an example.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 6 - SSHRC</title>
       <link>https://theevilbit.github.io/beyond/beyond_0006/</link>
       <pubDate>Sun, 21 Mar 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0006/</guid>
-      <description>This is part 6 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-I learned about this trick from @0xdade when he posted it on Twitter.
-If we create a file in the user&amp;rsquo;s HOME directory at ~/.ssh/rc it will be executed prior to the user&amp;rsquo;s login shell becomes available. The man page of sshd describes this in more detail.</description>
+      <description>This is part 6 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;I learned about this trick from @0xdade when he posted it on Twitter.&#xA;If we create a file in the user&amp;rsquo;s HOME directory at ~/.ssh/rc it will be executed prior to the user&amp;rsquo;s login shell becomes available. The man page of sshd describes this in more detail.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 5 - Pluggable Authentication Modules (PAM)</title>
       <link>https://theevilbit.github.io/beyond/beyond_0005/</link>
       <pubDate>Sat, 20 Mar 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0005/</guid>
-      <description>This is part 5 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-PAM originated from Red Hat Linux, but made its way to most *nix based system, including macOS. It&amp;rsquo;s a modular system, that allows third party additions to various authentication related operations. I highly recommend checking out the FreeBSD documentation to get a full picture.</description>
+      <description>This is part 5 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;PAM originated from Red Hat Linux, but made its way to most *nix based system, including macOS. It&amp;rsquo;s a modular system, that allows third party additions to various authentication related operations. I highly recommend checking out the FreeBSD documentation to get a full picture.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 4 - cron jobs</title>
       <link>https://theevilbit.github.io/beyond/beyond_0004/</link>
       <pubDate>Thu, 18 Mar 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0004/</guid>
-      <description>This is part 4 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-cron is probably one of the most well known persistence mechanisms for macOS and basically any *nix operating system. It was originally developed for Unix back in 1975, and made its way to most platforms, which has Unix origins, like Linux, FreeBSD and thus macOS.</description>
+      <description>This is part 4 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;cron is probably one of the most well known persistence mechanisms for macOS and basically any *nix operating system. It was originally developed for Unix back in 1975, and made its way to most platforms, which has Unix origins, like Linux, FreeBSD and thus macOS.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 3 - Login Items</title>
       <link>https://theevilbit.github.io/beyond/beyond_0003/</link>
       <pubDate>Wed, 17 Mar 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0003/</guid>
-      <description>This is part 3 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-To clear up some expectations. The below tweet is not about this method, that is deferred for now. :)
-Login items are probably one of the most well documented methods to persist on macOS. It&amp;rsquo;s widely used by various application to launch themselves upon user login.</description>
+      <description>This is part 3 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;To clear up some expectations. The below tweet is not about this method, that is deferred for now. :)&#xA;Login items are probably one of the most well documented methods to persist on macOS. It&amp;rsquo;s widely used by various application to launch themselves upon user login.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 2 - iTerm2 startup</title>
       <link>https://theevilbit.github.io/beyond/beyond_0002/</link>
       <pubDate>Tue, 16 Mar 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0002/</guid>
-      <description>This is part 2 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-If the first part was about Terminal and shell profiles, it&amp;rsquo;s worth to mention iTerm2, which is a popular Terminal alternative on macOS. It&amp;rsquo;s being used by many people, especially power users.
-When we start iTerm2 it starts the same shell environment as Terminal, and thus the same startup files apply here as well.</description>
+      <description>This is part 2 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;If the first part was about Terminal and shell profiles, it&amp;rsquo;s worth to mention iTerm2, which is a popular Terminal alternative on macOS. It&amp;rsquo;s being used by many people, especially power users.&#xA;When we start iTerm2 it starts the same shell environment as Terminal, and thus the same startup files apply here as well.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 1 - shell startup files</title>
       <link>https://theevilbit.github.io/beyond/beyond_0001/</link>
       <pubDate>Sun, 14 Mar 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0001/</guid>
-      <description>This is part 1 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-Shell startup files are executed when our shell environment like zsh or bash is starting up. macOS defaults to /bin/zsh these days, and whenever we open Terminal or SSH into the device, this is the shell environment we are placed into.</description>
+      <description>This is part 1 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;Shell startup files are executed when our shell environment like zsh or bash is starting up. macOS defaults to /bin/zsh these days, and whenever we open Terminal or SSH into the device, this is the shell environment we are placed into.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - Introduction</title>
       <link>https://theevilbit.github.io/beyond/beyond_intro/</link>
       <pubDate>Sun, 14 Mar 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_intro/</guid>
-      <description>I was always amazed by @Hexacorn&amp;rsquo;s Beyond good ol&amp;rsquo; Run key blog post series, which collects various persistence methods on Windows. It&amp;rsquo;s an awesome series, which has 133 parts at the time of this writing. I find them pretty cool, and if you are doing either offensive or defensive work on Windows, this is a must read and follow blog.
-In the past years as my interest in macOS grew, and now that I&amp;rsquo;m mostly doing only macOS related research and studies I started to came across many - many tricks, which allows someone to do persistence on macOS beyond just the LaunchDaemons or LaunchAgents directories, which is used to store the launchd startup files.</description>
+      <description>I was always amazed by @Hexacorn&amp;rsquo;s Beyond good ol&amp;rsquo; Run key blog post series, which collects various persistence methods on Windows. It&amp;rsquo;s an awesome series, which has 133 parts at the time of this writing. I find them pretty cool, and if you are doing either offensive or defensive work on Windows, this is a must read and follow blog.&#xA;In the past years as my interest in macOS grew, and now that I&amp;rsquo;m mostly doing only macOS related research and studies I started to came across many - many tricks, which allows someone to do persistence on macOS beyond just the LaunchDaemons or LaunchAgents directories, which is used to store the launchd startup files.</description>
     </item>
-    
     <item>
       <title>About com.apple.private.security.clear-library-validation</title>
       <link>https://theevilbit.github.io/posts/com.apple.private.security.clear-library-validation/</link>
       <pubDate>Tue, 19 Jan 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/com.apple.private.security.clear-library-validation/</guid>
-      <description>TL;DR Link to heading On macOS 10.15.2 Apple introduced the com.apple.private.security.clear-library-validation entitlement, which is slowly replacing the previously used com.apple.security.cs.disable-library-validation entitlement on system binaries. Although their impact is the about the same, the way they work is different. While library validation is automatically disabled using com.apple.security.cs.disable-library-validation, with com.apple.private.security.clear-library-validation, the application has to disable it for itself through a csops system call.
-Intro Link to heading With the release of Big Sur, I noticed that many of the system binaries have a new entitlement, which I didn&amp;rsquo;t see before, and that is com.</description>
+      <description>TL;DR Link to heading On macOS 10.15.2 Apple introduced the com.apple.private.security.clear-library-validation entitlement, which is slowly replacing the previously used com.apple.security.cs.disable-library-validation entitlement on system binaries. Although their impact is the about the same, the way they work is different. While library validation is automatically disabled using com.apple.security.cs.disable-library-validation, with com.apple.private.security.clear-library-validation, the application has to disable it for itself through a csops system call.&#xA;Intro Link to heading With the release of Big Sur, I noticed that many of the system binaries have a new entitlement, which I didn&amp;rsquo;t see before, and that is com.</description>
     </item>
-    
     <item>
       <title>CVE-2020-9771 - Reversing Engineering the Fix</title>
       <link>https://theevilbit.github.io/posts/reversing_cve_2020_9771/</link>
       <pubDate>Sun, 13 Dec 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/reversing_cve_2020_9771/</guid>
       <description>When I originally found the mount_apfs bug back in December, 2019, I honestly had no idea what was the root cause of it, nor had a clue how to even start looking into it. The only thing I knew for sure that the answer is within kernel. My macOS knowledge was still quite fresh that time (and even today), and was busy with so many other stuff that I never had the time to start looking into it.</description>
     </item>
-    
     <item>
       <title>NOCVE - Microsoft Teams for macOS Local Privilege Escalation</title>
       <link>https://theevilbit.github.io/posts/microsoft_teams_lpe/</link>
       <pubDate>Tue, 17 Nov 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/microsoft_teams_lpe/</guid>
-      <description>This blog post shares the details of a vulnerability Offensive Security discovered in the XPC service of Microsoft Teams. Although Microsoft secured these services reasonably well, we will see how small code mistakes can have serious impacts.
-We reported the issue to MSRC, but unfortunately Microsoft decided that “the finding is valid but does not meet our bar for immediate servicing.” While they have since hardened the XPC service, it remains exploitable.</description>
+      <description>This blog post shares the details of a vulnerability Offensive Security discovered in the XPC service of Microsoft Teams. Although Microsoft secured these services reasonably well, we will see how small code mistakes can have serious impacts.&#xA;We reported the issue to MSRC, but unfortunately Microsoft decided that “the finding is valid but does not meet our bar for immediate servicing.” While they have since hardened the XPC service, it remains exploitable.</description>
     </item>
-    
     <item>
       <title>Let&#39;s talk macOS Authorization</title>
       <link>https://theevilbit.github.io/posts/macos_authorization/</link>
       <pubDate>Thu, 22 Oct 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/macos_authorization/</guid>
-      <description>This is a blog post I wanted to write for a while now, but somehow never got the time for it, and I also knew that it will require lots of time, so I kept delaying it. I finally kicked my ass, sat down, and wrote it.
-The goal of the post is to cover many aspects of authorization, which I found interesting from security perspective. Honestly, partially for selfish reasons so I will have a goto summary when I need to lookup something later instead of browsing through 8-10 different articles.</description>
+      <description>This is a blog post I wanted to write for a while now, but somehow never got the time for it, and I also knew that it will require lots of time, so I kept delaying it. I finally kicked my ass, sat down, and wrote it.&#xA;The goal of the post is to cover many aspects of authorization, which I found interesting from security perspective. Honestly, partially for selfish reasons so I will have a goto summary when I need to lookup something later instead of browsing through 8-10 different articles.</description>
     </item>
-    
     <item>
       <title>CVE-2020-9771 - mount_apfs TCC bypass and privilege escalation</title>
       <link>https://theevilbit.github.io/posts/cve_2020_9771/</link>
       <pubDate>Fri, 03 Jul 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/cve_2020_9771/</guid>
-      <description>TL;DR Link to heading We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc&amp;hellip;) of every user on the system, including those protected by Apple&amp;rsquo;s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
-This could be achieved with a single command, for example: mount_apfs -o noowners -s com.</description>
+      <description>TL;DR Link to heading We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc&amp;hellip;) of every user on the system, including those protected by Apple&amp;rsquo;s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱&#xA;This could be achieved with a single command, for example: mount_apfs -o noowners -s com.</description>
     </item>
-    
     <item>
       <title>CVE-2020-14977 - Secure coding XPC Services - Part 5 - PID reuse attacks</title>
       <link>https://theevilbit.github.io/posts/secure_coding_xpc_part5/</link>
       <pubDate>Tue, 16 Jun 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/secure_coding_xpc_part5/</guid>
-      <description>In the last post of the series we will see another typical issue, where XPC services using the connecting process&amp;rsquo;s ID (PID) to verify the client instead of the audit token. We will use F-Secure SAFE again for our case study, the vulnerability was fixed in 17.8 and it was assigned CVE-2020-14977.
-The root cause Link to heading The XPC services of F-Secure SAFE use the process ID (PID) to verify the client&amp;rsquo;s signature, as can be seen in the code below.</description>
+      <description>In the last post of the series we will see another typical issue, where XPC services using the connecting process&amp;rsquo;s ID (PID) to verify the client instead of the audit token. We will use F-Secure SAFE again for our case study, the vulnerability was fixed in 17.8 and it was assigned CVE-2020-14977.&#xA;The root cause Link to heading The XPC services of F-Secure SAFE use the process ID (PID) to verify the client&amp;rsquo;s signature, as can be seen in the code below.</description>
     </item>
-    
     <item>
       <title>CVE-2020-14978 - Secure coding XPC Services - Part 4 - Improved client authorization</title>
       <link>https://theevilbit.github.io/posts/secure_coding_xpc_part4/</link>
       <pubDate>Fri, 12 Jun 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/secure_coding_xpc_part4/</guid>
       <description>F-Secure SAFE XPC service exploitation (CVE-2020-14978) Link to heading Intro Link to heading In this post we will look into an other case study which will show us (again) why XPC client verification is crucial in XPC security, and how added authorization checks can slightly improve (but not fix) the problem. The F-Secure SAFE XPC services installed on macOS were not sufficiently hardened, and a malicious actor had the ability to interact with them.</description>
     </item>
-    
     <item>
       <title>The AMFI MACF policy system call</title>
       <link>https://theevilbit.github.io/posts/amfi_syscall/</link>
       <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/amfi_syscall/</guid>
-      <description>On macOS, one popular technique to inject code into other applications is leveraging the DYLD_INSERT_LIBRARIES environment variable, which I wrote about in 2019 DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX. This variable can store a colon-separated list of dynamic libraries to load before the ones specified in the target process.
-Several limitations apply to when this injection technique can be used and when it cannot, which I also discussed. I revisited this topic, not only because things might have changed since then but also to ensure that I didn’t miss anything.</description>
+      <description>On macOS, one popular technique to inject code into other applications is leveraging the DYLD_INSERT_LIBRARIES environment variable, which I wrote about in 2019 DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX. This variable can store a colon-separated list of dynamic libraries to load before the ones specified in the target process.&#xA;Several limitations apply to when this injection technique can be used and when it cannot, which I also discussed. I revisited this topic, not only because things might have changed since then but also to ensure that I didn’t miss anything.</description>
     </item>
-    
     <item>
       <title>CVE-2020-0984 - Secure coding XPC Services - Part 3 - Incorrect client verification</title>
       <link>https://theevilbit.github.io/posts/secure_coding_xpc_part3/</link>
       <pubDate>Fri, 29 May 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/secure_coding_xpc_part3/</guid>
       <description>Microsoft AutoUpdate macOS privilege escalation vulnerability (CVE-2020-0984) Link to heading Introduction Link to heading This is the third post in my series which is trying to help Apple developers to avoid typical insecure coding practices. This one will highlight why XPC client hardening and proper verification is extremely important when we use XPC messaging on macOS between clients that run as a normal user and services that run as root.</description>
     </item>
-    
     <item>
       <title>Kernel Debugging macOS with SIP</title>
       <link>https://theevilbit.github.io/posts/kernel_debugging_with_sip/</link>
       <pubDate>Tue, 12 May 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/kernel_debugging_with_sip/</guid>
-      <description>As security researchers, we often find ourselves needing to look deep into various kernels to fully understand our target and accomplish our goals. Doing so on the Windows platform is no mystery, as there have been countless well-written posts about kernel debugging setups. For macOS, however, the situation is slightly different.
-There are many great posts describing how to set up kernel debugging between two machines, but all of them suggest that SIP (System Integrity Protection) should be disabled for kernel debugging.</description>
+      <description>As security researchers, we often find ourselves needing to look deep into various kernels to fully understand our target and accomplish our goals. Doing so on the Windows platform is no mystery, as there have been countless well-written posts about kernel debugging setups. For macOS, however, the situation is slightly different.&#xA;There are many great posts describing how to set up kernel debugging between two machines, but all of them suggest that SIP (System Integrity Protection) should be disabled for kernel debugging.</description>
     </item>
-    
     <item>
       <title>Secure coding XPC Services - Part 2 - Checking CS (CodeSigning) flags of the client</title>
       <link>https://theevilbit.github.io/posts/secure_coding_xpc_part2/</link>
       <pubDate>Sun, 22 Mar 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/secure_coding_xpc_part2/</guid>
       <description>I&amp;rsquo;m still waiting for some bug fixes to release the previously planned posts, and in the meantime I continue to poke at other PrivilegedHelperTools. This post born because I actually failed to exploit an XPC service, and I learned something new in regards, of how to securely write such a service. One application that came to my sight is Viscosity. This tool was already in Tyler Bohan&amp;rsquo;s list, where his team looked on exploiting such services: GitHub - blankwall/Offensive-Con: Talk and materials for Offensive Con presentation - Privileged Helper Tools.</description>
     </item>
-    
     <item>
       <title>TALK - Exploiting directory permissions on macOS</title>
       <link>https://theevilbit.github.io/posts/exploiting_directory_permissions_on_macos/</link>
       <pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/exploiting_directory_permissions_on_macos/</guid>
       <description>This research started around summer time in 2019, when everything settled down after my talk in 2019, where I detailed how did I gained root privileges via a benign App Store application, that I developed. That exploit used a symlink to achieve this, so I though I will make a more general approach and see if this type of vulnerability exists in other places as well on macOS systems. As it turns out it does exists, and not just on macOS directly but also on other apps, it appears to be a very fruitful of issue, without too much effort I found 5 exploitable bugs on macOS, 3 in Adobe installers.</description>
     </item>
-    
     <item>
       <title>CVE-2019-20057 - Secure coding XPC services - Part 1 - Why EvenBetterAuthorization is not enough?</title>
       <link>https://theevilbit.github.io/posts/secure_coding_xpc_part1/</link>
       <pubDate>Sun, 12 Jan 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/secure_coding_xpc_part1/</guid>
       <description>This is the first part of a blog post series I plan about PrivilegedHelperTools that exists on macOS systems. I recently took a look on a couple of these tools, and found that it&amp;rsquo;s very easy to make the code insecure, as there are many small pieces to it, and if one is done wrong, the helper tool will be open to abuse by anyone having a foothold on the system.</description>
     </item>
-    
     <item>
       <title>GateKeeper - Bypass or not bypass?</title>
       <link>https://theevilbit.github.io/posts/gatekeeper_bypass_or_not_bypass/</link>
       <pubDate>Fri, 25 Oct 2019 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/gatekeeper_bypass_or_not_bypass/</guid>
       <description>TL;DR Link to heading On macOS Mojave Gatekeeper only verifies executables, which are run with the open command or the user double clicks. It won’t verify files, that are executed through other means like, directly executing a binary ./myapp regardless of the quarantine attribute. If you can place a plist file inside LaunchAgents/LaunchDaemons, the command inside will also be executed. Prior to Catalina there is a way to trick users to drag &amp;amp; drop files in the LaunchAgents folder.</description>
     </item>
-    
     <item>
       <title>NOCVE - Few click RCE via GitHub Desktop macOS client with Gatekeeper bypass and custom URL handlers</title>
       <link>https://theevilbit.github.io/posts/few_click_rce_via_github_desktop_macos_client_with_gatekeeper_bypass_and_custom_url_handlers/</link>
       <pubDate>Sat, 05 Oct 2019 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/few_click_rce_via_github_desktop_macos_client_with_gatekeeper_bypass_and_custom_url_handlers/</guid>
-      <description>TL;DR Link to heading The GitHub Desktop app doesn’t add the quarantine extended attribute to files downloaded from the web, and this along with macOS’s URL handler auto-registration feature allows an attacker to execute arbitrary, even unsigned code on a macOS system. If we don’t count the clicks required to open the GitHub App, and cloning an external repository, then this is a 2 click RCE.
-The idea Link to heading I recently came across a very good blog post about an RCE vulnerability on GitHub Desktop: GitHub Desktop RCE (OSX) - André Baptista via its custom URL handlers.</description>
+      <description>TL;DR Link to heading The GitHub Desktop app doesn’t add the quarantine extended attribute to files downloaded from the web, and this along with macOS’s URL handler auto-registration feature allows an attacker to execute arbitrary, even unsigned code on a macOS system. If we don’t count the clicks required to open the GitHub App, and cloning an external repository, then this is a 2 click RCE.&#xA;The idea Link to heading I recently came across a very good blog post about an RCE vulnerability on GitHub Desktop: GitHub Desktop RCE (OSX) - André Baptista via its custom URL handlers.</description>
     </item>
-    
     <item>
       <title>DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX</title>
       <link>https://theevilbit.github.io/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/</link>
       <pubDate>Tue, 09 Jul 2019 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/dyld_insert_libraries_dylib_injection_in_macos_osx_deep_dive/</guid>
-      <description>After my recent blog post, my old mate @_Dark_Knight_ reached out to me and he asked me a question:
-“Do you typically callout user apps that allow dyld_insert_libraries?”
-And a few similar ones, and I will be honest, I had no idea what is he talking about, if only I understood the question :D Despite the fact that my recent blog posts and talks are about macOS, I deal much more with Windows on a daily basis, probably like 95%, and macOS is still a whole new territory for me.</description>
+      <description>After my recent blog post, my old mate @_Dark_Knight_ reached out to me and he asked me a question:&#xA;“Do you typically callout user apps that allow dyld_insert_libraries?”&#xA;And a few similar ones, and I will be honest, I had no idea what is he talking about, if only I understood the question :D Despite the fact that my recent blog posts and talks are about macOS, I deal much more with Windows on a daily basis, probably like 95%, and macOS is still a whole new territory for me.</description>
     </item>
-    
     <item>
       <title>TALK - macOS - Getting root with benign AppStore apps</title>
       <link>https://theevilbit.github.io/posts/getting_root_with_benign_appstore_apps/</link>
       <pubDate>Sat, 01 Jun 2019 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/getting_root_with_benign_appstore_apps/</guid>
       <description>This writeup is intended to be a bit of storytelling. I would like to show how I went down the rabbit hole in a quick ’research’ I wanted to do, and eventually found a local privilege escalation vulnerability in macOS. I also want to show, tell about all the obstacles and failures I run into, stuff that people don’t talk about usually, but I feel it’s part of the process all of us go through, when we try to create something.</description>
     </item>
-    
     <item>
       <title>CVE-2020-14976 - GNS3 ubridge SETUID bit - arbitrary file read</title>
       <link>https://theevilbit.github.io/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/</link>
       <pubDate>Tue, 28 May 2019 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/</guid>
-      <description>A couple of weeks ago, I had the idea of scanning my Mac for files that has the SUID bit set, I wanted to see if there is anything interesting showing up. You can do it this way:
-/usr/bin/sudo find / -perm -4000 -exec /bin/ls -ldb {} \; &amp;gt; suidfilelist There was one item that caught my attention, and that was a file called ubridge inside GNS3. I used to be a network guy, and GNS3 is a great tool to emulate real network gear, practice configuration, etc.</description>
+      <description>A couple of weeks ago, I had the idea of scanning my Mac for files that has the SUID bit set, I wanted to see if there is anything interesting showing up. You can do it this way:&#xA;/usr/bin/sudo find / -perm -4000 -exec /bin/ls -ldb {} \; &amp;gt; suidfilelist There was one item that caught my attention, and that was a file called ubridge inside GNS3. I used to be a network guy, and GNS3 is a great tool to emulate real network gear, practice configuration, etc.</description>
     </item>
-    
   </channel>
 </rss>

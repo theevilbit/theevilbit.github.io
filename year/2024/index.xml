@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>2024 on theevilbit blog</title>
+    <link>https://theevilbit.github.io/year/2024/</link>
+    <description>Recent content in 2024 on theevilbit blog</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 24 May 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://theevilbit.github.io/year/2024/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CVE-2023-40424 - How Malware Can Bypass Transparency Consent and Control</title>
+      <link>https://theevilbit.github.io/posts/cve-2023-40424/</link>
+      <pubDate>Fri, 24 May 2024 00:00:00 +0000</pubDate>
+      <guid>https://theevilbit.github.io/posts/cve-2023-40424/</guid>
+      <description>Intro Link to heading CVE-2023-40424 is a vulnerability that allows a root-level user to create a new user with a custom Transparency Consent and Control (TCC) database in macOS, which can then be used to access other users’ private data.&#xA;First discovered back in 2022, the vulnerability was fixed by Apple in 2023 in macOS Sonoma’s initial release. But it was not fixed in earlier versions of macOS—one more reason users and admins should update their Mac computers to Sonoma.</description>
+    </item>
+    <item>
+      <title>How Apple Mitigates Vulnerabilities in Installer Scripts</title>
+      <link>https://theevilbit.github.io/posts/apple-mitigates-vulnerabilities-installer-scripts/</link>
+      <pubDate>Fri, 15 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>https://theevilbit.github.io/posts/apple-mitigates-vulnerabilities-installer-scripts/</guid>
+      <description>Intro Link to heading Vulnerabilities are hot topics inside the world of security research and—because of their potentially dramatic impacts—outside as well. Unfortunately, the strategies and tactics that companies like Apple take to prevent specific vulnerabilities—or even entire families of exploits—typically attract less attention. But the fact is that engineering high-impact mitigations is typically more challenging than finding a single vulnerability.&#xA;In this post, we’ll look at Apple&amp;rsquo;s recent efforts to mitigate an entire class of installer-script vulnerabilities.</description>
+    </item>
+  </channel>
+</rss>

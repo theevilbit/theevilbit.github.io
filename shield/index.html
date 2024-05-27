@@ -17,18 +17,21 @@
 Motivation for limiting process injections Link to heading In the past 2 years I started to dig into macOS security research, and along the way it became pretty clear that beyond memory corruption issues the alpha and omega of macOS exploits is to run code in the context of other applications.">
 <meta name="keywords" content="">
 
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Shield - An app to protect against process injection on macOS"/>
-<meta name="twitter:description" content="Shield - An app to protect against process injection on macOS Link to heading In this post I would like to tell the story of the Shield.app development and also introduce its features. It&rsquo;s been a ride over the past year, and I wasn&rsquo;t sure always that it will happen.
-Motivation for limiting process injections Link to heading In the past 2 years I started to dig into macOS security research, and along the way it became pretty clear that beyond memory corruption issues the alpha and omega of macOS exploits is to run code in the context of other applications."/>
 
-<meta property="og:title" content="Shield - An app to protect against process injection on macOS" />
-<meta property="og:description" content="Shield - An app to protect against process injection on macOS Link to heading In this post I would like to tell the story of the Shield.app development and also introduce its features. It&rsquo;s been a ride over the past year, and I wasn&rsquo;t sure always that it will happen.
-Motivation for limiting process injections Link to heading In the past 2 years I started to dig into macOS security research, and along the way it became pretty clear that beyond memory corruption issues the alpha and omega of macOS exploits is to run code in the context of other applications." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://theevilbit.github.io/shield/" /><meta property="article:section" content="" />
-<meta property="article:published_time" content="2019-09-22T00:00:00+00:00" />
-<meta property="article:modified_time" content="2019-09-22T00:00:00+00:00" />
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Shield - An app to protect against process injection on macOS">
+  <meta name="twitter:description" content="Shield - An app to protect against process injection on macOS Link to heading In this post I would like to tell the story of the Shield.app development and also introduce its features. It’s been a ride over the past year, and I wasn’t sure always that it will happen.
+Motivation for limiting process injections Link to heading In the past 2 years I started to dig into macOS security research, and along the way it became pretty clear that beyond memory corruption issues the alpha and omega of macOS exploits is to run code in the context of other applications.">
+
+<meta property="og:url" content="https://theevilbit.github.io/shield/">
+  <meta property="og:site_name" content="theevilbit blog">
+  <meta property="og:title" content="Shield - An app to protect against process injection on macOS">
+  <meta property="og:description" content="Shield - An app to protect against process injection on macOS Link to heading In this post I would like to tell the story of the Shield.app development and also introduce its features. It’s been a ride over the past year, and I wasn’t sure always that it will happen.
+Motivation for limiting process injections Link to heading In the past 2 years I started to dig into macOS security research, and along the way it became pretty clear that beyond memory corruption issues the alpha and omega of macOS exploits is to run code in the context of other applications.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2019-09-22T00:00:00+00:00">
+    <meta property="article:modified_time" content="2019-09-22T00:00:00+00:00">
 
 
 
@@ -36,12 +39,14 @@ Motivation for limiting process injections Link to heading In the past 2 years I
 <link rel="canonical" href="https://theevilbit.github.io/shield/">
 
 
-<link rel="preload" href="https://theevilbit.github.io/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
 
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.135e22c97ff685fe983fc60048e309ced8f00d8d38f536aa67dba8a13a03dfa4.css" integrity="sha256-E14iyX/2hf6YP8YASOMJztjwDY049TaqZ9uooToD36Q=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.38c4552ac40f9ae3408bad40358f654ebd8804412fe74ed56f2d6c8a7af82dd3.css" integrity="sha256-OMRVKsQPmuNAi61ANY9lTr2IBEEv507Vby1sinr4LdM=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -82,7 +87,7 @@ Motivation for limiting process injections Link to heading In the past 2 years I
   
 <div class="float-container">
     <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
     </a>
 </div>
 
@@ -90,39 +95,41 @@ Motivation for limiting process injections Link to heading In the past 2 years I
   <main class="wrapper">
     <nav class="navigation">
   <section class="container">
+    
     <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
     
+    
       <input type="checkbox" id="menu-toggle" />
       <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
       </label>
       <ul class="navigation-list">
         
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/posts/">Posts</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/shield/">Shield.app</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/tags/">Tags</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/about/">About</a>
             </li>
           
         
@@ -148,7 +155,7 @@ Motivation for limiting process injections Link to heading In the past 2 years I
     <h1 id="shield---an-app-to-protect-against-process-injection-on-macos">
   Shield - An app to protect against process injection on macOS
   <a class="heading-link" href="#shield---an-app-to-protect-against-process-injection-on-macos">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h1>
@@ -156,7 +163,7 @@ Motivation for limiting process injections Link to heading In the past 2 years I
 <h2 id="motivation-for-limiting-process-injections">
   Motivation for limiting process injections
   <a class="heading-link" href="#motivation-for-limiting-process-injections">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -183,7 +190,7 @@ Motivation for limiting process injections Link to heading In the past 2 years I
 <h2 id="motivation-for-limiting-file-system-link-creation">
   Motivation for limiting file system link creation
   <a class="heading-link" href="#motivation-for-limiting-file-system-link-creation">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -191,7 +198,7 @@ Motivation for limiting process injections Link to heading In the past 2 years I
 <h2 id="development-of-shield">
   Development of Shield
   <a class="heading-link" href="#development-of-shield">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -205,7 +212,7 @@ Motivation for limiting process injections Link to heading In the past 2 years I
 <h2 id="getting-the-endpointsecurity-entitlement">
   Getting the EndpointSecurity entitlement
   <a class="heading-link" href="#getting-the-endpointsecurity-entitlement">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -217,7 +224,7 @@ Motivation for limiting process injections Link to heading In the past 2 years I
 <h2 id="using-shield">
   Using Shield
   <a class="heading-link" href="#using-shield">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -253,7 +260,7 @@ Motivation for limiting process injections Link to heading In the past 2 years I
 <h2 id="contribute">
   Contribute
   <a class="heading-link" href="#contribute">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -270,7 +277,7 @@ Motivation for limiting process injections Link to heading In the past 2 years I
   <section class="container">
     ©
     
-    2023
+    2024
      Csaba Fitzl 
     ·
     
@@ -294,18 +301,13 @@ Motivation for limiting process injections Link to heading In the past 2 years I
 
 
   
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-151008930-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
+  
+
+
+
+  
+
+  
 
   
 

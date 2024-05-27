@@ -17,18 +17,25 @@
 Several limitations apply to when this injection technique can be used and when it cannot, which I also discussed. I revisited this topic, not only because things might have changed since then but also to ensure that I didn’t miss anything.">
 <meta name="keywords" content="">
 
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="The AMFI MACF policy system call"/>
-<meta name="twitter:description" content="On macOS, one popular technique to inject code into other applications is leveraging the DYLD_INSERT_LIBRARIES environment variable, which I wrote about in 2019 DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX. This variable can store a colon-separated list of dynamic libraries to load before the ones specified in the target process.
-Several limitations apply to when this injection technique can be used and when it cannot, which I also discussed. I revisited this topic, not only because things might have changed since then but also to ensure that I didn’t miss anything."/>
 
-<meta property="og:title" content="The AMFI MACF policy system call" />
-<meta property="og:description" content="On macOS, one popular technique to inject code into other applications is leveraging the DYLD_INSERT_LIBRARIES environment variable, which I wrote about in 2019 DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX. This variable can store a colon-separated list of dynamic libraries to load before the ones specified in the target process.
-Several limitations apply to when this injection technique can be used and when it cannot, which I also discussed. I revisited this topic, not only because things might have changed since then but also to ensure that I didn’t miss anything." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://theevilbit.github.io/posts/amfi_syscall/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2020-06-09T00:00:00+00:00" />
-<meta property="article:modified_time" content="2020-06-09T00:00:00+00:00" />
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="The AMFI MACF policy system call">
+  <meta name="twitter:description" content="On macOS, one popular technique to inject code into other applications is leveraging the DYLD_INSERT_LIBRARIES environment variable, which I wrote about in 2019 DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX. This variable can store a colon-separated list of dynamic libraries to load before the ones specified in the target process.
+Several limitations apply to when this injection technique can be used and when it cannot, which I also discussed. I revisited this topic, not only because things might have changed since then but also to ensure that I didn’t miss anything.">
+
+<meta property="og:url" content="https://theevilbit.github.io/posts/amfi_syscall/">
+  <meta property="og:site_name" content="theevilbit blog">
+  <meta property="og:title" content="The AMFI MACF policy system call">
+  <meta property="og:description" content="On macOS, one popular technique to inject code into other applications is leveraging the DYLD_INSERT_LIBRARIES environment variable, which I wrote about in 2019 DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX. This variable can store a colon-separated list of dynamic libraries to load before the ones specified in the target process.
+Several limitations apply to when this injection technique can be used and when it cannot, which I also discussed. I revisited this topic, not only because things might have changed since then but also to ensure that I didn’t miss anything.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2020-06-09T00:00:00+00:00">
+    <meta property="article:modified_time" content="2020-06-09T00:00:00+00:00">
+    <meta property="article:tag" content="Macos">
+    <meta property="article:tag" content="Internals">
+    <meta property="article:tag" content="Amfi">
 
 
 
@@ -36,12 +43,14 @@ Several limitations apply to when this injection technique can be used and when 
 <link rel="canonical" href="https://theevilbit.github.io/posts/amfi_syscall/">
 
 
-<link rel="preload" href="https://theevilbit.github.io/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
 
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.135e22c97ff685fe983fc60048e309ced8f00d8d38f536aa67dba8a13a03dfa4.css" integrity="sha256-E14iyX/2hf6YP8YASOMJztjwDY049TaqZ9uooToD36Q=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.38c4552ac40f9ae3408bad40358f654ebd8804412fe74ed56f2d6c8a7af82dd3.css" integrity="sha256-OMRVKsQPmuNAi61ANY9lTr2IBEEv507Vby1sinr4LdM=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -82,7 +91,7 @@ Several limitations apply to when this injection technique can be used and when 
   
 <div class="float-container">
     <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
     </a>
 </div>
 
@@ -90,39 +99,41 @@ Several limitations apply to when this injection technique can be used and when 
   <main class="wrapper">
     <nav class="navigation">
   <section class="container">
+    
     <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
     
+    
       <input type="checkbox" id="menu-toggle" />
       <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
       </label>
       <ul class="navigation-list">
         
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/posts/">Posts</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/shield/">Shield.app</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/tags/">Tags</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/about/">About</a>
             </li>
           
         
@@ -148,33 +159,33 @@ Several limitations apply to when this injection technique can be used and when 
         <div class="post-meta">
           <div class="date">
             <span class="posted-on">
-              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
               <time datetime="2020-06-09T00:00:00Z">
                 June 9, 2020
               </time>
             </span>
             <span class="reading-time">
-              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
               One-minute read
             </span>
           </div>
           
           <div class="categories">
-  <i class="fa fa-folder" aria-hidden="true"></i>
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
     <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
 
           <div class="tags">
-  <i class="fa fa-tag" aria-hidden="true"></i>
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
     <span class="tag">
-      <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+      <a href="https://theevilbit.github.io/tags/macos/">Macos</a>
     </span>
       <span class="separator">•</span>
     <span class="tag">
-      <a href="https://theevilbit.github.io/tags/internals/">internals</a>
+      <a href="https://theevilbit.github.io/tags/internals/">Internals</a>
     </span>
       <span class="separator">•</span>
     <span class="tag">
-      <a href="https://theevilbit.github.io/tags/amfi/">amfi</a>
+      <a href="https://theevilbit.github.io/tags/amfi/">Amfi</a>
     </span></div>
 
         </div>
@@ -201,6 +212,9 @@ Several limitations apply to when this injection technique can be used and when 
         
         
         
+
+        
+        
       </footer>
     </article>
 
@@ -213,7 +227,7 @@ Several limitations apply to when this injection technique can be used and when 
   <section class="container">
     ©
     
-    2023
+    2024
      Csaba Fitzl 
     ·
     
@@ -237,18 +251,13 @@ Several limitations apply to when this injection technique can be used and when 
 
 
   
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-151008930-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
+  
+
+
+
+  
+
+  
 
   
 

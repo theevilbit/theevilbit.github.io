@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  How Apple Mitigates Vulnerabilities in Installer Scripts · theevilbit blog
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Csaba Fitzl">
+<meta name="description" content="Intro Link to heading Vulnerabilities are hot topics inside the world of security research and—because of their potentially dramatic impacts—outside as well. Unfortunately, the strategies and tactics that companies like Apple take to prevent specific vulnerabilities—or even entire families of exploits—typically attract less attention. But the fact is that engineering high-impact mitigations is typically more challenging than finding a single vulnerability.
+In this post, we’ll look at Apple&rsquo;s recent efforts to mitigate an entire class of installer-script vulnerabilities.">
+<meta name="keywords" content="">
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="How Apple Mitigates Vulnerabilities in Installer Scripts">
+  <meta name="twitter:description" content="Intro Link to heading Vulnerabilities are hot topics inside the world of security research and—because of their potentially dramatic impacts—outside as well. Unfortunately, the strategies and tactics that companies like Apple take to prevent specific vulnerabilities—or even entire families of exploits—typically attract less attention. But the fact is that engineering high-impact mitigations is typically more challenging than finding a single vulnerability.
+In this post, we’ll look at Apple’s recent efforts to mitigate an entire class of installer-script vulnerabilities.">
+
+<meta property="og:url" content="https://theevilbit.github.io/posts/apple-mitigates-vulnerabilities-installer-scripts/">
+  <meta property="og:site_name" content="theevilbit blog">
+  <meta property="og:title" content="How Apple Mitigates Vulnerabilities in Installer Scripts">
+  <meta property="og:description" content="Intro Link to heading Vulnerabilities are hot topics inside the world of security research and—because of their potentially dramatic impacts—outside as well. Unfortunately, the strategies and tactics that companies like Apple take to prevent specific vulnerabilities—or even entire families of exploits—typically attract less attention. But the fact is that engineering high-impact mitigations is typically more challenging than finding a single vulnerability.
+In this post, we’ll look at Apple’s recent efforts to mitigate an entire class of installer-script vulnerabilities.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-03-15T00:00:00+00:00">
+    <meta property="article:modified_time" content="2024-03-15T00:00:00+00:00">
+    <meta property="article:tag" content="Macos">
+    <meta property="article:tag" content="Lpe">
+    <meta property="article:tag" content="Vulnerability">
+    <meta property="article:tag" content="Cve">
+
+
+
+
+<link rel="canonical" href="https://theevilbit.github.io/posts/apple-mitigates-vulnerabilities-installer-scripts/">
+
+
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.38c4552ac40f9ae3408bad40358f654ebd8804412fe74ed56f2d6c8a7af82dd3.css" integrity="sha256-OMRVKsQPmuNAi61ANY9lTr2IBEEv507Vby1sinr4LdM=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+
+<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
+<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+<body class="preload-transitions colorscheme-light">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="https://theevilbit.github.io/">
+      theevilbit blog
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://theevilbit.github.io/posts/">Posts</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://theevilbit.github.io/shield/">Shield.app</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://theevilbit.github.io/tags/">Tags</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://theevilbit.github.io/about/">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="https://theevilbit.github.io/posts/apple-mitigates-vulnerabilities-installer-scripts/">
+              How Apple Mitigates Vulnerabilities in Installer Scripts
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2024-03-15T00:00:00Z">
+                March 15, 2024
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              One-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
+    <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
+
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/macos/">Macos</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/lpe/">Lpe</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/vulnerability/">Vulnerability</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="https://theevilbit.github.io/tags/cve/">Cve</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <h2 id="intro">
+  Intro
+  <a class="heading-link" href="#intro">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Vulnerabilities are hot topics inside the world of security research and—because of their potentially dramatic impacts—outside as well. Unfortunately, the strategies and tactics that companies like Apple take to prevent specific vulnerabilities—or even entire families of exploits—typically attract less attention. But the fact is that engineering high-impact mitigations is typically more challenging than finding a single vulnerability.</p>
+<p>In this post, we’ll look at Apple&rsquo;s recent efforts to mitigate an entire class of installer-script vulnerabilities. We will cover:</p>
+<p>Why Apple-signed installers are great targets for attackers;
+A high-level overview of such vulnerabilities from the past; and
+A deep-dive into how Apple attempts to mitigate these vulnerabilities with a new design in the PackageKit private framework.</p>
+<p>&hellip;</p>
+<p>The full blog was published at my company&rsquo;s (Kandji) website: <a href="https://blog.kandji.io/apple-mitigates-vulnerabilities-installer-scripts"  class="external-link" target="_blank" rel="noopener">https://blog.kandji.io/apple-mitigates-vulnerabilities-installer-scripts</a></p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2024
+     Csaba Fitzl 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+  
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

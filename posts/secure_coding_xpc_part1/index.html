@@ -16,16 +16,24 @@
 <meta name="description" content="This is the first part of a blog post series I plan about PrivilegedHelperTools that exists on macOS systems. I recently took a look on a couple of these tools, and found that it&rsquo;s very easy to make the code insecure, as there are many small pieces to it, and if one is done wrong, the helper tool will be open to abuse by anyone having a foothold on the system.">
 <meta name="keywords" content="">
 
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="CVE-2019-20057 - Secure coding XPC services - Part 1 - Why EvenBetterAuthorization is not enough?"/>
-<meta name="twitter:description" content="This is the first part of a blog post series I plan about PrivilegedHelperTools that exists on macOS systems. I recently took a look on a couple of these tools, and found that it&rsquo;s very easy to make the code insecure, as there are many small pieces to it, and if one is done wrong, the helper tool will be open to abuse by anyone having a foothold on the system."/>
 
-<meta property="og:title" content="CVE-2019-20057 - Secure coding XPC services - Part 1 - Why EvenBetterAuthorization is not enough?" />
-<meta property="og:description" content="This is the first part of a blog post series I plan about PrivilegedHelperTools that exists on macOS systems. I recently took a look on a couple of these tools, and found that it&rsquo;s very easy to make the code insecure, as there are many small pieces to it, and if one is done wrong, the helper tool will be open to abuse by anyone having a foothold on the system." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://theevilbit.github.io/posts/secure_coding_xpc_part1/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2020-01-12T00:00:00+00:00" />
-<meta property="article:modified_time" content="2020-01-12T00:00:00+00:00" />
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="CVE-2019-20057 - Secure coding XPC services - Part 1 - Why EvenBetterAuthorization is not enough?">
+  <meta name="twitter:description" content="This is the first part of a blog post series I plan about PrivilegedHelperTools that exists on macOS systems. I recently took a look on a couple of these tools, and found that it’s very easy to make the code insecure, as there are many small pieces to it, and if one is done wrong, the helper tool will be open to abuse by anyone having a foothold on the system.">
+
+<meta property="og:url" content="https://theevilbit.github.io/posts/secure_coding_xpc_part1/">
+  <meta property="og:site_name" content="theevilbit blog">
+  <meta property="og:title" content="CVE-2019-20057 - Secure coding XPC services - Part 1 - Why EvenBetterAuthorization is not enough?">
+  <meta property="og:description" content="This is the first part of a blog post series I plan about PrivilegedHelperTools that exists on macOS systems. I recently took a look on a couple of these tools, and found that it’s very easy to make the code insecure, as there are many small pieces to it, and if one is done wrong, the helper tool will be open to abuse by anyone having a foothold on the system.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2020-01-12T00:00:00+00:00">
+    <meta property="article:modified_time" content="2020-01-12T00:00:00+00:00">
+    <meta property="article:tag" content="Macos">
+    <meta property="article:tag" content="Lpe">
+    <meta property="article:tag" content="Privilegedhelpertools">
+    <meta property="article:tag" content="Xpc">
 
 
 
@@ -33,12 +41,14 @@
 <link rel="canonical" href="https://theevilbit.github.io/posts/secure_coding_xpc_part1/">
 
 
-<link rel="preload" href="https://theevilbit.github.io/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
 
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.135e22c97ff685fe983fc60048e309ced8f00d8d38f536aa67dba8a13a03dfa4.css" integrity="sha256-E14iyX/2hf6YP8YASOMJztjwDY049TaqZ9uooToD36Q=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.38c4552ac40f9ae3408bad40358f654ebd8804412fe74ed56f2d6c8a7af82dd3.css" integrity="sha256-OMRVKsQPmuNAi61ANY9lTr2IBEEv507Vby1sinr4LdM=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -79,7 +89,7 @@
   
 <div class="float-container">
     <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
     </a>
 </div>
 
@@ -87,39 +97,41 @@
   <main class="wrapper">
     <nav class="navigation">
   <section class="container">
+    
     <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
     
+    
       <input type="checkbox" id="menu-toggle" />
       <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
       </label>
       <ul class="navigation-list">
         
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/posts/">Posts</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/shield/">Shield.app</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/tags/">Tags</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/about/">About</a>
             </li>
           
         
@@ -145,37 +157,37 @@
         <div class="post-meta">
           <div class="date">
             <span class="posted-on">
-              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
               <time datetime="2020-01-12T00:00:00Z">
                 January 12, 2020
               </time>
             </span>
             <span class="reading-time">
-              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
               13-minute read
             </span>
           </div>
           
           <div class="categories">
-  <i class="fa fa-folder" aria-hidden="true"></i>
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
     <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
 
           <div class="tags">
-  <i class="fa fa-tag" aria-hidden="true"></i>
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
     <span class="tag">
-      <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+      <a href="https://theevilbit.github.io/tags/macos/">Macos</a>
     </span>
       <span class="separator">•</span>
     <span class="tag">
-      <a href="https://theevilbit.github.io/tags/lpe/">lpe</a>
+      <a href="https://theevilbit.github.io/tags/lpe/">Lpe</a>
     </span>
       <span class="separator">•</span>
     <span class="tag">
-      <a href="https://theevilbit.github.io/tags/privilegedhelpertools/">privilegedhelpertools</a>
+      <a href="https://theevilbit.github.io/tags/privilegedhelpertools/">Privilegedhelpertools</a>
     </span>
       <span class="separator">•</span>
     <span class="tag">
-      <a href="https://theevilbit.github.io/tags/xpc/">xpc</a>
+      <a href="https://theevilbit.github.io/tags/xpc/">Xpc</a>
     </span></div>
 
         </div>
@@ -188,7 +200,7 @@
 <h2 id="what-are-privilegedhelpertools">
   What are PrivilegedHelperTools?
   <a class="heading-link" href="#what-are-privilegedhelpertools">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -196,7 +208,7 @@
 <h2 id="apples-evenbetterauthorizationsample">
   Apple&rsquo;s EvenBetterAuthorizationSample
   <a class="heading-link" href="#apples-evenbetterauthorizationsample">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -393,7 +405,7 @@ The important part happens at the <code>AuthorizationCopyRights</code>, because 
 <h2 id="proxyman-change-proxy-privileged-action-vulnerability-cve-2019-20057">
   ProxyMan change proxy privileged action vulnerability (CVE-2019-20057)
   <a class="heading-link" href="#proxyman-change-proxy-privileged-action-vulnerability-cve-2019-20057">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -403,7 +415,7 @@ The important part happens at the <code>AuthorizationCopyRights</code>, because 
 <h2 id="root-cause">
   Root cause
   <a class="heading-link" href="#root-cause">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -468,7 +480,7 @@ The important part happens at the <code>AuthorizationCopyRights</code>, because 
 <h2 id="exploitation">
   Exploitation
   <a class="heading-link" href="#exploitation">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -520,7 +532,7 @@ The important part happens at the <code>AuthorizationCopyRights</code>, because 
 <h2 id="fix-such-and-similar-issues">
   Fix such and similar issues
   <a class="heading-link" href="#fix-such-and-similar-issues">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -546,7 +558,7 @@ com.apple.security.get-task-allow
 <h2 id="future-posts">
   Future posts
   <a class="heading-link" href="#future-posts">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -555,7 +567,7 @@ Part 3 - will talk about why the minimum client version is important. Date is un
 <h2 id="other-resources">
   Other resources:
   <a class="heading-link" href="#other-resources">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -575,6 +587,9 @@ Part 3 - will talk about why the minimum client version is important. Date is un
         
         
         
+
+        
+        
       </footer>
     </article>
 
@@ -587,7 +602,7 @@ Part 3 - will talk about why the minimum client version is important. Date is un
   <section class="container">
     ©
     
-    2023
+    2024
      Csaba Fitzl 
     ·
     
@@ -611,18 +626,13 @@ Part 3 - will talk about why the minimum client version is important. Date is un
 
 
   
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-151008930-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
+  
+
+
+
+  
+
+  
 
   
 

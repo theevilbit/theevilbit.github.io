@@ -4,122 +4,93 @@
     <title>2020 on theevilbit blog</title>
     <link>https://theevilbit.github.io/year/2020/</link>
     <description>Recent content in 2020 on theevilbit blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 13 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/year/2020/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 13 Dec 2020 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://theevilbit.github.io/year/2020/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>CVE-2020-9771 - Reversing Engineering the Fix</title>
       <link>https://theevilbit.github.io/posts/reversing_cve_2020_9771/</link>
       <pubDate>Sun, 13 Dec 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/reversing_cve_2020_9771/</guid>
       <description>When I originally found the mount_apfs bug back in December, 2019, I honestly had no idea what was the root cause of it, nor had a clue how to even start looking into it. The only thing I knew for sure that the answer is within kernel. My macOS knowledge was still quite fresh that time (and even today), and was busy with so many other stuff that I never had the time to start looking into it.</description>
     </item>
-    
     <item>
       <title>NOCVE - Microsoft Teams for macOS Local Privilege Escalation</title>
       <link>https://theevilbit.github.io/posts/microsoft_teams_lpe/</link>
       <pubDate>Tue, 17 Nov 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/microsoft_teams_lpe/</guid>
-      <description>This blog post shares the details of a vulnerability Offensive Security discovered in the XPC service of Microsoft Teams. Although Microsoft secured these services reasonably well, we will see how small code mistakes can have serious impacts.
-We reported the issue to MSRC, but unfortunately Microsoft decided that “the finding is valid but does not meet our bar for immediate servicing.” While they have since hardened the XPC service, it remains exploitable.</description>
+      <description>This blog post shares the details of a vulnerability Offensive Security discovered in the XPC service of Microsoft Teams. Although Microsoft secured these services reasonably well, we will see how small code mistakes can have serious impacts.&#xA;We reported the issue to MSRC, but unfortunately Microsoft decided that “the finding is valid but does not meet our bar for immediate servicing.” While they have since hardened the XPC service, it remains exploitable.</description>
     </item>
-    
     <item>
       <title>Let&#39;s talk macOS Authorization</title>
       <link>https://theevilbit.github.io/posts/macos_authorization/</link>
       <pubDate>Thu, 22 Oct 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/macos_authorization/</guid>
-      <description>This is a blog post I wanted to write for a while now, but somehow never got the time for it, and I also knew that it will require lots of time, so I kept delaying it. I finally kicked my ass, sat down, and wrote it.
-The goal of the post is to cover many aspects of authorization, which I found interesting from security perspective. Honestly, partially for selfish reasons so I will have a goto summary when I need to lookup something later instead of browsing through 8-10 different articles.</description>
+      <description>This is a blog post I wanted to write for a while now, but somehow never got the time for it, and I also knew that it will require lots of time, so I kept delaying it. I finally kicked my ass, sat down, and wrote it.&#xA;The goal of the post is to cover many aspects of authorization, which I found interesting from security perspective. Honestly, partially for selfish reasons so I will have a goto summary when I need to lookup something later instead of browsing through 8-10 different articles.</description>
     </item>
-    
     <item>
       <title>CVE-2020-9771 - mount_apfs TCC bypass and privilege escalation</title>
       <link>https://theevilbit.github.io/posts/cve_2020_9771/</link>
       <pubDate>Fri, 03 Jul 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/cve_2020_9771/</guid>
-      <description>TL;DR Link to heading We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc&amp;hellip;) of every user on the system, including those protected by Apple&amp;rsquo;s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
-This could be achieved with a single command, for example: mount_apfs -o noowners -s com.</description>
+      <description>TL;DR Link to heading We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc&amp;hellip;) of every user on the system, including those protected by Apple&amp;rsquo;s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱&#xA;This could be achieved with a single command, for example: mount_apfs -o noowners -s com.</description>
     </item>
-    
     <item>
       <title>CVE-2020-14977 - Secure coding XPC Services - Part 5 - PID reuse attacks</title>
       <link>https://theevilbit.github.io/posts/secure_coding_xpc_part5/</link>
       <pubDate>Tue, 16 Jun 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/secure_coding_xpc_part5/</guid>
-      <description>In the last post of the series we will see another typical issue, where XPC services using the connecting process&amp;rsquo;s ID (PID) to verify the client instead of the audit token. We will use F-Secure SAFE again for our case study, the vulnerability was fixed in 17.8 and it was assigned CVE-2020-14977.
-The root cause Link to heading The XPC services of F-Secure SAFE use the process ID (PID) to verify the client&amp;rsquo;s signature, as can be seen in the code below.</description>
+      <description>In the last post of the series we will see another typical issue, where XPC services using the connecting process&amp;rsquo;s ID (PID) to verify the client instead of the audit token. We will use F-Secure SAFE again for our case study, the vulnerability was fixed in 17.8 and it was assigned CVE-2020-14977.&#xA;The root cause Link to heading The XPC services of F-Secure SAFE use the process ID (PID) to verify the client&amp;rsquo;s signature, as can be seen in the code below.</description>
     </item>
-    
     <item>
       <title>CVE-2020-14978 - Secure coding XPC Services - Part 4 - Improved client authorization</title>
       <link>https://theevilbit.github.io/posts/secure_coding_xpc_part4/</link>
       <pubDate>Fri, 12 Jun 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/secure_coding_xpc_part4/</guid>
       <description>F-Secure SAFE XPC service exploitation (CVE-2020-14978) Link to heading Intro Link to heading In this post we will look into an other case study which will show us (again) why XPC client verification is crucial in XPC security, and how added authorization checks can slightly improve (but not fix) the problem. The F-Secure SAFE XPC services installed on macOS were not sufficiently hardened, and a malicious actor had the ability to interact with them.</description>
     </item>
-    
     <item>
       <title>The AMFI MACF policy system call</title>
       <link>https://theevilbit.github.io/posts/amfi_syscall/</link>
       <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/amfi_syscall/</guid>
-      <description>On macOS, one popular technique to inject code into other applications is leveraging the DYLD_INSERT_LIBRARIES environment variable, which I wrote about in 2019 DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX. This variable can store a colon-separated list of dynamic libraries to load before the ones specified in the target process.
-Several limitations apply to when this injection technique can be used and when it cannot, which I also discussed. I revisited this topic, not only because things might have changed since then but also to ensure that I didn’t miss anything.</description>
+      <description>On macOS, one popular technique to inject code into other applications is leveraging the DYLD_INSERT_LIBRARIES environment variable, which I wrote about in 2019 DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX. This variable can store a colon-separated list of dynamic libraries to load before the ones specified in the target process.&#xA;Several limitations apply to when this injection technique can be used and when it cannot, which I also discussed. I revisited this topic, not only because things might have changed since then but also to ensure that I didn’t miss anything.</description>
     </item>
-    
     <item>
       <title>CVE-2020-0984 - Secure coding XPC Services - Part 3 - Incorrect client verification</title>
       <link>https://theevilbit.github.io/posts/secure_coding_xpc_part3/</link>
       <pubDate>Fri, 29 May 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/secure_coding_xpc_part3/</guid>
       <description>Microsoft AutoUpdate macOS privilege escalation vulnerability (CVE-2020-0984) Link to heading Introduction Link to heading This is the third post in my series which is trying to help Apple developers to avoid typical insecure coding practices. This one will highlight why XPC client hardening and proper verification is extremely important when we use XPC messaging on macOS between clients that run as a normal user and services that run as root.</description>
     </item>
-    
     <item>
       <title>Kernel Debugging macOS with SIP</title>
       <link>https://theevilbit.github.io/posts/kernel_debugging_with_sip/</link>
       <pubDate>Tue, 12 May 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/kernel_debugging_with_sip/</guid>
-      <description>As security researchers, we often find ourselves needing to look deep into various kernels to fully understand our target and accomplish our goals. Doing so on the Windows platform is no mystery, as there have been countless well-written posts about kernel debugging setups. For macOS, however, the situation is slightly different.
-There are many great posts describing how to set up kernel debugging between two machines, but all of them suggest that SIP (System Integrity Protection) should be disabled for kernel debugging.</description>
+      <description>As security researchers, we often find ourselves needing to look deep into various kernels to fully understand our target and accomplish our goals. Doing so on the Windows platform is no mystery, as there have been countless well-written posts about kernel debugging setups. For macOS, however, the situation is slightly different.&#xA;There are many great posts describing how to set up kernel debugging between two machines, but all of them suggest that SIP (System Integrity Protection) should be disabled for kernel debugging.</description>
     </item>
-    
     <item>
       <title>Secure coding XPC Services - Part 2 - Checking CS (CodeSigning) flags of the client</title>
       <link>https://theevilbit.github.io/posts/secure_coding_xpc_part2/</link>
       <pubDate>Sun, 22 Mar 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/secure_coding_xpc_part2/</guid>
       <description>I&amp;rsquo;m still waiting for some bug fixes to release the previously planned posts, and in the meantime I continue to poke at other PrivilegedHelperTools. This post born because I actually failed to exploit an XPC service, and I learned something new in regards, of how to securely write such a service. One application that came to my sight is Viscosity. This tool was already in Tyler Bohan&amp;rsquo;s list, where his team looked on exploiting such services: GitHub - blankwall/Offensive-Con: Talk and materials for Offensive Con presentation - Privileged Helper Tools.</description>
     </item>
-    
     <item>
       <title>TALK - Exploiting directory permissions on macOS</title>
       <link>https://theevilbit.github.io/posts/exploiting_directory_permissions_on_macos/</link>
       <pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/exploiting_directory_permissions_on_macos/</guid>
       <description>This research started around summer time in 2019, when everything settled down after my talk in 2019, where I detailed how did I gained root privileges via a benign App Store application, that I developed. That exploit used a symlink to achieve this, so I though I will make a more general approach and see if this type of vulnerability exists in other places as well on macOS systems. As it turns out it does exists, and not just on macOS directly but also on other apps, it appears to be a very fruitful of issue, without too much effort I found 5 exploitable bugs on macOS, 3 in Adobe installers.</description>
     </item>
-    
     <item>
       <title>CVE-2019-20057 - Secure coding XPC services - Part 1 - Why EvenBetterAuthorization is not enough?</title>
       <link>https://theevilbit.github.io/posts/secure_coding_xpc_part1/</link>
       <pubDate>Sun, 12 Jan 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/secure_coding_xpc_part1/</guid>
       <description>This is the first part of a blog post series I plan about PrivilegedHelperTools that exists on macOS systems. I recently took a look on a couple of these tools, and found that it&amp;rsquo;s very easy to make the code insecure, as there are many small pieces to it, and if one is done wrong, the helper tool will be open to abuse by anyone having a foothold on the system.</description>
     </item>
-    
   </channel>
 </rss>

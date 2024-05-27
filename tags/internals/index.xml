@@ -1,81 +1,61 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>internals on theevilbit blog</title>
+    <title>Internals on theevilbit blog</title>
     <link>https://theevilbit.github.io/tags/internals/</link>
-    <description>Recent content in internals on theevilbit blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Internals on theevilbit blog</description>
+    <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 09 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/internals/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 09 Oct 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://theevilbit.github.io/tags/internals/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Launch and Environment Constraints Deep Dive</title>
       <link>https://theevilbit.github.io/posts/launch_constraints_deep_dive/</link>
       <pubDate>Mon, 09 Oct 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/launch_constraints_deep_dive/</guid>
-      <description>UPDATE 2023.10.10.: After chatting with Thijs Alkemade, @xnyhps, updated the XPC part of the post as I originally misunderstood Apple&amp;rsquo;s intent.
-Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&amp;rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.</description>
+      <description>UPDATE 2023.10.10.: After chatting with Thijs Alkemade, @xnyhps, updated the XPC part of the post as I originally misunderstood Apple&amp;rsquo;s intent.&#xA;Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&amp;rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.</description>
     </item>
-    
     <item>
       <title>AMFI Launch Constraints - First Quick Look</title>
       <link>https://theevilbit.github.io/posts/amfi_launch_constraints/</link>
       <pubDate>Tue, 14 Jun 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/amfi_launch_constraints/</guid>
-      <description>Dropping some initial quick notes for a new security feature I ran into on macOS Ventura. It&amp;rsquo;s called &amp;ldquo;Launch Constraints&amp;rdquo; and lives inside AMFI.
-Do the following experiment: Copy Terminal.app to your HOME folder and try to run it on Monterey and Ventura. On the former it will work without any issues, on the other it will fail, and we will get the following error:
-2022-06-14 05:59:55.254678+0200 0x5481 Default 0x0 0 0 kernel: (AppleMobileFileIntegrity) AMFI: Launch Constraint Violation (enforcing), error info: c[1]p[1]m[1]e[2], (Constraint not matched) launching proc[vc: 1 pid: 1112]: /Users/ace/Terminal.</description>
+      <description>Dropping some initial quick notes for a new security feature I ran into on macOS Ventura. It&amp;rsquo;s called &amp;ldquo;Launch Constraints&amp;rdquo; and lives inside AMFI.&#xA;Do the following experiment: Copy Terminal.app to your HOME folder and try to run it on Monterey and Ventura. On the former it will work without any issues, on the other it will fail, and we will get the following error:&#xA;2022-06-14 05:59:55.254678+0200 0x5481 Default 0x0 0 0 kernel: (AppleMobileFileIntegrity) AMFI: Launch Constraint Violation (enforcing), error info: c[1]p[1]m[1]e[2], (Constraint not matched) launching proc[vc: 1 pid: 1112]: /Users/ace/Terminal.</description>
     </item>
-    
     <item>
       <title>macOS Monterey Shortcuts - First look</title>
       <link>https://theevilbit.github.io/posts/monterey_shortcuts/</link>
       <pubDate>Thu, 10 Jun 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/monterey_shortcuts/</guid>
       <description>Apple announced macOS Monterey (macOS 12) this week at WWDC, and one of its new features that caught my eye is Shortcuts. It&amp;rsquo;s already available on iOS, but it made its way to macOS. My security focused brain immediately thought about how cool this feature could be for red teamers or pentesters to persist on macOS :) So I decided to take a quick look on the new functionality, focusing on how it works.</description>
     </item>
-    
     <item>
       <title>About com.apple.private.security.clear-library-validation</title>
       <link>https://theevilbit.github.io/posts/com.apple.private.security.clear-library-validation/</link>
       <pubDate>Tue, 19 Jan 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/com.apple.private.security.clear-library-validation/</guid>
-      <description>TL;DR Link to heading On macOS 10.15.2 Apple introduced the com.apple.private.security.clear-library-validation entitlement, which is slowly replacing the previously used com.apple.security.cs.disable-library-validation entitlement on system binaries. Although their impact is the about the same, the way they work is different. While library validation is automatically disabled using com.apple.security.cs.disable-library-validation, with com.apple.private.security.clear-library-validation, the application has to disable it for itself through a csops system call.
-Intro Link to heading With the release of Big Sur, I noticed that many of the system binaries have a new entitlement, which I didn&amp;rsquo;t see before, and that is com.</description>
+      <description>TL;DR Link to heading On macOS 10.15.2 Apple introduced the com.apple.private.security.clear-library-validation entitlement, which is slowly replacing the previously used com.apple.security.cs.disable-library-validation entitlement on system binaries. Although their impact is the about the same, the way they work is different. While library validation is automatically disabled using com.apple.security.cs.disable-library-validation, with com.apple.private.security.clear-library-validation, the application has to disable it for itself through a csops system call.&#xA;Intro Link to heading With the release of Big Sur, I noticed that many of the system binaries have a new entitlement, which I didn&amp;rsquo;t see before, and that is com.</description>
     </item>
-    
     <item>
       <title>Let&#39;s talk macOS Authorization</title>
       <link>https://theevilbit.github.io/posts/macos_authorization/</link>
       <pubDate>Thu, 22 Oct 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/macos_authorization/</guid>
-      <description>This is a blog post I wanted to write for a while now, but somehow never got the time for it, and I also knew that it will require lots of time, so I kept delaying it. I finally kicked my ass, sat down, and wrote it.
-The goal of the post is to cover many aspects of authorization, which I found interesting from security perspective. Honestly, partially for selfish reasons so I will have a goto summary when I need to lookup something later instead of browsing through 8-10 different articles.</description>
+      <description>This is a blog post I wanted to write for a while now, but somehow never got the time for it, and I also knew that it will require lots of time, so I kept delaying it. I finally kicked my ass, sat down, and wrote it.&#xA;The goal of the post is to cover many aspects of authorization, which I found interesting from security perspective. Honestly, partially for selfish reasons so I will have a goto summary when I need to lookup something later instead of browsing through 8-10 different articles.</description>
     </item>
-    
     <item>
       <title>The AMFI MACF policy system call</title>
       <link>https://theevilbit.github.io/posts/amfi_syscall/</link>
       <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/amfi_syscall/</guid>
-      <description>On macOS, one popular technique to inject code into other applications is leveraging the DYLD_INSERT_LIBRARIES environment variable, which I wrote about in 2019 DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX. This variable can store a colon-separated list of dynamic libraries to load before the ones specified in the target process.
-Several limitations apply to when this injection technique can be used and when it cannot, which I also discussed. I revisited this topic, not only because things might have changed since then but also to ensure that I didn’t miss anything.</description>
+      <description>On macOS, one popular technique to inject code into other applications is leveraging the DYLD_INSERT_LIBRARIES environment variable, which I wrote about in 2019 DYLD_INSERT_LIBRARIES DYLIB injection in macOS / OSX. This variable can store a colon-separated list of dynamic libraries to load before the ones specified in the target process.&#xA;Several limitations apply to when this injection technique can be used and when it cannot, which I also discussed. I revisited this topic, not only because things might have changed since then but also to ensure that I didn’t miss anything.</description>
     </item>
-    
     <item>
       <title>Kernel Debugging macOS with SIP</title>
       <link>https://theevilbit.github.io/posts/kernel_debugging_with_sip/</link>
       <pubDate>Tue, 12 May 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/kernel_debugging_with_sip/</guid>
-      <description>As security researchers, we often find ourselves needing to look deep into various kernels to fully understand our target and accomplish our goals. Doing so on the Windows platform is no mystery, as there have been countless well-written posts about kernel debugging setups. For macOS, however, the situation is slightly different.
-There are many great posts describing how to set up kernel debugging between two machines, but all of them suggest that SIP (System Integrity Protection) should be disabled for kernel debugging.</description>
+      <description>As security researchers, we often find ourselves needing to look deep into various kernels to fully understand our target and accomplish our goals. Doing so on the Windows platform is no mystery, as there have been countless well-written posts about kernel debugging setups. For macOS, however, the situation is slightly different.&#xA;There are many great posts describing how to set up kernel debugging between two machines, but all of them suggest that SIP (System Integrity Protection) should be disabled for kernel debugging.</description>
     </item>
-    
   </channel>
 </rss>

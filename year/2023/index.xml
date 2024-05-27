@@ -4,69 +4,51 @@
     <title>2023 on theevilbit blog</title>
     <link>https://theevilbit.github.io/year/2023/</link>
     <description>Recent content in 2023 on theevilbit blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 09 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/year/2023/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 09 Oct 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://theevilbit.github.io/year/2023/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Launch and Environment Constraints Deep Dive</title>
       <link>https://theevilbit.github.io/posts/launch_constraints_deep_dive/</link>
       <pubDate>Mon, 09 Oct 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/launch_constraints_deep_dive/</guid>
-      <description>UPDATE 2023.10.10.: After chatting with Thijs Alkemade, @xnyhps, updated the XPC part of the post as I originally misunderstood Apple&amp;rsquo;s intent.
-Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&amp;rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.</description>
+      <description>UPDATE 2023.10.10.: After chatting with Thijs Alkemade, @xnyhps, updated the XPC part of the post as I originally misunderstood Apple&amp;rsquo;s intent.&#xA;Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&amp;rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 32 - Dock Tile Plugins</title>
       <link>https://theevilbit.github.io/beyond/beyond_0032/</link>
       <pubDate>Fri, 29 Sep 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0032/</guid>
-      <description>This is part 32 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-When you write a series about something, there are some episodes which are less interesting, many boring stuff, but sometimes there are some true gems. While doing some research yesterday, I run into the Dock Tile Plugin feature in macOS, which turned out to be truly amazing from persistence point of view.</description>
+      <description>This is part 32 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;When you write a series about something, there are some episodes which are less interesting, many boring stuff, but sometimes there are some true gems. While doing some research yesterday, I run into the Dock Tile Plugin feature in macOS, which turned out to be truly amazing from persistence point of view.</description>
     </item>
-    
     <item>
       <title>macOS Service Management - The SMAppService API - Quick Notes</title>
       <link>https://theevilbit.github.io/posts/smappservice/</link>
       <pubDate>Thu, 28 Sep 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/smappservice/</guid>
-      <description>This is just a super quick post and some notes, about my experiences with SMAppService.
-Apple introduced the SMAppService API in macOS Ventura (13) to replace the older SMJobBless and SMLoginItemSetEnabled APIs. SMAppService should be used now to register any new Login Item, Launch Agent or Daemon.
-The API is super easy to use, even I could learn it from the developer docs, which is a big thing, and it means that it is indeed really easy as I suck as a developer.</description>
+      <description>This is just a super quick post and some notes, about my experiences with SMAppService.&#xA;Apple introduced the SMAppService API in macOS Ventura (13) to replace the older SMJobBless and SMLoginItemSetEnabled APIs. SMAppService should be used now to register any new Login Item, Launch Agent or Daemon.&#xA;The API is super easy to use, even I could learn it from the developer docs, which is a big thing, and it means that it is indeed really easy as I suck as a developer.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 31 - BSM audit framework</title>
       <link>https://theevilbit.github.io/beyond/beyond_0031/</link>
       <pubDate>Fri, 26 May 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0031/</guid>
-      <description>This is part 31 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-macOS implements the OpenBSM audit framework created by McAfee, which allows someone to audit system events, like login, file access, etc… This has been part of the system for very long time. Auditing has several components, the main one being the kernel, which handles all the events.</description>
+      <description>This is part 31 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;macOS implements the OpenBSM audit framework created by McAfee, which allows someone to audit system events, like login, file access, etc… This has been part of the system for very long time. Auditing has several components, the main one being the kernel, which handles all the events.</description>
     </item>
-    
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 30 - The man config file - man.conf</title>
       <link>https://theevilbit.github.io/beyond/beyond_0030/</link>
       <pubDate>Wed, 10 May 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/beyond/beyond_0030/</guid>
-      <description>This is part 30 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-I was watching an old BSidesLuxemburg 2019 talk by Aaron Jewitt, called &amp;ldquo;Threat Hunting On Linux And Mac With Auditbeat System Module&amp;rdquo;, it&amp;rsquo;s up on YouTube. Aaron mentioned in one of the slides that you can persist using man.conf files. It looked really odd, I tried to quickly Google it, but haven’t found anything about it.</description>
+      <description>This is part 30 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;I was watching an old BSidesLuxemburg 2019 talk by Aaron Jewitt, called &amp;ldquo;Threat Hunting On Linux And Mac With Auditbeat System Module&amp;rdquo;, it&amp;rsquo;s up on YouTube. Aaron mentioned in one of the slides that you can persist using man.conf files. It looked really odd, I tried to quickly Google it, but haven’t found anything about it.</description>
     </item>
-    
     <item>
       <title>CVE-2022-22655 - TCC - Location Services Bypass</title>
       <link>https://theevilbit.github.io/posts/cve-2022-22655/</link>
       <pubDate>Mon, 13 Feb 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/cve-2022-22655/</guid>
-      <description>This is a quick blogpost about a vulnerability I covered in our Black Hat Europe 2022 talk with Wojciech Regula.
-In contrary to what people would expect, clients which can access location services are not maintained in one of the TCC databased, but in a separate location, and it&amp;rsquo;s maintained by locationd. This has been also recently covered by Howard Oakley, in his Privacy: what TCC does and doesn’t blogpost.</description>
+      <description>This is a quick blogpost about a vulnerability I covered in our Black Hat Europe 2022 talk with Wojciech Regula.&#xA;In contrary to what people would expect, clients which can access location services are not maintained in one of the TCC databased, but in a separate location, and it&amp;rsquo;s maintained by locationd. This has been also recently covered by Howard Oakley, in his Privacy: what TCC does and doesn’t blogpost.</description>
     </item>
-    
   </channel>
 </rss>

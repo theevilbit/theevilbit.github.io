@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>av on theevilbit blog</title>
+    <title>Av on theevilbit blog</title>
     <link>https://theevilbit.github.io/tags/av/</link>
-    <description>Recent content in av on theevilbit blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Av on theevilbit blog</description>
+    <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 17 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/av/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 17 Jan 2021 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://theevilbit.github.io/tags/av/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Divide and Conquer - A technique to bypass NextGen AV</title>
       <link>https://theevilbit.github.io/posts/divide_and_conquer/</link>
       <pubDate>Sun, 17 Jan 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/divide_and_conquer/</guid>
-      <description>TL;DR Link to heading This blog post describes a generic technique I called internally on our red team assessment &amp;ldquo;Divide and Conquer&amp;rdquo;, which can be used to bypass behavioral based NextGen AV detection. It works by splitting malicious actions and API calls into distinct processes.
-Intro Link to heading Back in 2019 I was part of a red team, where our daily activity was to bypass a specific NextGen AV.</description>
+      <description>TL;DR Link to heading This blog post describes a generic technique I called internally on our red team assessment &amp;ldquo;Divide and Conquer&amp;rdquo;, which can be used to bypass behavioral based NextGen AV detection. It works by splitting malicious actions and API calls into distinct processes.&#xA;Intro Link to heading Back in 2019 I was part of a red team, where our daily activity was to bypass a specific NextGen AV.</description>
     </item>
-    
   </channel>
 </rss>

@@ -17,18 +17,25 @@
 I started to explore to possibility of persisting on macOS through script files contained in an application. The basic idea is that if we find a script file, which is being executed by a given application, we can edit that script file, put our code inside, and wait for an execution.">
 <meta name="keywords" content="">
 
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 10 - Application script files"/>
-<meta name="twitter:description" content="This is part 10 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-I started to explore to possibility of persisting on macOS through script files contained in an application. The basic idea is that if we find a script file, which is being executed by a given application, we can edit that script file, put our code inside, and wait for an execution."/>
 
-<meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 10 - Application script files" />
-<meta property="og:description" content="This is part 10 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-I started to explore to possibility of persisting on macOS through script files contained in an application. The basic idea is that if we find a script file, which is being executed by a given application, we can edit that script file, put our code inside, and wait for an execution." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0010/" /><meta property="article:section" content="beyond" />
-<meta property="article:published_time" content="2021-04-02T00:00:00+00:00" />
-<meta property="article:modified_time" content="2021-04-02T00:00:00+00:00" />
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 10 - Application script files">
+  <meta name="twitter:description" content="This is part 10 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+I started to explore to possibility of persisting on macOS through script files contained in an application. The basic idea is that if we find a script file, which is being executed by a given application, we can edit that script file, put our code inside, and wait for an execution.">
+
+<meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0010/">
+  <meta property="og:site_name" content="theevilbit blog">
+  <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 10 - Application script files">
+  <meta property="og:description" content="This is part 10 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+I started to explore to possibility of persisting on macOS through script files contained in an application. The basic idea is that if we find a script file, which is being executed by a given application, we can edit that script file, put our code inside, and wait for an execution.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="beyond">
+    <meta property="article:published_time" content="2021-04-02T00:00:00+00:00">
+    <meta property="article:modified_time" content="2021-04-02T00:00:00+00:00">
+    <meta property="article:tag" content="Macos">
+    <meta property="article:tag" content="Persistence">
+    <meta property="article:tag" content="Beyond">
 
 
 
@@ -36,12 +43,14 @@ I started to explore to possibility of persisting on macOS through script files 
 <link rel="canonical" href="https://theevilbit.github.io/beyond/beyond_0010/">
 
 
-<link rel="preload" href="https://theevilbit.github.io/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
 
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.135e22c97ff685fe983fc60048e309ced8f00d8d38f536aa67dba8a13a03dfa4.css" integrity="sha256-E14iyX/2hf6YP8YASOMJztjwDY049TaqZ9uooToD36Q=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.38c4552ac40f9ae3408bad40358f654ebd8804412fe74ed56f2d6c8a7af82dd3.css" integrity="sha256-OMRVKsQPmuNAi61ANY9lTr2IBEEv507Vby1sinr4LdM=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -82,7 +91,7 @@ I started to explore to possibility of persisting on macOS through script files 
   
 <div class="float-container">
     <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
     </a>
 </div>
 
@@ -90,39 +99,41 @@ I started to explore to possibility of persisting on macOS through script files 
   <main class="wrapper">
     <nav class="navigation">
   <section class="container">
+    
     <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
     
+    
       <input type="checkbox" id="menu-toggle" />
       <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
       </label>
       <ul class="navigation-list">
         
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/posts/">Posts</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/shield/">Shield.app</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/tags/">Tags</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/about/">About</a>
             </li>
           
         
@@ -162,7 +173,7 @@ I started to explore to possibility of persisting on macOS through script files 
 <h2 id="python3-idleapp">
   Python3 Idle.app
   <a class="heading-link" href="#python3-idleapp">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -172,7 +183,7 @@ I started to explore to possibility of persisting on macOS through script files 
 <h2 id="sublime-text">
   Sublime Text
   <a class="heading-link" href="#sublime-text">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -187,7 +198,7 @@ In short macOS will only verify code signature upon first execution, anything ch
 <h2 id="gog-launchers">
   GOG launchers
   <a class="heading-link" href="#gog-launchers">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -209,7 +220,7 @@ It will only do this if the application was already run once, if not then the en
 <h2 id="the-library-folder">
   The /Library folder
   <a class="heading-link" href="#the-library-folder">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -222,7 +233,7 @@ find /Library/ -name &#34;*.py&#34; -perm -u+w -user username
 <h2 id="homebrew">
   Homebrew
   <a class="heading-link" href="#homebrew">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -236,7 +247,7 @@ find /Library/ -name &#34;*.py&#34; -perm -u+w -user username
 <h2 id="wireshark">
   Wireshark
   <a class="heading-link" href="#wireshark">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -261,7 +272,7 @@ find /Library/ -name &#34;*.py&#34; -perm -u+w -user username
 <h2 id="python-import-hijacking">
   Python import hijacking
   <a class="heading-link" href="#python-import-hijacking">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -277,7 +288,7 @@ Type &#34;help&#34;, &#34;copyright&#34;, &#34;credits&#34; or &#34;license&#34;
 <h2 id="detection">
   Detection
   <a class="heading-link" href="#detection">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -336,7 +347,7 @@ Type &#34;help&#34;, &#34;copyright&#34;, &#34;credits&#34; or &#34;license&#34;
   <section class="container">
     ©
     
-    2023
+    2024
      Csaba Fitzl 
     ·
     
@@ -360,18 +371,13 @@ Type &#34;help&#34;, &#34;copyright&#34;, &#34;credits&#34; or &#34;license&#34;
 
 
   
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-151008930-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
+  
+
+
+
+  
+
+  
 
   
 

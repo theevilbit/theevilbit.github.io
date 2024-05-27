@@ -17,18 +17,25 @@
 Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.">
 <meta name="keywords" content="">
 
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Launch and Environment Constraints Deep Dive"/>
-<meta name="twitter:description" content="UPDATE 2023.10.10.: After chatting with Thijs Alkemade, @xnyhps, updated the XPC part of the post as I originally misunderstood Apple&rsquo;s intent.
-Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present."/>
 
-<meta property="og:title" content="Launch and Environment Constraints Deep Dive" />
-<meta property="og:description" content="UPDATE 2023.10.10.: After chatting with Thijs Alkemade, @xnyhps, updated the XPC part of the post as I originally misunderstood Apple&rsquo;s intent.
-Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://theevilbit.github.io/posts/launch_constraints_deep_dive/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2023-10-09T00:00:00+00:00" />
-<meta property="article:modified_time" content="2023-10-09T00:00:00+00:00" />
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Launch and Environment Constraints Deep Dive">
+  <meta name="twitter:description" content="UPDATE 2023.10.10.: After chatting with Thijs Alkemade, @xnyhps, updated the XPC part of the post as I originally misunderstood Apple’s intent.
+Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let’s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.">
+
+<meta property="og:url" content="https://theevilbit.github.io/posts/launch_constraints_deep_dive/">
+  <meta property="og:site_name" content="theevilbit blog">
+  <meta property="og:title" content="Launch and Environment Constraints Deep Dive">
+  <meta property="og:description" content="UPDATE 2023.10.10.: After chatting with Thijs Alkemade, @xnyhps, updated the XPC part of the post as I originally misunderstood Apple’s intent.
+Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let’s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-10-09T00:00:00+00:00">
+    <meta property="article:modified_time" content="2023-10-09T00:00:00+00:00">
+    <meta property="article:tag" content="Macos">
+    <meta property="article:tag" content="Internals">
+    <meta property="article:tag" content="Amfi">
 
 
 
@@ -36,12 +43,14 @@ Apple introduced Launch Constraints in macOS Ventura (13) as a response to some 
 <link rel="canonical" href="https://theevilbit.github.io/posts/launch_constraints_deep_dive/">
 
 
-<link rel="preload" href="https://theevilbit.github.io/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
 
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.135e22c97ff685fe983fc60048e309ced8f00d8d38f536aa67dba8a13a03dfa4.css" integrity="sha256-E14iyX/2hf6YP8YASOMJztjwDY049TaqZ9uooToD36Q=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.38c4552ac40f9ae3408bad40358f654ebd8804412fe74ed56f2d6c8a7af82dd3.css" integrity="sha256-OMRVKsQPmuNAi61ANY9lTr2IBEEv507Vby1sinr4LdM=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -82,7 +91,7 @@ Apple introduced Launch Constraints in macOS Ventura (13) as a response to some 
   
 <div class="float-container">
     <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
     </a>
 </div>
 
@@ -90,39 +99,41 @@ Apple introduced Launch Constraints in macOS Ventura (13) as a response to some 
   <main class="wrapper">
     <nav class="navigation">
   <section class="container">
+    
     <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
     
+    
       <input type="checkbox" id="menu-toggle" />
       <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
       </label>
       <ul class="navigation-list">
         
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/posts/">Posts</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/shield/">Shield.app</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/tags/">Tags</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/about/">About</a>
             </li>
           
         
@@ -148,33 +159,33 @@ Apple introduced Launch Constraints in macOS Ventura (13) as a response to some 
         <div class="post-meta">
           <div class="date">
             <span class="posted-on">
-              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
               <time datetime="2023-10-09T00:00:00Z">
                 October 9, 2023
               </time>
             </span>
             <span class="reading-time">
-              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
               16-minute read
             </span>
           </div>
           
           <div class="categories">
-  <i class="fa fa-folder" aria-hidden="true"></i>
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
     <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
 
           <div class="tags">
-  <i class="fa fa-tag" aria-hidden="true"></i>
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
     <span class="tag">
-      <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+      <a href="https://theevilbit.github.io/tags/macos/">Macos</a>
     </span>
       <span class="separator">•</span>
     <span class="tag">
-      <a href="https://theevilbit.github.io/tags/internals/">internals</a>
+      <a href="https://theevilbit.github.io/tags/internals/">Internals</a>
     </span>
       <span class="separator">•</span>
     <span class="tag">
-      <a href="https://theevilbit.github.io/tags/amfi/">amfi</a>
+      <a href="https://theevilbit.github.io/tags/amfi/">Amfi</a>
     </span></div>
 
         </div>
@@ -189,14 +200,14 @@ Apple introduced Launch Constraints in macOS Ventura (13) as a response to some 
 <h2 id="old-macos-vulnerabilities">
   Old macOS Vulnerabilities
   <a class="heading-link" href="#old-macos-vulnerabilities">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
 <h3 id="tcc-bypass-with-imagentapp">
   TCC Bypass with imagent.app
   <a class="heading-link" href="#tcc-bypass-with-imagentapp">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h3>
@@ -219,7 +230,7 @@ Apple introduced Launch Constraints in macOS Ventura (13) as a response to some 
 <h3 id="tcc-bypass-using-directory-utilityapp-cve-2020-27937">
   TCC Bypass Using Directory Utility.app, CVE-2020-27937
   <a class="heading-link" href="#tcc-bypass-using-directory-utilityapp-cve-2020-27937">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h3>
@@ -232,7 +243,7 @@ Apple introduced Launch Constraints in macOS Ventura (13) as a response to some 
 <h3 id="tcc-bypass-using-configd-powerdir">
   TCC Bypass Using configd, &ldquo;powerdir&rdquo;
   <a class="heading-link" href="#tcc-bypass-using-configd-powerdir">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h3>
@@ -245,7 +256,7 @@ Apple introduced Launch Constraints in macOS Ventura (13) as a response to some 
 <h2 id="introducing-launch-constraints">
   Introducing Launch Constraints
   <a class="heading-link" href="#introducing-launch-constraints">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -269,7 +280,7 @@ Responsible Constraints - These are constraints related to the process which is 
 <h3 id="launch-constraints-categories">
   Launch Constraints Categories
   <a class="heading-link" href="#launch-constraints-categories">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h3>
@@ -291,7 +302,7 @@ Responsible Constraints - These are constraints related to the process which is 
 <h3 id="the-trust-cache">
   The Trust Cache
   <a class="heading-link" href="#the-trust-cache">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h3>
@@ -356,7 +367,7 @@ entry count = 13713
 <h3 id="reversing-constraints">
   Reversing Constraints
   <a class="heading-link" href="#reversing-constraints">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h3>
@@ -418,7 +429,7 @@ kConstraintCategory18_Parent
 </code></pre><h3 id="attack-mitigation">
   Attack Mitigation
   <a class="heading-link" href="#attack-mitigation">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h3>
@@ -432,7 +443,7 @@ kConstraintCategory18_Parent
 <h2 id="old-third-party-vulnerabilities">
   Old Third Party Vulnerabilities
   <a class="heading-link" href="#old-third-party-vulnerabilities">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -440,7 +451,7 @@ kConstraintCategory18_Parent
 <h3 id="global-xpc-daemon-attacks">
   Global XPC Daemon Attacks
   <a class="heading-link" href="#global-xpc-daemon-attacks">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h3>
@@ -465,7 +476,7 @@ kConstraintCategory18_Parent
 <h3 id="embedded-xpc-service-attacks">
   Embedded XPC Service Attacks
   <a class="heading-link" href="#embedded-xpc-service-attacks">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h3>
@@ -474,7 +485,7 @@ kConstraintCategory18_Parent
 <h3 id="electron-attacks">
   Electron Attacks
   <a class="heading-link" href="#electron-attacks">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h3>
@@ -487,7 +498,7 @@ kConstraintCategory18_Parent
 <h2 id="launch-and-environment-constraints">
   Launch and Environment Constraints
   <a class="heading-link" href="#launch-and-environment-constraints">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -498,7 +509,7 @@ kConstraintCategory18_Parent
 <h3 id="securing-xpc-connection">
   Securing XPC Connection
   <a class="heading-link" href="#securing-xpc-connection">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h3>
@@ -514,7 +525,7 @@ kConstraintCategory18_Parent
 <h3 id="securing-electron-applications">
   Securing Electron Applications
   <a class="heading-link" href="#securing-electron-applications">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h3>
@@ -534,7 +545,7 @@ kConstraintCategory18_Parent
 <h2 id="final-thoughts">
   Final thoughts
   <a class="heading-link" href="#final-thoughts">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -553,6 +564,9 @@ kConstraintCategory18_Parent
         
         
         
+
+        
+        
       </footer>
     </article>
 
@@ -565,7 +579,7 @@ kConstraintCategory18_Parent
   <section class="container">
     ©
     
-    2023
+    2024
      Csaba Fitzl 
     ·
     
@@ -589,18 +603,13 @@ kConstraintCategory18_Parent
 
 
   
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-151008930-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
+  
+
+
+
+  
+
+  
 
   
 

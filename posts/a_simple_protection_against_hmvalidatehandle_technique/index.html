@@ -17,18 +17,23 @@
 What is HMValidateHandle? Link to heading HMValidateHandle is an internal, unexported function of user32.dll. It takes a handle and a handle type as arguments, and by looking up the handle table, if the handle is matching with the type it will copy the object to user memory.">
 <meta name="keywords" content="">
 
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="A simple protection against HMValidateHandle technique"/>
-<meta name="twitter:description" content="In the recent days I was reading technical analysis of win32k exploits from recent years, and it caught my eyes, that the HMValidateHandle technique is very heavily used almost everywhere. Then I had an idea how to protect against this family of exploits, which I think is very simple. This post will be about that.
-What is HMValidateHandle? Link to heading HMValidateHandle is an internal, unexported function of user32.dll. It takes a handle and a handle type as arguments, and by looking up the handle table, if the handle is matching with the type it will copy the object to user memory."/>
 
-<meta property="og:title" content="A simple protection against HMValidateHandle technique" />
-<meta property="og:description" content="In the recent days I was reading technical analysis of win32k exploits from recent years, and it caught my eyes, that the HMValidateHandle technique is very heavily used almost everywhere. Then I had an idea how to protect against this family of exploits, which I think is very simple. This post will be about that.
-What is HMValidateHandle? Link to heading HMValidateHandle is an internal, unexported function of user32.dll. It takes a handle and a handle type as arguments, and by looking up the handle table, if the handle is matching with the type it will copy the object to user memory." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://theevilbit.github.io/posts/a_simple_protection_against_hmvalidatehandle_technique/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2019-07-31T00:00:00+00:00" />
-<meta property="article:modified_time" content="2019-07-31T00:00:00+00:00" />
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="A simple protection against HMValidateHandle technique">
+  <meta name="twitter:description" content="In the recent days I was reading technical analysis of win32k exploits from recent years, and it caught my eyes, that the HMValidateHandle technique is very heavily used almost everywhere. Then I had an idea how to protect against this family of exploits, which I think is very simple. This post will be about that.
+What is HMValidateHandle? Link to heading HMValidateHandle is an internal, unexported function of user32.dll. It takes a handle and a handle type as arguments, and by looking up the handle table, if the handle is matching with the type it will copy the object to user memory.">
+
+<meta property="og:url" content="https://theevilbit.github.io/posts/a_simple_protection_against_hmvalidatehandle_technique/">
+  <meta property="og:site_name" content="theevilbit blog">
+  <meta property="og:title" content="A simple protection against HMValidateHandle technique">
+  <meta property="og:description" content="In the recent days I was reading technical analysis of win32k exploits from recent years, and it caught my eyes, that the HMValidateHandle technique is very heavily used almost everywhere. Then I had an idea how to protect against this family of exploits, which I think is very simple. This post will be about that.
+What is HMValidateHandle? Link to heading HMValidateHandle is an internal, unexported function of user32.dll. It takes a handle and a handle type as arguments, and by looking up the handle table, if the handle is matching with the type it will copy the object to user memory.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2019-07-31T00:00:00+00:00">
+    <meta property="article:modified_time" content="2019-07-31T00:00:00+00:00">
+    <meta property="article:tag" content="Kernel Exploitation">
 
 
 
@@ -36,12 +41,14 @@ What is HMValidateHandle? Link to heading HMValidateHandle is an internal, unexp
 <link rel="canonical" href="https://theevilbit.github.io/posts/a_simple_protection_against_hmvalidatehandle_technique/">
 
 
-<link rel="preload" href="https://theevilbit.github.io/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
 
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.135e22c97ff685fe983fc60048e309ced8f00d8d38f536aa67dba8a13a03dfa4.css" integrity="sha256-E14iyX/2hf6YP8YASOMJztjwDY049TaqZ9uooToD36Q=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.38c4552ac40f9ae3408bad40358f654ebd8804412fe74ed56f2d6c8a7af82dd3.css" integrity="sha256-OMRVKsQPmuNAi61ANY9lTr2IBEEv507Vby1sinr4LdM=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -82,7 +89,7 @@ What is HMValidateHandle? Link to heading HMValidateHandle is an internal, unexp
   
 <div class="float-container">
     <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
     </a>
 </div>
 
@@ -90,39 +97,41 @@ What is HMValidateHandle? Link to heading HMValidateHandle is an internal, unexp
   <main class="wrapper">
     <nav class="navigation">
   <section class="container">
+    
     <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
     
+    
       <input type="checkbox" id="menu-toggle" />
       <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
       </label>
       <ul class="navigation-list">
         
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/posts/">Posts</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/shield/">Shield.app</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/tags/">Tags</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/about/">About</a>
             </li>
           
         
@@ -148,25 +157,25 @@ What is HMValidateHandle? Link to heading HMValidateHandle is an internal, unexp
         <div class="post-meta">
           <div class="date">
             <span class="posted-on">
-              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
               <time datetime="2019-07-31T00:00:00Z">
                 July 31, 2019
               </time>
             </span>
             <span class="reading-time">
-              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
               8-minute read
             </span>
           </div>
           
           <div class="categories">
-  <i class="fa fa-folder" aria-hidden="true"></i>
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
     <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
 
           <div class="tags">
-  <i class="fa fa-tag" aria-hidden="true"></i>
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
     <span class="tag">
-      <a href="https://theevilbit.github.io/tags/kernel-exploitation/">kernel exploitation</a>
+      <a href="https://theevilbit.github.io/tags/kernel-exploitation/">Kernel Exploitation</a>
     </span></div>
 
         </div>
@@ -178,7 +187,7 @@ What is HMValidateHandle? Link to heading HMValidateHandle is an internal, unexp
 <h2 id="what-is-hmvalidatehandle">
   What is HMValidateHandle?
   <a class="heading-link" href="#what-is-hmvalidatehandle">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -187,7 +196,7 @@ There are awful lot of documentation about this, and it was widely abused in man
 <h3 id="getting-the-address-of-hmvalidatehandle">
   Getting the address of HMValidateHandle
   <a class="heading-link" href="#getting-the-address-of-hmvalidatehandle">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h3>
@@ -225,7 +234,7 @@ There are awful lot of documentation about this, and it was widely abused in man
 <h2 id="protecting-against-the-technique">
   Protecting against the technique
   <a class="heading-link" href="#protecting-against-the-technique">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -234,7 +243,7 @@ There are awful lot of documentation about this, and it was widely abused in man
 <h3 id="detours-installation">
   Detours installation
   <a class="heading-link" href="#detours-installation">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h3>
@@ -244,7 +253,7 @@ This will build all the examples, create the <code>lib</code> files, etc… Now 
 <h3 id="integrate-with-visual-studio">
   Integrate with Visual Studio
   <a class="heading-link" href="#integrate-with-visual-studio">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h3>
@@ -258,7 +267,7 @@ This will build all the examples, create the <code>lib</code> files, etc… Now 
 <h3 id="using-detours">
   Using Detours
   <a class="heading-link" href="#using-detours">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h3>
@@ -278,7 +287,7 @@ This is how you hook:</p>
 <h3 id="implementing-the-protection">
   Implementing the protection
   <a class="heading-link" href="#implementing-the-protection">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h3>
@@ -343,7 +352,7 @@ This is how you hook:</p>
 <h3 id="testing">
   Testing
   <a class="heading-link" href="#testing">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h3>
@@ -361,7 +370,7 @@ The normal version worked as expected:
 <h3 id="hook-every-process">
   Hook every process
   <a class="heading-link" href="#hook-every-process">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h3>
@@ -369,7 +378,7 @@ The normal version worked as expected:
 <h3 id="conclusion-of-the-protection">
   Conclusion of the protection
   <a class="heading-link" href="#conclusion-of-the-protection">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h3>
@@ -378,7 +387,7 @@ Not sure if any exploit protection products are using this trick, but it should 
 <h2 id="note---update-20190801">
   Note - UPDATE 2019.08.01.
   <a class="heading-link" href="#note---update-20190801">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -402,6 +411,9 @@ Not sure if any exploit protection products are using this trick, but it should 
         
         
         
+
+        
+        
       </footer>
     </article>
 
@@ -414,7 +426,7 @@ Not sure if any exploit protection products are using this trick, but it should 
   <section class="container">
     ©
     
-    2023
+    2024
      Csaba Fitzl 
     ·
     
@@ -438,18 +450,13 @@ Not sure if any exploit protection products are using this trick, but it should 
 
 
   
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-151008930-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
+  
+
+
+
+  
+
+  
 
   
 

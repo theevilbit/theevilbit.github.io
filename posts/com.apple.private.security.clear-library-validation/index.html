@@ -17,18 +17,26 @@
 Intro Link to heading With the release of Big Sur, I noticed that many of the system binaries have a new entitlement, which I didn&rsquo;t see before, and that is com.">
 <meta name="keywords" content="">
 
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="About com.apple.private.security.clear-library-validation"/>
-<meta name="twitter:description" content="TL;DR Link to heading On macOS 10.15.2 Apple introduced the com.apple.private.security.clear-library-validation entitlement, which is slowly replacing the previously used com.apple.security.cs.disable-library-validation entitlement on system binaries. Although their impact is the about the same, the way they work is different. While library validation is automatically disabled using com.apple.security.cs.disable-library-validation, with com.apple.private.security.clear-library-validation, the application has to disable it for itself through a csops system call.
-Intro Link to heading With the release of Big Sur, I noticed that many of the system binaries have a new entitlement, which I didn&rsquo;t see before, and that is com."/>
 
-<meta property="og:title" content="About com.apple.private.security.clear-library-validation" />
-<meta property="og:description" content="TL;DR Link to heading On macOS 10.15.2 Apple introduced the com.apple.private.security.clear-library-validation entitlement, which is slowly replacing the previously used com.apple.security.cs.disable-library-validation entitlement on system binaries. Although their impact is the about the same, the way they work is different. While library validation is automatically disabled using com.apple.security.cs.disable-library-validation, with com.apple.private.security.clear-library-validation, the application has to disable it for itself through a csops system call.
-Intro Link to heading With the release of Big Sur, I noticed that many of the system binaries have a new entitlement, which I didn&rsquo;t see before, and that is com." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://theevilbit.github.io/posts/com.apple.private.security.clear-library-validation/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2021-01-19T00:00:00+00:00" />
-<meta property="article:modified_time" content="2021-01-19T00:00:00+00:00" />
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="About com.apple.private.security.clear-library-validation">
+  <meta name="twitter:description" content="TL;DR Link to heading On macOS 10.15.2 Apple introduced the com.apple.private.security.clear-library-validation entitlement, which is slowly replacing the previously used com.apple.security.cs.disable-library-validation entitlement on system binaries. Although their impact is the about the same, the way they work is different. While library validation is automatically disabled using com.apple.security.cs.disable-library-validation, with com.apple.private.security.clear-library-validation, the application has to disable it for itself through a csops system call.
+Intro Link to heading With the release of Big Sur, I noticed that many of the system binaries have a new entitlement, which I didn’t see before, and that is com.">
+
+<meta property="og:url" content="https://theevilbit.github.io/posts/com.apple.private.security.clear-library-validation/">
+  <meta property="og:site_name" content="theevilbit blog">
+  <meta property="og:title" content="About com.apple.private.security.clear-library-validation">
+  <meta property="og:description" content="TL;DR Link to heading On macOS 10.15.2 Apple introduced the com.apple.private.security.clear-library-validation entitlement, which is slowly replacing the previously used com.apple.security.cs.disable-library-validation entitlement on system binaries. Although their impact is the about the same, the way they work is different. While library validation is automatically disabled using com.apple.security.cs.disable-library-validation, with com.apple.private.security.clear-library-validation, the application has to disable it for itself through a csops system call.
+Intro Link to heading With the release of Big Sur, I noticed that many of the system binaries have a new entitlement, which I didn’t see before, and that is com.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2021-01-19T00:00:00+00:00">
+    <meta property="article:modified_time" content="2021-01-19T00:00:00+00:00">
+    <meta property="article:tag" content="Macos">
+    <meta property="article:tag" content="Internals">
+    <meta property="article:tag" content="Codesigning">
+    <meta property="article:tag" content="Entitlement">
 
 
 
@@ -36,12 +44,14 @@ Intro Link to heading With the release of Big Sur, I noticed that many of the sy
 <link rel="canonical" href="https://theevilbit.github.io/posts/com.apple.private.security.clear-library-validation/">
 
 
-<link rel="preload" href="https://theevilbit.github.io/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
 
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.135e22c97ff685fe983fc60048e309ced8f00d8d38f536aa67dba8a13a03dfa4.css" integrity="sha256-E14iyX/2hf6YP8YASOMJztjwDY049TaqZ9uooToD36Q=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.38c4552ac40f9ae3408bad40358f654ebd8804412fe74ed56f2d6c8a7af82dd3.css" integrity="sha256-OMRVKsQPmuNAi61ANY9lTr2IBEEv507Vby1sinr4LdM=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -82,7 +92,7 @@ Intro Link to heading With the release of Big Sur, I noticed that many of the sy
   
 <div class="float-container">
     <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
     </a>
 </div>
 
@@ -90,39 +100,41 @@ Intro Link to heading With the release of Big Sur, I noticed that many of the sy
   <main class="wrapper">
     <nav class="navigation">
   <section class="container">
+    
     <a class="navigation-title" href="https://theevilbit.github.io/">
       theevilbit blog
     </a>
     
+    
       <input type="checkbox" id="menu-toggle" />
       <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
       </label>
       <ul class="navigation-list">
         
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/posts/">Posts</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/posts/">Posts</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/shield/">Shield.app</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/shield/">Shield.app</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/tags/">Tags</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/tags/">Tags</a>
             </li>
           
             <li class="navigation-item">
-              <a class="navigation-link" href="https://theevilbit.github.io/about/">About</a>
+              <a class="navigation-link " href="https://theevilbit.github.io/about/">About</a>
             </li>
           
         
@@ -148,37 +160,37 @@ Intro Link to heading With the release of Big Sur, I noticed that many of the sy
         <div class="post-meta">
           <div class="date">
             <span class="posted-on">
-              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
               <time datetime="2021-01-19T00:00:00Z">
                 January 19, 2021
               </time>
             </span>
             <span class="reading-time">
-              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
               9-minute read
             </span>
           </div>
           
           <div class="categories">
-  <i class="fa fa-folder" aria-hidden="true"></i>
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
     <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
 
           <div class="tags">
-  <i class="fa fa-tag" aria-hidden="true"></i>
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
     <span class="tag">
-      <a href="https://theevilbit.github.io/tags/macos/">macos</a>
+      <a href="https://theevilbit.github.io/tags/macos/">Macos</a>
     </span>
       <span class="separator">•</span>
     <span class="tag">
-      <a href="https://theevilbit.github.io/tags/internals/">internals</a>
+      <a href="https://theevilbit.github.io/tags/internals/">Internals</a>
     </span>
       <span class="separator">•</span>
     <span class="tag">
-      <a href="https://theevilbit.github.io/tags/codesigning/">codesigning</a>
+      <a href="https://theevilbit.github.io/tags/codesigning/">Codesigning</a>
     </span>
       <span class="separator">•</span>
     <span class="tag">
-      <a href="https://theevilbit.github.io/tags/entitlement/">entitlement</a>
+      <a href="https://theevilbit.github.io/tags/entitlement/">Entitlement</a>
     </span></div>
 
         </div>
@@ -189,7 +201,7 @@ Intro Link to heading With the release of Big Sur, I noticed that many of the sy
         <h2 id="tldr">
   TL;DR
   <a class="heading-link" href="#tldr">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -197,7 +209,7 @@ Intro Link to heading With the release of Big Sur, I noticed that many of the sy
 <h2 id="intro">
   Intro
   <a class="heading-link" href="#intro">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -206,7 +218,7 @@ Intro Link to heading With the release of Big Sur, I noticed that many of the sy
 <h2 id="the-csops-system-call">
   The csops system call
   <a class="heading-link" href="#the-csops-system-call">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -426,7 +438,7 @@ Intro Link to heading With the release of Big Sur, I noticed that many of the sy
 <h2 id="ssh">
   SSH
   <a class="heading-link" href="#ssh">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -448,7 +460,7 @@ loc_10016d694:
 <h2 id="history">
   History
   <a class="heading-link" href="#history">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -457,7 +469,7 @@ loc_10016d694:
 <h2 id="why-is-it-good">
   Why is it good?
   <a class="heading-link" href="#why-is-it-good">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -469,7 +481,7 @@ Unsatisfied Entitlements:
 </code></pre><h2 id="recap">
   Recap
   <a class="heading-link" href="#recap">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
@@ -487,6 +499,9 @@ Unsatisfied Entitlements:
         
         
         
+
+        
+        
       </footer>
     </article>
 
@@ -499,7 +514,7 @@ Unsatisfied Entitlements:
   <section class="container">
     ©
     
-    2023
+    2024
      Csaba Fitzl 
     ·
     
@@ -523,18 +538,13 @@ Unsatisfied Entitlements:
 
 
   
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-151008930-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
+  
+
+
+
+  
+
+  
 
   
 

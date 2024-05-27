@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>entitlement on theevilbit blog</title>
+    <title>Entitlement on theevilbit blog</title>
     <link>https://theevilbit.github.io/tags/entitlement/</link>
-    <description>Recent content in entitlement on theevilbit blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Entitlement on theevilbit blog</description>
+    <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 19 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/entitlement/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 19 Jan 2021 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://theevilbit.github.io/tags/entitlement/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>About com.apple.private.security.clear-library-validation</title>
       <link>https://theevilbit.github.io/posts/com.apple.private.security.clear-library-validation/</link>
       <pubDate>Tue, 19 Jan 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/com.apple.private.security.clear-library-validation/</guid>
-      <description>TL;DR Link to heading On macOS 10.15.2 Apple introduced the com.apple.private.security.clear-library-validation entitlement, which is slowly replacing the previously used com.apple.security.cs.disable-library-validation entitlement on system binaries. Although their impact is the about the same, the way they work is different. While library validation is automatically disabled using com.apple.security.cs.disable-library-validation, with com.apple.private.security.clear-library-validation, the application has to disable it for itself through a csops system call.
-Intro Link to heading With the release of Big Sur, I noticed that many of the system binaries have a new entitlement, which I didn&amp;rsquo;t see before, and that is com.</description>
+      <description>TL;DR Link to heading On macOS 10.15.2 Apple introduced the com.apple.private.security.clear-library-validation entitlement, which is slowly replacing the previously used com.apple.security.cs.disable-library-validation entitlement on system binaries. Although their impact is the about the same, the way they work is different. While library validation is automatically disabled using com.apple.security.cs.disable-library-validation, with com.apple.private.security.clear-library-validation, the application has to disable it for itself through a csops system call.&#xA;Intro Link to heading With the release of Big Sur, I noticed that many of the system binaries have a new entitlement, which I didn&amp;rsquo;t see before, and that is com.</description>
     </item>
-    
   </channel>
 </rss>

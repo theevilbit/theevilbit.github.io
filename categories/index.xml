@@ -4,71 +4,58 @@
     <title>Categories on theevilbit blog</title>
     <link>https://theevilbit.github.io/categories/</link>
     <description>Recent content in Categories on theevilbit blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 09 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 24 May 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://theevilbit.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>BLOG</title>
       <link>https://theevilbit.github.io/categories/blog/</link>
-      <pubDate>Mon, 09 Oct 2023 00:00:00 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://theevilbit.github.io/categories/blog/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>talk</title>
+      <title>Talk</title>
       <link>https://theevilbit.github.io/categories/talk/</link>
-      <pubDate>Thu, 05 Oct 2023 00:00:00 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://theevilbit.github.io/categories/talk/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Workshops</title>
       <link>https://theevilbit.github.io/categories/workshops/</link>
-      <pubDate>Thu, 05 Oct 2023 00:00:00 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://theevilbit.github.io/categories/workshops/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>beyond</title>
+      <title>Beyond</title>
       <link>https://theevilbit.github.io/categories/beyond/</link>
-      <pubDate>Fri, 29 Sep 2023 00:00:00 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://theevilbit.github.io/categories/beyond/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>persistence</title>
+      <title>Persistence</title>
       <link>https://theevilbit.github.io/categories/persistence/</link>
-      <pubDate>Fri, 29 Sep 2023 00:00:00 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://theevilbit.github.io/categories/persistence/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>about</title>
+      <title>About</title>
       <link>https://theevilbit.github.io/categories/about/</link>
-      <pubDate>Fri, 22 Oct 2021 00:00:00 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://theevilbit.github.io/categories/about/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>shield</title>
+      <title>Shield</title>
       <link>https://theevilbit.github.io/categories/shield/</link>
-      <pubDate>Sun, 22 Sep 2019 00:00:00 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://theevilbit.github.io/categories/shield/</guid>
       <description></description>
     </item>
-    
   </channel>
 </rss>

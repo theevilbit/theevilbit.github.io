@@ -1,30 +1,26 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>microsoft on theevilbit blog</title>
+    <title>Microsoft on theevilbit blog</title>
     <link>https://theevilbit.github.io/tags/microsoft/</link>
-    <description>Recent content in microsoft on theevilbit blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Microsoft on theevilbit blog</description>
+    <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 17 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/microsoft/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 17 Nov 2020 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://theevilbit.github.io/tags/microsoft/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>NOCVE - Microsoft Teams for macOS Local Privilege Escalation</title>
       <link>https://theevilbit.github.io/posts/microsoft_teams_lpe/</link>
       <pubDate>Tue, 17 Nov 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/microsoft_teams_lpe/</guid>
-      <description>This blog post shares the details of a vulnerability Offensive Security discovered in the XPC service of Microsoft Teams. Although Microsoft secured these services reasonably well, we will see how small code mistakes can have serious impacts.
-We reported the issue to MSRC, but unfortunately Microsoft decided that “the finding is valid but does not meet our bar for immediate servicing.” While they have since hardened the XPC service, it remains exploitable.</description>
+      <description>This blog post shares the details of a vulnerability Offensive Security discovered in the XPC service of Microsoft Teams. Although Microsoft secured these services reasonably well, we will see how small code mistakes can have serious impacts.&#xA;We reported the issue to MSRC, but unfortunately Microsoft decided that “the finding is valid but does not meet our bar for immediate servicing.” While they have since hardened the XPC service, it remains exploitable.</description>
     </item>
-    
     <item>
       <title>CVE-2020-0984 - Secure coding XPC Services - Part 3 - Incorrect client verification</title>
       <link>https://theevilbit.github.io/posts/secure_coding_xpc_part3/</link>
       <pubDate>Fri, 29 May 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/secure_coding_xpc_part3/</guid>
       <description>Microsoft AutoUpdate macOS privilege escalation vulnerability (CVE-2020-0984) Link to heading Introduction Link to heading This is the third post in my series which is trying to help Apple developers to avoid typical insecure coding practices. This one will highlight why XPC client hardening and proper verification is extremely important when we use XPC messaging on macOS between clients that run as a normal user and services that run as root.</description>
     </item>
-    
   </channel>
 </rss>

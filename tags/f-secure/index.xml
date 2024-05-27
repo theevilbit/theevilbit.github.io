@@ -1,30 +1,26 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>f-secure on theevilbit blog</title>
+    <title>F-Secure on theevilbit blog</title>
     <link>https://theevilbit.github.io/tags/f-secure/</link>
-    <description>Recent content in f-secure on theevilbit blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in F-Secure on theevilbit blog</description>
+    <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 16 Jun 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://theevilbit.github.io/tags/f-secure/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 16 Jun 2020 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://theevilbit.github.io/tags/f-secure/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>CVE-2020-14977 - Secure coding XPC Services - Part 5 - PID reuse attacks</title>
       <link>https://theevilbit.github.io/posts/secure_coding_xpc_part5/</link>
       <pubDate>Tue, 16 Jun 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/secure_coding_xpc_part5/</guid>
-      <description>In the last post of the series we will see another typical issue, where XPC services using the connecting process&amp;rsquo;s ID (PID) to verify the client instead of the audit token. We will use F-Secure SAFE again for our case study, the vulnerability was fixed in 17.8 and it was assigned CVE-2020-14977.
-The root cause Link to heading The XPC services of F-Secure SAFE use the process ID (PID) to verify the client&amp;rsquo;s signature, as can be seen in the code below.</description>
+      <description>In the last post of the series we will see another typical issue, where XPC services using the connecting process&amp;rsquo;s ID (PID) to verify the client instead of the audit token. We will use F-Secure SAFE again for our case study, the vulnerability was fixed in 17.8 and it was assigned CVE-2020-14977.&#xA;The root cause Link to heading The XPC services of F-Secure SAFE use the process ID (PID) to verify the client&amp;rsquo;s signature, as can be seen in the code below.</description>
     </item>
-    
     <item>
       <title>CVE-2020-14978 - Secure coding XPC Services - Part 4 - Improved client authorization</title>
       <link>https://theevilbit.github.io/posts/secure_coding_xpc_part4/</link>
       <pubDate>Fri, 12 Jun 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://theevilbit.github.io/posts/secure_coding_xpc_part4/</guid>
       <description>F-Secure SAFE XPC service exploitation (CVE-2020-14978) Link to heading Intro Link to heading In this post we will look into an other case study which will show us (again) why XPC client verification is crucial in XPC security, and how added authorization checks can slightly improve (but not fix) the problem. The F-Secure SAFE XPC services installed on macOS were not sufficiently hardened, and a malicious actor had the ability to interact with them.</description>
     </item>
-    
   </channel>
 </rss>

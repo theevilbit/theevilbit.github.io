@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Beyond the good ol&#39; LaunchAgents - 33 - Widgets · theevilbit blog
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Csaba Fitzl">
+<meta name="description" content="This is part 33 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+Widgets are application extensions you can place on your desktop to display some key information from your main app. Although Apple says developers shouldn&rsquo;t implement any functionality there and just use them as a display, they are still apps that run on their own and we can run code inside them.">
+<meta name="keywords" content="">
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 33 - Widgets">
+  <meta name="twitter:description" content="This is part 33 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+Widgets are application extensions you can place on your desktop to display some key information from your main app. Although Apple says developers shouldn’t implement any functionality there and just use them as a display, they are still apps that run on their own and we can run code inside them.">
+
+<meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0033/">
+  <meta property="og:site_name" content="theevilbit blog">
+  <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 33 - Widgets">
+  <meta property="og:description" content="This is part 33 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+Widgets are application extensions you can place on your desktop to display some key information from your main app. Although Apple says developers shouldn’t implement any functionality there and just use them as a display, they are still apps that run on their own and we can run code inside them.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="beyond">
+    <meta property="article:published_time" content="2024-06-12T00:00:00+00:00">
+    <meta property="article:modified_time" content="2024-06-12T00:00:00+00:00">
+    <meta property="article:tag" content="Macos">
+    <meta property="article:tag" content="Persistence">
+    <meta property="article:tag" content="Beyond">
+
+
+
+
+<link rel="canonical" href="https://theevilbit.github.io/beyond/beyond_0033/">
+
+
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.38c4552ac40f9ae3408bad40358f654ebd8804412fe74ed56f2d6c8a7af82dd3.css" integrity="sha256-OMRVKsQPmuNAi61ANY9lTr2IBEEv507Vby1sinr4LdM=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+
+<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
+<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+<body class="preload-transitions colorscheme-light">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="https://theevilbit.github.io/">
+      theevilbit blog
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://theevilbit.github.io/posts/">Posts</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://theevilbit.github.io/shield/">Shield.app</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://theevilbit.github.io/tags/">Tags</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://theevilbit.github.io/about/">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container page">
+  <article>
+    <header>
+      <h1 class="title">
+        <a class="title-link" href="https://theevilbit.github.io/beyond/beyond_0033/">
+          Beyond the good ol&#39; LaunchAgents - 33 - Widgets
+        </a>
+      </h1>
+    </header>
+
+    <blockquote>
+<p>This is part 33 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p>
+</blockquote>
+<p>Widgets are application extensions you can place on your desktop to display some key information from your main app. Although Apple says developers shouldn&rsquo;t implement any functionality there and just use them as a display, they are still apps that run on their own and we can run code inside them. We will explore how we can create them, use them as persistence and also investigate what widgets will automatically run on our system.</p>
+<h2 id="creating-widgets">
+  Creating Widgets
+  <a class="heading-link" href="#creating-widgets">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>I&rsquo;m not a developer myself and also relied on external source to create one. I think others do a much better job explaining it, and walking through, so I will just refer here to the ones I found useful.</p>
+<p><a href="https://appleinsider.com/inside/xcode/tips/getting-started-with-widgetkit-making-your-first-macos-widget"  class="external-link" target="_blank" rel="noopener">Getting started with WidgetKit</a></p>
+<p><a href="https://www.youtube.com/watch?v=jucm6e9M6LA&amp;ab_channel=SeanAllen"  class="external-link" target="_blank" rel="noopener">How to Build a Widget in Swift with WidgetKit</a></p>
+<p>The one I created based on the video above is uploaded to my <a href="https://github.com/theevilbit/macos"  class="external-link" target="_blank" rel="noopener">theevilbit/macos</a> Github repository. This is just a sample widget based on that tutorial, nothing extra.</p>
+<p>When the application with a widget is compiled, essentially they will become an <code>appex</code> bundle within our app.</p>
+<p>Although widgets are &ldquo;application extensions&rdquo; and one would expect they are loaded into a dedicated process, they are in fact run on their own. We can find this if we list processes with &ldquo;Widget&rdquo; in their name.</p>
+<pre tabindex="0"><code>csaby@max ~ % pgrep -lf Widget
+743 /System/Applications/Weather.app/Contents/PlugIns/WeatherWidget.appex/Contents/MacOS/WeatherWidget
+757 /System/Applications/Calendar.app/Contents/PlugIns/CalendarWidgetExtension.appex/Contents/MacOS/CalendarWidgetExtension
+759 /System/Applications/Clock.app/Contents/PlugIns/WorldClockWidget.appex/Contents/MacOS/WorldClockWidget
+</code></pre><h2 id="loading-widgets">
+  Loading widgets
+  <a class="heading-link" href="#loading-widgets">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>To run or load a widget, a user would normally open widgets, select &ldquo;Edit Widgets&rdquo;, which brings up the window below.
+<img src="https://theevilbit.github.io/images/beyond/beyond_0033_0.png" alt="Editing Widgets"></p>
+<p>In this window we can drag &amp; drop widgets, select the size we want, etc&hellip; but it&rsquo;s very GUI interaction heavy and from an attacker point of view this is very inconvenient, essentially impossible to persist our widget this way. We need to find a way to load a widget programmatically.</p>
+<p>Eventually I found that widgets are started by <code>NotificationCenter</code> and their active configuration is stored in the <code>~/Library/Containers/com.apple.notificationcenterui/Data/Library/Preferences/com.apple.notificationcenterui.plist</code> configuration file. Because this plist is located inside a container, it enjoys TCC&rsquo;s App Data protection, thus normally we can&rsquo;t touch it unless we bypass TCC or have Full Disk Access rights granted. This makes this persistence slightly inconvenient.</p>
+<p>Let&rsquo;s explore how this PLIST is structured, how we can analyze it and persist via editing it.</p>
+<h2 id="comapplenotificationcenteruiplist">
+  com.apple.notificationcenterui.plist
+  <a class="heading-link" href="#comapplenotificationcenteruiplist">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>This property list turns out to be very complex as we will see shortly. Let&rsquo;s take a look at it.</p>
+<pre tabindex="0"><code>csaby@max widgets % plutil -p ~/Library/Containers/com.apple.notificationcenterui/Data/Library/Preferences/com.apple.notificationcenterui.plist | head -n 20
+{
+  &#34;fontStyle&#34; =&gt; 0
+  &#34;last-analytics-stamp&#34; =&gt; 739606677.208112
+  &#34;widgets&#34; =&gt; {
+    &#34;DesktopWidgetPlacementStorage&#34; =&gt; {length = 95, bytes = 0x62706c69 73743030 d2010203 045f1014 ... 00000000 0000003a }
+    &#34;instances&#34; =&gt; [
+      0 =&gt; {length = 2772, bytes = 0x62706c69 73743030 d2010203 04567769 ... 00000000 00000aaa }
+      1 =&gt; {length = 3015, bytes = 0x62706c69 73743030 d2010203 04567769 ... 00000000 00000b9d }
+      2 =&gt; {length = 4532, bytes = 0x62706c69 73743030 d2010203 04567769 ... 00000000 0000118a }
+    ]
+    &#34;vers&#34; =&gt; 1
+    &#34;widgets&#34; =&gt; [
+      0 =&gt; {length = 3405, bytes = 0x62706c69 73743030 d4010203 04050607 ... 00000000 00000d1b }
+      1 =&gt; {length = 1800, bytes = 0x62706c69 73743030 d4010203 04050607 ... 00000000 000006d6 }
+      2 =&gt; {length = 1523, bytes = 0x62706c69 73743030 d4010203 04050607 ... 00000000 000005c1 }
+      3 =&gt; {length = 1426, bytes = 0x62706c69 73743030 d4010203 04050607 ... 00000000 00000560 }
+      4 =&gt; {length = 3536, bytes = 0x62706c69 73743030 d4010203 04050607 ... 00000000 00000d9e }
+      5 =&gt; {length = 3300, bytes = 0x62706c69 73743030 d4010203 04050607 ... 00000000 00000cb2 }
+      6 =&gt; {length = 1664, bytes = 0x62706c69 73743030 d4010203 04050607 ... 00000000 0000064e }
+      7 =&gt; {length = 1943, bytes = 0x62706c69 73743030 d4010203 04050607 ... 00000000 00000765 }
+...
+</code></pre><p>We find that there is a shorter list of base64 encoded items in <code>widgets.instances</code> and much more in <code>widgets.widgets</code>. <code>instances</code> will store information about the widgets that have been configured to run, while <code>widgets</code> will contain a list of all available widgets (including those from your iOS device). <code>DesktopWidgetPlacementStorage</code> stores information about how the widgets are placed, but only if the widget is placed directly on the Desktop, and not as an item in the notification bar.</p>
+<p>I wrote a short shell script which takes a plist as an input and will decode each embedded base64 strings, which is normally inside the <code>data</code> tags. Running this script, what we find is that each widgets.instances decodes as follows.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>uuid<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>403B6E51-3F19-4268-981E-10BF4F6F76DE<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>widget<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;data&gt;</span>
+</span></span><span style="display:flex;"><span>	YnBsaXN0MDDUAQIDBAUGBwpYJHZlcnNpb25ZJGFyY2hpdmVyVCR0b3BYJG9iamVjdHMS
+</span></span><span style="display:flex;"><span>	AAGGoF8QD05TS2V5ZWRBcmNoaXZlctEICVRyb290gAGsCwwZISIjKisxNTk9VSRudWxs
+</span></span><span style="display:flex;"><span>	1g0ODxAREhMUFRYXGF8QEWV4dGVuc2lvbklkZW50aXR5V2ludGVudDJUa2luZF8QEmFj
+</span></span><span style="display:flex;"><span>	dGl2aXR5SWRlbnRpZmllclYkY2xhc3NWZmFtaWx5gAKAB4AGgACACxAB1BobHBEWHh8g
+</span></span><span style="display:flex;"><span>	XxAQZGV2aWNlSWRlbnRpZmllcl8QGWNvbnRhaW5lckJ1bmRsZUlkZW50aWZpZXJfEBll
+</span></span><span style="display:flex;"><span>	eHRlbnNpb25CdW5kbGVJZGVudGlmaWVygACABIADgAVfEBhjb20uYXBwbGUud2VhdGhl
+</span></span><span style="display:flex;"><span>...
+</span></span></code></pre></div><p>Damn. This is a plist inside a plist, with more base64 data. Not fun. Let&rsquo;s decode this as well.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$archiver<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSKeyedArchiver<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$objects<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>$null<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>com.apple.weather.widget<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>com.apple.weather<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classes<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>CHSExtensionIdentity<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSObject<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classname<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>CHSExtensionIdentity<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>com.apple.weather<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$class<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>9<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>NS.data<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;data&gt;</span>
+</span></span><span style="display:flex;"><span>			5E1faW5kZXhpbmdIYXNoM9K5lBGWVOURVXBhcmFtZXRlckNvbWJp
+</span></span><span style="display:flex;"><span>			...
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/data&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classes<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSMutableData<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSData<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSObject<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classname<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSMutableData<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classes<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>CHSIntentReference<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSObject<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classname<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>CHSIntentReference<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classes<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>CHSWidget<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSObject<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classname<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>CHSWidget<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$top<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;key&gt;</span>root<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>1<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$version<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>100000<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
+</span></span></code></pre></div><p>We find that this is an <code>NSKeyedArchiver</code> data. It stores an actual object with all of its properties. We also find that there is more base64 encoded stuff within the <code>NS.Data</code> section. The main object which is stored here is <code>CHSWidget</code> and the data inside <code>NS.Data</code> is an <code>INIntent</code> object. The former is defined in <code>ChronoServices.framework</code> and the later is in <code>Intents.framework</code>. We can load these frameworks and their classes dynamically, and we can then use NSLog to display the class contents.</p>
+<p>I again wrote a small tool, this time in Objective-C to parse all the <code>widget.instances</code>.</p>
+<pre tabindex="0"><code>csaby@max widgets % ./parseinstances ~/Library/Containers/com.apple.notificationcenterui/Data/Library/Preferences/com.apple.notificationcenterui.plist 
+2024-06-12 15:58:24.643 parseinstances[94282:5374885] Successfully loaded required frameworks.
+2024-06-12 15:58:24.677 parseinstances[94282:5374885] Successfully loaded plist file.
+2024-06-12 15:58:24.677 parseinstances[94282:5374885] Successfully retrieved widget instances.
+2024-06-12 15:58:24.677 parseinstances[94282:5374885] Processing UUID: 403B6E51-3F19-4268-981E-10BF4F6F76DE
+2024-06-12 15:58:24.678 parseinstances[94282:5374885] Decoded widget: &lt;CHSWidget: 0x60000001d260; extensionIdentity: com.apple.weather::com.apple.weather.widget; kind: com.apple.weather; family: systemSmall; hasIntent?: YES; activityIdentifier: 0x0&gt;
+2024-06-12 15:58:24.683 parseinstances[94282:5374885] Intent: &lt;INIntent: 0x600003c74090&gt; {
+    location = &lt;INCustomObject: 0x600002d640a0&gt; {
+        hash = &lt;null&gt;;
+        pronunciationHint = &lt;null&gt;;
+        subtitleString = &lt;null&gt;;
+        superclass = &lt;null&gt;;
+        debugDescription = &lt;null&gt;;
+        identifier = localCity;
+        description = &lt;null&gt;;
+        alternativeSpeakableMatches = &lt;null&gt;;
+        displayString = My Location;
+    };
+}
+2024-06-12 15:58:24.683 parseinstances[94282:5374885] Processing UUID: 0338F223-5CB8-46E1-9F54-E0871CB8B807
+2024-06-12 15:58:24.684 parseinstances[94282:5374885] Decoded widget: &lt;CHSWidget: 0x60000001a490; extensionIdentity: com.apple.iCal::com.apple.iCal.CalendarWidgetExtension; kind: com.apple.CalendarWidget.CalendarUpNextWidget; family: systemSmall; hasIntent?: YES; activityIdentifier: 0x0&gt;
+2024-06-12 15:58:24.684 parseinstances[94282:5374885] Intent: &lt;INIntent: 0x600003c702d0&gt; {
+    mirrorCalendarApp = 1;
+    hideAllDayEvents = &lt;null&gt;;
+    calendars = &lt;null&gt;;
+}
+2024-06-12 15:58:24.684 parseinstances[94282:5374885] Processing UUID: 225C4FF3-C7C4-4DCE-901F-833D06954835
+2024-06-12 15:58:24.684 parseinstances[94282:5374885] Decoded widget: &lt;CHSWidget: 0x60000001b960; extensionIdentity: com.apple.clock::com.apple.clock.WorldClockWidget; kind: com.apple.mobiletimer.WorldClock; family: systemMedium; hasIntent?: YES; activityIdentifier: 0x0&gt;
+2024-06-12 15:58:24.685 parseinstances[94282:5374885] Intent: &lt;INIntent: 0x600003c70360&gt; {
+    cities = (
+        &lt;INCustomObject: 0x600002d64b40&gt; {
+            hash = &lt;null&gt;;
+            pronunciationHint = &lt;null&gt;;
+            subtitleString = &lt;null&gt;;
+            superclass = &lt;null&gt;;
+            debugDescription = &lt;null&gt;;
+            identifier = 75;
+            description = &lt;null&gt;;
+            alternativeSpeakableMatches = &lt;null&gt;;
+            displayString = Cupertino, U.S.A.;
+        },
+</code></pre><p>These are all the active widgets that are actively loaded by the system. I think this is very handy for a forensics investigation.</p>
+<p>I extended the above tool to also parse all the <code>widgets.widgets</code> instances, which contain <code>CHSWidgetDescriptor</code> data. Again, this is a list of all widgets available on the system, including those available on your iPhone!</p>
+<p>So far so good, we can examine the available widgets, but we still can&rsquo;t persist easily.</p>
+<h2 id="persisting">
+  Persisting
+  <a class="heading-link" href="#persisting">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Ultimately what we should do here is create the classes, and store them using NSKeyedArchiver. For this we would need to define all these private classes, which contain reference to other private classes, etc&hellip; this is painful enough for me to take a shortcut. If we have a widget binary, which we deploy on our own system, we can simply take the encoded base64 string, and copy it to another system.</p>
+<p>So I wrote another shell script, which will take a copy of this plist before adding a widget, then after adding a widget, diff it, and create a shell script which we can take to a machine and run it to persist our widget, which will look like the following.</p>
+<pre tabindex="0"><code>plutil -insert widgets.instances -data &lt;base64data&gt; -append com.apple.notificationcenterui.plist
+</code></pre><p>Once we added our entry we need to restart NotificationCenter so our widget is loaded, and it will be also loaded after restart.</p>
+<p>The widget will be displayed in the notification bar in this case, so it&rsquo;s not visible at first place. Also there is no alert from <code>backgrundtaskmanagement</code> that a new item was added.</p>
+<p>All the tools I created are available on my Gist, here: <a href="https://gist.github.com/theevilbit/cea32b23195f740e0a270d205ed50613"  class="external-link" target="_blank" rel="noopener">Tools for working with widgets</a></p>
+
+  </article>
+</section>
+
+  
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2024
+     Csaba Fitzl 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+  
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

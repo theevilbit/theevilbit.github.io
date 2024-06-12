@@ -6,8 +6,15 @@
     <description>Recent content in Beyonds on theevilbit blog</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 29 Sep 2023 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 12 Jun 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://theevilbit.github.io/beyond/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 33 - Widgets</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0033/</link>
+      <pubDate>Wed, 12 Jun 2024 00:00:00 +0000</pubDate>
+      <guid>https://theevilbit.github.io/beyond/beyond_0033/</guid>
+      <description>This is part 33 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;Widgets are application extensions you can place on your desktop to display some key information from your main app. Although Apple says developers shouldn&amp;rsquo;t implement any functionality there and just use them as a display, they are still apps that run on their own and we can run code inside them.</description>
+    </item>
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 32 - Dock Tile Plugins</title>
       <link>https://theevilbit.github.io/beyond/beyond_0032/</link>

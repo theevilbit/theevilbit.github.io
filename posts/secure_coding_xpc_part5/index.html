@@ -14,7 +14,14 @@
 
 <meta name="author" content="Csaba Fitzl">
 <meta name="description" content="In the last post of the series we will see another typical issue, where XPC services using the connecting process&rsquo;s ID (PID) to verify the client instead of the audit token. We will use F-Secure SAFE again for our case study, the vulnerability was fixed in 17.8 and it was assigned CVE-2020-14977.
-The root cause Link to heading The XPC services of F-Secure SAFE use the process ID (PID) to verify the client&rsquo;s signature, as can be seen in the code below.">
+
+  The root cause
+  
+    
+    Link to heading
+  
+
+The XPC services of F-Secure SAFE use the process ID (PID) to verify the client&rsquo;s signature, as can be seen in the code below.">
 <meta name="keywords" content="">
 
 
@@ -447,9 +454,6 @@ The root cause Link to heading The XPC services of F-Secure SAFE use the process
 
 
   
-  
-
-
 
   
 

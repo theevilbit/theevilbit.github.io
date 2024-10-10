@@ -14,20 +14,21 @@
 
 <meta name="author" content="Csaba Fitzl">
 <meta name="description" content="A couple of weeks ago, I had the idea of scanning my Mac for files that has the SUID bit set, I wanted to see if there is anything interesting showing up. You can do it this way:
-/usr/bin/sudo find / -perm -4000 -exec /bin/ls -ldb {} \; &gt; suidfilelist There was one item that caught my attention, and that was a file called ubridge inside GNS3. I used to be a network guy, and GNS3 is a great tool to emulate real network gear, practice configuration, etc.">
+/usr/bin/sudo find / -perm -4000 -exec /bin/ls -ldb {} \; &gt; suidfilelist
+There was one item that caught my attention, and that was a file called ubridge inside GNS3. I used to be a network guy, and GNS3 is a great tool to emulate real network gear, practice configuration, etc.. I highly recommend for anyone who learns networking. This was the file:">
 <meta name="keywords" content="">
 
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="CVE-2020-14976 - GNS3 ubridge SETUID bit - arbitrary file read">
   <meta name="twitter:description" content="A couple of weeks ago, I had the idea of scanning my Mac for files that has the SUID bit set, I wanted to see if there is anything interesting showing up. You can do it this way:
-/usr/bin/sudo find / -perm -4000 -exec /bin/ls -ldb {} \; &gt; suidfilelist There was one item that caught my attention, and that was a file called ubridge inside GNS3. I used to be a network guy, and GNS3 is a great tool to emulate real network gear, practice configuration, etc.">
+/usr/bin/sudo find / -perm -4000 -exec /bin/ls -ldb {} \; &gt; suidfilelist There was one item that caught my attention, and that was a file called ubridge inside GNS3. I used to be a network guy, and GNS3 is a great tool to emulate real network gear, practice configuration, etc.. I highly recommend for anyone who learns networking. This was the file:">
 
 <meta property="og:url" content="https://theevilbit.github.io/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/">
   <meta property="og:site_name" content="theevilbit blog">
   <meta property="og:title" content="CVE-2020-14976 - GNS3 ubridge SETUID bit - arbitrary file read">
   <meta property="og:description" content="A couple of weeks ago, I had the idea of scanning my Mac for files that has the SUID bit set, I wanted to see if there is anything interesting showing up. You can do it this way:
-/usr/bin/sudo find / -perm -4000 -exec /bin/ls -ldb {} \; &gt; suidfilelist There was one item that caught my attention, and that was a file called ubridge inside GNS3. I used to be a network guy, and GNS3 is a great tool to emulate real network gear, practice configuration, etc.">
+/usr/bin/sudo find / -perm -4000 -exec /bin/ls -ldb {} \; &gt; suidfilelist There was one item that caught my attention, and that was a file called ubridge inside GNS3. I used to be a network guy, and GNS3 is a great tool to emulate real network gear, practice configuration, etc.. I highly recommend for anyone who learns networking. This was the file:">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -302,9 +303,6 @@ That exploit is still available at:
 
 
   
-  
-
-
 
   
 

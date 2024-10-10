@@ -13,18 +13,18 @@
 
 
 <meta name="author" content="Csaba Fitzl">
-<meta name="description" content="I&rsquo;m still waiting for some bug fixes to release the previously planned posts, and in the meantime I continue to poke at other PrivilegedHelperTools. This post born because I actually failed to exploit an XPC service, and I learned something new in regards, of how to securely write such a service. One application that came to my sight is Viscosity. This tool was already in Tyler Bohan&rsquo;s list, where his team looked on exploiting such services: GitHub - blankwall/Offensive-Con: Talk and materials for Offensive Con presentation - Privileged Helper Tools.">
+<meta name="description" content="I&rsquo;m still waiting for some bug fixes to release the previously planned posts, and in the meantime I continue to poke at other PrivilegedHelperTools. This post born because I actually failed to exploit an XPC service, and I learned something new in regards, of how to securely write such a service. One application that came to my sight is Viscosity. This tool was already in Tyler Bohan&rsquo;s list, where his team looked on exploiting such services: GitHub - blankwall/Offensive-Con: Talk and materials for Offensive Con presentation - Privileged Helper Tools. I still thought that I will give it a try, because many times, fixes are not properly done, and you can reexploit the bugs.">
 <meta name="keywords" content="">
 
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Secure coding XPC Services - Part 2 - Checking CS (CodeSigning) flags of the client">
-  <meta name="twitter:description" content="I’m still waiting for some bug fixes to release the previously planned posts, and in the meantime I continue to poke at other PrivilegedHelperTools. This post born because I actually failed to exploit an XPC service, and I learned something new in regards, of how to securely write such a service. One application that came to my sight is Viscosity. This tool was already in Tyler Bohan’s list, where his team looked on exploiting such services: GitHub - blankwall/Offensive-Con: Talk and materials for Offensive Con presentation - Privileged Helper Tools.">
+  <meta name="twitter:description" content="I’m still waiting for some bug fixes to release the previously planned posts, and in the meantime I continue to poke at other PrivilegedHelperTools. This post born because I actually failed to exploit an XPC service, and I learned something new in regards, of how to securely write such a service. One application that came to my sight is Viscosity. This tool was already in Tyler Bohan’s list, where his team looked on exploiting such services: GitHub - blankwall/Offensive-Con: Talk and materials for Offensive Con presentation - Privileged Helper Tools. I still thought that I will give it a try, because many times, fixes are not properly done, and you can reexploit the bugs.">
 
 <meta property="og:url" content="https://theevilbit.github.io/posts/secure_coding_xpc_part2/">
   <meta property="og:site_name" content="theevilbit blog">
   <meta property="og:title" content="Secure coding XPC Services - Part 2 - Checking CS (CodeSigning) flags of the client">
-  <meta property="og:description" content="I’m still waiting for some bug fixes to release the previously planned posts, and in the meantime I continue to poke at other PrivilegedHelperTools. This post born because I actually failed to exploit an XPC service, and I learned something new in regards, of how to securely write such a service. One application that came to my sight is Viscosity. This tool was already in Tyler Bohan’s list, where his team looked on exploiting such services: GitHub - blankwall/Offensive-Con: Talk and materials for Offensive Con presentation - Privileged Helper Tools.">
+  <meta property="og:description" content="I’m still waiting for some bug fixes to release the previously planned posts, and in the meantime I continue to poke at other PrivilegedHelperTools. This post born because I actually failed to exploit an XPC service, and I learned something new in regards, of how to securely write such a service. One application that came to my sight is Viscosity. This tool was already in Tyler Bohan’s list, where his team looked on exploiting such services: GitHub - blankwall/Offensive-Con: Talk and materials for Offensive Con presentation - Privileged Helper Tools. I still thought that I will give it a try, because many times, fixes are not properly done, and you can reexploit the bugs.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -368,9 +368,6 @@ Internal requirements count=1 size=220
 
 
   
-  
-
-
 
   
 

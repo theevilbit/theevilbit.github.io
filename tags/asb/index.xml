@@ -13,7 +13,7 @@
       <link>https://theevilbit.github.io/posts/experiences_with_asb/</link>
       <pubDate>Fri, 23 Apr 2021 00:00:00 +0000</pubDate>
       <guid>https://theevilbit.github.io/posts/experiences_with_asb/</guid>
-      <description>Since Apple started their Apple Security Bounty program I have submitted around 50 cases to their product security team. I thought I will share my experiences working with Apple in the past 2 years. This will be useful to anyone thinking about participating in the program, and will help setting up expectations.&#xA;Beyond Apple I do bug bounties also in other programs, like HackerOne, BugCrowd, VCP, ZDI or sometimes just working directly with vendors, so I have a good pool of other cases I can compare to.</description>
+      <description>&lt;p&gt;Since Apple started their &lt;a href=&#34;https://developer.apple.com/security-bounty/&#34;  class=&#34;external-link&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Apple Security Bounty&lt;/a&gt; program I have submitted around 50 cases to their product security team. I thought I will share my experiences working with Apple in the past 2 years. This will be useful to anyone thinking about participating in the program, and will help setting up expectations.&lt;/p&gt;&#xA;&lt;p&gt;Beyond Apple I do bug bounties also in other programs, like HackerOne, BugCrowd, VCP, ZDI or sometimes just working directly with vendors, so I have a good pool of other cases I can  compare to.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

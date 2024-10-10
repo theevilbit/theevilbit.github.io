@@ -14,20 +14,28 @@
 
 <meta name="author" content="Csaba Fitzl">
 <meta name="description" content="In the recent days I was reading technical analysis of win32k exploits from recent years, and it caught my eyes, that the HMValidateHandle technique is very heavily used almost everywhere. Then I had an idea how to protect against this family of exploits, which I think is very simple. This post will be about that.
-What is HMValidateHandle? Link to heading HMValidateHandle is an internal, unexported function of user32.dll. It takes a handle and a handle type as arguments, and by looking up the handle table, if the handle is matching with the type it will copy the object to user memory.">
+
+  What is HMValidateHandle?
+  
+    
+    Link to heading
+  
+
+HMValidateHandle is an internal, unexported function of user32.dll. It takes a handle and a handle type as arguments, and by looking up the handle table, if the handle is matching with the type it will copy the object to user memory. If the object contains a pointer to itself, like tagWND it can be used to leak memory addresses from the kernel. This has been a known technique for very long time, I think the first mention of this was in Tarjei Mandt’s 2011 BlackHat US talk, you can find the PDF here: https://media.blackhat.com/bh-us-11/Mandt/BH_US_11_Mandt_win32k_WP.pdf
+There are awful lot of documentation about this, and it was widely abused in many-many Windows kernel exploits, as you could reliably leak kernel object addresses, especially useful for kernel pool spraying. Thus Microsoft decided to finally close this, and so this technique doesn’t work beyond Windows 10 RS4.">
 <meta name="keywords" content="">
 
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="A simple protection against HMValidateHandle technique">
   <meta name="twitter:description" content="In the recent days I was reading technical analysis of win32k exploits from recent years, and it caught my eyes, that the HMValidateHandle technique is very heavily used almost everywhere. Then I had an idea how to protect against this family of exploits, which I think is very simple. This post will be about that.
-What is HMValidateHandle? Link to heading HMValidateHandle is an internal, unexported function of user32.dll. It takes a handle and a handle type as arguments, and by looking up the handle table, if the handle is matching with the type it will copy the object to user memory.">
+What is HMValidateHandle? Link to heading HMValidateHandle is an internal, unexported function of user32.dll. It takes a handle and a handle type as arguments, and by looking up the handle table, if the handle is matching with the type it will copy the object to user memory. If the object contains a pointer to itself, like tagWND it can be used to leak memory addresses from the kernel. This has been a known technique for very long time, I think the first mention of this was in Tarjei Mandt’s 2011 BlackHat US talk, you can find the PDF here: https://media.blackhat.com/bh-us-11/Mandt/BH_US_11_Mandt_win32k_WP.pdf There are awful lot of documentation about this, and it was widely abused in many-many Windows kernel exploits, as you could reliably leak kernel object addresses, especially useful for kernel pool spraying. Thus Microsoft decided to finally close this, and so this technique doesn’t work beyond Windows 10 RS4.">
 
 <meta property="og:url" content="https://theevilbit.github.io/posts/a_simple_protection_against_hmvalidatehandle_technique/">
   <meta property="og:site_name" content="theevilbit blog">
   <meta property="og:title" content="A simple protection against HMValidateHandle technique">
   <meta property="og:description" content="In the recent days I was reading technical analysis of win32k exploits from recent years, and it caught my eyes, that the HMValidateHandle technique is very heavily used almost everywhere. Then I had an idea how to protect against this family of exploits, which I think is very simple. This post will be about that.
-What is HMValidateHandle? Link to heading HMValidateHandle is an internal, unexported function of user32.dll. It takes a handle and a handle type as arguments, and by looking up the handle table, if the handle is matching with the type it will copy the object to user memory.">
+What is HMValidateHandle? Link to heading HMValidateHandle is an internal, unexported function of user32.dll. It takes a handle and a handle type as arguments, and by looking up the handle table, if the handle is matching with the type it will copy the object to user memory. If the object contains a pointer to itself, like tagWND it can be used to leak memory addresses from the kernel. This has been a known technique for very long time, I think the first mention of this was in Tarjei Mandt’s 2011 BlackHat US talk, you can find the PDF here: https://media.blackhat.com/bh-us-11/Mandt/BH_US_11_Mandt_win32k_WP.pdf There are awful lot of documentation about this, and it was widely abused in many-many Windows kernel exploits, as you could reliably leak kernel object addresses, especially useful for kernel pool spraying. Thus Microsoft decided to finally close this, and so this technique doesn’t work beyond Windows 10 RS4.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -450,9 +458,6 @@ Not sure if any exploit protection products are using this trick, but it should 
 
 
   
-  
-
-
 
   
 

@@ -13,24 +13,29 @@
 
 
 <meta name="author" content="Csaba Fitzl">
-<meta name="description" content="This is part 22 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta name="description" content="
+This is part 22 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+
 This method is considered deprecated by Apple, yet it still works.
-LoginHooks and LogoutHooks have been widely documented by many people, so this post is mostly for completeness. The official, Apple documentation can be found here: Customizing Login and Logout">
+LoginHooks and LogoutHooks have been widely documented by many people, so this post is mostly for completeness. The official, Apple documentation can be found here: Customizing Login and Logout
+LoginHooks and LogoutHooks are executed, well&hellip; at logins and logouts just as the name suggest, and they are run as root. They are set in the preferences of the  com.apple.loginwindow process, and so it&rsquo;s stored in the file /var/root/Library/Preferences/com.apple.loginwindow.plist.">
 <meta name="keywords" content="">
 
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 22 - LoginHook and LogoutHook">
-  <meta name="twitter:description" content="This is part 22 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+  <meta name="twitter:description" content=" This is part 22 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
 This method is considered deprecated by Apple, yet it still works.
-LoginHooks and LogoutHooks have been widely documented by many people, so this post is mostly for completeness. The official, Apple documentation can be found here: Customizing Login and Logout">
+LoginHooks and LogoutHooks have been widely documented by many people, so this post is mostly for completeness. The official, Apple documentation can be found here: Customizing Login and Logout
+LoginHooks and LogoutHooks are executed, well… at logins and logouts just as the name suggest, and they are run as root. They are set in the preferences of the com.apple.loginwindow process, and so it’s stored in the file /var/root/Library/Preferences/com.apple.loginwindow.plist.">
 
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0022/">
   <meta property="og:site_name" content="theevilbit blog">
   <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 22 - LoginHook and LogoutHook">
-  <meta property="og:description" content="This is part 22 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+  <meta property="og:description" content=" This is part 22 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
 This method is considered deprecated by Apple, yet it still works.
-LoginHooks and LogoutHooks have been widely documented by many people, so this post is mostly for completeness. The official, Apple documentation can be found here: Customizing Login and Logout">
+LoginHooks and LogoutHooks have been widely documented by many people, so this post is mostly for completeness. The official, Apple documentation can be found here: Customizing Login and Logout
+LoginHooks and LogoutHooks are executed, well… at logins and logouts just as the name suggest, and they are run as root. They are set in the preferences of the com.apple.loginwindow process, and so it’s stored in the file /var/root/Library/Preferences/com.apple.loginwindow.plist.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="beyond">
@@ -211,9 +216,6 @@ sudo defaults delete com.apple.loginwindow LogoutHook
 
 
   
-  
-
-
 
   
 

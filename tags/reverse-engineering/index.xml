@@ -13,7 +13,7 @@
       <link>https://theevilbit.github.io/posts/reversing_cve_2020_9771/</link>
       <pubDate>Sun, 13 Dec 2020 00:00:00 +0000</pubDate>
       <guid>https://theevilbit.github.io/posts/reversing_cve_2020_9771/</guid>
-      <description>When I originally found the mount_apfs bug back in December, 2019, I honestly had no idea what was the root cause of it, nor had a clue how to even start looking into it. The only thing I knew for sure that the answer is within kernel. My macOS knowledge was still quite fresh that time (and even today), and was busy with so many other stuff that I never had the time to start looking into it.</description>
+      <description>&lt;p&gt;When I originally found the &lt;code&gt;mount_apfs&lt;/code&gt; bug back in December, 2019, I honestly had no idea what was the root cause of it, nor had a clue how to even start looking into it. The only thing I knew for sure that the answer is within kernel. My macOS knowledge was still quite fresh that time (and even today), and was busy with so many other stuff that I never had the time to start looking into it.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

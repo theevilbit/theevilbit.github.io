@@ -13,7 +13,7 @@
       <link>https://theevilbit.github.io/posts/macos_authorization/</link>
       <pubDate>Thu, 22 Oct 2020 00:00:00 +0000</pubDate>
       <guid>https://theevilbit.github.io/posts/macos_authorization/</guid>
-      <description>This is a blog post I wanted to write for a while now, but somehow never got the time for it, and I also knew that it will require lots of time, so I kept delaying it. I finally kicked my ass, sat down, and wrote it.&#xA;The goal of the post is to cover many aspects of authorization, which I found interesting from security perspective. Honestly, partially for selfish reasons so I will have a goto summary when I need to lookup something later instead of browsing through 8-10 different articles.</description>
+      <description>&lt;p&gt;This is a blog post I wanted to write for a while now, but somehow never got the time for it, and I also knew that it will require lots of time, so I kept delaying it. I finally kicked my ass, sat down, and wrote it.&lt;/p&gt;&#xA;&lt;p&gt;The goal of the post is to cover many aspects of authorization, which I found interesting from security perspective. Honestly, partially for selfish reasons so I will have a goto summary when I need to lookup something later instead of browsing through 8-10 different articles. All of these information I try catch here in one post, are known, but spread all over the place in various blog posts and articles, and I never found a good, central location with all the details. Also some of the items are very confusing and it took me some time to clear things in my head as not everything is obvious or intuitive.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

@@ -6,28 +6,35 @@
     <description>Recent content in 2024 on theevilbit blog</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 12 Jun 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 10 Oct 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://theevilbit.github.io/year/2024/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 34 - launchd embedded plist</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0034/</link>
+      <pubDate>Thu, 10 Oct 2024 00:00:00 +0000</pubDate>
+      <guid>https://theevilbit.github.io/beyond/beyond_0034/</guid>
+      <description>&lt;blockquote&gt;&#xA;&lt;p&gt;This is part 34 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the &lt;a href=&#34;https://theevilbit.github.io/beyond/beyond_intro/&#34;  class=&#34;external-link&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;introduction&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;The all mighty &lt;code&gt;launchd&lt;/code&gt;, contains an embedded plist file in its &lt;code&gt;__TEXT __config&lt;/code&gt; section, which contains various settings, BootStrap file locations (like &lt;code&gt;LaunchDaemons&lt;/code&gt; and &lt;code&gt;LaunchAgents&lt;/code&gt;) and it has also a &lt;code&gt;Boot&lt;/code&gt; key, which defines various services, which will be run upon boot. Although this is documented in Jonathan Levin&amp;rsquo;s *OS Internals Vol I. book, I think this is a not well known, and in fact I also totally forgot about it until &lt;a href=&#34;https://x.com/byaaaaahhh&#34;  class=&#34;external-link&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Matt&lt;/a&gt; brought them to my attention recently.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 33 - Widgets</title>
       <link>https://theevilbit.github.io/beyond/beyond_0033/</link>
       <pubDate>Wed, 12 Jun 2024 00:00:00 +0000</pubDate>
       <guid>https://theevilbit.github.io/beyond/beyond_0033/</guid>
-      <description>This is part 33 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.&#xA;Widgets are application extensions you can place on your desktop to display some key information from your main app. Although Apple says developers shouldn&amp;rsquo;t implement any functionality there and just use them as a display, they are still apps that run on their own and we can run code inside them.</description>
+      <description>&lt;blockquote&gt;&#xA;&lt;p&gt;This is part 33 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the &lt;a href=&#34;https://theevilbit.github.io/beyond/beyond_intro/&#34;  class=&#34;external-link&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;introduction&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;Widgets are application extensions you can place on your desktop to display some key information from your main app. Although Apple says developers shouldn&amp;rsquo;t implement any functionality there and just use them as a display, they are still apps that run on their own and we can run code inside them. We will explore how we can create them, use them as persistence and also investigate what widgets will automatically run on our system.&lt;/p&gt;</description>
     </item>
     <item>
       <title>CVE-2023-40424 - How Malware Can Bypass Transparency Consent and Control</title>
       <link>https://theevilbit.github.io/posts/cve-2023-40424/</link>
       <pubDate>Fri, 24 May 2024 00:00:00 +0000</pubDate>
       <guid>https://theevilbit.github.io/posts/cve-2023-40424/</guid>
-      <description>Intro Link to heading CVE-2023-40424 is a vulnerability that allows a root-level user to create a new user with a custom Transparency Consent and Control (TCC) database in macOS, which can then be used to access other users’ private data.&#xA;First discovered back in 2022, the vulnerability was fixed by Apple in 2023 in macOS Sonoma’s initial release. But it was not fixed in earlier versions of macOS—one more reason users and admins should update their Mac computers to Sonoma.</description>
+      <description>&lt;h2 id=&#34;intro&#34;&gt;&#xA;  Intro&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#intro&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;CVE-2023-40424 is a vulnerability that allows a root-level user to create a new user with a custom Transparency Consent and Control (TCC) database in macOS, which can then be used to access other users’ private data.&lt;/p&gt;&#xA;&lt;p&gt;First discovered back in 2022, the vulnerability was fixed by Apple in 2023 in macOS Sonoma’s initial release. But it was not fixed in earlier versions of macOS—one more reason users and admins should update their Mac computers to Sonoma.&lt;/p&gt;</description>
     </item>
     <item>
       <title>How Apple Mitigates Vulnerabilities in Installer Scripts</title>
       <link>https://theevilbit.github.io/posts/apple-mitigates-vulnerabilities-installer-scripts/</link>
       <pubDate>Fri, 15 Mar 2024 00:00:00 +0000</pubDate>
       <guid>https://theevilbit.github.io/posts/apple-mitigates-vulnerabilities-installer-scripts/</guid>
-      <description>Intro Link to heading Vulnerabilities are hot topics inside the world of security research and—because of their potentially dramatic impacts—outside as well. Unfortunately, the strategies and tactics that companies like Apple take to prevent specific vulnerabilities—or even entire families of exploits—typically attract less attention. But the fact is that engineering high-impact mitigations is typically more challenging than finding a single vulnerability.&#xA;In this post, we’ll look at Apple&amp;rsquo;s recent efforts to mitigate an entire class of installer-script vulnerabilities.</description>
+      <description>&lt;h2 id=&#34;intro&#34;&gt;&#xA;  Intro&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#intro&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;Vulnerabilities are hot topics inside the world of security research and—because of their potentially dramatic impacts—outside as well. Unfortunately, the strategies and tactics that companies like Apple take to prevent specific vulnerabilities—or even entire families of exploits—typically attract less attention. But the fact is that engineering high-impact mitigations is typically more challenging than finding a single vulnerability.&lt;/p&gt;&#xA;&lt;p&gt;In this post, we’ll look at Apple&amp;rsquo;s recent efforts to mitigate an entire class of installer-script vulnerabilities. We will cover:&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

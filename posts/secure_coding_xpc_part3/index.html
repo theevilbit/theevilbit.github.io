@@ -13,18 +13,32 @@
 
 
 <meta name="author" content="Csaba Fitzl">
-<meta name="description" content="Microsoft AutoUpdate macOS privilege escalation vulnerability (CVE-2020-0984) Link to heading Introduction Link to heading This is the third post in my series which is trying to help Apple developers to avoid typical insecure coding practices. This one will highlight why XPC client hardening and proper verification is extremely important when we use XPC messaging on macOS between clients that run as a normal user and services that run as root.">
+<meta name="description" content="
+  Microsoft AutoUpdate macOS privilege escalation vulnerability (CVE-2020-0984)
+  
+    
+    Link to heading
+  
+
+
+  Introduction
+  
+    
+    Link to heading
+  
+
+This is the third post in my series which is trying to help Apple developers to avoid typical insecure coding practices. This one will highlight why XPC client hardening and proper verification is extremely important when we use XPC messaging on macOS between clients that run as a normal user and services that run as root. If this validation is not right, it opens up the possibility for an attacker to run privileged commands or worse case, achieve full privilege escalation on the system.">
 <meta name="keywords" content="">
 
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="CVE-2020-0984 - Secure coding XPC Services - Part 3 - Incorrect client verification">
-  <meta name="twitter:description" content="Microsoft AutoUpdate macOS privilege escalation vulnerability (CVE-2020-0984) Link to heading Introduction Link to heading This is the third post in my series which is trying to help Apple developers to avoid typical insecure coding practices. This one will highlight why XPC client hardening and proper verification is extremely important when we use XPC messaging on macOS between clients that run as a normal user and services that run as root.">
+  <meta name="twitter:description" content=" Microsoft AutoUpdate macOS privilege escalation vulnerability (CVE-2020-0984) Link to heading Introduction Link to heading This is the third post in my series which is trying to help Apple developers to avoid typical insecure coding practices. This one will highlight why XPC client hardening and proper verification is extremely important when we use XPC messaging on macOS between clients that run as a normal user and services that run as root. If this validation is not right, it opens up the possibility for an attacker to run privileged commands or worse case, achieve full privilege escalation on the system.">
 
 <meta property="og:url" content="https://theevilbit.github.io/posts/secure_coding_xpc_part3/">
   <meta property="og:site_name" content="theevilbit blog">
   <meta property="og:title" content="CVE-2020-0984 - Secure coding XPC Services - Part 3 - Incorrect client verification">
-  <meta property="og:description" content="Microsoft AutoUpdate macOS privilege escalation vulnerability (CVE-2020-0984) Link to heading Introduction Link to heading This is the third post in my series which is trying to help Apple developers to avoid typical insecure coding practices. This one will highlight why XPC client hardening and proper verification is extremely important when we use XPC messaging on macOS between clients that run as a normal user and services that run as root.">
+  <meta property="og:description" content=" Microsoft AutoUpdate macOS privilege escalation vulnerability (CVE-2020-0984) Link to heading Introduction Link to heading This is the third post in my series which is trying to help Apple developers to avoid typical insecure coding practices. This one will highlight why XPC client hardening and proper verification is extremely important when we use XPC messaging on macOS between clients that run as a normal user and services that run as root. If this validation is not right, it opens up the possibility for an attacker to run privileged commands or worse case, achieve full privilege escalation on the system.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -475,9 +489,6 @@ com.apple.security.get-task-allow
 
 
   
-  
-
-
 
   
 

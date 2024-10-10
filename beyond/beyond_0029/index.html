@@ -13,24 +13,70 @@
 
 
 <meta name="author" content="Csaba Fitzl">
-<meta name="description" content="This is part 29 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta name="description" content="
+This is part 29 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+
 When doing some research on macOS I came across the following LaunchAgent: /System/Library/LaunchAgents/com.apple.amstoold.plist. Its content is the following.
-&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt; &lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt; &lt;plist version=&#34;1.0&#34;&gt; &lt;dict&gt; &lt;key&gt;EnablePressuredExit&lt;/key&gt; &lt;true/&gt; &lt;key&gt;EnableTransactions&lt;/key&gt; &lt;true/&gt; &lt;key&gt;Label&lt;/key&gt; &lt;string&gt;com.apple.amstoold&lt;/string&gt; &lt;key&gt;LaunchEvents&lt;/key&gt; &lt;dict&gt; &lt;key&gt;com.apple.distnoted.matching&lt;/key&gt; &lt;dict&gt; &lt;key&gt;com.">
+&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;
+&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;
+&lt;plist version=&#34;1.0&#34;&gt;
+&lt;dict&gt;
+	&lt;key&gt;EnablePressuredExit&lt;/key&gt;
+	&lt;true/&gt;
+	&lt;key&gt;EnableTransactions&lt;/key&gt;
+	&lt;true/&gt;
+	&lt;key&gt;Label&lt;/key&gt;
+	&lt;string&gt;com.apple.amstoold&lt;/string&gt;
+	&lt;key&gt;LaunchEvents&lt;/key&gt;
+	&lt;dict&gt;
+		&lt;key&gt;com.apple.distnoted.matching&lt;/key&gt;
+		&lt;dict&gt;
+			&lt;key&gt;com.apple.nfcd.ams.accessory&lt;/key&gt;
+			&lt;dict&gt;
+				&lt;key&gt;Name&lt;/key&gt;
+				&lt;string&gt;com.apple.nfcd.ams.accessory&lt;/string&gt;
+			&lt;/dict&gt;
+		&lt;/dict&gt;
+		&lt;key&gt;com.apple.notifyd.matching&lt;/key&gt;
+		&lt;dict&gt;
+			&lt;key&gt;com.apple.ams.privateListeningChanged&lt;/key&gt;
+			&lt;dict&gt;
+				&lt;key&gt;Notification&lt;/key&gt;
+				&lt;string&gt;com.apple.ams.privateListeningChanged&lt;/string&gt;
+			&lt;/dict&gt;
+		&lt;/dict&gt;
+	&lt;/dict&gt;
+	&lt;key&gt;MachServices&lt;/key&gt;
+	&lt;dict&gt;
+		&lt;key&gt;com.apple.xpc.amstoold&lt;/key&gt;
+		&lt;true/&gt;
+	&lt;/dict&gt;
+	&lt;key&gt;ProcessType&lt;/key&gt;
+	&lt;string&gt;Background&lt;/string&gt;
+	&lt;key&gt;ProgramArguments&lt;/key&gt;
+	&lt;array&gt;
+		&lt;string&gt;/usr/local/bin/amstoold&lt;/string&gt;
+	&lt;/array&gt;
+	&lt;key&gt;RunAtLoad&lt;/key&gt;
+	&lt;true/&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;
+If we examine it closely we can notice that the related binary is /usr/local/bin/amstoold. This is very interesting as this file doesn&rsquo;t exists on default macOS installations. This means that if we create it, it will be started as the user upon login. As the launchd file is SIP protected, we can&rsquo;t even remove it, and even if we would, it likely would come back at the next OS update.">
 <meta name="keywords" content="">
 
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 29 - amstoold">
-  <meta name="twitter:description" content="This is part 29 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+  <meta name="twitter:description" content=" This is part 29 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
 When doing some research on macOS I came across the following LaunchAgent: /System/Library/LaunchAgents/com.apple.amstoold.plist. Its content is the following.
-&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt; &lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt; &lt;plist version=&#34;1.0&#34;&gt; &lt;dict&gt; &lt;key&gt;EnablePressuredExit&lt;/key&gt; &lt;true/&gt; &lt;key&gt;EnableTransactions&lt;/key&gt; &lt;true/&gt; &lt;key&gt;Label&lt;/key&gt; &lt;string&gt;com.apple.amstoold&lt;/string&gt; &lt;key&gt;LaunchEvents&lt;/key&gt; &lt;dict&gt; &lt;key&gt;com.apple.distnoted.matching&lt;/key&gt; &lt;dict&gt; &lt;key&gt;com.">
+&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt; &lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt; &lt;plist version=&#34;1.0&#34;&gt; &lt;dict&gt; &lt;key&gt;EnablePressuredExit&lt;/key&gt; &lt;true/&gt; &lt;key&gt;EnableTransactions&lt;/key&gt; &lt;true/&gt; &lt;key&gt;Label&lt;/key&gt; &lt;string&gt;com.apple.amstoold&lt;/string&gt; &lt;key&gt;LaunchEvents&lt;/key&gt; &lt;dict&gt; &lt;key&gt;com.apple.distnoted.matching&lt;/key&gt; &lt;dict&gt; &lt;key&gt;com.apple.nfcd.ams.accessory&lt;/key&gt; &lt;dict&gt; &lt;key&gt;Name&lt;/key&gt; &lt;string&gt;com.apple.nfcd.ams.accessory&lt;/string&gt; &lt;/dict&gt; &lt;/dict&gt; &lt;key&gt;com.apple.notifyd.matching&lt;/key&gt; &lt;dict&gt; &lt;key&gt;com.apple.ams.privateListeningChanged&lt;/key&gt; &lt;dict&gt; &lt;key&gt;Notification&lt;/key&gt; &lt;string&gt;com.apple.ams.privateListeningChanged&lt;/string&gt; &lt;/dict&gt; &lt;/dict&gt; &lt;/dict&gt; &lt;key&gt;MachServices&lt;/key&gt; &lt;dict&gt; &lt;key&gt;com.apple.xpc.amstoold&lt;/key&gt; &lt;true/&gt; &lt;/dict&gt; &lt;key&gt;ProcessType&lt;/key&gt; &lt;string&gt;Background&lt;/string&gt; &lt;key&gt;ProgramArguments&lt;/key&gt; &lt;array&gt; &lt;string&gt;/usr/local/bin/amstoold&lt;/string&gt; &lt;/array&gt; &lt;key&gt;RunAtLoad&lt;/key&gt; &lt;true/&gt; &lt;/dict&gt; &lt;/plist&gt; If we examine it closely we can notice that the related binary is /usr/local/bin/amstoold. This is very interesting as this file doesn’t exists on default macOS installations. This means that if we create it, it will be started as the user upon login. As the launchd file is SIP protected, we can’t even remove it, and even if we would, it likely would come back at the next OS update.">
 
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0029/">
   <meta property="og:site_name" content="theevilbit blog">
   <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 29 - amstoold">
-  <meta property="og:description" content="This is part 29 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+  <meta property="og:description" content=" This is part 29 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
 When doing some research on macOS I came across the following LaunchAgent: /System/Library/LaunchAgents/com.apple.amstoold.plist. Its content is the following.
-&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt; &lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt; &lt;plist version=&#34;1.0&#34;&gt; &lt;dict&gt; &lt;key&gt;EnablePressuredExit&lt;/key&gt; &lt;true/&gt; &lt;key&gt;EnableTransactions&lt;/key&gt; &lt;true/&gt; &lt;key&gt;Label&lt;/key&gt; &lt;string&gt;com.apple.amstoold&lt;/string&gt; &lt;key&gt;LaunchEvents&lt;/key&gt; &lt;dict&gt; &lt;key&gt;com.apple.distnoted.matching&lt;/key&gt; &lt;dict&gt; &lt;key&gt;com.">
+&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt; &lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt; &lt;plist version=&#34;1.0&#34;&gt; &lt;dict&gt; &lt;key&gt;EnablePressuredExit&lt;/key&gt; &lt;true/&gt; &lt;key&gt;EnableTransactions&lt;/key&gt; &lt;true/&gt; &lt;key&gt;Label&lt;/key&gt; &lt;string&gt;com.apple.amstoold&lt;/string&gt; &lt;key&gt;LaunchEvents&lt;/key&gt; &lt;dict&gt; &lt;key&gt;com.apple.distnoted.matching&lt;/key&gt; &lt;dict&gt; &lt;key&gt;com.apple.nfcd.ams.accessory&lt;/key&gt; &lt;dict&gt; &lt;key&gt;Name&lt;/key&gt; &lt;string&gt;com.apple.nfcd.ams.accessory&lt;/string&gt; &lt;/dict&gt; &lt;/dict&gt; &lt;key&gt;com.apple.notifyd.matching&lt;/key&gt; &lt;dict&gt; &lt;key&gt;com.apple.ams.privateListeningChanged&lt;/key&gt; &lt;dict&gt; &lt;key&gt;Notification&lt;/key&gt; &lt;string&gt;com.apple.ams.privateListeningChanged&lt;/string&gt; &lt;/dict&gt; &lt;/dict&gt; &lt;/dict&gt; &lt;key&gt;MachServices&lt;/key&gt; &lt;dict&gt; &lt;key&gt;com.apple.xpc.amstoold&lt;/key&gt; &lt;true/&gt; &lt;/dict&gt; &lt;key&gt;ProcessType&lt;/key&gt; &lt;string&gt;Background&lt;/string&gt; &lt;key&gt;ProgramArguments&lt;/key&gt; &lt;array&gt; &lt;string&gt;/usr/local/bin/amstoold&lt;/string&gt; &lt;/array&gt; &lt;key&gt;RunAtLoad&lt;/key&gt; &lt;true/&gt; &lt;/dict&gt; &lt;/plist&gt; If we examine it closely we can notice that the related binary is /usr/local/bin/amstoold. This is very interesting as this file doesn’t exists on default macOS installations. This means that if we create it, it will be started as the user upon login. As the launchd file is SIP protected, we can’t even remove it, and even if we would, it likely would come back at the next OS update.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="beyond">
@@ -302,9 +348,6 @@ When doing some research on macOS I came across the following LaunchAgent: /Syst
 
 
   
-  
-
-
 
   
 

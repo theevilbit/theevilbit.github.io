@@ -13,7 +13,9 @@
 
 
 <meta name="author" content="Csaba Fitzl">
-<meta name="description" content="This is part 19 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+<meta name="description" content="
+This is part 19 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+
 This post has been long due, as it&rsquo;s one of my favorite persistence tricks. Up until Big Sur 11.5 you could also exploit it for privilege escalation if Homebrew was installed on the system.
 Periodic scripts have a FreeBSD origin. These scripts are doing some maintenance tasks on the system, and scheduled to be run on a daily, weekly and monthly basis.">
 <meta name="keywords" content="">
@@ -21,14 +23,14 @@ Periodic scripts have a FreeBSD origin. These scripts are doing some maintenance
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 19 - Periodic Scripts">
-  <meta name="twitter:description" content="This is part 19 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+  <meta name="twitter:description" content=" This is part 19 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
 This post has been long due, as it’s one of my favorite persistence tricks. Up until Big Sur 11.5 you could also exploit it for privilege escalation if Homebrew was installed on the system.
 Periodic scripts have a FreeBSD origin. These scripts are doing some maintenance tasks on the system, and scheduled to be run on a daily, weekly and monthly basis.">
 
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0019/">
   <meta property="og:site_name" content="theevilbit blog">
   <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 19 - Periodic Scripts">
-  <meta property="og:description" content="This is part 19 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+  <meta property="og:description" content=" This is part 19 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
 This post has been long due, as it’s one of my favorite persistence tricks. Up until Big Sur 11.5 you could also exploit it for privilege escalation if Homebrew was installed on the system.
 Periodic scripts have a FreeBSD origin. These scripts are doing some maintenance tasks on the system, and scheduled to be run on a daily, weekly and monthly basis.">
   <meta property="og:locale" content="en">
@@ -278,9 +280,6 @@ periodic_conf_files=&#34;/etc/periodic.conf /etc/periodic.conf.local&#34;
 
 
   
-  
-
-
 
   
 

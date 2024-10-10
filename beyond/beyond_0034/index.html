@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Beyond the good ol&#39; LaunchAgents - 34 - launchd embedded plist · theevilbit blog
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Csaba Fitzl">
+<meta name="description" content="
+This is part 34 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+
+The all mighty launchd, contains an embedded plist file in its __TEXT __config section, which contains various settings, BootStrap file locations (like LaunchDaemons and LaunchAgents) and it has also a Boot key, which defines various services, which will be run upon boot. Although this is documented in Jonathan Levin&rsquo;s *OS Internals Vol I. book, I think this is a not well known, and in fact I also totally forgot about it until Matt brought them to my attention recently.">
+<meta name="keywords" content="">
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 34 - launchd embedded plist">
+  <meta name="twitter:description" content=" This is part 34 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+The all mighty launchd, contains an embedded plist file in its __TEXT __config section, which contains various settings, BootStrap file locations (like LaunchDaemons and LaunchAgents) and it has also a Boot key, which defines various services, which will be run upon boot. Although this is documented in Jonathan Levin’s *OS Internals Vol I. book, I think this is a not well known, and in fact I also totally forgot about it until Matt brought them to my attention recently.">
+
+<meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0034/">
+  <meta property="og:site_name" content="theevilbit blog">
+  <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 34 - launchd embedded plist">
+  <meta property="og:description" content=" This is part 34 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+The all mighty launchd, contains an embedded plist file in its __TEXT __config section, which contains various settings, BootStrap file locations (like LaunchDaemons and LaunchAgents) and it has also a Boot key, which defines various services, which will be run upon boot. Although this is documented in Jonathan Levin’s *OS Internals Vol I. book, I think this is a not well known, and in fact I also totally forgot about it until Matt brought them to my attention recently.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="beyond">
+    <meta property="article:published_time" content="2024-10-10T00:00:00+00:00">
+    <meta property="article:modified_time" content="2024-10-10T00:00:00+00:00">
+    <meta property="article:tag" content="Macos">
+    <meta property="article:tag" content="Persistence">
+    <meta property="article:tag" content="Beyond">
+
+
+
+
+<link rel="canonical" href="https://theevilbit.github.io/beyond/beyond_0034/">
+
+
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.38c4552ac40f9ae3408bad40358f654ebd8804412fe74ed56f2d6c8a7af82dd3.css" integrity="sha256-OMRVKsQPmuNAi61ANY9lTr2IBEEv507Vby1sinr4LdM=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+
+<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
+<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+<body class="preload-transitions colorscheme-light">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="https://theevilbit.github.io/">
+      theevilbit blog
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://theevilbit.github.io/posts/">Posts</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://theevilbit.github.io/shield/">Shield.app</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://theevilbit.github.io/tags/">Tags</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://theevilbit.github.io/about/">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container page">
+  <article>
+    <header>
+      <h1 class="title">
+        <a class="title-link" href="https://theevilbit.github.io/beyond/beyond_0034/">
+          Beyond the good ol&#39; LaunchAgents - 34 - launchd embedded plist
+        </a>
+      </h1>
+    </header>
+
+    <blockquote>
+<p>This is part 34 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p>
+</blockquote>
+<p>The all mighty <code>launchd</code>, contains an embedded plist file in its <code>__TEXT __config</code> section, which contains various settings, BootStrap file locations (like <code>LaunchDaemons</code> and <code>LaunchAgents</code>) and it has also a <code>Boot</code> key, which defines various services, which will be run upon boot. Although this is documented in Jonathan Levin&rsquo;s *OS Internals Vol I. book, I think this is a not well known, and in fact I also totally forgot about it until <a href="https://x.com/byaaaaahhh"  class="external-link" target="_blank" rel="noopener">Matt</a> brought them to my attention recently.</p>
+<p>We can dump this plist with the following one liner, which is pretty massive due to the fact that the plist is stored in little endian format.</p>
+<pre tabindex="0"><code>otool -X -s __TEXT __config /sbin/launchd | awk &#39;{print $2 $3 $4 $5}&#39; | xxd -r -p | hexdump -v -e &#39;1/4 &#34;%08x&#34;&#39; -e &#39;&#34;\n&#34;&#39; | xxd -r -p 
+</code></pre><p>I think the <code>BootStrap</code> config is very interesting as it contains more locations for <code>Launch*</code> files, than we are normally aware of. <code>/private/var/db/ManagedConfigurationFiles/BackgroundTaskServices/Launch*/</code> especially stands out, this location is also SIP protected.</p>
+<p>But let&rsquo;s focus on how we can utilize this configuration to persist our own stuff.</p>
+<p>There are 6 entries that we can potentially utilize, but each of them will require extra access beyond having <code>root</code> privileges. The first three are binaries which can be found either in <code>/Library/Apple/</code> or <code>/private/var/install</code>.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>finish-demo-restore<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>Program<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/Library/Apple/usr/libexec/finish_demo_restore<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>PerformAfterUserspaceReboot<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>RequireSuccess<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>shutdown_installer_tasks<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>Program<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/private/var/install/shutdown_installer_tasks<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>RequireSuccess<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>PerformAfterUserspaceReboot<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>deferred_install<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>RebootOnSuccess<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>RequireSuccess<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>Program<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/private/var/install/deferred_install<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>PerformAfterUserspaceReboot<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span></code></pre></div><p>These files don&rsquo;t exists by default, and will only show up during installations, but in order for us to place them we need some sort of SIP bypass privileges.</p>
+<p>The second set of three items are scripts from <code>/etc/</code>, and all of them are <code>rc.*</code> files.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>rc.server<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>Program<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/etc/rc.server<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>PerformAfterUserspaceReboot<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>AllowCrash<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>rc.cdrom<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>PassLaunchBootModeAsArgument<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>PerformInBaseSystem<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>ProgramArguments<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>rc.cdrom<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>Program<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/etc/rc.cdrom<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>AllowCrash<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>rc.netboot<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>RequireSuccess<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>ProgramArguments<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>rc.netboot<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>init<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>Program<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/etc/rc.netboot<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span></code></pre></div><p>From these three only <code>rc.netboot</code> exists on default installations in macOS Sequoia. To create or edit any of these files, we will need <code>kTCCServiceSystempolicySysAdminFiles</code> TCC permissions (or the joker - Full Disk Access). If we don&rsquo;t have one we will be presented with the following dialog.</p>
+<p><img src="https://theevilbit.github.io/images/beyond/beyond_0034_0.png" alt="TCC Prompt"></p>
+<p>Although it&rsquo;s easier to obtain than a SIP bypass exploit, it can be still a massive limitation.</p>
+<p>In summary, location which will require root and some sort of SIP bypass exploit:</p>
+<pre tabindex="0"><code>/Library/Apple/usr/libexec/finish_demo_restore
+/private/var/install/shutdown_installer_tasks
+/private/var/install/deferred_install
+</code></pre><p>Locations which will require root access and TCC permissions:</p>
+<pre tabindex="0"><code>/etc/rc.server
+/etc/rc.cdrom
+/etc/rc.netboot
+</code></pre>
+  </article>
+</section>
+
+  
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2024
+     Csaba Fitzl 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

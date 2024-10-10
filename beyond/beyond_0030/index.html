@@ -13,21 +13,23 @@
 
 
 <meta name="author" content="Csaba Fitzl">
-<meta name="description" content="This is part 30 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-I was watching an old BSidesLuxemburg 2019 talk by Aaron Jewitt, called &ldquo;Threat Hunting On Linux And Mac With Auditbeat System Module&rdquo;, it&rsquo;s up on YouTube. Aaron mentioned in one of the slides that you can persist using man.conf files. It looked really odd, I tried to quickly Google it, but haven’t found anything about it.">
+<meta name="description" content="
+This is part 30 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+
+I was watching an old BSidesLuxemburg 2019 talk by Aaron Jewitt, called &ldquo;Threat Hunting On Linux And Mac With Auditbeat System Module&rdquo;, it&rsquo;s up on YouTube. Aaron mentioned in one of the slides that you can persist using man.conf files. It looked really odd, I tried to quickly Google it, but haven’t found anything about it. So I took a look at the configuration file, and indeed, it turns out you can persist via man’s configuration file, man.conf, which can be found at /private/etc/man.conf.">
 <meta name="keywords" content="">
 
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 30 - The man config file - man.conf">
-  <meta name="twitter:description" content="This is part 30 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-I was watching an old BSidesLuxemburg 2019 talk by Aaron Jewitt, called “Threat Hunting On Linux And Mac With Auditbeat System Module”, it’s up on YouTube. Aaron mentioned in one of the slides that you can persist using man.conf files. It looked really odd, I tried to quickly Google it, but haven’t found anything about it.">
+  <meta name="twitter:description" content=" This is part 30 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+I was watching an old BSidesLuxemburg 2019 talk by Aaron Jewitt, called “Threat Hunting On Linux And Mac With Auditbeat System Module”, it’s up on YouTube. Aaron mentioned in one of the slides that you can persist using man.conf files. It looked really odd, I tried to quickly Google it, but haven’t found anything about it. So I took a look at the configuration file, and indeed, it turns out you can persist via man’s configuration file, man.conf, which can be found at /private/etc/man.conf.">
 
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0030/">
   <meta property="og:site_name" content="theevilbit blog">
   <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 30 - The man config file - man.conf">
-  <meta property="og:description" content="This is part 30 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-I was watching an old BSidesLuxemburg 2019 talk by Aaron Jewitt, called “Threat Hunting On Linux And Mac With Auditbeat System Module”, it’s up on YouTube. Aaron mentioned in one of the slides that you can persist using man.conf files. It looked really odd, I tried to quickly Google it, but haven’t found anything about it.">
+  <meta property="og:description" content=" This is part 30 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+I was watching an old BSidesLuxemburg 2019 talk by Aaron Jewitt, called “Threat Hunting On Linux And Mac With Auditbeat System Module”, it’s up on YouTube. Aaron mentioned in one of the slides that you can persist using man.conf files. It looked really odd, I tried to quickly Google it, but haven’t found anything about it. So I took a look at the configuration file, and indeed, it turns out you can persist via man’s configuration file, man.conf, which can be found at /private/etc/man.conf.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="beyond">
@@ -232,9 +234,6 @@ touch /tmp/manconf
 
 
   
-  
-
-
 
   
 

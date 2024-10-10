@@ -13,7 +13,7 @@
       <link>https://theevilbit.github.io/posts/gatekeeper_not_a_bypass/</link>
       <pubDate>Tue, 29 Jun 2021 00:00:00 +0000</pubDate>
       <guid>https://theevilbit.github.io/posts/gatekeeper_not_a_bypass/</guid>
-      <description>This post is about two techniques that can be useful for someone to evade GateKeeper in a red team engagement or pentest. According to Apple these are not considered bypasses, and everything works as expected.&#xA;mmap Link to heading Part of GateKeeper is implemented on macOS in the Quarantine.kext kernel extension. It uses the MAC policy framework to insert hooks on the system on various points. These functions are named as hook*.</description>
+      <description>&lt;p&gt;This post is about two techniques that can be useful for someone to evade GateKeeper in a red team engagement or pentest. According to Apple these are not considered bypasses, and everything works as expected.&lt;/p&gt;&#xA;&lt;h2 id=&#34;mmap&#34;&gt;&#xA;  mmap&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#mmap&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;Part of GateKeeper is implemented on macOS in the &lt;code&gt;Quarantine.kext&lt;/code&gt;  kernel extension. It uses the MAC policy framework to insert hooks on the system on various points. These functions are named as hook*. Let&amp;rsquo;s take a look on what is implemented.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

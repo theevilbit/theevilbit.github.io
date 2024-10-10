@@ -13,7 +13,7 @@
       <link>https://theevilbit.github.io/posts/kernel_debugging_with_sip/</link>
       <pubDate>Tue, 12 May 2020 00:00:00 +0000</pubDate>
       <guid>https://theevilbit.github.io/posts/kernel_debugging_with_sip/</guid>
-      <description>As security researchers, we often find ourselves needing to look deep into various kernels to fully understand our target and accomplish our goals. Doing so on the Windows platform is no mystery, as there have been countless well-written posts about kernel debugging setups. For macOS, however, the situation is slightly different.&#xA;There are many great posts describing how to set up kernel debugging between two machines, but all of them suggest that SIP (System Integrity Protection) should be disabled for kernel debugging.</description>
+      <description>&lt;p&gt;As security researchers, we often find ourselves needing to look deep into various kernels to fully understand our target and accomplish our goals. Doing so on the Windows platform is no mystery, as there have been countless well-written posts about kernel debugging setups. For macOS, however, the situation is slightly different.&lt;/p&gt;&#xA;&lt;p&gt;There are many great posts describing how to set up kernel debugging between two machines, but all of them suggest that SIP (System Integrity Protection) should be disabled for kernel debugging. This creates a problem if we want to investigate the inner workings of macOS’s security mechanisms, since turning off SIP will also turn off most of the foundational security features of the operating system.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

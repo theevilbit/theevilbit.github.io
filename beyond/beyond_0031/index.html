@@ -13,21 +13,23 @@
 
 
 <meta name="author" content="Csaba Fitzl">
-<meta name="description" content="This is part 31 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-macOS implements the OpenBSM audit framework created by McAfee, which allows someone to audit system events, like login, file access, etc… This has been part of the system for very long time. Auditing has several components, the main one being the kernel, which handles all the events.">
+<meta name="description" content="
+This is part 31 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+
+macOS implements the OpenBSM audit framework created by McAfee, which allows someone to audit system events, like login, file access, etc… This has been part of the system for very long time. Auditing has several components, the main one being the kernel, which handles all the events. The main user mode process is auditd, which is mainly responsible for logging. It’s a huge framework, detailed very well by Jonathan Levin in his *OS Internal Part 3 book. I suggest reading that part, but you can also find some information here:">
 <meta name="keywords" content="">
 
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 31 - BSM audit framework">
-  <meta name="twitter:description" content="This is part 31 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-macOS implements the OpenBSM audit framework created by McAfee, which allows someone to audit system events, like login, file access, etc… This has been part of the system for very long time. Auditing has several components, the main one being the kernel, which handles all the events.">
+  <meta name="twitter:description" content=" This is part 31 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+macOS implements the OpenBSM audit framework created by McAfee, which allows someone to audit system events, like login, file access, etc… This has been part of the system for very long time. Auditing has several components, the main one being the kernel, which handles all the events. The main user mode process is auditd, which is mainly responsible for logging. It’s a huge framework, detailed very well by Jonathan Levin in his *OS Internal Part 3 book. I suggest reading that part, but you can also find some information here:">
 
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0031/">
   <meta property="og:site_name" content="theevilbit blog">
   <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 31 - BSM audit framework">
-  <meta property="og:description" content="This is part 31 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-macOS implements the OpenBSM audit framework created by McAfee, which allows someone to audit system events, like login, file access, etc… This has been part of the system for very long time. Auditing has several components, the main one being the kernel, which handles all the events.">
+  <meta property="og:description" content=" This is part 31 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+macOS implements the OpenBSM audit framework created by McAfee, which allows someone to audit system events, like login, file access, etc… This has been part of the system for very long time. Auditing has several components, the main one being the kernel, which handles all the events. The main user mode process is auditd, which is mainly responsible for logging. It’s a huge framework, detailed very well by Jonathan Levin in his *OS Internal Part 3 book. I suggest reading that part, but you can also find some information here:">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="beyond">
@@ -228,9 +230,6 @@ total 48
 
 
   
-  
-
-
 
   
 

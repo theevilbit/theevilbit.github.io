@@ -13,20 +13,22 @@
 
 
 <meta name="author" content="Csaba Fitzl">
-<meta name="description" content="UPDATE 2023.10.10.: After chatting with Thijs Alkemade, @xnyhps, updated the XPC part of the post as I originally misunderstood Apple&rsquo;s intent.
+<meta name="description" content="
+UPDATE 2023.10.10.: After chatting with Thijs Alkemade, @xnyhps, updated the XPC part of the post as I originally misunderstood Apple&rsquo;s intent.
+
 Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.">
 <meta name="keywords" content="">
 
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Launch and Environment Constraints Deep Dive">
-  <meta name="twitter:description" content="UPDATE 2023.10.10.: After chatting with Thijs Alkemade, @xnyhps, updated the XPC part of the post as I originally misunderstood Apple’s intent.
+  <meta name="twitter:description" content=" UPDATE 2023.10.10.: After chatting with Thijs Alkemade, @xnyhps, updated the XPC part of the post as I originally misunderstood Apple’s intent.
 Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let’s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.">
 
 <meta property="og:url" content="https://theevilbit.github.io/posts/launch_constraints_deep_dive/">
   <meta property="og:site_name" content="theevilbit blog">
   <meta property="og:title" content="Launch and Environment Constraints Deep Dive">
-  <meta property="og:description" content="UPDATE 2023.10.10.: After chatting with Thijs Alkemade, @xnyhps, updated the XPC part of the post as I originally misunderstood Apple’s intent.
+  <meta property="og:description" content=" UPDATE 2023.10.10.: After chatting with Thijs Alkemade, @xnyhps, updated the XPC part of the post as I originally misunderstood Apple’s intent.
 Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let’s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
@@ -603,9 +605,6 @@ kConstraintCategory18_Parent
 
 
   
-  
-
-
 
   
 

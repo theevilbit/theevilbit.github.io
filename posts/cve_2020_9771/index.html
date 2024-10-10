@@ -13,21 +13,29 @@
 
 
 <meta name="author" content="Csaba Fitzl">
-<meta name="description" content="TL;DR Link to heading We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc&hellip;) of every user on the system, including those protected by Apple&rsquo;s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
-This could be achieved with a single command, for example: mount_apfs -o noowners -s com.">
+<meta name="description" content="
+  TL;DR
+  
+    
+    Link to heading
+  
+
+We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc&hellip;) of every user on the system, including those protected by Apple&rsquo;s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
+This could be achieved with a single command, for example:
+mount_apfs -o noowners -s com.apple.TimeMachine.2019-11-17-141812.local /System/Volumes/Data /tmp/snap">
 <meta name="keywords" content="">
 
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="CVE-2020-9771 - mount_apfs TCC bypass and privilege escalation">
-  <meta name="twitter:description" content="TL;DR Link to heading We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc…) of every user on the system, including those protected by Apple’s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
-This could be achieved with a single command, for example: mount_apfs -o noowners -s com.">
+  <meta name="twitter:description" content=" TL;DR Link to heading We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc…) of every user on the system, including those protected by Apple’s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
+This could be achieved with a single command, for example: mount_apfs -o noowners -s com.apple.TimeMachine.2019-11-17-141812.local /System/Volumes/Data /tmp/snap">
 
 <meta property="og:url" content="https://theevilbit.github.io/posts/cve_2020_9771/">
   <meta property="og:site_name" content="theevilbit blog">
   <meta property="og:title" content="CVE-2020-9771 - mount_apfs TCC bypass and privilege escalation">
-  <meta property="og:description" content="TL;DR Link to heading We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc…) of every user on the system, including those protected by Apple’s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
-This could be achieved with a single command, for example: mount_apfs -o noowners -s com.">
+  <meta property="og:description" content=" TL;DR Link to heading We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc…) of every user on the system, including those protected by Apple’s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
+This could be achieved with a single command, for example: mount_apfs -o noowners -s com.apple.TimeMachine.2019-11-17-141812.local /System/Volumes/Data /tmp/snap">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -395,9 +403,6 @@ total 4704
 
 
   
-  
-
-
 
   
 

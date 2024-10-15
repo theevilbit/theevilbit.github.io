@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Beyond the good ol&#39; LaunchAgents - 35 - Persist through the NVRAM - The &#39;apple-trusted-trampoline&#39; · theevilbit blog
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Csaba Fitzl">
+<meta name="description" content="
+This is part 35 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+
+TL;DR - This is a practically completely useless persistence, as this can be only set and enabled when SIP is actually disabled. On the other hand I still find it a pretty amazing way to persist, as we can do that by putting a binary into NVRAM and get that executed. Here follows the details of the discovery.">
+<meta name="keywords" content="">
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 35 - Persist through the NVRAM - The &#39;apple-trusted-trampoline&#39;">
+  <meta name="twitter:description" content=" This is part 35 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+TL;DR - This is a practically completely useless persistence, as this can be only set and enabled when SIP is actually disabled. On the other hand I still find it a pretty amazing way to persist, as we can do that by putting a binary into NVRAM and get that executed. Here follows the details of the discovery.">
+
+<meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0035/">
+  <meta property="og:site_name" content="theevilbit blog">
+  <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 35 - Persist through the NVRAM - The &#39;apple-trusted-trampoline&#39;">
+  <meta property="og:description" content=" This is part 35 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+TL;DR - This is a practically completely useless persistence, as this can be only set and enabled when SIP is actually disabled. On the other hand I still find it a pretty amazing way to persist, as we can do that by putting a binary into NVRAM and get that executed. Here follows the details of the discovery.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="beyond">
+    <meta property="article:published_time" content="2024-10-15T00:00:00+00:00">
+    <meta property="article:modified_time" content="2024-10-15T00:00:00+00:00">
+    <meta property="article:tag" content="Macos">
+    <meta property="article:tag" content="Persistence">
+    <meta property="article:tag" content="Beyond">
+
+
+
+
+<link rel="canonical" href="https://theevilbit.github.io/beyond/beyond_0035/">
+
+
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://theevilbit.github.io/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.38c4552ac40f9ae3408bad40358f654ebd8804412fe74ed56f2d6c8a7af82dd3.css" integrity="sha256-OMRVKsQPmuNAi61ANY9lTr2IBEEv507Vby1sinr4LdM=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
+
+<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
+<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+<body class="preload-transitions colorscheme-light">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="https://theevilbit.github.io/">
+      theevilbit blog
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://theevilbit.github.io/posts/">Posts</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://theevilbit.github.io/shield/">Shield.app</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://theevilbit.github.io/tags/">Tags</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://theevilbit.github.io/about/">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container page">
+  <article>
+    <header>
+      <h1 class="title">
+        <a class="title-link" href="https://theevilbit.github.io/beyond/beyond_0035/">
+          Beyond the good ol&#39; LaunchAgents - 35 - Persist through the NVRAM - The &#39;apple-trusted-trampoline&#39;
+        </a>
+      </h1>
+    </header>
+
+    <blockquote>
+<p>This is part 35 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p>
+</blockquote>
+<p>TL;DR - This is a practically completely useless persistence, as this can be only set and enabled when SIP is actually disabled. On the other hand I still find it a pretty amazing way to persist, as we can do that by putting a binary into NVRAM and get that executed. Here follows the details of the discovery.</p>
+<p>When I recently wrote about the launchd boot task persistence, I kept reading through the massive list of various boot tasks. Eventually one caught my attention.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>rc.trampoline<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>Program<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/System/Library/CoreServices/rc.trampoline<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>PerformAfterUserspaceReboot<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>AllowCrash<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+</span></span></code></pre></div><p>It&rsquo;s called <code>rc.trampoline</code>. I&rsquo;m somewhat familiar with the other <code>rc</code> options, so I thought that this would be something similar, but also more unique as the file sits in a SIP protected location. I couldn&rsquo;t find any information about what this could be, so I loaded the binary to IDA and after decompilation, and some editing I finally arrived to the following (almost) fully reversed code. You can actually compile this if you wish.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objective-c" data-lang="objective-c"><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;objc/runtime.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;Foundation/Foundation.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;IOKit/IOKitLib.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;spawn.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;unistd.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdlib.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;err.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;sys/wait.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;sys/stat.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">typedef</span> uint32_t csr_config_t;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#099">#define CSR_ALLOW_UNRESTRICTED_FS (1 &lt;&lt; 1)
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">extern</span> <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">csr_check</span>(csr_config_t);
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">extern</span> <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">csops</span>(pid_t pid, <span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#078;font-weight:bold">int</span>  ops, <span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span> useraddr, size_t usersize);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">handle_error</span>() {
+</span></span><span style="display:flex;"><span>	printf(<span style="color:#c30">&#34;Something went wrong, I&#39;m lazy to implement an error for each case now...</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>	exit(<span style="color:#f60">1</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">main</span>() {
+</span></span><span style="display:flex;"><span>    io_registry_entry_t ioEntry;
+</span></span><span style="display:flex;"><span>    io_object_t ioObject;
+</span></span><span style="display:flex;"><span>    CFMutableDictionaryRef ioProperties <span style="color:#555">=</span> <span style="color:#366">NULL</span>;
+</span></span><span style="display:flex;"><span>    mach_port_t mainPort <span style="color:#555">=</span> <span style="color:#f60">0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (IOMasterPort(bootstrap_port, <span style="color:#555">&amp;</span>mainPort) <span style="color:#555">!=</span> KERN_SUCCESS) {
+</span></span><span style="display:flex;"><span>        handle_error();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    ioEntry <span style="color:#555">=</span> IORegistryEntryFromPath(mainPort, <span style="color:#c30">&#34;IODeviceTree:/options&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span>ioEntry) {
+</span></span><span style="display:flex;"><span>        handle_error();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    ioObject <span style="color:#555">=</span> ioEntry;
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (IORegistryEntryCreateCFProperties(ioEntry, <span style="color:#555">&amp;</span>ioProperties, <span style="color:#366">NULL</span>, <span style="color:#f60">0</span>) <span style="color:#555">!=</span> KERN_SUCCESS) {
+</span></span><span style="display:flex;"><span>        handle_error();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    IOObjectRelease(ioObject);
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span>ioProperties) {
+</span></span><span style="display:flex;"><span>        handle_error();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">// Retrieve &#34;apple-trusted-trampoline&#34; property
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    CFStringRef trampolineKey <span style="color:#555">=</span> CFSTR(<span style="color:#c30">&#34;apple-trusted-trampoline&#34;</span>);
+</span></span><span style="display:flex;"><span>    NSString <span style="color:#555">*</span>trampolineValue <span style="color:#555">=</span> CFDictionaryGetValue(ioProperties, trampolineKey);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span>trampolineValue <span style="color:#555">||</span> <span style="color:#555">!</span>[trampolineValue length]) {
+</span></span><span style="display:flex;"><span>        handle_error();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">// Generate file path in temporary directory
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    NSString <span style="color:#555">*</span>tempDir <span style="color:#555">=</span> NSTemporaryDirectory();
+</span></span><span style="display:flex;"><span>    NSURL <span style="color:#555">*</span>fileURL <span style="color:#555">=</span> [NSURL <span style="color:#99f">fileURLWithPath</span>:tempDir];
+</span></span><span style="display:flex;"><span>    NSURL <span style="color:#555">*</span>finalURL <span style="color:#555">=</span> [fileURL <span style="color:#99f">URLByAppendingPathComponent</span>:<span style="color:#c30">@&#34;apple-trusted-trampoline.bin&#34;</span>];
+</span></span><span style="display:flex;"><span>    NSString <span style="color:#555">*</span>filePath <span style="color:#555">=</span> [finalURL path];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">// Write trampoline to file
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    <span style="color:#078;font-weight:bold">BOOL</span> writeSuccess <span style="color:#555">=</span> [trampolineValue <span style="color:#99f">writeToFile</span>:filePath <span style="color:#99f">atomically</span>:<span style="color:#366">NO</span>];
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span>writeSuccess) {
+</span></span><span style="display:flex;"><span>        <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>filePathCStr <span style="color:#555">=</span> [filePath UTF8String];
+</span></span><span style="display:flex;"><span>        errx(<span style="color:#f60">1</span>, <span style="color:#c30">&#34;Failed to write binary file to %s, it must be writable.&#34;</span>, filePathCStr);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    chmod([filePath UTF8String], <span style="color:#f60">0700</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">// Prepare to spawn a new process
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    pid_t childPid <span style="color:#555">=</span> <span style="color:#f60">0</span>;
+</span></span><span style="display:flex;"><span>    posix_spawn_file_actions_t fileActions;
+</span></span><span style="display:flex;"><span>    posix_spawnattr_t spawnAttr;
+</span></span><span style="display:flex;"><span>    posix_spawn_file_actions_init(<span style="color:#555">&amp;</span>fileActions);
+</span></span><span style="display:flex;"><span>    posix_spawnattr_init(<span style="color:#555">&amp;</span>spawnAttr);
+</span></span><span style="display:flex;"><span>    posix_spawnattr_setflags(<span style="color:#555">&amp;</span>spawnAttr, POSIX_SPAWN_START_SUSPENDED);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>argv[] <span style="color:#555">=</span> {<span style="color:#c30">&#34;apple-trusted-trampoline.bin&#34;</span>, <span style="color:#366">NULL</span>};
+</span></span><span style="display:flex;"><span>    <span style="color:#078;font-weight:bold">int</span> spawnResult <span style="color:#555">=</span> posix_spawn(<span style="color:#555">&amp;</span>childPid, [filePath UTF8String], <span style="color:#555">&amp;</span>fileActions, <span style="color:#555">&amp;</span>spawnAttr, (<span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span><span style="color:#069;font-weight:bold">const</span> <span style="color:#555">*</span>)argv, <span style="color:#366">NULL</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (spawnResult <span style="color:#555">!=</span> <span style="color:#f60">0</span>) {
+</span></span><span style="display:flex;"><span>        handle_error();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">// Perform checks on the spawned process
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    <span style="color:#078;font-weight:bold">int</span> csopsFlags <span style="color:#555">=</span> <span style="color:#f60">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#078;font-weight:bold">int</span> checkResult <span style="color:#555">=</span> csops(childPid, <span style="color:#f60">0</span>, <span style="color:#555">&amp;</span>csopsFlags, <span style="color:#069;font-weight:bold">sizeof</span>(csopsFlags));
+</span></span><span style="display:flex;"><span>    <span style="color:#078;font-weight:bold">int</span> csrCheckResult <span style="color:#555">=</span> csr_check(CSR_ALLOW_UNRESTRICTED_FS);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">// Clean up and terminate child process if necessary
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    NSString <span style="color:#555">*</span>unlinkPath <span style="color:#555">=</span> [finalURL path];
+</span></span><span style="display:flex;"><span>    unlink([unlinkPath UTF8String]);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (csrCheckResult <span style="color:#555">!=</span> <span style="color:#f60">0</span> <span style="color:#555">&amp;&amp;</span> (checkResult <span style="color:#555">!=</span> <span style="color:#f60">0</span> <span style="color:#555">||</span> (csopsFlags <span style="color:#555">&amp;</span> <span style="color:#f60">0x4000000</span>) <span style="color:#555">==</span> <span style="color:#f60">0</span>)) {
+</span></span><span style="display:flex;"><span>        fprintf(stderr, <span style="color:#c30">&#34;Killing child, it did not pass the platform check.</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>        kill(childPid, SIGKILL);
+</span></span><span style="display:flex;"><span>        exit(<span style="color:#f60">0</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">// Resume child process and wait for it to finish
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    kill(childPid, SIGCONT);
+</span></span><span style="display:flex;"><span>    <span style="color:#078;font-weight:bold">int</span> status <span style="color:#555">=</span> <span style="color:#f60">0</span>;
+</span></span><span style="display:flex;"><span>    waitpid(childPid, <span style="color:#555">&amp;</span>status, <span style="color:#f60">0</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span> <span style="color:#f60">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Let me summarize what this does:</p>
+<ol>
+<li>The binary will first lookup the IO registry entry <code>IODeviceTree:/options</code> (which as I learned later is the NVRAM).</li>
+<li>Once found it will look for the key <code>apple-trusted-trampoline</code></li>
+<li>If found it will read the data held by this key and write it out to the temporary directory, under the name <code>apple-trusted-trampoline.bin</code></li>
+<li>Next it will execute the binary in a SUSPENDED state and then using the process&rsquo; code signature it checks if it&rsquo;s a platform binary or not.</li>
+<li>If it is a platform binary it will let it run, otherwise it will terminate it.</li>
+<li>The file is also deleted in the process.</li>
+</ol>
+<p>I honestly found this pretty dope. By setting an NVRAM variable you can get the system execute code if it&rsquo;s an Apple signed binary. Interestingly, the key <code>apple-trusted-trampoline</code> doesn&rsquo;t exists by default.</p>
+<p>So I created a small tool, which will read a file and write it to the IO Registry. I started to play around how to trigger the actual execution, and also start reversing <code>launchd</code> as it didn&rsquo;t want to work at first.</p>
+<p>Turned out that the <code>rc.trampoline</code> boot arg has to be set in order to run the <code>rc.trampoline</code> boot task. <code>launchd</code> will check quite a few boot-args when it starts up (there is one for most of the items in the boot task list), including the one we need.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>flag_trampoline <span style="color:#555">=</span> <span style="color:#c0f">sub_100041188</span>(bootargs, (<span style="color:#069;font-weight:bold">__int64</span>)<span style="color:#c30">&#34;rc.trampoline=&#34;</span>) <span style="color:#555">!=</span> <span style="color:#f60">0</span>;
+</span></span></code></pre></div><p>It will set a flag if the relevant boot arg is found and later it will check that flag and if set, it will run the <code>rc.trampoline</code> boot task.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">if</span> ( flag_trampoline )
+</span></span><span style="display:flex;"><span>      v50 <span style="color:#555">=</span> <span style="color:#c0f">sub_100042D68</span>(<span style="color:#c30">&#34;rc.trampoline&#34;</span>, <span style="color:#f60">0LL</span>);
+</span></span></code></pre></div><p>This is all nice, but there are two issues:</p>
+<ol>
+<li>We can&rsquo;t set the boot-args in NVRAM is SIP is enabled (unless we find a bypass).</li>
+<li>The function which starts this boot task will only run if SIP is disabled (which is verified using <code>csr_check</code>).</li>
+</ol>
+<p>Thus a SIP bypass is not enough, we really need to disable SIP in order for this to work. I told you it&rsquo;s useless. Still I wanted to see how this all plays out, so I disabled SIP, set the <code>boot-args</code> and also set <code>apple-trusted-trampoline</code>. The trick is that the boot task can be blocking, launchd will not continue until it returns, thus if we execute a shell, or perl, or something similar, we will be greeted with a black screen for awful lot of time. So we need to run something that actually returns. Also it has to be an Apple binary. To further complicate things, I found that you can only put about 390kB data in this variable.</p>
+<p>When we finally execute a binary, we can find that in the logs:</p>
+<pre tabindex="0"><code>2024-10-10 22:46:37.628685+0200 0x4aa      Default     0x0                  0      0    kernel: Boot args: rc.trampoline=1
+2024-10-10 22:52:32.252685+0200 0x2a0      Default     0x0                  0      0    kernel: [System Event] [78064438] [INFO] [Subsystem: launchd] [Event: rc.trampoline] Doing boot task
+</code></pre><p>You might wonder about LaunchConstraints and how I could run <code>perl</code> or <code>sh</code> outside their locations. This is not in play here as SIP will be disabled, so we can run any binary.</p>
+<p>I will leave it up to the reader to find out how to run your own stuff with these limitations.</p>
+<p>That&rsquo;s really it. Totally useless, but still very interesting. The boot task was introduced in macOS Mojave, and I booted up every OS and looked for the real <code>apple-trusted-trampoline</code> but couldn&rsquo;t find it on any of the OSes. I truly wonder why it is there and what it is used for &ldquo;normally&rdquo;. If anyone finds a copy of this binary please let me know :)</p>
+<p>All related code to this research can be found here:</p>
+<p><a href="https://gist.github.com/theevilbit/f84f4721acf83b80ef65f1d4e87ce1a8"  class="external-link" target="_blank" rel="noopener">GIST - rc.trampoline research</a></p>
+<p>#blog</p>
+
+  </article>
+</section>
+
+  
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2024
+     Csaba Fitzl 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

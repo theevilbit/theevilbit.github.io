@@ -6,8 +6,15 @@
     <description>Recent content in Macos on theevilbit blog</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 10 Oct 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 15 Oct 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://theevilbit.github.io/tags/macos/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the good ol&#39; LaunchAgents - 35 - Persist through the NVRAM - The &#39;apple-trusted-trampoline&#39;</title>
+      <link>https://theevilbit.github.io/beyond/beyond_0035/</link>
+      <pubDate>Tue, 15 Oct 2024 00:00:00 +0000</pubDate>
+      <guid>https://theevilbit.github.io/beyond/beyond_0035/</guid>
+      <description>&lt;blockquote&gt;&#xA;&lt;p&gt;This is part 35 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the &lt;a href=&#34;https://theevilbit.github.io/beyond/beyond_intro/&#34;  class=&#34;external-link&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;introduction&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;TL;DR - This is a practically completely useless persistence, as this can be only set and enabled when SIP is actually disabled. On the other hand I still find it a pretty amazing way to persist, as we can do that by putting a binary into NVRAM and get that executed. Here follows the details of the discovery.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 34 - launchd boot tasks</title>
       <link>https://theevilbit.github.io/beyond/beyond_0034/</link>

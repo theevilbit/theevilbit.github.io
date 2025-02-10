@@ -28,7 +28,7 @@
   
 
 This is the third post in my series which is trying to help Apple developers to avoid typical insecure coding practices. This one will highlight why XPC client hardening and proper verification is extremely important when we use XPC messaging on macOS between clients that run as a normal user and services that run as root. If this validation is not right, it opens up the possibility for an attacker to run privileged commands or worse case, achieve full privilege escalation on the system.">
-<meta name="keywords" content="">
+<meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
 
 
 
@@ -72,6 +72,12 @@ This is the third post in my series which is trying to help Apple developers to 
 
 
 
+  
+    
+    
+    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
 
 
  
@@ -102,7 +108,9 @@ This is the third post in my series which is trying to help Apple developers to 
 
 
 
-<body class="preload-transitions colorscheme-light">
+
+
+<body class="preload-transitions colorscheme-auto">
   
 <div class="float-container">
     <a id="dark-mode-toggle" class="colorscheme-toggle">
@@ -464,6 +472,8 @@ com.apple.security.get-task-allow
     <footer class="footer">
   <section class="container">
     ©
+    
+      2019 -
     
     2025
      Csaba Fitzl 

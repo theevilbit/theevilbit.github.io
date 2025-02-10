@@ -15,7 +15,7 @@
 <meta name="author" content="Csaba Fitzl">
 <meta name="description" content="As security researchers, we often find ourselves needing to look deep into various kernels to fully understand our target and accomplish our goals. Doing so on the Windows platform is no mystery, as there have been countless well-written posts about kernel debugging setups. For macOS, however, the situation is slightly different.
 There are many great posts describing how to set up kernel debugging between two machines, but all of them suggest that SIP (System Integrity Protection) should be disabled for kernel debugging. This creates a problem if we want to investigate the inner workings of macOS’s security mechanisms, since turning off SIP will also turn off most of the foundational security features of the operating system.">
-<meta name="keywords" content="">
+<meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
 
 
 
@@ -58,6 +58,12 @@ There are many great posts describing how to set up kernel debugging between two
 
 
 
+  
+    
+    
+    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
 
 
  
@@ -88,7 +94,9 @@ There are many great posts describing how to set up kernel debugging between two
 
 
 
-<body class="preload-transitions colorscheme-light">
+
+
+<body class="preload-transitions colorscheme-auto">
   
 <div class="float-container">
     <a id="dark-mode-toggle" class="colorscheme-toggle">
@@ -225,6 +233,8 @@ There are many great posts describing how to set up kernel debugging between two
     <footer class="footer">
   <section class="container">
     ©
+    
+      2019 -
     
     2025
      Csaba Fitzl 

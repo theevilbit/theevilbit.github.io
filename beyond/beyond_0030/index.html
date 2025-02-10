@@ -16,7 +16,7 @@
 <meta name="description" content="
 This is part 30 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
 I was watching an old BSidesLuxemburg 2019 talk by Aaron Jewitt, called &ldquo;Threat Hunting On Linux And Mac With Auditbeat System Module&rdquo;, it&rsquo;s up on YouTube. Aaron mentioned in one of the slides that you can persist using man.conf files. It looked really odd, I tried to quickly Google it, but haven’t found anything about it. So I took a look at the configuration file, and indeed, it turns out you can persist via man’s configuration file, man.conf, which can be found at /private/etc/man.conf.">
-<meta name="keywords" content="">
+<meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
 
 
 
@@ -59,6 +59,12 @@ I was watching an old BSidesLuxemburg 2019 talk by Aaron Jewitt, called “Threa
 
 
 
+  
+    
+    
+    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
 
 
  
@@ -89,7 +95,9 @@ I was watching an old BSidesLuxemburg 2019 talk by Aaron Jewitt, called “Threa
 
 
 
-<body class="preload-transitions colorscheme-light">
+
+
+<body class="preload-transitions colorscheme-auto">
   
 <div class="float-container">
     <a id="dark-mode-toggle" class="colorscheme-toggle">
@@ -208,6 +216,8 @@ touch /tmp/manconf
     <footer class="footer">
   <section class="container">
     ©
+    
+      2019 -
     
     2025
      Csaba Fitzl 

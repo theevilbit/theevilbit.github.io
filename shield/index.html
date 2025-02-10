@@ -29,7 +29,7 @@ In this post I would like to tell the story of the Shield.app development and al
   
 
 In the past 2 years I started to dig into macOS security research, and along the way it became pretty clear that beyond memory corruption issues the alpha and omega of macOS exploits is to run code in the context of other applications. The reason for this lies within the security model of macOS (and in fact *OS as well). Each application has a list of entitlements that grants the application various rights. If we take only 3rd party applications it&rsquo;s mostly around what it can do if it&rsquo;s sandboxed (e.g.: access the network) or if not sandboxed, which privacy (TCC) protected areas can it access, like camera, microphone, messages, etc&hellip; In case of TCC, if we don&rsquo;t hold these entitlements, we can&rsquo;t access those resources or location even if we run as root.">
-<meta name="keywords" content="">
+<meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
 
 
 
@@ -68,6 +68,12 @@ Motivation for limiting process injections Link to heading In the past 2 years I
 
 
 
+  
+    
+    
+    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
 
 
  
@@ -98,7 +104,9 @@ Motivation for limiting process injections Link to heading In the past 2 years I
 
 
 
-<body class="preload-transitions colorscheme-light">
+
+
+<body class="preload-transitions colorscheme-auto">
   
 <div class="float-container">
     <a id="dark-mode-toggle" class="colorscheme-toggle">
@@ -291,6 +299,8 @@ Motivation for limiting process injections Link to heading In the past 2 years I
     <footer class="footer">
   <section class="container">
     ©
+    
+      2019 -
     
     2025
      Csaba Fitzl 

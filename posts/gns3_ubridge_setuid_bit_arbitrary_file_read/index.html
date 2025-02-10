@@ -16,7 +16,7 @@
 <meta name="description" content="A couple of weeks ago, I had the idea of scanning my Mac for files that has the SUID bit set, I wanted to see if there is anything interesting showing up. You can do it this way:
 /usr/bin/sudo find / -perm -4000 -exec /bin/ls -ldb {} \; &gt; suidfilelist
 There was one item that caught my attention, and that was a file called ubridge inside GNS3. I used to be a network guy, and GNS3 is a great tool to emulate real network gear, practice configuration, etc.. I highly recommend for anyone who learns networking. This was the file:">
-<meta name="keywords" content="">
+<meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
 
 
 
@@ -58,6 +58,12 @@ There was one item that caught my attention, and that was a file called ubridge 
 
 
 
+  
+    
+    
+    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
 
 
  
@@ -88,7 +94,9 @@ There was one item that caught my attention, and that was a file called ubridge 
 
 
 
-<body class="preload-transitions colorscheme-light">
+
+
+<body class="preload-transitions colorscheme-auto">
   
 <div class="float-container">
     <a id="dark-mode-toggle" class="colorscheme-toggle">
@@ -278,6 +286,8 @@ That exploit is still available at:
     <footer class="footer">
   <section class="container">
     ©
+    
+      2019 -
     
     2025
      Csaba Fitzl 

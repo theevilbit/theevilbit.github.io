@@ -29,7 +29,7 @@ On macOS 10.15.2 Apple introduced the com.apple.private.security.clear-library-v
   
 
 With the release of Big Sur, I noticed that many of the system binaries have a new entitlement, which I didn&rsquo;t see before, and that is com.apple.private.security.clear-library-validation (later it turned out that it was introduced earlier, but I didn&rsquo;t know about it that time). These applications possessed the com.apple.security.cs.disable-library-validation before, so it seemed that this is being replaced with a new one. The name suggest similarity, and testing it also confirmed, that these binaries can still load third party plugins signed by non Apple developers. This means that these entitlements have the same impact.">
-<meta name="keywords" content="">
+<meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
 
 
 
@@ -73,6 +73,12 @@ Intro Link to heading With the release of Big Sur, I noticed that many of the sy
 
 
 
+  
+    
+    
+    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
 
 
  
@@ -103,7 +109,9 @@ Intro Link to heading With the release of Big Sur, I noticed that many of the sy
 
 
 
-<body class="preload-transitions colorscheme-light">
+
+
+<body class="preload-transitions colorscheme-auto">
   
 <div class="float-container">
     <a id="dark-mode-toggle" class="colorscheme-toggle">
@@ -527,6 +535,8 @@ Unsatisfied Entitlements:
     <footer class="footer">
   <section class="container">
     ©
+    
+      2019 -
     
     2025
      Csaba Fitzl 

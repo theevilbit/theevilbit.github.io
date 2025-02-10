@@ -14,7 +14,7 @@
 
 <meta name="author" content="Csaba Fitzl">
 <meta name="description" content="This is the first part of a blog post series I plan about PrivilegedHelperTools that exists on macOS systems. I recently took a look on a couple of these tools, and found that it&rsquo;s very easy to make the code insecure, as there are many small pieces to it, and if one is done wrong, the helper tool will be open to abuse by anyone having a foothold on the system. Depending on the application this might be limited to certain privileged actions (setting system configurations, mounting, etc&hellip;), and in some cases it&rsquo;s more broad, and thus a full privilege escalation can be performed. Ideally only the real client application should be able to talk to the helper tool, and all other connections should be refused.">
-<meta name="keywords" content="">
+<meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
 
 
 
@@ -56,6 +56,12 @@
 
 
 
+  
+    
+    
+    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
 
 
  
@@ -86,7 +92,9 @@
 
 
 
-<body class="preload-transitions colorscheme-light">
+
+
+<body class="preload-transitions colorscheme-auto">
   
 <div class="float-container">
     <a id="dark-mode-toggle" class="colorscheme-toggle">
@@ -601,6 +609,8 @@ Part 3 - will talk about why the minimum client version is important. Date is un
     <footer class="footer">
   <section class="container">
     ©
+    
+      2019 -
     
     2025
      Csaba Fitzl 

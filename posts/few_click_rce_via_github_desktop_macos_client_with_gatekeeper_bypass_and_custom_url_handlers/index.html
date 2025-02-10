@@ -21,7 +21,7 @@
   
 
 The GitHub Desktop app doesn’t add the quarantine extended attribute to files downloaded from the web, and this along with macOS’s URL handler auto-registration feature allows an attacker to execute arbitrary, even unsigned code on a macOS system. If we don’t count the clicks required to open the GitHub App, and cloning an external repository, then this is a 2 click RCE.">
-<meta name="keywords" content="">
+<meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
 
 
 
@@ -61,6 +61,12 @@ The GitHub Desktop app doesn’t add the quarantine extended attribute to files 
 
 
 
+  
+    
+    
+    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
 
 
  
@@ -91,7 +97,9 @@ The GitHub Desktop app doesn’t add the quarantine extended attribute to files 
 
 
 
-<body class="preload-transitions colorscheme-light">
+
+
+<body class="preload-transitions colorscheme-auto">
   
 <div class="float-container">
     <a id="dark-mode-toggle" class="colorscheme-toggle">
@@ -390,6 +398,8 @@ In short upon download of the application launch services daemon (<code>lsd</cod
     <footer class="footer">
   <section class="container">
     ©
+    
+      2019 -
     
     2025
      Csaba Fitzl 

@@ -18,7 +18,7 @@ This is part 22 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&r
 This method is considered deprecated by Apple, yet it still works.
 LoginHooks and LogoutHooks have been widely documented by many people, so this post is mostly for completeness. The official, Apple documentation can be found here: Customizing Login and Logout
 LoginHooks and LogoutHooks are executed, well&hellip; at logins and logouts just as the name suggest, and they are run as root. They are set in the preferences of the  com.apple.loginwindow process, and so it&rsquo;s stored in the file /var/root/Library/Preferences/com.apple.loginwindow.plist.">
-<meta name="keywords" content="">
+<meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
 
 
 
@@ -65,6 +65,12 @@ LoginHooks and LogoutHooks are executed, well… at logins and logouts just as t
 
 
 
+  
+    
+    
+    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
 
 
  
@@ -95,7 +101,9 @@ LoginHooks and LogoutHooks are executed, well… at logins and logouts just as t
 
 
 
-<body class="preload-transitions colorscheme-light">
+
+
+<body class="preload-transitions colorscheme-auto">
   
 <div class="float-container">
     <a id="dark-mode-toggle" class="colorscheme-toggle">
@@ -190,6 +198,8 @@ sudo defaults delete com.apple.loginwindow LogoutHook
     <footer class="footer">
   <section class="container">
     ©
+    
+      2019 -
     
     2025
      Csaba Fitzl 

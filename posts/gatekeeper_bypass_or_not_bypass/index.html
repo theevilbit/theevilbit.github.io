@@ -22,7 +22,7 @@
 
 On macOS Mojave Gatekeeper only verifies executables, which are run with the open command or the user double clicks. It won’t verify files, that are executed through other means like, directly executing a binary ./myapp regardless of the quarantine attribute. If you can place a plist file inside LaunchAgents/LaunchDaemons, the command inside will also be executed. Prior to Catalina there is a way to trick users to drag &amp; drop files in the LaunchAgents folder.
 On macOS Catalina lot has changed, the most notable one regarding gatekeeper is that it will verify files when executed via classic ‘exec’ methods.">
-<meta name="keywords" content="">
+<meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
 
 
 
@@ -62,6 +62,12 @@ On macOS Catalina lot has changed, the most notable one regarding gatekeeper is 
 
 
 
+  
+    
+    
+    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
 
 
  
@@ -92,7 +98,9 @@ On macOS Catalina lot has changed, the most notable one regarding gatekeeper is 
 
 
 
-<body class="preload-transitions colorscheme-light">
+
+
+<body class="preload-transitions colorscheme-auto">
   
 <div class="float-container">
     <a id="dark-mode-toggle" class="colorscheme-toggle">
@@ -660,6 +668,8 @@ Here I will only highlight the main item involving GateKeeper. The most signific
     <footer class="footer">
   <section class="container">
     ©
+    
+      2019 -
     
     2025
      Csaba Fitzl 

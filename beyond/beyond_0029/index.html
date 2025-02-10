@@ -61,7 +61,7 @@ When doing some research on macOS I came across the following LaunchAgent: /Syst
 &lt;/dict&gt;
 &lt;/plist&gt;
 If we examine it closely we can notice that the related binary is /usr/local/bin/amstoold. This is very interesting as this file doesn&rsquo;t exists on default macOS installations. This means that if we create it, it will be started as the user upon login. As the launchd file is SIP protected, we can&rsquo;t even remove it, and even if we would, it likely would come back at the next OS update.">
-<meta name="keywords" content="">
+<meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
 
 
 
@@ -106,6 +106,12 @@ When doing some research on macOS I came across the following LaunchAgent: /Syst
 
 
 
+  
+    
+    
+    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
 
 
  
@@ -136,7 +142,9 @@ When doing some research on macOS I came across the following LaunchAgent: /Syst
 
 
 
-<body class="preload-transitions colorscheme-light">
+
+
+<body class="preload-transitions colorscheme-auto">
   
 <div class="float-container">
     <a id="dark-mode-toggle" class="colorscheme-toggle">
@@ -322,6 +330,8 @@ When doing some research on macOS I came across the following LaunchAgent: /Syst
     <footer class="footer">
   <section class="container">
     ©
+    
+      2019 -
     
     2025
      Csaba Fitzl 

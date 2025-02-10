@@ -18,7 +18,37 @@
     <lastmod>2025-02-10T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/year/2024/</loc>
-    <lastmod>2024-10-15T00:00:00+00:00</lastmod>
+    <lastmod>2024-12-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/categories/blog/</loc>
+    <lastmod>2024-12-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/tags/cve/</loc>
+    <lastmod>2024-12-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/tags/lpe/</loc>
+    <lastmod>2024-12-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/tags/macos/</loc>
+    <lastmod>2024-12-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/posts/</loc>
+    <lastmod>2024-12-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/tags/</loc>
+    <lastmod>2024-12-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/posts/macos-audit-story-part2/</loc>
+    <lastmod>2024-12-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/tags/vulnerability/</loc>
+    <lastmod>2024-12-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/year/</loc>
+    <lastmod>2024-12-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/posts/macos-audit-story-part1/</loc>
+    <lastmod>2024-11-08T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/tags/beyond/</loc>
     <lastmod>2024-10-15T00:00:00+00:00</lastmod>
@@ -32,46 +62,25 @@
     <loc>https://theevilbit.github.io/beyond/</loc>
     <lastmod>2024-10-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://theevilbit.github.io/tags/macos/</loc>
-    <lastmod>2024-10-15T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://theevilbit.github.io/tags/persistence/</loc>
     <lastmod>2024-10-15T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/categories/persistence/</loc>
     <lastmod>2024-10-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://theevilbit.github.io/tags/</loc>
-    <lastmod>2024-10-15T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/year/</loc>
-    <lastmod>2024-10-15T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://theevilbit.github.io/beyond/beyond_0034/</loc>
     <lastmod>2024-10-10T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/posts/dock-tile-plugins-persistence/</loc>
+    <lastmod>2024-07-19T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/beyond/beyond_0033/</loc>
     <lastmod>2024-06-12T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://theevilbit.github.io/categories/blog/</loc>
-    <lastmod>2024-05-24T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/tags/cve/</loc>
-    <lastmod>2024-05-24T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://theevilbit.github.io/posts/cve-2023-40424/</loc>
     <lastmod>2024-05-24T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://theevilbit.github.io/tags/lpe/</loc>
-    <lastmod>2024-05-24T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/posts/</loc>
-    <lastmod>2024-05-24T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://theevilbit.github.io/tags/tcc/</loc>
-    <lastmod>2024-05-24T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/tags/vulnerability/</loc>
     <lastmod>2024-05-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/posts/apple-mitigates-vulnerabilities-installer-scripts/</loc>

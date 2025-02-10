@@ -6,8 +6,22 @@
     <description>Recent content in Macos on theevilbit blog</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 15 Oct 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 12 Dec 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://theevilbit.github.io/tags/macos/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The diskarbitrationd and storagekitd Audit Story Part 2</title>
+      <link>https://theevilbit.github.io/posts/macos-audit-story-part2/</link>
+      <pubDate>Thu, 12 Dec 2024 00:00:00 +0000</pubDate>
+      <guid>https://theevilbit.github.io/posts/macos-audit-story-part2/</guid>
+      <description>&lt;h2 id=&#34;intro&#34;&gt;&#xA;  Intro&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#intro&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;Kandji&amp;rsquo;s Threat Research team recently performed an audit on the macOS diskarbitrationd and storagekitd system daemons, uncovering several vulnerabilities. Our team reported all of them to Apple through their responsible disclosure program, and as these are fixed now, we are releasing the details in this blog series - this is part two.&lt;/p&gt;&#xA;&lt;p&gt;In part one we covered a vulnerability which impacted the diskarbitrationd system daemon and allowed attacks to either escape the sandbox or escalate our privileges through user file systems.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>The diskarbitrationd and storagekitd Audit Story Part 1</title>
+      <link>https://theevilbit.github.io/posts/macos-audit-story-part1/</link>
+      <pubDate>Fri, 08 Nov 2024 00:00:00 +0000</pubDate>
+      <guid>https://theevilbit.github.io/posts/macos-audit-story-part1/</guid>
+      <description>&lt;h2 id=&#34;intro&#34;&gt;&#xA;  Intro&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#intro&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;The Kandji team is always looking out for how to help keep your devices secure. In line with that, our Threat Research team performed an audit on the macOS diskarbitrationd and storagekitd system daemons, uncovering several vulnerabilities such as sandbox escapes, local privilege escalations, and TCC bypasses. Our team reported all of them to Apple through their responsible disclosure program, and as these are fixed now, we are releasing the details.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 35 - Persist through the NVRAM - The &#39;apple-trusted-trampoline&#39;</title>
       <link>https://theevilbit.github.io/beyond/beyond_0035/</link>
@@ -21,6 +35,13 @@
       <pubDate>Thu, 10 Oct 2024 00:00:00 +0000</pubDate>
       <guid>https://theevilbit.github.io/beyond/beyond_0034/</guid>
       <description>&lt;blockquote&gt;&#xA;&lt;p&gt;This is part 34 in the series of &amp;ldquo;Beyond the good ol&amp;rsquo; LaunchAgents&amp;rdquo;, where I try to collect various persistence techniques for macOS. For more background check the &lt;a href=&#34;https://theevilbit.github.io/beyond/beyond_intro/&#34;  class=&#34;external-link&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;introduction&lt;/a&gt;.&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;p&gt;The all mighty &lt;code&gt;launchd&lt;/code&gt;, contains an embedded plist file in its &lt;code&gt;__TEXT __config&lt;/code&gt; section, which contains various settings, BootStrap file locations (like &lt;code&gt;LaunchDaemons&lt;/code&gt; and &lt;code&gt;LaunchAgents&lt;/code&gt;) and it has also a &lt;code&gt;Boot&lt;/code&gt; key, which defines various services, which will be run upon boot. They are called boot tasks. Although this is documented in Jonathan Levin&amp;rsquo;s *OS Internals Vol I. book, I think this is a not well known, and in fact I also totally forgot about it until &lt;a href=&#34;https://x.com/byaaaaahhh&#34;  class=&#34;external-link&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Matt&lt;/a&gt; brought them to my attention recently.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Dock Tile Plugins Could Be Used to Escalate Privileges</title>
+      <link>https://theevilbit.github.io/posts/dock-tile-plugins-persistence/</link>
+      <pubDate>Fri, 19 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>https://theevilbit.github.io/posts/dock-tile-plugins-persistence/</guid>
+      <description>&lt;h2 id=&#34;intro&#34;&gt;&#xA;  Intro&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#intro&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;I recently came across a persistence feature in macOS that&amp;rsquo;s tied to Dock tile plugins.&lt;/p&gt;&#xA;&lt;p&gt;Dock tiles are the small icons that appear on your Dock when an application runs. Plugins for these Dock tiles have been available since macOS Snow Leopard (10.6). In its developer documentation, Apple says about them:&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;A set of methods implemented by plug-ins&amp;hellip;allow an app’s Dock tile to be customized while the app is not running.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Beyond the good ol&#39; LaunchAgents - 33 - Widgets</title>

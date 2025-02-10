@@ -15,20 +15,19 @@
 <meta name="author" content="Csaba Fitzl">
 <meta name="description" content="
 This is part 32 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-
 When you write a series about something, there are some episodes which are less interesting, many boring stuff, but sometimes there are some true gems. While doing some research yesterday, I run into the Dock Tile Plugin feature in macOS, which turned out to be truly amazing from persistence point of view.">
 <meta name="keywords" content="">
 
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 32 - Dock Tile Plugins">
-  <meta name="twitter:description" content=" This is part 32 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+  <meta name="twitter:description" content="This is part 32 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
 When you write a series about something, there are some episodes which are less interesting, many boring stuff, but sometimes there are some true gems. While doing some research yesterday, I run into the Dock Tile Plugin feature in macOS, which turned out to be truly amazing from persistence point of view.">
 
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0032/">
   <meta property="og:site_name" content="theevilbit blog">
   <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 32 - Dock Tile Plugins">
-  <meta property="og:description" content=" This is part 32 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+  <meta property="og:description" content="This is part 32 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
 When you write a series about something, there are some episodes which are less interesting, many boring stuff, but sometimes there are some true gems. While doing some research yesterday, I run into the Dock Tile Plugin feature in macOS, which turned out to be truly amazing from persistence point of view.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
@@ -159,18 +158,15 @@ When you write a series about something, there are some episodes which are less 
     </header>
 
     <blockquote>
-<p>This is part 32 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p>
-</blockquote>
+<p>This is part 32 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p></blockquote>
 <p>When you write a series about something, there are some episodes which are less interesting, many boring stuff, but sometimes there are some true gems. While doing some research yesterday, I run into the Dock Tile Plugin feature in macOS, which turned out to be truly amazing from persistence point of view.</p>
 <p>Dock tile plugins are available since macOS Snow Leopard (10.6), which is considered by many people one of the best edition ever. Dock tiles are the small icons that appear on your Dock, when the application runs. Apple writes the following about these plugins in their <a href="https://developer.apple.com/documentation/appkit/nsdocktileplugin?language=objc"  class="external-link" target="_blank" rel="noopener">Developer Documentation</a>:</p>
 <blockquote>
-<p>A set of methods implemented by plug-ins that allow an app’s Dock tile to be customized while the app is not running.</p>
-</blockquote>
+<p>A set of methods implemented by plug-ins that allow an app’s Dock tile to be customized while the app is not running.</p></blockquote>
 <p>So it&rsquo;s a plugin that will run when your app is not running, that sounds really - really interesting.</p>
 <p>They also write:</p>
 <blockquote>
-<p>The plugin is loaded in a system process at login time or when the application tile is added to the Dock. When the plugin is loaded, the principal class&rsquo; implementation of <a href="https://developer.apple.com/documentation/appkit/nsdocktileplugin/1534120-setdocktile?language=objc"  class="external-link" target="_blank" rel="noopener">setDockTile:</a> is invoked, passing an <a href="https://developer.apple.com/documentation/appkit/nsdocktile?language=objc"  class="external-link" target="_blank" rel="noopener">NSDockTile</a> for the plug-in to customize. If the principal class implements <a href="https://developer.apple.com/documentation/appkit/nsdocktileplugin/1527547-dockmenu?language=objc"  class="external-link" target="_blank" rel="noopener">dockMenu</a> it is invoked whenever the user causes the application&rsquo;s dock menu to be shown. When the dock tile is no longer valid (for example,. the application has been removed from the dock) -<a href="https://developer.apple.com/documentation/appkit/nsdocktileplugin/1534120-setdocktile?language=objc"  class="external-link" target="_blank" rel="noopener">setDockTile:</a> is invoked with nil.</p>
-</blockquote>
+<p>The plugin is loaded in a system process at login time or when the application tile is added to the Dock. When the plugin is loaded, the principal class&rsquo; implementation of <a href="https://developer.apple.com/documentation/appkit/nsdocktileplugin/1534120-setdocktile?language=objc"  class="external-link" target="_blank" rel="noopener">setDockTile:</a> is invoked, passing an <a href="https://developer.apple.com/documentation/appkit/nsdocktile?language=objc"  class="external-link" target="_blank" rel="noopener">NSDockTile</a> for the plug-in to customize. If the principal class implements <a href="https://developer.apple.com/documentation/appkit/nsdocktileplugin/1527547-dockmenu?language=objc"  class="external-link" target="_blank" rel="noopener">dockMenu</a> it is invoked whenever the user causes the application&rsquo;s dock menu to be shown. When the dock tile is no longer valid (for example,. the application has been removed from the dock) -<a href="https://developer.apple.com/documentation/appkit/nsdocktileplugin/1534120-setdocktile?language=objc"  class="external-link" target="_blank" rel="noopener">setDockTile:</a> is invoked with nil.</p></blockquote>
 <p>&ldquo;plugin is loaded in a system process at login time&rdquo; - this is fantastic. It is persistence, no matter how it&rsquo;s framed. Basically it&rsquo;s a plugin that can react to various system events, and update the tile on the Dock, how it looks, add custom menus, etc&hellip; Let&rsquo;s see how we can create one.</p>
 <h2 id="creating-a-plugin">
   Creating a plugin
@@ -239,8 +235,7 @@ When you write a series about something, there are some episodes which are less 
 </h3>
 <p>As our app is built, we can copy it to wherever we want, it will be recognized by launch services, registered, and the plugin will be loaded!!!! We don&rsquo;t even need to start the app, the Dock tile doesn&rsquo;t need to show up, we don&rsquo;t need to do anything. That is so cool.</p>
 <blockquote>
-<p>There is one exception. If the app is downloaded and has the quarantine attribute the plugin won&rsquo;t be started until the app is started and the user approves it, so this can&rsquo;t be used to bypass GateKeeper. Also in my testing, it might require a reboot for the plugin to be started even if the user approved the app. So the best is to drop the app without the Q flags.</p>
-</blockquote>
+<p>There is one exception. If the app is downloaded and has the quarantine attribute the plugin won&rsquo;t be started until the app is started and the user approves it, so this can&rsquo;t be used to bypass GateKeeper. Also in my testing, it might require a reboot for the plugin to be started even if the user approved the app. So the best is to drop the app without the Q flags.</p></blockquote>
 <p>Once our plugin is loaded we can lock the screen, and observe the logs, that indeed our function is being called again and again.</p>
 <pre tabindex="0"><code>csaby@max ~ % log stream | grep DuckDockTilePlugin
 2023-09-28 22:43:31.633798+0200 0x1d67     Default     0x0                  948    0    com.apple.dock.external.extra.arm64: (DuckDockTilePlugin) BEYOND doSomething was called
@@ -349,7 +344,7 @@ Internal requirements count=1 size=84
   <section class="container">
     ©
     
-    2024
+    2025
      Csaba Fitzl 
     ·
     

@@ -34,13 +34,13 @@ With the release of Big Sur, I noticed that many of the system binaries have a n
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="About com.apple.private.security.clear-library-validation">
-  <meta name="twitter:description" content=" TL;DR Link to heading On macOS 10.15.2 Apple introduced the com.apple.private.security.clear-library-validation entitlement, which is slowly replacing the previously used com.apple.security.cs.disable-library-validation entitlement on system binaries. Although their impact is the about the same, the way they work is different. While library validation is automatically disabled using com.apple.security.cs.disable-library-validation, with com.apple.private.security.clear-library-validation, the application has to disable it for itself through a csops system call.
+  <meta name="twitter:description" content="TL;DR Link to heading On macOS 10.15.2 Apple introduced the com.apple.private.security.clear-library-validation entitlement, which is slowly replacing the previously used com.apple.security.cs.disable-library-validation entitlement on system binaries. Although their impact is the about the same, the way they work is different. While library validation is automatically disabled using com.apple.security.cs.disable-library-validation, with com.apple.private.security.clear-library-validation, the application has to disable it for itself through a csops system call.
 Intro Link to heading With the release of Big Sur, I noticed that many of the system binaries have a new entitlement, which I didn’t see before, and that is com.apple.private.security.clear-library-validation (later it turned out that it was introduced earlier, but I didn’t know about it that time). These applications possessed the com.apple.security.cs.disable-library-validation before, so it seemed that this is being replaced with a new one. The name suggest similarity, and testing it also confirmed, that these binaries can still load third party plugins signed by non Apple developers. This means that these entitlements have the same impact.">
 
 <meta property="og:url" content="https://theevilbit.github.io/posts/com.apple.private.security.clear-library-validation/">
   <meta property="og:site_name" content="theevilbit blog">
   <meta property="og:title" content="About com.apple.private.security.clear-library-validation">
-  <meta property="og:description" content=" TL;DR Link to heading On macOS 10.15.2 Apple introduced the com.apple.private.security.clear-library-validation entitlement, which is slowly replacing the previously used com.apple.security.cs.disable-library-validation entitlement on system binaries. Although their impact is the about the same, the way they work is different. While library validation is automatically disabled using com.apple.security.cs.disable-library-validation, with com.apple.private.security.clear-library-validation, the application has to disable it for itself through a csops system call.
+  <meta property="og:description" content="TL;DR Link to heading On macOS 10.15.2 Apple introduced the com.apple.private.security.clear-library-validation entitlement, which is slowly replacing the previously used com.apple.security.cs.disable-library-validation entitlement on system binaries. Although their impact is the about the same, the way they work is different. While library validation is automatically disabled using com.apple.security.cs.disable-library-validation, with com.apple.private.security.clear-library-validation, the application has to disable it for itself through a csops system call.
 Intro Link to heading With the release of Big Sur, I noticed that many of the system binaries have a new entitlement, which I didn’t see before, and that is com.apple.private.security.clear-library-validation (later it turned out that it was introduced earlier, but I didn’t know about it that time). These applications possessed the com.apple.security.cs.disable-library-validation before, so it seemed that this is being replaced with a new one. The name suggest similarity, and testing it also confirmed, that these binaries can still load third party plugins signed by non Apple developers. This means that these entitlements have the same impact.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
@@ -528,7 +528,7 @@ Unsatisfied Entitlements:
   <section class="container">
     ©
     
-    2024
+    2025
      Csaba Fitzl 
     ·
     

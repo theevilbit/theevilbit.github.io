@@ -15,7 +15,6 @@
 <meta name="author" content="Csaba Fitzl">
 <meta name="description" content="
 This is part 15 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-
 I run into this not so exciting persistent method when I was investigating xsanctl for&hellip; other&hellip; reasons&hellip; xsanctl is a &ldquo;Xsan file system control utility&rdquo;, which allows us to mount and manage Xsans.
 The xsanctl binary can be found at /System/Library/Filesystems/acfs.fs/Contents/bin/xsanctl, however when we simply run the command it is run from /usr/sbin/xsanctl. If we check, this is a symbolic link.">
 <meta name="keywords" content="">
@@ -23,14 +22,14 @@ The xsanctl binary can be found at /System/Library/Filesystems/acfs.fs/Contents/
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 15 - xsanctl">
-  <meta name="twitter:description" content=" This is part 15 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+  <meta name="twitter:description" content="This is part 15 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
 I run into this not so exciting persistent method when I was investigating xsanctl for… other… reasons… xsanctl is a “Xsan file system control utility”, which allows us to mount and manage Xsans.
 The xsanctl binary can be found at /System/Library/Filesystems/acfs.fs/Contents/bin/xsanctl, however when we simply run the command it is run from /usr/sbin/xsanctl. If we check, this is a symbolic link.">
 
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0015/">
   <meta property="og:site_name" content="theevilbit blog">
   <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 15 - xsanctl">
-  <meta property="og:description" content=" This is part 15 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+  <meta property="og:description" content="This is part 15 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
 I run into this not so exciting persistent method when I was investigating xsanctl for… other… reasons… xsanctl is a “Xsan file system control utility”, which allows us to mount and manage Xsans.
 The xsanctl binary can be found at /System/Library/Filesystems/acfs.fs/Contents/bin/xsanctl, however when we simply run the command it is run from /usr/sbin/xsanctl. If we check, this is a symbolic link.">
   <meta property="og:locale" content="en">
@@ -162,8 +161,7 @@ The xsanctl binary can be found at /System/Library/Filesystems/acfs.fs/Contents/
     </header>
 
     <blockquote>
-<p>This is part 15 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p>
-</blockquote>
+<p>This is part 15 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p></blockquote>
 <p>I run into this not so exciting persistent method when I was investigating <code>xsanctl</code> for&hellip; other&hellip; reasons&hellip; <code>xsanctl</code> is a &ldquo;Xsan file system control utility&rdquo;, which allows us to mount and manage Xsans.</p>
 <p>The <code>xsanctl</code> binary can be found at <code>/System/Library/Filesystems/acfs.fs/Contents/bin/xsanctl</code>, however when we simply run the command it is run from <code>/usr/sbin/xsanctl</code>. If we check, this is a symbolic link.</p>
 <pre tabindex="0"><code>csaby@mac exploits % ls -l /usr/sbin/xsanctl
@@ -196,7 +194,7 @@ ${XSAN_ALT_BINDIR}/${COMMAND} &#34;$@&#34;
   <section class="container">
     ©
     
-    2024
+    2025
      Csaba Fitzl 
     ·
     

@@ -15,20 +15,19 @@
 <meta name="author" content="Csaba Fitzl">
 <meta name="description" content="
 This is part 28 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-
 This persistence mechanism was described in very detail by Chris Ross in his blogpost: Persistent Credential Theft with Authorization Plugins. He also developed sample code, which can be found on his GitHub. Thus this blog will only focus on the high level summary, and some changes that happened since he wrote that post.">
 <meta name="keywords" content="">
 
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 28 - Authorization Plugins">
-  <meta name="twitter:description" content=" This is part 28 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+  <meta name="twitter:description" content="This is part 28 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
 This persistence mechanism was described in very detail by Chris Ross in his blogpost: Persistent Credential Theft with Authorization Plugins. He also developed sample code, which can be found on his GitHub. Thus this blog will only focus on the high level summary, and some changes that happened since he wrote that post.">
 
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0028/">
   <meta property="og:site_name" content="theevilbit blog">
   <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 28 - Authorization Plugins">
-  <meta property="og:description" content=" This is part 28 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+  <meta property="og:description" content="This is part 28 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
 This persistence mechanism was described in very detail by Chris Ross in his blogpost: Persistent Credential Theft with Authorization Plugins. He also developed sample code, which can be found on his GitHub. Thus this blog will only focus on the high level summary, and some changes that happened since he wrote that post.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
@@ -159,8 +158,7 @@ This persistence mechanism was described in very detail by Chris Ross in his blo
     </header>
 
     <blockquote>
-<p>This is part 28 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p>
-</blockquote>
+<p>This is part 28 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p></blockquote>
 <p>This persistence mechanism was described in very detail by <a href="https://twitter.com/xorrior"  class="external-link" target="_blank" rel="noopener">Chris Ross</a> in his <a href="https://posts.specterops.io/persistent-credential-theft-with-authorization-plugins-d17b34719d65"  class="external-link" target="_blank" rel="noopener">blogpost: Persistent Credential Theft with Authorization Plugins</a>. He also developed sample code, which can be found on his <a href="https://github.com/xorrior/macOSTools/tree/master/auth_plugins"  class="external-link" target="_blank" rel="noopener">GitHub</a>. Thus this blog will only focus on the high level summary, and some changes that happened since he wrote that post.</p>
 <p>On a high level, <code>authorization plugins</code> are extensions that can be used by the system to grant specific authorization rights.</p>
 <p>For installation we need to perform two steps. First is adding the plugin bundle to the directory <code>/Library/Security/SecurityAgentPlugins/</code>. Second we need to modify the authorization database and add an entry so that our plugin is loaded and invoked as needed.</p>
@@ -299,7 +297,7 @@ Internal requirements count=1 size=88
   <section class="container">
     ©
     
-    2024
+    2025
      Csaba Fitzl 
     ·
     

@@ -28,13 +28,13 @@ mount_apfs -o noowners -s com.apple.TimeMachine.2019-11-17-141812.local /System/
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="CVE-2020-9771 - mount_apfs TCC bypass and privilege escalation">
-  <meta name="twitter:description" content=" TL;DR Link to heading We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc…) of every user on the system, including those protected by Apple’s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
+  <meta name="twitter:description" content="TL;DR Link to heading We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc…) of every user on the system, including those protected by Apple’s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
 This could be achieved with a single command, for example: mount_apfs -o noowners -s com.apple.TimeMachine.2019-11-17-141812.local /System/Volumes/Data /tmp/snap">
 
 <meta property="og:url" content="https://theevilbit.github.io/posts/cve_2020_9771/">
   <meta property="og:site_name" content="theevilbit blog">
   <meta property="og:title" content="CVE-2020-9771 - mount_apfs TCC bypass and privilege escalation">
-  <meta property="og:description" content=" TL;DR Link to heading We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc…) of every user on the system, including those protected by Apple’s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
+  <meta property="og:description" content="TL;DR Link to heading We could mount the entire file system through APFS snapshots as read-only, with the noowners flag, which enables us accessing (almost) every file in the file system, including data (documents, files, etc…) of every user on the system, including those protected by Apple’s privacy framework (TCC). Even with the Guest account we could read files of admin accounts as Guest! 😱
 This could be achieved with a single command, for example: mount_apfs -o noowners -s com.apple.TimeMachine.2019-11-17-141812.local /System/Volumes/Data /tmp/snap">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
@@ -300,8 +300,7 @@ com.apple.TimeMachine.2019-11-17-133316.local
 com.apple.TimeMachine.2019-11-17-141812.local
 </code></pre><p>We can mount the snapshot with <code>noowners</code>, which according to the <code>manpage</code> means:</p>
 <blockquote>
-<p>Ignore the ownership field for the entire volume.  This causes all objects to appear as owned by user ID 99 and group ID 99.  User ID 99 is interpreted as the current effective user ID, while group ID 99 is used directly and translates to `unknown’.</p>
-</blockquote>
+<p>Ignore the ownership field for the entire volume.  This causes all objects to appear as owned by user ID 99 and group ID 99.  User ID 99 is interpreted as the current effective user ID, while group ID 99 is used directly and translates to `unknown’.</p></blockquote>
 <pre tabindex="0"><code>n00b@mac Messages % mount_apfs -o noowners -s com.apple.TimeMachine.2019-11-17-141812.local /System/Volumes/Data /tmp/snap
 mount_apfs: snapshot implicitly mounted readonly
 </code></pre><p>And finally we can access all data from there as the privileges set for our user:</p>
@@ -324,22 +323,18 @@ total 4704
 <blockquote>
 <p>I did one more test and turned off “Full Disk Access” for Terminal, and then it indeed stopped working. I don’t consider this as a fix, relaying on TCC stopping this is a bad move in my opinion, most people will have Terminal set to “Full Disk Access”.</p>
 <p>This still violates the basic BSD security model, as you can read other user’s file, without elevating to root. <strong>Even if SIP is OFF and Terminal has “Full Disk Access”, you shouldn’t be able to mount anything with “noowners” unless you are root</strong>. **The mount operation itself should fail.**If you think about it: Even if SIP is ON and Terminal has Full Disk Access, you can’t see other user’s files with it - with this vulnerability you can.</p>
-<p>“Full Disk Access” TCC setting is global, which means that if an admin user enables this, a low privileged user can use Terminal to access the admin user’s files.</p>
-</blockquote>
+<p>“Full Disk Access” TCC setting is global, which means that if an admin user enables this, a low privileged user can use Terminal to access the admin user’s files.</p></blockquote>
 <p>I got a reply the same day:</p>
 <blockquote>
-<p>Thank you for providing additional information. We will investigate.</p>
-</blockquote>
+<p>Thank you for providing additional information. We will investigate.</p></blockquote>
 <p>After this point we went into, what I call &ldquo;black hole mode&rdquo;, I never got replies to my emails, and than <code>CVE-2020-9771</code> became public on the 26th of May. They shipped the fix to Mojave on that day (<a href="https://support.apple.com/en-us/HT211170%29"  class="external-link" target="_blank" rel="noopener">https://support.apple.com/en-us/HT211170)</a>, and retroactively updated the 10.15.4 security notes the same day with this CVE (<a href="https://support.apple.com/en-us/HT211100"  class="external-link" target="_blank" rel="noopener">https://support.apple.com/en-us/HT211100</a>). I tested this again, and I found the same behavior. At this point I still didn&rsquo;t know if they considered this fixed or not, as no one came back to me. Their description &ldquo;This issue was addressed with a new entitlement.&rdquo; is extremely misleading.</p>
 <p>I sent an email again on May 27th (still in &ldquo;black hole mode&rdquo;):</p>
 <blockquote>
-<p>I want to ask again if you consider this fixed via controlling this &ldquo;exploit&rdquo; via the &ldquo;Full Disk Access&rdquo; permission in TCC. As noted earlier I think it&rsquo;s not right.</p>
-</blockquote>
+<p>I want to ask again if you consider this fixed via controlling this &ldquo;exploit&rdquo; via the &ldquo;Full Disk Access&rdquo; permission in TCC. As noted earlier I think it&rsquo;s not right.</p></blockquote>
 <p>Finally on the 29th of June I got a reply:</p>
 <blockquote>
 <p>This issue was addressed with macOS Catalina 10.15.5 and assigned CVE-2020-9771 -&gt;  <a href="https://support.apple.com/HT211170"  class="external-link" target="_blank" rel="noopener">https://support.apple.com/HT211170</a> . We are not planning any additional changes in this area.</p>
-<p>macOS Catalina has improvements which have reduced the need for applications run through Terminal to require Full-Disk Access, and it should not be enabled by a user unless necessary.</p>
-</blockquote>
+<p>macOS Catalina has improvements which have reduced the need for applications run through Terminal to require Full-Disk Access, and it should not be enabled by a user unless necessary.</p></blockquote>
 <p>That&rsquo;s it, not much I can do about this anymore, I only hope that it will get enough public attention, with many disappointed users about the fix, that 🍎 will reconsider the fix.</p>
 <h2 id="conclusion">
   Conclusion
@@ -379,7 +374,7 @@ total 4704
   <section class="container">
     ©
     
-    2024
+    2025
      Csaba Fitzl 
     ·
     

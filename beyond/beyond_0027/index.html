@@ -15,7 +15,6 @@
 <meta name="author" content="Csaba Fitzl">
 <meta name="description" content="
 This is part 27 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-
 This persistence is another gem I found in Leo Pitt&rsquo;s Modern macOS Persistence talk.
 macOS Dock stores shortcuts for applications, that we would like to access through the, well&hellip; Dock. It stores all settings in ~/Library/Preferences/com.apple.dock.plist. Although we can edit this PLIST directly, we can also use the defaults utility to change it. For example adding a new entry:">
 <meta name="keywords" content="">
@@ -23,14 +22,14 @@ macOS Dock stores shortcuts for applications, that we would like to access throu
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 27 - Dock shortcuts">
-  <meta name="twitter:description" content=" This is part 27 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+  <meta name="twitter:description" content="This is part 27 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
 This persistence is another gem I found in Leo Pitt’s Modern macOS Persistence talk.
 macOS Dock stores shortcuts for applications, that we would like to access through the, well… Dock. It stores all settings in ~/Library/Preferences/com.apple.dock.plist. Although we can edit this PLIST directly, we can also use the defaults utility to change it. For example adding a new entry:">
 
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0027/">
   <meta property="og:site_name" content="theevilbit blog">
   <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 27 - Dock shortcuts">
-  <meta property="og:description" content=" This is part 27 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+  <meta property="og:description" content="This is part 27 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
 This persistence is another gem I found in Leo Pitt’s Modern macOS Persistence talk.
 macOS Dock stores shortcuts for applications, that we would like to access through the, well… Dock. It stores all settings in ~/Library/Preferences/com.apple.dock.plist. Although we can edit this PLIST directly, we can also use the defaults utility to change it. For example adding a new entry:">
   <meta property="og:locale" content="en">
@@ -162,8 +161,7 @@ macOS Dock stores shortcuts for applications, that we would like to access throu
     </header>
 
     <blockquote>
-<p>This is part 27 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p>
-</blockquote>
+<p>This is part 27 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p></blockquote>
 <p>This persistence is another gem I found in <a href="https://twitter.com/_D00mfist"  class="external-link" target="_blank" rel="noopener">Leo Pitt</a>&rsquo;s <a href="https://www.youtube.com/watch?v=OFQYTJiAmxs"  class="external-link" target="_blank" rel="noopener">Modern macOS Persistence</a> talk.</p>
 <p>macOS Dock stores shortcuts for applications, that we would like to access through the, well&hellip; Dock. It stores all settings in <code>~/Library/Preferences/com.apple.dock.plist</code>. Although we can edit this PLIST directly, we can also use the <code>defaults</code> utility to change it. For example adding a new entry:</p>
 <pre tabindex="0"><code>defaults write com.apple.dock persistent-apps -array-add &#39;&lt;dict&gt;&lt;key&gt;tile-data&lt;/key&gt;&lt;dict&gt;&lt;key&gt;file-data&lt;/key&gt;&lt;dict&gt;&lt;key&gt;_CFURLString&lt;/key&gt;&lt;string&gt;/System/Applications/Books.app&lt;/string&gt;&lt;key&gt;_CFURLStringType&lt;/key&gt;&lt;integer&gt;0&lt;/integer&gt;&lt;/dict&gt;&lt;/dict&gt;&lt;/dict&gt;&#39;
@@ -198,7 +196,7 @@ killall Dock
   <section class="container">
     ©
     
-    2024
+    2025
      Csaba Fitzl 
     ·
     

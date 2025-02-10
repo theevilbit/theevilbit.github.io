@@ -15,20 +15,19 @@
 <meta name="author" content="Csaba Fitzl">
 <meta name="description" content="
 This is part 34 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-
 The all mighty launchd, contains an embedded plist file in its __TEXT __config section, which contains various settings, BootStrap file locations (like LaunchDaemons and LaunchAgents) and it has also a Boot key, which defines various services, which will be run upon boot. They are called boot tasks. Although this is documented in Jonathan Levin&rsquo;s *OS Internals Vol I. book, I think this is a not well known, and in fact I also totally forgot about it until Matt brought them to my attention recently.">
 <meta name="keywords" content="">
 
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 34 - launchd boot tasks">
-  <meta name="twitter:description" content=" This is part 34 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+  <meta name="twitter:description" content="This is part 34 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
 The all mighty launchd, contains an embedded plist file in its __TEXT __config section, which contains various settings, BootStrap file locations (like LaunchDaemons and LaunchAgents) and it has also a Boot key, which defines various services, which will be run upon boot. They are called boot tasks. Although this is documented in Jonathan Levin’s *OS Internals Vol I. book, I think this is a not well known, and in fact I also totally forgot about it until Matt brought them to my attention recently.">
 
 <meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0034/">
   <meta property="og:site_name" content="theevilbit blog">
   <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 34 - launchd boot tasks">
-  <meta property="og:description" content=" This is part 34 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+  <meta property="og:description" content="This is part 34 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
 The all mighty launchd, contains an embedded plist file in its __TEXT __config section, which contains various settings, BootStrap file locations (like LaunchDaemons and LaunchAgents) and it has also a Boot key, which defines various services, which will be run upon boot. They are called boot tasks. Although this is documented in Jonathan Levin’s *OS Internals Vol I. book, I think this is a not well known, and in fact I also totally forgot about it until Matt brought them to my attention recently.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
@@ -159,8 +158,7 @@ The all mighty launchd, contains an embedded plist file in its __TEXT __config s
     </header>
 
     <blockquote>
-<p>This is part 34 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p>
-</blockquote>
+<p>This is part 34 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p></blockquote>
 <p>The all mighty <code>launchd</code>, contains an embedded plist file in its <code>__TEXT __config</code> section, which contains various settings, BootStrap file locations (like <code>LaunchDaemons</code> and <code>LaunchAgents</code>) and it has also a <code>Boot</code> key, which defines various services, which will be run upon boot. They are called boot tasks. Although this is documented in Jonathan Levin&rsquo;s *OS Internals Vol I. book, I think this is a not well known, and in fact I also totally forgot about it until <a href="https://x.com/byaaaaahhh"  class="external-link" target="_blank" rel="noopener">Matt</a> brought them to my attention recently.</p>
 <p>We can dump this plist with the following one liner, which is pretty massive due to the fact that the plist is stored in little endian format.</p>
 <pre tabindex="0"><code>otool -X -s __TEXT __config /sbin/launchd | awk &#39;{print $2 $3 $4 $5}&#39; | xxd -r -p | hexdump -v -e &#39;1/4 &#34;%08x&#34;&#39; -e &#39;&#34;\n&#34;&#39; | xxd -r -p 
@@ -263,7 +261,7 @@ The all mighty launchd, contains an embedded plist file in its __TEXT __config s
   <section class="container">
     ©
     
-    2024
+    2025
      Csaba Fitzl 
     ·
     

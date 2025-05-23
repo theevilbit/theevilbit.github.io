@@ -340,7 +340,7 @@ Type &#34;help&#34;, &#34;copyright&#34;, &#34;credits&#34; or &#34;license&#34;
 </span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">if</span> f[<span style="color:#f60">1</span>]<span style="color:#555">!=</span> t:
 </span></span><span style="display:flex;"><span>				<span style="color:#366">print</span> <span style="color:#c30">&#34;[!] The file </span><span style="color:#a00">%s</span><span style="color:#c30"> timestamp is different form the rest, file: </span><span style="color:#a00">%s</span><span style="color:#c30">, rest: </span><span style="color:#a00">%s</span><span style="color:#c30"> - potential backdoor&#34;</span> <span style="color:#555">%</span> (f[<span style="color:#f60">0</span>], f[<span style="color:#f60">1</span>], t)
 </span></span><span style="display:flex;"><span>				
-</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">if</span> __name__<span style="color:#555">==</span> <span style="color:#c30">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">if</span> <span style="color:#033">__name__</span><span style="color:#555">==</span> <span style="color:#c30">&#34;__main__&#34;</span>:
 </span></span><span style="display:flex;"><span>	main()
 </span></span></code></pre></div><p>You could also monitor the hashes of all the files, and alert on changes. Here you will need to deal with updates, etc…</p>
 <p>The same persistence idea is valid for Windows and Linux as well.</p>

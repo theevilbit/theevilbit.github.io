@@ -59,7 +59,7 @@ TL;DR Link to heading It works, but very limited due to heavy sandboxing, you ca
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.cf9ddd8f927a64ebeaf4fc847b0d4ad73601b6a45ef3c8fc24771e71437ab230.css" integrity="sha256-z53dj5J6ZOvq9PyEew1K1zYBtqRe88j8JHcecUN6sjA=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.b886fe0d9034709648f91f4ce178f51dd367d9350f82dd1132d54fd69bfca66f.css" integrity="sha256-uIb&#43;DZA0cJZI&#43;R9M4Xj1HdNn2TUPgt0RMtVP1pv8pm8=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -259,19 +259,19 @@ It’s pretty old, but works. First I just compiled it to see if this importer i
 <ol>
 <li>schema.xml - this will contain the attributes your importer will support. The attributes are the metadata buckets your importer can extract data into, and which will be indexed by Spotlight. For the above project I actually made it mostly intact, but I could likely clean it completely.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#099">&lt;?xml version=“1.0” encoding=“UTF-8”?&gt;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#75715e">&lt;?xml version=“1.0” encoding=“UTF-8”?&gt;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;schema</span> <span style="color:#309">version=</span><span style="color:#c30">“1.0”</span> <span style="color:#309">xmlns=</span><span style="color:#c30">“http://www.apple.com/metadata”</span> <span style="color:#309">xmlns:xsi=</span><span style="color:#c30">“http://www.w3.org/2001/XMLSchema-instance”</span> <span style="color:#309">xsi:schemaLocation=</span><span style="color:#c30">“http://www.apple.com/metadata</span> <span style="color:#a00;background-color:#faa">file:///System/Library/Frameworks/CoreServices.framework/Frameworks/Metadata.framework/Resources/MetadataSchema.xsd”</span><span style="color:#309;font-weight:bold">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;schema</span> <span style="color:#a6e22e">version=</span><span style="color:#e6db74">“1.0”</span> <span style="color:#a6e22e">xmlns=</span><span style="color:#e6db74">“http://www.apple.com/metadata”</span> <span style="color:#a6e22e">xmlns:xsi=</span><span style="color:#e6db74">“http://www.w3.org/2001/XMLSchema-instance”</span> <span style="color:#a6e22e">xsi:schemaLocation=</span><span style="color:#e6db74">“http://www.apple.com/metadata</span> <span style="color:#960050;background-color:#1e0010">file:///System/Library/Frameworks/CoreServices.framework/Frameworks/Metadata.framework/Resources/MetadataSchema.xsd”</span><span style="color:#f92672">&gt;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#099">&lt;!— “attributes” element must exist in schema.xml file even if mdimporter doesn’t support any custom attributes. if it doesn’t exist, the metadata which are listed by “displayattrs” elements aren’t displayed by Finder’s “Get Info” panel (in OS X 10.10.2). —&gt;</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#309;font-weight:bold">&lt;attributes&gt;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#309;font-weight:bold">&lt;attribute</span> <span style="color:#309">name=</span><span style="color:#c30">“com_csaby_persist_mdimporter”</span> <span style="color:#309">multivalued=</span><span style="color:#c30">“false”</span> <span style="color:#309">type=</span><span style="color:#c30">“CFString”/</span><span style="color:#309;font-weight:bold">&gt;</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#309;font-weight:bold">&lt;/attributes&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">&lt;!— “attributes” element must exist in schema.xml file even if mdimporter doesn’t support any custom attributes. if it doesn’t exist, the metadata which are listed by “displayattrs” elements aren’t displayed by Finder’s “Get Info” panel (in OS X 10.10.2). —&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;attributes&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;attribute</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">“com_csaby_persist_mdimporter”</span> <span style="color:#a6e22e">multivalued=</span><span style="color:#e6db74">“false”</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">“CFString”/</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/attributes&gt;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#309;font-weight:bold">&lt;types&gt;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#309;font-weight:bold">&lt;type</span> <span style="color:#309">name=</span><span style="color:#c30">“org.idpf.epub-container”</span><span style="color:#309;font-weight:bold">&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;types&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;type</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">“org.idpf.epub-container”</span><span style="color:#f92672">&gt;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>      <span style="color:#309;font-weight:bold">&lt;allattrs&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;allattrs&gt;</span>
 </span></span><span style="display:flex;"><span>        kMDItemTitle
 </span></span><span style="display:flex;"><span>        kMDItemAuthors
 </span></span><span style="display:flex;"><span>        kMDItemKeywords
@@ -290,9 +290,9 @@ It’s pretty old, but works. First I just compiled it to see if this importer i
 </span></span><span style="display:flex;"><span>        kMDItemContentCreationDate
 </span></span><span style="display:flex;"><span>        kMDItemContentModificationDate
 </span></span><span style="display:flex;"><span>        com_csaby_persist_mdimporter
-</span></span><span style="display:flex;"><span>      <span style="color:#309;font-weight:bold">&lt;/allattrs&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;/allattrs&gt;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>      <span style="color:#309;font-weight:bold">&lt;displayattrs&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;displayattrs&gt;</span>
 </span></span><span style="display:flex;"><span>        kMDItemTitle
 </span></span><span style="display:flex;"><span>        kMDItemAuthors
 </span></span><span style="display:flex;"><span>        kMDItemContributors
@@ -306,90 +306,90 @@ It’s pretty old, but works. First I just compiled it to see if this importer i
 </span></span><span style="display:flex;"><span>        kMDItemContentCreationDate
 </span></span><span style="display:flex;"><span>        kMDItemContentModificationDate
 </span></span><span style="display:flex;"><span>        kMDItemDescription
-</span></span><span style="display:flex;"><span>      <span style="color:#309;font-weight:bold">&lt;/displayattrs&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;/displayattrs&gt;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#309;font-weight:bold">&lt;/type&gt;</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#309;font-weight:bold">&lt;/types&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/schema&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/type&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/types&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/schema&gt;</span>
 </span></span></code></pre></div><ol start="2">
 <li>main.c file - This is a standard file, typically generated by Xcode, you don’t need to modify it. I will not paste it here, as it’s quite long, but you can get it from my GitHub project (link above).</li>
 <li>Info.plist file - Here you must define (along some other standard things) what kind of files your importer will support. It should contain file extensions, and the <a href="https://en.wikipedia.org/wiki/Uniform_Type_Identifier"  class="external-link" target="_blank" rel="noopener">Uniform Type Identifier</a>. Below is the one related to epub from the Info.plist. As mentioned by Patrick you can also specify all files, but I opted to stick with epubs, I didn’t want my importer to run always, as my goal was only experimenting.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>UTImportedTypeDeclarations<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>UTTypeConformsTo<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
-</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>public.data<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>public.item<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>public.composite-content<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>public.content<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>UTTypeIdentifier<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>org.idpf.epub-container<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>UTTypeTagSpecification<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>public.filename-extension<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
-</span></span><span style="display:flex;"><span>					<span style="color:#309;font-weight:bold">&lt;string&gt;</span>epub<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
-</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>public.mime-type<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
-</span></span><span style="display:flex;"><span>					<span style="color:#309;font-weight:bold">&lt;string&gt;</span>application/epub+zip<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>UTImportedTypeDeclarations<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;key&gt;</span>UTTypeConformsTo<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#f92672">&lt;string&gt;</span>public.data<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#f92672">&lt;string&gt;</span>public.item<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#f92672">&lt;string&gt;</span>public.composite-content<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#f92672">&lt;string&gt;</span>public.content<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;key&gt;</span>UTTypeIdentifier<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;string&gt;</span>org.idpf.epub-container<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;key&gt;</span>UTTypeTagSpecification<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#f92672">&lt;key&gt;</span>public.filename-extension<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#f92672">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>					<span style="color:#f92672">&lt;string&gt;</span>epub<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#f92672">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#f92672">&lt;key&gt;</span>public.mime-type<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#f92672">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>					<span style="color:#f92672">&lt;string&gt;</span>application/epub+zip<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#f92672">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;/array&gt;</span>
 </span></span></code></pre></div><ol start="4">
 <li>GetMetadataForFile.m file, which will be the brain of your importer, here you actually define how the content is parsed, and how metadata is extracted. For that you need to implement the following function (and eventually return true at the end):</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#078;font-weight:bold">Boolean</span> GetMetadataForFile(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>thisInterface, CFMutableDictionaryRef attributes, CFStringRef contentTypeUTI, CFStringRef pathToFile)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#66d9ef">Boolean</span> GetMetadataForFile(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>thisInterface, CFMutableDictionaryRef attributes, CFStringRef contentTypeUTI, CFStringRef pathToFile)
 </span></span></code></pre></div><p>I started to experiment what I can do here, and it quickly turned out that this importer is heavily sandboxed. The only thing you can really do is read the actual file that Spotlight wants you to get metadata from, and write to your temp folder. That’s pretty much it, no access to any other random file, no network, can’t start other apps, so pretty much locked down. With that, my importer will copy every epub to a temp folder, I have also a network test included, just to show that it fails.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;CoreFoundation/CoreFoundation.h&gt;</span><span style="color:#099">
-</span></span></span><span style="display:flex;"><span><span style="color:#099">#import &lt;Cocoa/Cocoa.h&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
-</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">Boolean</span> <span style="color:#c0f">GetMetadataForFile</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>thisInterface, CFMutableDictionaryRef attributes, CFStringRef contentTypeUTI, CFStringRef pathToFile);
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;CoreFoundation/CoreFoundation.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#import &lt;Cocoa/Cocoa.h&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">Boolean</span> <span style="color:#a6e22e">GetMetadataForFile</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>thisInterface, CFMutableDictionaryRef attributes, CFStringRef contentTypeUTI, CFStringRef pathToFile);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//==============================================================================
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//	Get metadata attributes from document files
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//	The purpose of this function is to extract useful information from the
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//	file formats for your document, and set the values into the attribute
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//  dictionary for Spotlight to include.
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//==============================================================================
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>
-</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">Boolean</span> <span style="color:#c0f">GetMetadataForFile</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>thisInterface, CFMutableDictionaryRef attributes, CFStringRef contentTypeUTI, CFStringRef pathToFile)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//==============================================================================
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//	Get metadata attributes from document files
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//	The purpose of this function is to extract useful information from the
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//	file formats for your document, and set the values into the attribute
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//  dictionary for Spotlight to include.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//==============================================================================
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">Boolean</span> <span style="color:#a6e22e">GetMetadataForFile</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>thisInterface, CFMutableDictionaryRef attributes, CFStringRef contentTypeUTI, CFStringRef pathToFile)
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    NSLog(@<span style="color:#a00;background-color:#faa">“</span>Hello from peristent mdimporter by <span style="color:#99f">csaby</span> :)<span style="color:#a00;background-color:#faa">”</span>);
+</span></span><span style="display:flex;"><span>    NSLog(@<span style="color:#960050;background-color:#1e0010">“</span>Hello from peristent mdimporter by csaby :)<span style="color:#960050;background-color:#1e0010">”</span>);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    NSString<span style="color:#555">*</span> tempDir <span style="color:#555">=</span> NSTemporaryDirectory();
-</span></span><span style="display:flex;"><span>    NSString<span style="color:#555">*</span> tempDirFolder <span style="color:#555">=</span> [tempDir <span style="color:#99f">stringByAppendingPathComponent</span>:@<span style="color:#a00;background-color:#faa">“</span>TestPersist<span style="color:#a00;background-color:#faa">”</span>];
-</span></span><span style="display:flex;"><span>    NSString <span style="color:#555">*</span>source <span style="color:#555">=</span> (<span style="color:#069;font-weight:bold">__bridge</span> NSString <span style="color:#555">*</span>)pathToFile;
-</span></span><span style="display:flex;"><span>    NSString <span style="color:#555">*</span>theFileName <span style="color:#555">=</span> [[source lastPathComponent] stringByDeletingPathExtension];
-</span></span><span style="display:flex;"><span>    NSString <span style="color:#555">*</span>destination <span style="color:#555">=</span> [tempDirFolder <span style="color:#99f">stringByAppendingPathComponent</span>:theFileName];
-</span></span><span style="display:flex;"><span>    NSError <span style="color:#555">*</span>error;
-</span></span><span style="display:flex;"><span>    NSFileManager <span style="color:#555">*</span>fileManager <span style="color:#555">=</span> [NSFileManager defaultManager];
+</span></span><span style="display:flex;"><span>    NSString<span style="color:#f92672">*</span> tempDir <span style="color:#f92672">=</span> NSTemporaryDirectory();
+</span></span><span style="display:flex;"><span>    NSString<span style="color:#f92672">*</span> tempDirFolder <span style="color:#f92672">=</span> [tempDir stringByAppendingPathComponent:@<span style="color:#960050;background-color:#1e0010">“</span>TestPersist<span style="color:#960050;background-color:#1e0010">”</span>];
+</span></span><span style="display:flex;"><span>    NSString <span style="color:#f92672">*</span>source <span style="color:#f92672">=</span> (<span style="color:#66d9ef">__bridge</span> NSString <span style="color:#f92672">*</span>)pathToFile;
+</span></span><span style="display:flex;"><span>    NSString <span style="color:#f92672">*</span>theFileName <span style="color:#f92672">=</span> [[source lastPathComponent] stringByDeletingPathExtension];
+</span></span><span style="display:flex;"><span>    NSString <span style="color:#f92672">*</span>destination <span style="color:#f92672">=</span> [tempDirFolder stringByAppendingPathComponent:theFileName];
+</span></span><span style="display:flex;"><span>    NSError <span style="color:#f92672">*</span>error;
+</span></span><span style="display:flex;"><span>    NSFileManager <span style="color:#f92672">*</span>fileManager <span style="color:#f92672">=</span> [NSFileManager defaultManager];
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">//create temp folder
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    <span style="color:#078;font-weight:bold">BOOL</span> fileOK <span style="color:#555">=</span> [[NSFileManager defaultManager] <span style="color:#99f">createDirectoryAtPath</span>:tempDirFolder <span style="color:#99f">withIntermediateDirectories</span>:<span style="color:#366">NO</span> <span style="color:#99f">attributes</span>:<span style="color:#366">nil</span> <span style="color:#99f">error</span>:<span style="color:#555">&amp;</span>error ];
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> ( <span style="color:#555">!</span>fileOK )
-</span></span><span style="display:flex;"><span>        NSLog(@<span style="color:#a00;background-color:#faa">“</span>createDirectoryAtPath <span style="color:#555">%</span>@<span style="color:#a00;background-color:#faa">“</span>, [error localizedDescription]);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//create temp folder
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">BOOL</span> fileOK <span style="color:#f92672">=</span> [[NSFileManager defaultManager] createDirectoryAtPath:tempDirFolder withIntermediateDirectories:NO attributes:nil error:<span style="color:#f92672">&amp;</span>error ];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">!</span>fileOK )
+</span></span><span style="display:flex;"><span>        NSLog(@<span style="color:#960050;background-color:#1e0010">“</span>createDirectoryAtPath <span style="color:#f92672">%</span>@<span style="color:#960050;background-color:#1e0010">“</span>, [error localizedDescription]);
 </span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">//copy file
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    <span style="color:#069;font-weight:bold">if</span> ([fileManager <span style="color:#99f">copyItemAtPath</span>:source <span style="color:#99f">toPath</span>:destination <span style="color:#99f">error</span>:<span style="color:#555">&amp;</span>error]){
-</span></span><span style="display:flex;"><span>        NSLog(@<span style="color:#a00;background-color:#faa">“</span>Copy Success <span style="color:#99f">from</span>: <span style="color:#555">%</span>@, to <span style="color:#555">%</span>@<span style="color:#a00;background-color:#faa">“</span>, source, destination);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//copy file
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> ([fileManager copyItemAtPath:source toPath:destination error:<span style="color:#f92672">&amp;</span>error]){
+</span></span><span style="display:flex;"><span>        NSLog(@<span style="color:#960050;background-color:#1e0010">“</span>Copy Success from: <span style="color:#f92672">%</span>@, to <span style="color:#f92672">%</span>@<span style="color:#960050;background-color:#1e0010">“</span>, source, destination);
 </span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">else</span>{
-</span></span><span style="display:flex;"><span>        NSLog(<span style="color:#c30">@&#34;Copy error: %@&#34;</span>, error);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>{
+</span></span><span style="display:flex;"><span>        NSLog(<span style="color:#e6db74">@&#34;Copy error: %@&#34;</span>, error);
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">//network test
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    NSString <span style="color:#555">*</span>URLString <span style="color:#555">=</span> [NSString <span style="color:#99f">stringWithContentsOfURL</span>:[NSURL <span style="color:#99f">URLWithString</span>:<span style="color:#c30">@&#34;https://www.google.com&#34;</span>]];
-</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;URL: %@&#34;</span>, URLString);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//network test
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    NSString <span style="color:#f92672">*</span>URLString <span style="color:#f92672">=</span> [NSString stringWithContentsOfURL:[NSURL URLWithString:<span style="color:#e6db74">@&#34;https://www.google.com&#34;</span>]];
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#e6db74">@&#34;URL: %@&#34;</span>, URLString);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span> <span style="color:#366">true</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> true;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>As it turned out during my research, since OSX 10.8 you can’t use the standard <code>/tmp/</code> folder, as you have no access to that, you need to query your sandboxed <code>tmp</code> directory, you can do that with <code>NSTemporaryDirectory()</code>. More on that:</p>
 <p><a href="https://web.archive.org/web/20170615173848/http://www.cocoabuilder.com/archive/cocoa/328611-creating-temp-files-or-temp-folders-in-standard-temp-file-locations-in-mdimporter-on-mac-os-10-8-3.html"  class="external-link" target="_blank" rel="noopener">creating temp files or temp folders in standard temp file locations in mdimporter on Mac OS X 10.8.3 | Cocoabuilder</a></p>

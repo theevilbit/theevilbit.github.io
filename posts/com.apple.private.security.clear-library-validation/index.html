@@ -66,7 +66,7 @@ Intro Link to heading With the release of Big Sur, I noticed that many of the sy
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.cf9ddd8f927a64ebeaf4fc847b0d4ad73601b6a45ef3c8fc24771e71437ab230.css" integrity="sha256-z53dj5J6ZOvq9PyEew1K1zYBtqRe88j8JHcecUN6sjA=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.b886fe0d9034709648f91f4ce178f51dd367d9350f82dd1132d54fd69bfca66f.css" integrity="sha256-uIb&#43;DZA0cJZI&#43;R9M4Xj1HdNn2TUPgt0RMtVP1pv8pm8=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -246,165 +246,165 @@ Intro Link to heading With the release of Big Sur, I noticed that many of the sy
   </a>
 </h2>
 <p>I didn&rsquo;t dig into this new entitlement until I run into a new <code>csops</code> operation code listed below, which can be found in <code>xnu-7195.50.7.100.1/bsd/sys/codesign.h</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#define CS_OPS_CLEAR_LV     15  </span><span style="color:#09f;font-style:italic">/* clear the library validation flag */</span><span style="color:#099">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#define CS_OPS_CLEAR_LV     15  </span><span style="color:#75715e">/* clear the library validation flag */</span><span style="color:#75715e">
 </span></span></span></code></pre></div><p><code>csops</code> is a system call that can be used to perform various code signing related operation on processes. We can query the status of a process, set various flags during runtime, query its code signing blob, and so on. This was a new one that I didn&rsquo;t spot before, so I started to go after it.</p>
 <p>The description of this constant says that we can use this operation code to clear the library validation flag of a process. This means that if we can run this on a process we can load third party libraries into it if the call is successful.</p>
 <p>This constant is only referenced inside the <code>xnu-7195.50.7.100.1/bsd/kern/kern_proc.c</code> source file, which contains the source for the <code>csops_internal</code> function. This is the function that will be run when the system call is made. Here is the relevant part of the source code concerning the <code>CS_OPS_CLEAR_LV</code> operation.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">int</span>
-</span></span><span style="display:flex;"><span><span style="color:#c0f">csops_internal</span>(<span style="color:#078;font-weight:bold">pid_t</span> pid, <span style="color:#078;font-weight:bold">int</span> ops, <span style="color:#078;font-weight:bold">user_addr_t</span> uaddr, <span style="color:#078;font-weight:bold">user_size_t</span> usersize, <span style="color:#078;font-weight:bold">user_addr_t</span> uaudittoken)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">csops_internal</span>(<span style="color:#66d9ef">pid_t</span> pid, <span style="color:#66d9ef">int</span> ops, <span style="color:#66d9ef">user_addr_t</span> uaddr, <span style="color:#66d9ef">user_size_t</span> usersize, <span style="color:#66d9ef">user_addr_t</span> uaudittoken)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>(...)
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (pid <span style="color:#555">==</span> <span style="color:#f60">0</span>) {
-</span></span><span style="display:flex;"><span>		pid <span style="color:#555">=</span> <span style="color:#c0f">proc_selfpid</span>();
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> (pid <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>		pid <span style="color:#f92672">=</span> <span style="color:#a6e22e">proc_selfpid</span>();
 </span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (pid <span style="color:#555">==</span> <span style="color:#c0f">proc_selfpid</span>()) {
-</span></span><span style="display:flex;"><span>		forself <span style="color:#555">=</span> <span style="color:#f60">1</span>;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> (pid <span style="color:#f92672">==</span> <span style="color:#a6e22e">proc_selfpid</span>()) {
+</span></span><span style="display:flex;"><span>		forself <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">switch</span> (ops) {
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_STATUS</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CDHASH</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_PIDOFFSET</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_ENTITLEMENTS_BLOB</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_IDENTITY</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_BLOB</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_TEAMID</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEAR_LV</span>:
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">break</span>;          <span style="color:#09f;font-style:italic">/* not restricted to root */</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">default</span><span style="color:#555">:</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> (forself <span style="color:#555">==</span> <span style="color:#f60">0</span> <span style="color:#555">&amp;&amp;</span> <span style="color:#c0f">kauth_cred_issuser</span>(<span style="color:#c0f">kauth_cred_get</span>()) <span style="color:#555">!=</span> TRUE) {
-</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">return</span> EPERM;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">switch</span> (ops) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_STATUS:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_CDHASH:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_PIDOFFSET:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_ENTITLEMENTS_BLOB:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_IDENTITY:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_BLOB:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_TEAMID:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_CLEAR_LV:
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">break</span>;          <span style="color:#75715e">/* not restricted to root */</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">default</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> (forself <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">kauth_cred_issuser</span>(<span style="color:#a6e22e">kauth_cred_get</span>()) <span style="color:#f92672">!=</span> TRUE) {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">return</span> EPERM;
 </span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">break</span>;
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">break</span>;
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	pt <span style="color:#555">=</span> <span style="color:#c0f">proc_find</span>(pid);
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (pt <span style="color:#555">==</span> PROC_NULL) {
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> ESRCH;
+</span></span><span style="display:flex;"><span>	pt <span style="color:#f92672">=</span> <span style="color:#a6e22e">proc_find</span>(pid);
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> (pt <span style="color:#f92672">==</span> PROC_NULL) {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> ESRCH;
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>(...)
-</span></span><span style="display:flex;"><span><span style="color:#099">#if CONFIG_MACF
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	<span style="color:#069;font-weight:bold">switch</span> (ops) {
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_MARKINVALID</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_MARKHARD</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_MARKKILL</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_MARKRESTRICT</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_SET_STATUS</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEARINSTALLER</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEARPLATFORM</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEAR_LV</span>:
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> ((error <span style="color:#555">=</span> <span style="color:#c0f">mac_proc_check_set_cs_info</span>(<span style="color:#c0f">current_proc</span>(), pt, ops))) {
-</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">goto</span> out;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#if CONFIG_MACF
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">switch</span> (ops) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_MARKINVALID:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_MARKHARD:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_MARKKILL:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_MARKRESTRICT:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_SET_STATUS:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_CLEARINSTALLER:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_CLEARPLATFORM:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_CLEAR_LV:
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> ((error <span style="color:#f92672">=</span> <span style="color:#a6e22e">mac_proc_check_set_cs_info</span>(<span style="color:#a6e22e">current_proc</span>(), pt, ops))) {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">goto</span> out;
 </span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">break</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">default</span><span style="color:#555">:</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> ((error <span style="color:#555">=</span> <span style="color:#c0f">mac_proc_check_get_cs_info</span>(<span style="color:#c0f">current_proc</span>(), pt, ops))) {
-</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">goto</span> out;
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">default</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> ((error <span style="color:#f92672">=</span> <span style="color:#a6e22e">mac_proc_check_get_cs_info</span>(<span style="color:#a6e22e">current_proc</span>(), pt, ops))) {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">goto</span> out;
 </span></span><span style="display:flex;"><span>		}
 </span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span><span style="color:#099">#endif
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	<span style="color:#069;font-weight:bold">switch</span> (ops) {
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">switch</span> (ops) {
 </span></span><span style="display:flex;"><span>(...)
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEAR_LV</span>: {
-</span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">/*
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * This option is used to remove library validation from
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * a running process. This is used in plugin architectures
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * when a program needs to load untrusted libraries. This
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * allows the process to maintain library validation as
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * long as possible, then drop it only when required.
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * Once a process has loaded the untrusted library,
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * relying on library validation in the future will
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * not be effective. An alternative is to re-exec
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * your application without library validation, or
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * fork an untrusted child.
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 */</span>
-</span></span><span style="display:flex;"><span><span style="color:#099">#if !defined(XNU_TARGET_OS_OSX)
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>		<span style="color:#09f;font-style:italic">// We only support dropping library validation on macOS
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>		error <span style="color:#555">=</span> ENOTSUP;
-</span></span><span style="display:flex;"><span><span style="color:#099">#else
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>		<span style="color:#09f;font-style:italic">/*
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * if we have the flag set, and the caller wants
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * to remove it, and they&#39;re entitled to, then
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * we remove it from the csflags
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 *
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * NOTE: We are fine to poke into the task because
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * we get a ref to pt when we do the proc_find
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * at the beginning of this function.
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 *
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * We also only allow altering ourselves.
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 */</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> (forself <span style="color:#555">==</span> <span style="color:#f60">1</span> <span style="color:#555">&amp;&amp;</span> <span style="color:#c0f">IOTaskHasEntitlement</span>(pt<span style="color:#555">-&gt;</span>task, CLEAR_LV_ENTITLEMENT)) {
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">proc_lock</span>(pt);
-</span></span><span style="display:flex;"><span>			pt<span style="color:#555">-&gt;</span>p_csflags <span style="color:#555">&amp;=</span> (<span style="color:#555">~</span>(CS_REQUIRE_LV <span style="color:#555">|</span> CS_FORCED_LV));
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">proc_unlock</span>(pt);
-</span></span><span style="display:flex;"><span>			error <span style="color:#555">=</span> <span style="color:#f60">0</span>;
-</span></span><span style="display:flex;"><span>		} <span style="color:#069;font-weight:bold">else</span> {
-</span></span><span style="display:flex;"><span>			error <span style="color:#555">=</span> EPERM;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_CLEAR_LV: {
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * This option is used to remove library validation from
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * a running process. This is used in plugin architectures
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * when a program needs to load untrusted libraries. This
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * allows the process to maintain library validation as
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * long as possible, then drop it only when required.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * Once a process has loaded the untrusted library,
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * relying on library validation in the future will
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * not be effective. An alternative is to re-exec
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * your application without library validation, or
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * fork an untrusted child.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 */</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#if !defined(XNU_TARGET_OS_OSX)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#75715e">// We only support dropping library validation on macOS
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		error <span style="color:#f92672">=</span> ENOTSUP;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#else
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * if we have the flag set, and the caller wants
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * to remove it, and they&#39;re entitled to, then
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * we remove it from the csflags
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * NOTE: We are fine to poke into the task because
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * we get a ref to pt when we do the proc_find
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * at the beginning of this function.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * We also only allow altering ourselves.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 */</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> (forself <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">IOTaskHasEntitlement</span>(pt<span style="color:#f92672">-&gt;</span>task, CLEAR_LV_ENTITLEMENT)) {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">proc_lock</span>(pt);
+</span></span><span style="display:flex;"><span>			pt<span style="color:#f92672">-&gt;</span>p_csflags <span style="color:#f92672">&amp;=</span> (<span style="color:#f92672">~</span>(CS_REQUIRE_LV <span style="color:#f92672">|</span> CS_FORCED_LV));
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">proc_unlock</span>(pt);
+</span></span><span style="display:flex;"><span>			error <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>		} <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>			error <span style="color:#f92672">=</span> EPERM;
 </span></span><span style="display:flex;"><span>		}
 </span></span><span style="display:flex;"><span>(...)
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>We will go through this piece by piece.  There are three places where it gets checked. We will start with the first <code>switch</code> case.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">switch</span> (ops) {
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_STATUS</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CDHASH</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_PIDOFFSET</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_ENTITLEMENTS_BLOB</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_IDENTITY</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_BLOB</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_TEAMID</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEAR_LV</span>:
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">break</span>;          <span style="color:#09f;font-style:italic">/* not restricted to root */</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">default</span><span style="color:#555">:</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> (forself <span style="color:#555">==</span> <span style="color:#f60">0</span> <span style="color:#555">&amp;&amp;</span> <span style="color:#c0f">kauth_cred_issuser</span>(<span style="color:#c0f">kauth_cred_get</span>()) <span style="color:#555">!=</span> TRUE) {
-</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">return</span> EPERM;
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">switch</span> (ops) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_STATUS:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_CDHASH:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_PIDOFFSET:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_ENTITLEMENTS_BLOB:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_IDENTITY:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_BLOB:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_TEAMID:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_CLEAR_LV:
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">break</span>;          <span style="color:#75715e">/* not restricted to root */</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">default</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> (forself <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">kauth_cred_issuser</span>(<span style="color:#a6e22e">kauth_cred_get</span>()) <span style="color:#f92672">!=</span> TRUE) {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">return</span> EPERM;
 </span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">break</span>;
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">break</span>;
 </span></span><span style="display:flex;"><span>	}
 </span></span></code></pre></div><p>What happens here is that the system will allow non-root execution of the operations listed in the switch table, including the one, which is in the focus of our interest. This means that we can call <code>csops</code> with the <code>CS_OPS_CLEAR_LV</code> operation even if we are not running as root.</p>
 <p>Let&rsquo;s move on to the other switch case.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#if CONFIG_MACF
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	<span style="color:#069;font-weight:bold">switch</span> (ops) {
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_MARKINVALID</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_MARKHARD</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_MARKKILL</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_MARKRESTRICT</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_SET_STATUS</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEARINSTALLER</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEARPLATFORM</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEAR_LV</span>:
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> ((error <span style="color:#555">=</span> <span style="color:#c0f">mac_proc_check_set_cs_info</span>(<span style="color:#c0f">current_proc</span>(), pt, ops))) {
-</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">goto</span> out;
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#if CONFIG_MACF
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">switch</span> (ops) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_MARKINVALID:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_MARKHARD:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_MARKKILL:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_MARKRESTRICT:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_SET_STATUS:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_CLEARINSTALLER:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_CLEARPLATFORM:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_CLEAR_LV:
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> ((error <span style="color:#f92672">=</span> <span style="color:#a6e22e">mac_proc_check_set_cs_info</span>(<span style="color:#a6e22e">current_proc</span>(), pt, ops))) {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">goto</span> out;
 </span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">break</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">default</span><span style="color:#555">:</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> ((error <span style="color:#555">=</span> <span style="color:#c0f">mac_proc_check_get_cs_info</span>(<span style="color:#c0f">current_proc</span>(), pt, ops))) {
-</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">goto</span> out;
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">default</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> ((error <span style="color:#f92672">=</span> <span style="color:#a6e22e">mac_proc_check_get_cs_info</span>(<span style="color:#a6e22e">current_proc</span>(), pt, ops))) {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">goto</span> out;
 </span></span><span style="display:flex;"><span>		}
 </span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span><span style="color:#099">#endif
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
 </span></span></span></code></pre></div><p>Here we have a MACF policy call, using the function <code>mac_proc_check_get_cs_info</code>. MACF policy calls return 0 if they are successful, and this is what being check on the condition. The <code>mac_proc_check_get_cs_info</code> function is implemented inside <code>xnu-7195.50.7.100.1/security/mac_process.c</code>. Let&rsquo;s follow it.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span>
-</span></span><span style="display:flex;"><span><span style="color:#c0f">mac_proc_check_set_cs_info</span>(<span style="color:#078;font-weight:bold">proc_t</span> curp, <span style="color:#078;font-weight:bold">proc_t</span> target, <span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#078;font-weight:bold">int</span> op)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mac_proc_check_set_cs_info</span>(<span style="color:#66d9ef">proc_t</span> curp, <span style="color:#66d9ef">proc_t</span> target, <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> op)
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">kauth_cred_t</span> cred;
-</span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">int</span> error <span style="color:#555">=</span> <span style="color:#f60">0</span>;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">kauth_cred_t</span> cred;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">int</span> error <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#099">#if SECURITY_MAC_CHECK_ENFORCE
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	<span style="color:#09f;font-style:italic">/* 21167099 - only check if we allow write */</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span>mac_proc_enforce) {
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> <span style="color:#f60">0</span>;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#if SECURITY_MAC_CHECK_ENFORCE
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#75715e">/* 21167099 - only check if we allow write */</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>mac_proc_enforce) {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span><span style="color:#099">#endif
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	<span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span><span style="color:#c0f">mac_proc_check_enforce</span>(curp)) {
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> <span style="color:#f60">0</span>;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">mac_proc_check_enforce</span>(curp)) {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	cred <span style="color:#555">=</span> <span style="color:#c0f">kauth_cred_proc_ref</span>(curp);
-</span></span><span style="display:flex;"><span>	<span style="color:#c0f">MAC_CHECK</span>(proc_check_set_cs_info, cred, target, op);
-</span></span><span style="display:flex;"><span>	<span style="color:#c0f">kauth_cred_unref</span>(<span style="color:#555">&amp;</span>cred);
+</span></span><span style="display:flex;"><span>	cred <span style="color:#f92672">=</span> <span style="color:#a6e22e">kauth_cred_proc_ref</span>(curp);
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">MAC_CHECK</span>(proc_check_set_cs_info, cred, target, op);
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">kauth_cred_unref</span>(<span style="color:#f92672">&amp;</span>cred);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">return</span> error;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> error;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>This function will eventually make a MACF call using the <code>MAC_CHECK</code> macro, what I already discussed in my <a href="https://theevilbit.github.io/posts/reversing_cve_2020_9771/"  class="external-link" target="_blank" rel="noopener">Reversing engineering the fix of CVE-2020-9771</a> post. It will iterate over the MACF policy hooks, which make a check on <code>proc_check_set_cs_info</code>. This is only hooked right now by the Sandbox, which we can see below.</p>
 <pre tabindex="0"><code class="language-clike" data-lang="clike">void _hook_proc_check_set_cs_info(int arg0, int arg1) {
@@ -417,45 +417,45 @@ Intro Link to heading With the release of Big Sur, I noticed that many of the sy
 </code></pre><p>This will make an internal call to <code>_cred_sb_evaluate</code> with the opcode <code>0x65</code>, I also discussed this in my previous post.</p>
 <p>Going back to our <code>csops</code> call, we can determine that a MACF policy check will be run if this operation is allowed or not for the calling process.</p>
 <p>Assuming yes, we move on, and finally reach the point where the operation is actually implemented.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEAR_LV</span>: {
-</span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">/*
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * This option is used to remove library validation from
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * a running process. This is used in plugin architectures
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * when a program needs to load untrusted libraries. This
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * allows the process to maintain library validation as
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * long as possible, then drop it only when required.
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * Once a process has loaded the untrusted library,
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * relying on library validation in the future will
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * not be effective. An alternative is to re-exec
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * your application without library validation, or
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * fork an untrusted child.
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 */</span>
-</span></span><span style="display:flex;"><span><span style="color:#099">#if !defined(XNU_TARGET_OS_OSX)
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>		<span style="color:#09f;font-style:italic">// We only support dropping library validation on macOS
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>		error <span style="color:#555">=</span> ENOTSUP;
-</span></span><span style="display:flex;"><span><span style="color:#099">#else
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>		<span style="color:#09f;font-style:italic">/*
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * if we have the flag set, and the caller wants
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * to remove it, and they&#39;re entitled to, then
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * we remove it from the csflags
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 *
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * NOTE: We are fine to poke into the task because
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * we get a ref to pt when we do the proc_find
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * at the beginning of this function.
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 *
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * We also only allow altering ourselves.
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 */</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> (forself <span style="color:#555">==</span> <span style="color:#f60">1</span> <span style="color:#555">&amp;&amp;</span> <span style="color:#c0f">IOTaskHasEntitlement</span>(pt<span style="color:#555">-&gt;</span>task, CLEAR_LV_ENTITLEMENT)) {
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">proc_lock</span>(pt);
-</span></span><span style="display:flex;"><span>			pt<span style="color:#555">-&gt;</span>p_csflags <span style="color:#555">&amp;=</span> (<span style="color:#555">~</span>(CS_REQUIRE_LV <span style="color:#555">|</span> CS_FORCED_LV));
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">proc_unlock</span>(pt);
-</span></span><span style="display:flex;"><span>			error <span style="color:#555">=</span> <span style="color:#f60">0</span>;
-</span></span><span style="display:flex;"><span>		} <span style="color:#069;font-weight:bold">else</span> {
-</span></span><span style="display:flex;"><span>			error <span style="color:#555">=</span> EPERM;
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> CS_OPS_CLEAR_LV: {
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * This option is used to remove library validation from
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * a running process. This is used in plugin architectures
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * when a program needs to load untrusted libraries. This
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * allows the process to maintain library validation as
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * long as possible, then drop it only when required.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * Once a process has loaded the untrusted library,
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * relying on library validation in the future will
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * not be effective. An alternative is to re-exec
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * your application without library validation, or
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * fork an untrusted child.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 */</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#if !defined(XNU_TARGET_OS_OSX)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#75715e">// We only support dropping library validation on macOS
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		error <span style="color:#f92672">=</span> ENOTSUP;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#else
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * if we have the flag set, and the caller wants
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * to remove it, and they&#39;re entitled to, then
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * we remove it from the csflags
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * NOTE: We are fine to poke into the task because
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * we get a ref to pt when we do the proc_find
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * at the beginning of this function.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 * We also only allow altering ourselves.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		 */</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> (forself <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">IOTaskHasEntitlement</span>(pt<span style="color:#f92672">-&gt;</span>task, CLEAR_LV_ENTITLEMENT)) {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">proc_lock</span>(pt);
+</span></span><span style="display:flex;"><span>			pt<span style="color:#f92672">-&gt;</span>p_csflags <span style="color:#f92672">&amp;=</span> (<span style="color:#f92672">~</span>(CS_REQUIRE_LV <span style="color:#f92672">|</span> CS_FORCED_LV));
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">proc_unlock</span>(pt);
+</span></span><span style="display:flex;"><span>			error <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>		} <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>			error <span style="color:#f92672">=</span> EPERM;
 </span></span><span style="display:flex;"><span>		}
 </span></span></code></pre></div><p>I think the description added by Apple is very nice, detailed and explains everything. If the requirements are satisfied it will clear the library validation flag of the target process (<code>pt-&gt;p_csflags &amp;= (~(CS_REQUIRE_LV | CS_FORCED_LV));</code>).</p>
 <p>The condition is very strict. This operation can be called by processes only on themselves (<code>forself == 1</code>) and those that has the entitlement defined by the constant <code>CLEAR_LV_ENTITLEMENT</code>. This is defined in <code>xnu-7195.50.7.100.1/bsd/sys/codesign.h</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#define CLEAR_LV_ENTITLEMENT &#34;com.apple.private.security.clear-library-validation&#34;
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#define CLEAR_LV_ENTITLEMENT &#34;com.apple.private.security.clear-library-validation&#34;
 </span></span></span></code></pre></div><p>And the loop is closed we got the entitlement which we saw before.</p>
 <p>To sum up, we can say that a process owning the <code>com.apple.private.security.clear-library-validation</code> entitlement can call the <code>csops</code> system call using the <code>CLEAR_LV_ENTITLEMENT</code> to clear the library validation code signing flag on itself. This works even if the process is not running as root.</p>
 <h2 id="ssh">

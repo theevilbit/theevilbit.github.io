@@ -52,7 +52,7 @@ Widgets are application extensions you can place on your desktop to display some
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.cf9ddd8f927a64ebeaf4fc847b0d4ad73601b6a45ef3c8fc24771e71437ab230.css" integrity="sha256-z53dj5J6ZOvq9PyEew1K1zYBtqRe88j8JHcecUN6sjA=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.b886fe0d9034709648f91f4ce178f51dd367d9350f82dd1132d54fd69bfca66f.css" integrity="sha256-uIb&#43;DZA0cJZI&#43;R9M4Xj1HdNn2TUPgt0RMtVP1pv8pm8=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -230,11 +230,11 @@ Widgets are application extensions you can place on your desktop to display some
 ...
 </code></pre><p>We find that there is a shorter list of base64 encoded items in <code>widgets.instances</code> and much more in <code>widgets.widgets</code>. <code>instances</code> will store information about the widgets that have been configured to run, while <code>widgets</code> will contain a list of all available widgets (including those from your iOS device). <code>DesktopWidgetPlacementStorage</code> stores information about how the widgets are placed, but only if the widget is placed directly on the Desktop, and not as an item in the notification bar.</p>
 <p>I wrote a short shell script which takes a plist as an input and will decode each embedded base64 strings, which is normally inside the <code>data</code> tags. Running this script, what we find is that each widgets.instances decodes as follows.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>uuid<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>403B6E51-3F19-4268-981E-10BF4F6F76DE<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>widget<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;data&gt;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>uuid<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;string&gt;</span>403B6E51-3F19-4268-981E-10BF4F6F76DE<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>widget<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;data&gt;</span>
 </span></span><span style="display:flex;"><span>	YnBsaXN0MDDUAQIDBAUGBwpYJHZlcnNpb25ZJGFyY2hpdmVyVCR0b3BYJG9iamVjdHMS
 </span></span><span style="display:flex;"><span>	AAGGoF8QD05TS2V5ZWRBcmNoaXZlctEICVRyb290gAGsCwwZISIjKisxNTk9VSRudWxs
 </span></span><span style="display:flex;"><span>	1g0ODxAREhMUFRYXGF8QEWV4dGVuc2lvbklkZW50aXR5V2ludGVudDJUa2luZF8QEmFj
@@ -243,85 +243,85 @@ Widgets are application extensions you can place on your desktop to display some
 </span></span><span style="display:flex;"><span>	eHRlbnNpb25CdW5kbGVJZGVudGlmaWVygACABIADgAVfEBhjb20uYXBwbGUud2VhdGhl
 </span></span><span style="display:flex;"><span>...
 </span></span></code></pre></div><p>Damn. This is a plist inside a plist, with more base64 data. Not fun. Let&rsquo;s decode this as well.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$archiver<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSKeyedArchiver<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$objects<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>$null<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;plist</span> <span style="color:#a6e22e">version=</span><span style="color:#e6db74">&#34;1.0&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>$archiver<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;string&gt;</span>NSKeyedArchiver<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>$objects<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;string&gt;</span>$null<span style="color:#f92672">&lt;/string&gt;</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>		...
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>com.apple.weather.widget<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>com.apple.weather<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classes<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
-</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>CHSExtensionIdentity<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSObject<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classname<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>CHSExtensionIdentity<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>com.apple.weather<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;string&gt;</span>com.apple.weather.widget<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;string&gt;</span>com.apple.weather<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;key&gt;</span>$classes<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#f92672">&lt;string&gt;</span>CHSExtensionIdentity<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#f92672">&lt;string&gt;</span>NSObject<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;key&gt;</span>$classname<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;string&gt;</span>CHSExtensionIdentity<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;string&gt;</span>com.apple.weather<span style="color:#f92672">&lt;/string&gt;</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>		...
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$class<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>9<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>NS.data<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;data&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;key&gt;</span>$class<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#f92672">&lt;key&gt;</span>CF$UID<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#f92672">&lt;integer&gt;</span>9<span style="color:#f92672">&lt;/integer&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;key&gt;</span>NS.data<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;data&gt;</span>
 </span></span><span style="display:flex;"><span>			5E1faW5kZXhpbmdIYXNoM9K5lBGWVOURVXBhcmFtZXRlckNvbWJp
 </span></span><span style="display:flex;"><span>			...
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/data&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classes<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
-</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSMutableData<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSData<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSObject<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classname<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSMutableData<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classes<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
-</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>CHSIntentReference<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSObject<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classname<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>CHSIntentReference<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classes<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
-</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>CHSWidget<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>NSObject<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$classname<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;string&gt;</span>CHSWidget<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$top<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;key&gt;</span>root<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>CF$UID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>1<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>$version<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>100000<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;/data&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;key&gt;</span>$classes<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#f92672">&lt;string&gt;</span>NSMutableData<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#f92672">&lt;string&gt;</span>NSData<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#f92672">&lt;string&gt;</span>NSObject<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;key&gt;</span>$classname<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;string&gt;</span>NSMutableData<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;key&gt;</span>$classes<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#f92672">&lt;string&gt;</span>CHSIntentReference<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#f92672">&lt;string&gt;</span>NSObject<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;key&gt;</span>$classname<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;string&gt;</span>CHSIntentReference<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;key&gt;</span>$classes<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#f92672">&lt;string&gt;</span>CHSWidget<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#f92672">&lt;string&gt;</span>NSObject<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;key&gt;</span>$classname<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;string&gt;</span>CHSWidget<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>$top<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;key&gt;</span>root<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;key&gt;</span>CF$UID<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;integer&gt;</span>1<span style="color:#f92672">&lt;/integer&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>$version<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;integer&gt;</span>100000<span style="color:#f92672">&lt;/integer&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/plist&gt;</span>
 </span></span></code></pre></div><p>We find that this is an <code>NSKeyedArchiver</code> data. It stores an actual object with all of its properties. We also find that there is more base64 encoded stuff within the <code>NS.Data</code> section. The main object which is stored here is <code>CHSWidget</code> and the data inside <code>NS.Data</code> is an <code>INIntent</code> object. The former is defined in <code>ChronoServices.framework</code> and the later is in <code>Intents.framework</code>. We can load these frameworks and their classes dynamically, and we can then use NSLog to display the class contents.</p>
 <p>I again wrote a small tool, this time in Objective-C to parse all the <code>widget.instances</code>.</p>
 <pre tabindex="0"><code>csaby@max widgets % ./parseinstances ~/Library/Containers/com.apple.notificationcenterui/Data/Library/Preferences/com.apple.notificationcenterui.plist 

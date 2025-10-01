@@ -52,7 +52,7 @@ When you write a series about something, there are some episodes which are less 
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.cf9ddd8f927a64ebeaf4fc847b0d4ad73601b6a45ef3c8fc24771e71437ab230.css" integrity="sha256-z53dj5J6ZOvq9PyEew1K1zYBtqRe88j8JHcecUN6sjA=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.b886fe0d9034709648f91f4ce178f51dd367d9350f82dd1132d54fd69bfca66f.css" integrity="sha256-uIb&#43;DZA0cJZI&#43;R9M4Xj1HdNn2TUPgt0RMtVP1pv8pm8=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -188,49 +188,49 @@ When you write a series about something, there are some episodes which are less 
 <p>I will release the app and the source code, but you might want to follow this guide.</p>
 <p>To start we will need a macOS app. You can name it whatever you like, I gave it a name &ldquo;DuckDockTile&rdquo;. Once it&rsquo;s created, add a new target to Xcode, and it should be a bundle. I used the name DuckDockTilePlugin.docktileplugin. I will show it later, but based on reversing the process which will load it, it can have any extension or name.</p>
 <p>Once the new target is created we will need to add a header file first.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objective-c" data-lang="objective-c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@interface</span> <span style="color:#0a8;font-weight:bold">DuckDockTilePlugIn</span> : <span style="color:#0a8;font-weight:bold">NSObject</span> <span style="color:#555">&lt;</span>NSDockTilePlugIn<span style="color:#555">&gt;</span> {
-</span></span><span style="display:flex;"><span>    NSMenu <span style="color:#555">*</span>dockMenu;
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objective-c" data-lang="objective-c"><span style="display:flex;"><span><span style="color:#66d9ef">@interface</span> <span style="color:#a6e22e">DuckDockTilePlugIn</span> : <span style="color:#a6e22e">NSObject</span> <span style="color:#f92672">&lt;</span>NSDockTilePlugIn<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>    NSMenu <span style="color:#f92672">*</span>dockMenu;
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@property</span>(<span style="color:#069;font-weight:bold">retain</span>) <span style="color:#078;font-weight:bold">id</span> observer;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">@property</span>(<span style="color:#66d9ef">retain</span>) <span style="color:#66d9ef">id</span> observer;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@end</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">@end</span>
 </span></span></code></pre></div><p>There we define our class (DuckDockTilePlugIn in my case), which will implement the <code>NSDockTilePlugIn</code> protocol. We will also need a property for the class, which will hold an observer object. More on this soon.</p>
 <p>Next we can create the main file, where we implement our class. According the documentation we need to implement the following functions.</p>
 <p><a href="https://developer.apple.com/documentation/appkit/nsdocktileplugin/1534120-setdocktile?language=objc"  class="external-link" target="_blank" rel="noopener">- setDockTile:</a> - Invoked when the plug-in is first loaded and when the application is removed from the Dock. This is required.
 <a href="https://developer.apple.com/documentation/appkit/nsdocktileplugin/1527547-dockmenu?language=objc"  class="external-link" target="_blank" rel="noopener">- dockMenu</a> - Invoked when the user causes the application&rsquo;s dock menu to be shown. This is optional.</p>
 <p>The best if we implement both. I used the previously mentioned samples to get an idea what we can do. So I did the following.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objective-c" data-lang="objective-c"><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&#34;DuckDockTilePlugIn.h&#34;</span><span style="color:#099">
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
-</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@implementation</span> <span style="color:#0a8;font-weight:bold">DuckDockTilePlugIn</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objective-c" data-lang="objective-c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&#34;DuckDockTilePlugIn.h&#34;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">@implementation</span> <span style="color:#a6e22e">DuckDockTilePlugIn</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@synthesize</span> observer;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">@synthesize</span> observer;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">doSomething</span>(<span style="color:#078;font-weight:bold">void</span>) {
-</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;%@&#34;</span>, <span style="color:#c30">@&#34;BEYOND doSomething was called&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">doSomething</span>(<span style="color:#66d9ef">void</span>) {
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#e6db74">@&#34;%@&#34;</span>, <span style="color:#e6db74">@&#34;BEYOND doSomething was called&#34;</span>);
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setDockTile:</span>(NSDockTile <span style="color:#555">*</span>)<span style="color:#033">dockTile</span> {
-</span></span><span style="display:flex;"><span>        observer <span style="color:#555">=</span> [[NSDistributedNotificationCenter defaultCenter] <span style="color:#99f">addObserverForName</span>:<span style="color:#c30">@&#34;com.apple.screenIsLocked&#34;</span> <span style="color:#99f">object</span>:<span style="color:#366">nil</span> <span style="color:#99f">queue</span>:<span style="color:#366">nil</span> <span style="color:#99f">usingBlock</span>:<span style="color:#555">^</span>(NSNotification <span style="color:#555">*</span>notification) {
+</span></span><span style="display:flex;"><span>- (<span style="color:#66d9ef">void</span>)<span style="color:#a6e22e">setDockTile:</span>(NSDockTile <span style="color:#f92672">*</span>)dockTile {
+</span></span><span style="display:flex;"><span>        observer <span style="color:#f92672">=</span> [[NSDistributedNotificationCenter defaultCenter] addObserverForName:<span style="color:#e6db74">@&#34;com.apple.screenIsLocked&#34;</span> object:nil queue:nil usingBlock:<span style="color:#f92672">^</span>(NSNotification <span style="color:#f92672">*</span>notification) {
 </span></span><span style="display:flex;"><span>            doSomething();
 </span></span><span style="display:flex;"><span>        }];
-</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;%@&#34;</span>, <span style="color:#c30">@&#34;BEYOND setDockTile was called&#34;</span>);
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#e6db74">@&#34;%@&#34;</span>, <span style="color:#e6db74">@&#34;BEYOND setDockTile was called&#34;</span>);
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@end</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">@end</span>
 </span></span></code></pre></div><p>While implementing our logic in the setDockTile would be sufficient based on the documentation, I found the observer idea very interesting from the samples. Basically we can subscribe to various system notifications, and define a function that will be executed every single time that event is happening. This is awesome, as we can cause our plugin to be executed multiple times, and we can make it very granular based on the events we subscribe to. In theory if we provide &ldquo;nil&rdquo; for the observer name we subscribe to everything (but maybe I&rsquo;m wrong here) but that didn&rsquo;t work for me.</p>
 <p>I have spent some time looking for a good name, and eventually found the <code>com.apple.screenIsLocked</code> event, which is called when the screen is getting locked. I think under normal use, we can expect it to be invoked a few times during the day. Also, it is invoked when the screen is locked, so the user doesn&rsquo;t see what we are doing&hellip;. * evil laugh *.</p>
 <p>Once we are done with this, we need to do a few more things, so our plugin ends up inside the app.</p>
 <p>First for the plugin&rsquo;s <em>Info.plist</em> file (which is now simply the Info menu in Xcode 15), we need to define the &ldquo;Principal class&rdquo;, which is the name of the class we used for our plugin. In this case it&rsquo;s &ldquo;DuckDockTilePlugin&rdquo;.</p>
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0032_0.png" alt="Principal class"></p>
 <p>In the <em>Info.plist</em> file it will show up as:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>NSPrincipalClass<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;string&gt;</span>DuckDockTilePlugin<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;key&gt;</span>NSPrincipalClass<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;string&gt;</span>DuckDockTilePlugin<span style="color:#f92672">&lt;/string&gt;</span>
 </span></span></code></pre></div><p>Next we need to go to the Info tab of our main application and define the &ldquo;Dock Tile plugin path&rdquo;, which should be the bundle name we used.</p>
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0032_1.png" alt="Dock Tile plugin path"></p>
 <p>In the <em>Info.plist</em> it will show up as:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>NSDockTilePlugIn<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;string&gt;</span>DuckDockTilePlugin.docktileplugin<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;key&gt;</span>NSDockTilePlugIn<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;string&gt;</span>DuckDockTilePlugin.docktileplugin<span style="color:#f92672">&lt;/string&gt;</span>
 </span></span></code></pre></div><p>Lastly we need to create a &ldquo;Copy Files&rdquo; action in the main app&rsquo;s Build Phases menu. This is shown below.</p>
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0032_2.png" alt="Copy Files"></p>
 <p>We need to copy the bundle inside the app. The destination should be &ldquo;PlugIns and Foundation Extensions&rdquo;.</p>
@@ -277,31 +277,31 @@ Internal requirements count=1 size=84
   </a>
 </h2>
 <p>As I mentioned before we can use any bundle name. Loading the <code>com.apple.dock.external.extra.arm64</code> binary in IDA and looking at the load function reveals the following:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objective-c" data-lang="objective-c"><span style="display:flex;"><span> <span style="color:#078;font-weight:bold">id</span> <span style="color:#069;font-weight:bold">__cdecl</span> <span style="color:#555">-</span>[DockExtraService <span style="color:#99f">_loadPluginAtPath</span>:<span style="color:#99f">withSize</span>:<span style="color:#99f">andScale</span>:](
-</span></span><span style="display:flex;"><span>        DockExtraService <span style="color:#555">*</span><span style="color:#366">self</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#078;font-weight:bold">SEL</span> a2,
-</span></span><span style="display:flex;"><span>        <span style="color:#078;font-weight:bold">id</span> a3,
-</span></span><span style="display:flex;"><span>        <span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#069;font-weight:bold">__int64</span> a4,
-</span></span><span style="display:flex;"><span>        <span style="color:#078;font-weight:bold">float</span> a5)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objective-c" data-lang="objective-c"><span style="display:flex;"><span> <span style="color:#66d9ef">id</span> <span style="color:#66d9ef">__cdecl</span> <span style="color:#f92672">-</span>[DockExtraService _loadPluginAtPath:withSize:andScale:](
+</span></span><span style="display:flex;"><span>        DockExtraService <span style="color:#f92672">*</span>self,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">SEL</span> a2,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">id</span> a3,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int64</span> a4,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">float</span> a5)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>...
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>Value <span style="color:#555">=</span> (<span style="color:#069;font-weight:bold">const</span> __CFString <span style="color:#555">*</span>)CFDictionaryGetValue(v11, CFSTR(<span style="color:#c30">&#34;NSDockTilePlugIn&#34;</span>));
-</span></span><span style="display:flex;"><span>  v14 <span style="color:#555">=</span> Value;
-</span></span><span style="display:flex;"><span>  <span style="color:#069;font-weight:bold">if</span> ( <span style="color:#555">!</span>Value <span style="color:#555">||</span> TypeID <span style="color:#555">!=</span> CFGetTypeID(Value) )
+</span></span><span style="display:flex;"><span>Value <span style="color:#f92672">=</span> (<span style="color:#66d9ef">const</span> __CFString <span style="color:#f92672">*</span>)CFDictionaryGetValue(v11, CFSTR(<span style="color:#e6db74">&#34;NSDockTilePlugIn&#34;</span>));
+</span></span><span style="display:flex;"><span>  v14 <span style="color:#f92672">=</span> Value;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">!</span>Value <span style="color:#f92672">||</span> TypeID <span style="color:#f92672">!=</span> CFGetTypeID(Value) )
 </span></span><span style="display:flex;"><span>  {
-</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#555">&amp;</span>CFSTR(<span style="color:#c30">&#34;Could not get resource for NSDockTilePlugIn (check spelling?) for Dock Extra&#34;</span>).isa);
-</span></span><span style="display:flex;"><span><span style="color:#99f">LABEL_11</span>:
-</span></span><span style="display:flex;"><span>    v26 <span style="color:#555">=</span> <span style="color:#f60">0LL</span>;
-</span></span><span style="display:flex;"><span>    v27 <span style="color:#555">=</span> <span style="color:#f60">0LL</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">goto</span> LABEL_12;
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#f92672">&amp;</span>CFSTR(<span style="color:#e6db74">&#34;Could not get resource for NSDockTilePlugIn (check spelling?) for Dock Extra&#34;</span>).isa);
+</span></span><span style="display:flex;"><span>LABEL_11:
+</span></span><span style="display:flex;"><span>    v26 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0LL</span>;
+</span></span><span style="display:flex;"><span>    v27 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0LL</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">goto</span> LABEL_12;
 </span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>  v16 <span style="color:#555">=</span> objc_msgSend_stringWithFormat_(<span style="color:#555">&amp;</span>OBJC_CLASS___NSString, v15, CFSTR(<span style="color:#c30">&#34;/Contents/PlugIns/%@&#34;</span>), v14);
-</span></span><span style="display:flex;"><span>  v18 <span style="color:#555">=</span> objc_msgSend_URLByAppendingPathComponent_(v8, v17, v16);
-</span></span><span style="display:flex;"><span>  v19 <span style="color:#555">=</span> objc_retain(v18);
-</span></span><span style="display:flex;"><span>  v21 <span style="color:#555">=</span> objc_msgSend_defaultManager(<span style="color:#555">&amp;</span>OBJC_CLASS___NSFileManager, v20);
-</span></span><span style="display:flex;"><span>  v23 <span style="color:#555">=</span> objc_msgSend_path(v19, v22);
+</span></span><span style="display:flex;"><span>  v16 <span style="color:#f92672">=</span> objc_msgSend_stringWithFormat_(<span style="color:#f92672">&amp;</span>OBJC_CLASS___NSString, v15, CFSTR(<span style="color:#e6db74">&#34;/Contents/PlugIns/%@&#34;</span>), v14);
+</span></span><span style="display:flex;"><span>  v18 <span style="color:#f92672">=</span> objc_msgSend_URLByAppendingPathComponent_(v8, v17, v16);
+</span></span><span style="display:flex;"><span>  v19 <span style="color:#f92672">=</span> objc_retain(v18);
+</span></span><span style="display:flex;"><span>  v21 <span style="color:#f92672">=</span> objc_msgSend_defaultManager(<span style="color:#f92672">&amp;</span>OBJC_CLASS___NSFileManager, v20);
+</span></span><span style="display:flex;"><span>  v23 <span style="color:#f92672">=</span> objc_msgSend_path(v19, v22);
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>...
 </span></span></code></pre></div><p>It will use the <code>NSDockTilePlugIn</code> property of the main app to find the plugin name, and it will be appended to <code>/Contents/PlugIns/</code>. So the plugin must be placed inside that directory, but the name is arbitrary.</p>

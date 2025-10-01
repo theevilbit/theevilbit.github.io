@@ -99,7 +99,7 @@ When doing some research on macOS I came across the following LaunchAgent: /Syst
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.cf9ddd8f927a64ebeaf4fc847b0d4ad73601b6a45ef3c8fc24771e71437ab230.css" integrity="sha256-z53dj5J6ZOvq9PyEew1K1zYBtqRe88j8JHcecUN6sjA=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.b886fe0d9034709648f91f4ce178f51dd367d9350f82dd1132d54fd69bfca66f.css" integrity="sha256-uIb&#43;DZA0cJZI&#43;R9M4Xj1HdNn2TUPgt0RMtVP1pv8pm8=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -216,50 +216,50 @@ When doing some research on macOS I came across the following LaunchAgent: /Syst
     <blockquote>
 <p>This is part 29 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p></blockquote>
 <p>When doing some research on macOS I came across the following LaunchAgent: <code>/System/Library/LaunchAgents/com.apple.amstoold.plist</code>. Its content is the following.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>EnablePressuredExit<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>EnableTransactions<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>Label<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>com.apple.amstoold<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>LaunchEvents<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.distnoted.matching<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.nfcd.ams.accessory<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>Name<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>com.apple.nfcd.ams.accessory<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.notifyd.matching<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.ams.privateListeningChanged<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;key&gt;</span>Notification<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>				<span style="color:#309;font-weight:bold">&lt;string&gt;</span>com.apple.ams.privateListeningChanged<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>MachServices<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.xpc.amstoold<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>ProcessType<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>Background<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>ProgramArguments<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/usr/local/bin/amstoold<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>RunAtLoad<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;plist</span> <span style="color:#a6e22e">version=</span><span style="color:#e6db74">&#34;1.0&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>EnablePressuredExit<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>EnableTransactions<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>Label<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;string&gt;</span>com.apple.amstoold<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>LaunchEvents<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;key&gt;</span>com.apple.distnoted.matching<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;key&gt;</span>com.apple.nfcd.ams.accessory<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#f92672">&lt;key&gt;</span>Name<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#f92672">&lt;string&gt;</span>com.apple.nfcd.ams.accessory<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;key&gt;</span>com.apple.notifyd.matching<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;key&gt;</span>com.apple.ams.privateListeningChanged<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#f92672">&lt;key&gt;</span>Notification<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#f92672">&lt;string&gt;</span>com.apple.ams.privateListeningChanged<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>MachServices<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;key&gt;</span>com.apple.xpc.amstoold<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>ProcessType<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;string&gt;</span>Background<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>ProgramArguments<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;string&gt;</span>/usr/local/bin/amstoold<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>RunAtLoad<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/plist&gt;</span>
 </span></span></code></pre></div><p>If we examine it closely we can notice that the related binary is <code>/usr/local/bin/amstoold</code>. This is very interesting as this file doesn&rsquo;t exists on default macOS installations. This means that if we create it, it will be started as the user upon login. As the launchd file is SIP protected, we can&rsquo;t even remove it, and even if we would, it likely would come back at the next OS update.</p>
 <p>Normally we would require root for installing a file in this location, however if we have <code>homebrew</code> installed, we can do that as the normal user.</p>
 <p>Honestly this is really odd. Moreover it defines an Mach/XPC service, named <code>com.apple.xpc.amstoold</code>. This is being referenced in a couple of Sandbox profiles:</p>
@@ -282,39 +282,39 @@ When doing some research on macOS I came across the following LaunchAgent: /Syst
 117:    (global-name &#34;com.apple.xpc.amstoold&#34;)
 </code></pre><p>The XPC service is being referenced by a single framework, namely <code>AppleMediaServices</code>. Based on this I guess <code>amstoold</code> stands for <code>Apple Media Services Tool Daemon</code>.</p>
 <p>Essentially the lack of this binary would also allow us to hijack a system defined XPC service. I didn&rsquo;t take the time to reverse its invocation, beyond finding the XPC connection setup, which is show below.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span> <span style="color:#555">-</span>[AMSHTTPArchiveService _createRemoteConnection](<span style="color:#078;font-weight:bold">int</span> arg0) {
-</span></span><span style="display:flex;"><span>    r12 <span style="color:#555">=</span> <span style="color:#555">*</span>_objc_msgSend;
-</span></span><span style="display:flex;"><span>    dispatch_assert_queue<span style="color:#a00;background-color:#faa">$</span>V2([[arg0 queue] <span style="color:#069;font-weight:bold">retain</span>]);
-</span></span><span style="display:flex;"><span>    [rax <span style="color:#069;font-weight:bold">release</span>];
-</span></span><span style="display:flex;"><span>    rbx <span style="color:#555">=</span> r12;
-</span></span><span style="display:flex;"><span>    r12 <span style="color:#555">=</span> [[<span style="color:#555">*</span><span style="color:#f60">0x7ff842dc4568</span> alloc] <span style="color:#99f">initWithMachServiceName</span>:<span style="color:#c30">@&#34;com.apple.xpc.amstoold&#34;</span> <span style="color:#99f">options</span>:<span style="color:#f60">0x0</span>];
-</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [arg0 queue];
-</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
-</span></span><span style="display:flex;"><span>    [r12 <span style="color:#99f">_setQueue</span>:rax];
-</span></span><span style="display:flex;"><span>    [rax <span style="color:#069;font-weight:bold">release</span>];
-</span></span><span style="display:flex;"><span>    r14 <span style="color:#555">=</span> [[<span style="color:#555">*</span><span style="color:#f60">0x7ff842dc4570</span> <span style="color:#99f">interfaceWithProtocol</span>:<span style="color:#555">*</span><span style="color:#f60">0x7ff842dc40a0</span>] <span style="color:#069;font-weight:bold">retain</span>];
-</span></span><span style="display:flex;"><span>    [r14 <span style="color:#99f">setClass</span>:objc_opt_class(@<span style="color:#069;font-weight:bold">class</span>(AMSHTTPArchiveTaskInfo)) <span style="color:#99f">forSelector</span>:<span style="color:#069;font-weight:bold">@selector</span>(<span style="color:#99f">recordTrafficWithTaskInfo</span>:) <span style="color:#99f">argumentIndex</span>:<span style="color:#f60">0x0</span> <span style="color:#99f">ofReply</span>:<span style="color:#f60">0x0</span>];
-</span></span><span style="display:flex;"><span>    [r12 <span style="color:#99f">setRemoteObjectInterface</span>:r14];
-</span></span><span style="display:flex;"><span>    objc_initWeak(<span style="color:#555">&amp;</span>var_30, arg0);
-</span></span><span style="display:flex;"><span>    <span style="color:#555">*</span>(<span style="color:#555">&amp;</span>var_60 <span style="color:#555">-</span> <span style="color:#f60">0x20</span>) <span style="color:#555">=</span> <span style="color:#555">*</span>__NSConcreteStackBlock;
-</span></span><span style="display:flex;"><span>    <span style="color:#555">*</span>(<span style="color:#555">&amp;</span>var_60 <span style="color:#555">-</span> <span style="color:#f60">0x18</span>) <span style="color:#555">=</span> <span style="color:#f60">0xffffffffc2000000</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#555">*</span>(<span style="color:#555">&amp;</span>var_60 <span style="color:#555">-</span> <span style="color:#f60">0x10</span>) <span style="color:#555">=</span> sub_7ff817786529;
-</span></span><span style="display:flex;"><span>    <span style="color:#555">*</span>(<span style="color:#555">&amp;</span>var_60 <span style="color:#555">-</span> <span style="color:#f60">0x8</span>) <span style="color:#555">=</span> <span style="color:#f60">0x7ff8415511f8</span>;
-</span></span><span style="display:flex;"><span>    objc_copyWeak(<span style="color:#555">&amp;</span>var_60, <span style="color:#555">&amp;</span>var_30);
-</span></span><span style="display:flex;"><span>    [r12 <span style="color:#99f">setInvalidationHandler</span>:<span style="color:#555">&amp;</span>var_80];
-</span></span><span style="display:flex;"><span>    <span style="color:#555">*</span>(<span style="color:#555">&amp;</span>var_38 <span style="color:#555">-</span> <span style="color:#f60">0x20</span>) <span style="color:#555">=</span> <span style="color:#555">*</span>__NSConcreteStackBlock;
-</span></span><span style="display:flex;"><span>    <span style="color:#555">*</span>(<span style="color:#555">&amp;</span>var_38 <span style="color:#555">-</span> <span style="color:#f60">0x18</span>) <span style="color:#555">=</span> <span style="color:#f60">0xffffffffc2000000</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#555">*</span>(<span style="color:#555">&amp;</span>var_38 <span style="color:#555">-</span> <span style="color:#f60">0x10</span>) <span style="color:#555">=</span> sub_7ff8177866b9;
-</span></span><span style="display:flex;"><span>    <span style="color:#555">*</span>(<span style="color:#555">&amp;</span>var_38 <span style="color:#555">-</span> <span style="color:#f60">0x8</span>) <span style="color:#555">=</span> <span style="color:#f60">0x7ff8415511f8</span>;
-</span></span><span style="display:flex;"><span>    objc_copyWeak(<span style="color:#555">&amp;</span>var_38, <span style="color:#555">&amp;</span>var_30);
-</span></span><span style="display:flex;"><span>    [r12 <span style="color:#99f">setInterruptionHandler</span>:<span style="color:#555">&amp;</span>var_58];
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#f92672">-</span>[AMSHTTPArchiveService _createRemoteConnection](<span style="color:#66d9ef">int</span> arg0) {
+</span></span><span style="display:flex;"><span>    r12 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>_objc_msgSend;
+</span></span><span style="display:flex;"><span>    dispatch_assert_queue<span style="color:#960050;background-color:#1e0010">$</span>V2([[arg0 queue] <span style="color:#66d9ef">retain</span>]);
+</span></span><span style="display:flex;"><span>    [rax <span style="color:#66d9ef">release</span>];
+</span></span><span style="display:flex;"><span>    rbx <span style="color:#f92672">=</span> r12;
+</span></span><span style="display:flex;"><span>    r12 <span style="color:#f92672">=</span> [[<span style="color:#f92672">*</span><span style="color:#ae81ff">0x7ff842dc4568</span> alloc] initWithMachServiceName:<span style="color:#e6db74">@&#34;com.apple.xpc.amstoold&#34;</span> options:<span style="color:#ae81ff">0x0</span>];
+</span></span><span style="display:flex;"><span>    rax <span style="color:#f92672">=</span> [arg0 queue];
+</span></span><span style="display:flex;"><span>    rax <span style="color:#f92672">=</span> [rax <span style="color:#66d9ef">retain</span>];
+</span></span><span style="display:flex;"><span>    [r12 _setQueue:rax];
+</span></span><span style="display:flex;"><span>    [rax <span style="color:#66d9ef">release</span>];
+</span></span><span style="display:flex;"><span>    r14 <span style="color:#f92672">=</span> [[<span style="color:#f92672">*</span><span style="color:#ae81ff">0x7ff842dc4570</span> interfaceWithProtocol:<span style="color:#f92672">*</span><span style="color:#ae81ff">0x7ff842dc40a0</span>] <span style="color:#66d9ef">retain</span>];
+</span></span><span style="display:flex;"><span>    [r14 setClass:objc_opt_class(@<span style="color:#66d9ef">class</span>(AMSHTTPArchiveTaskInfo)) forSelector:<span style="color:#66d9ef">@selector</span>(recordTrafficWithTaskInfo:) argumentIndex:<span style="color:#ae81ff">0x0</span> ofReply:<span style="color:#ae81ff">0x0</span>];
+</span></span><span style="display:flex;"><span>    [r12 setRemoteObjectInterface:r14];
+</span></span><span style="display:flex;"><span>    objc_initWeak(<span style="color:#f92672">&amp;</span>var_30, arg0);
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>(<span style="color:#f92672">&amp;</span>var_60 <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x20</span>) <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>__NSConcreteStackBlock;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>(<span style="color:#f92672">&amp;</span>var_60 <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x18</span>) <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xffffffffc2000000</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>(<span style="color:#f92672">&amp;</span>var_60 <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x10</span>) <span style="color:#f92672">=</span> sub_7ff817786529;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>(<span style="color:#f92672">&amp;</span>var_60 <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x8</span>) <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x7ff8415511f8</span>;
+</span></span><span style="display:flex;"><span>    objc_copyWeak(<span style="color:#f92672">&amp;</span>var_60, <span style="color:#f92672">&amp;</span>var_30);
+</span></span><span style="display:flex;"><span>    [r12 setInvalidationHandler:<span style="color:#f92672">&amp;</span>var_80];
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>(<span style="color:#f92672">&amp;</span>var_38 <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x20</span>) <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>__NSConcreteStackBlock;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>(<span style="color:#f92672">&amp;</span>var_38 <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x18</span>) <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xffffffffc2000000</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>(<span style="color:#f92672">&amp;</span>var_38 <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x10</span>) <span style="color:#f92672">=</span> sub_7ff8177866b9;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>(<span style="color:#f92672">&amp;</span>var_38 <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x8</span>) <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x7ff8415511f8</span>;
+</span></span><span style="display:flex;"><span>    objc_copyWeak(<span style="color:#f92672">&amp;</span>var_38, <span style="color:#f92672">&amp;</span>var_30);
+</span></span><span style="display:flex;"><span>    [r12 setInterruptionHandler:<span style="color:#f92672">&amp;</span>var_58];
 </span></span><span style="display:flex;"><span>    [r12 resume];
-</span></span><span style="display:flex;"><span>    objc_destroyWeak(<span style="color:#555">&amp;</span>var_38);
-</span></span><span style="display:flex;"><span>    objc_destroyWeak(<span style="color:#555">&amp;</span>var_60);
-</span></span><span style="display:flex;"><span>    objc_destroyWeak(<span style="color:#555">&amp;</span>var_30);
-</span></span><span style="display:flex;"><span>    [r14 <span style="color:#069;font-weight:bold">release</span>];
-</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [r12 autorelease];
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span> rax;
+</span></span><span style="display:flex;"><span>    objc_destroyWeak(<span style="color:#f92672">&amp;</span>var_38);
+</span></span><span style="display:flex;"><span>    objc_destroyWeak(<span style="color:#f92672">&amp;</span>var_60);
+</span></span><span style="display:flex;"><span>    objc_destroyWeak(<span style="color:#f92672">&amp;</span>var_30);
+</span></span><span style="display:flex;"><span>    [r14 <span style="color:#66d9ef">release</span>];
+</span></span><span style="display:flex;"><span>    rax <span style="color:#f92672">=</span> [r12 autorelease];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> rax;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>I think it would an interesting future research area, what could we get access to by implementing this service ourselves.</p>
 <p>Until then, simply drop this binary and you can persist as the user.</p>

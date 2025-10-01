@@ -52,7 +52,7 @@ TL;DR - This is a practically completely useless persistence, as this can be onl
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.cf9ddd8f927a64ebeaf4fc847b0d4ad73601b6a45ef3c8fc24771e71437ab230.css" integrity="sha256-z53dj5J6ZOvq9PyEew1K1zYBtqRe88j8JHcecUN6sjA=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.b886fe0d9034709648f91f4ce178f51dd367d9350f82dd1132d54fd69bfca66f.css" integrity="sha256-uIb&#43;DZA0cJZI&#43;R9M4Xj1HdNn2TUPgt0RMtVP1pv8pm8=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -170,124 +170,124 @@ TL;DR - This is a practically completely useless persistence, as this can be onl
 <p>This is part 35 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p></blockquote>
 <p>TL;DR - This is a practically completely useless persistence, as this can be only set and enabled when SIP is actually disabled. On the other hand I still find it a pretty amazing way to persist, as we can do that by putting a binary into NVRAM and get that executed. Here follows the details of the discovery.</p>
 <p>When I recently wrote about the launchd boot task persistence, I kept reading through the massive list of various boot tasks. Eventually one caught my attention.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>rc.trampoline<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>Program<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/System/Library/CoreServices/rc.trampoline<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>PerformAfterUserspaceReboot<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>AllowCrash<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;key&gt;</span>rc.trampoline<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>Program<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;string&gt;</span>/System/Library/CoreServices/rc.trampoline<span style="color:#f92672">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>PerformAfterUserspaceReboot<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>AllowCrash<span style="color:#f92672">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/dict&gt;</span>
 </span></span></code></pre></div><p>It&rsquo;s called <code>rc.trampoline</code>. I&rsquo;m somewhat familiar with the other <code>rc</code> options, so I thought that this would be something similar, but also more unique as the file sits in a SIP protected location. I couldn&rsquo;t find any information about what this could be, so I loaded the binary to IDA and after decompilation, and some editing I finally arrived to the following (almost) fully reversed code. You can actually compile this if you wish.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objective-c" data-lang="objective-c"><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;objc/runtime.h&gt;</span><span style="color:#099">
-</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;Foundation/Foundation.h&gt;</span><span style="color:#099">
-</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;IOKit/IOKitLib.h&gt;</span><span style="color:#099">
-</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;spawn.h&gt;</span><span style="color:#099">
-</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;unistd.h&gt;</span><span style="color:#099">
-</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
-</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdlib.h&gt;</span><span style="color:#099">
-</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;err.h&gt;</span><span style="color:#099">
-</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;sys/wait.h&gt;</span><span style="color:#099">
-</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;sys/stat.h&gt;</span><span style="color:#099">
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
-</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">typedef</span> uint32_t csr_config_t;
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objective-c" data-lang="objective-c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;objc/runtime.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;Foundation/Foundation.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;IOKit/IOKitLib.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;spawn.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;unistd.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;err.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/wait.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/stat.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> uint32_t csr_config_t;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#099">#define CSR_ALLOW_UNRESTRICTED_FS (1 &lt;&lt; 1)
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
-</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">extern</span> <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">csr_check</span>(csr_config_t);
-</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">extern</span> <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">csops</span>(pid_t pid, <span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#078;font-weight:bold">int</span>  ops, <span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span> useraddr, size_t usersize);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#define CSR_ALLOW_UNRESTRICTED_FS (1 &lt;&lt; 1)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">extern</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">csr_check</span>(csr_config_t);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">extern</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">csops</span>(pid_t pid, <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>  ops, <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span> useraddr, size_t usersize);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">handle_error</span>() {
-</span></span><span style="display:flex;"><span>	printf(<span style="color:#c30">&#34;Something went wrong, I&#39;m lazy to implement an error for each case now...</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>	exit(<span style="color:#f60">1</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">handle_error</span>() {
+</span></span><span style="display:flex;"><span>	printf(<span style="color:#e6db74">&#34;Something went wrong, I&#39;m lazy to implement an error for each case now...</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>	exit(<span style="color:#ae81ff">1</span>);
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">main</span>() {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
 </span></span><span style="display:flex;"><span>    io_registry_entry_t ioEntry;
 </span></span><span style="display:flex;"><span>    io_object_t ioObject;
-</span></span><span style="display:flex;"><span>    CFMutableDictionaryRef ioProperties <span style="color:#555">=</span> <span style="color:#366">NULL</span>;
-</span></span><span style="display:flex;"><span>    mach_port_t mainPort <span style="color:#555">=</span> <span style="color:#f60">0</span>;
+</span></span><span style="display:flex;"><span>    CFMutableDictionaryRef ioProperties <span style="color:#f92672">=</span> NULL;
+</span></span><span style="display:flex;"><span>    mach_port_t mainPort <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (IOMasterPort(bootstrap_port, <span style="color:#555">&amp;</span>mainPort) <span style="color:#555">!=</span> KERN_SUCCESS) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (IOMasterPort(bootstrap_port, <span style="color:#f92672">&amp;</span>mainPort) <span style="color:#f92672">!=</span> KERN_SUCCESS) {
 </span></span><span style="display:flex;"><span>        handle_error();
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    ioEntry <span style="color:#555">=</span> IORegistryEntryFromPath(mainPort, <span style="color:#c30">&#34;IODeviceTree:/options&#34;</span>);
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span>ioEntry) {
+</span></span><span style="display:flex;"><span>    ioEntry <span style="color:#f92672">=</span> IORegistryEntryFromPath(mainPort, <span style="color:#e6db74">&#34;IODeviceTree:/options&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>ioEntry) {
 </span></span><span style="display:flex;"><span>        handle_error();
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    ioObject <span style="color:#555">=</span> ioEntry;
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (IORegistryEntryCreateCFProperties(ioEntry, <span style="color:#555">&amp;</span>ioProperties, <span style="color:#366">NULL</span>, <span style="color:#f60">0</span>) <span style="color:#555">!=</span> KERN_SUCCESS) {
+</span></span><span style="display:flex;"><span>    ioObject <span style="color:#f92672">=</span> ioEntry;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (IORegistryEntryCreateCFProperties(ioEntry, <span style="color:#f92672">&amp;</span>ioProperties, NULL, <span style="color:#ae81ff">0</span>) <span style="color:#f92672">!=</span> KERN_SUCCESS) {
 </span></span><span style="display:flex;"><span>        handle_error();
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    IOObjectRelease(ioObject);
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span>ioProperties) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>ioProperties) {
 </span></span><span style="display:flex;"><span>        handle_error();
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">// Retrieve &#34;apple-trusted-trampoline&#34; property
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    CFStringRef trampolineKey <span style="color:#555">=</span> CFSTR(<span style="color:#c30">&#34;apple-trusted-trampoline&#34;</span>);
-</span></span><span style="display:flex;"><span>    NSString <span style="color:#555">*</span>trampolineValue <span style="color:#555">=</span> CFDictionaryGetValue(ioProperties, trampolineKey);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Retrieve &#34;apple-trusted-trampoline&#34; property
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    CFStringRef trampolineKey <span style="color:#f92672">=</span> CFSTR(<span style="color:#e6db74">&#34;apple-trusted-trampoline&#34;</span>);
+</span></span><span style="display:flex;"><span>    NSString <span style="color:#f92672">*</span>trampolineValue <span style="color:#f92672">=</span> CFDictionaryGetValue(ioProperties, trampolineKey);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span>trampolineValue <span style="color:#555">||</span> <span style="color:#555">!</span>[trampolineValue length]) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>trampolineValue <span style="color:#f92672">||</span> <span style="color:#f92672">!</span>[trampolineValue length]) {
 </span></span><span style="display:flex;"><span>        handle_error();
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">// Generate file path in temporary directory
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    NSString <span style="color:#555">*</span>tempDir <span style="color:#555">=</span> NSTemporaryDirectory();
-</span></span><span style="display:flex;"><span>    NSURL <span style="color:#555">*</span>fileURL <span style="color:#555">=</span> [NSURL <span style="color:#99f">fileURLWithPath</span>:tempDir];
-</span></span><span style="display:flex;"><span>    NSURL <span style="color:#555">*</span>finalURL <span style="color:#555">=</span> [fileURL <span style="color:#99f">URLByAppendingPathComponent</span>:<span style="color:#c30">@&#34;apple-trusted-trampoline.bin&#34;</span>];
-</span></span><span style="display:flex;"><span>    NSString <span style="color:#555">*</span>filePath <span style="color:#555">=</span> [finalURL path];
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Generate file path in temporary directory
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    NSString <span style="color:#f92672">*</span>tempDir <span style="color:#f92672">=</span> NSTemporaryDirectory();
+</span></span><span style="display:flex;"><span>    NSURL <span style="color:#f92672">*</span>fileURL <span style="color:#f92672">=</span> [NSURL fileURLWithPath:tempDir];
+</span></span><span style="display:flex;"><span>    NSURL <span style="color:#f92672">*</span>finalURL <span style="color:#f92672">=</span> [fileURL URLByAppendingPathComponent:<span style="color:#e6db74">@&#34;apple-trusted-trampoline.bin&#34;</span>];
+</span></span><span style="display:flex;"><span>    NSString <span style="color:#f92672">*</span>filePath <span style="color:#f92672">=</span> [finalURL path];
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">// Write trampoline to file
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    <span style="color:#078;font-weight:bold">BOOL</span> writeSuccess <span style="color:#555">=</span> [trampolineValue <span style="color:#99f">writeToFile</span>:filePath <span style="color:#99f">atomically</span>:<span style="color:#366">NO</span>];
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span>writeSuccess) {
-</span></span><span style="display:flex;"><span>        <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>filePathCStr <span style="color:#555">=</span> [filePath UTF8String];
-</span></span><span style="display:flex;"><span>        errx(<span style="color:#f60">1</span>, <span style="color:#c30">&#34;Failed to write binary file to %s, it must be writable.&#34;</span>, filePathCStr);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Write trampoline to file
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">BOOL</span> writeSuccess <span style="color:#f92672">=</span> [trampolineValue writeToFile:filePath atomically:NO];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>writeSuccess) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>filePathCStr <span style="color:#f92672">=</span> [filePath UTF8String];
+</span></span><span style="display:flex;"><span>        errx(<span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#34;Failed to write binary file to %s, it must be writable.&#34;</span>, filePathCStr);
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    chmod([filePath UTF8String], <span style="color:#f60">0700</span>);
+</span></span><span style="display:flex;"><span>    chmod([filePath UTF8String], <span style="color:#ae81ff">0700</span>);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">// Prepare to spawn a new process
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    pid_t childPid <span style="color:#555">=</span> <span style="color:#f60">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Prepare to spawn a new process
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    pid_t childPid <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>    posix_spawn_file_actions_t fileActions;
 </span></span><span style="display:flex;"><span>    posix_spawnattr_t spawnAttr;
-</span></span><span style="display:flex;"><span>    posix_spawn_file_actions_init(<span style="color:#555">&amp;</span>fileActions);
-</span></span><span style="display:flex;"><span>    posix_spawnattr_init(<span style="color:#555">&amp;</span>spawnAttr);
-</span></span><span style="display:flex;"><span>    posix_spawnattr_setflags(<span style="color:#555">&amp;</span>spawnAttr, POSIX_SPAWN_START_SUSPENDED);
+</span></span><span style="display:flex;"><span>    posix_spawn_file_actions_init(<span style="color:#f92672">&amp;</span>fileActions);
+</span></span><span style="display:flex;"><span>    posix_spawnattr_init(<span style="color:#f92672">&amp;</span>spawnAttr);
+</span></span><span style="display:flex;"><span>    posix_spawnattr_setflags(<span style="color:#f92672">&amp;</span>spawnAttr, POSIX_SPAWN_START_SUSPENDED);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>argv[] <span style="color:#555">=</span> {<span style="color:#c30">&#34;apple-trusted-trampoline.bin&#34;</span>, <span style="color:#366">NULL</span>};
-</span></span><span style="display:flex;"><span>    <span style="color:#078;font-weight:bold">int</span> spawnResult <span style="color:#555">=</span> posix_spawn(<span style="color:#555">&amp;</span>childPid, [filePath UTF8String], <span style="color:#555">&amp;</span>fileActions, <span style="color:#555">&amp;</span>spawnAttr, (<span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span><span style="color:#069;font-weight:bold">const</span> <span style="color:#555">*</span>)argv, <span style="color:#366">NULL</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>argv[] <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;apple-trusted-trampoline.bin&#34;</span>, NULL};
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> spawnResult <span style="color:#f92672">=</span> posix_spawn(<span style="color:#f92672">&amp;</span>childPid, [filePath UTF8String], <span style="color:#f92672">&amp;</span>fileActions, <span style="color:#f92672">&amp;</span>spawnAttr, (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">const</span> <span style="color:#f92672">*</span>)argv, NULL);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (spawnResult <span style="color:#555">!=</span> <span style="color:#f60">0</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (spawnResult <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>) {
 </span></span><span style="display:flex;"><span>        handle_error();
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">// Perform checks on the spawned process
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    <span style="color:#078;font-weight:bold">int</span> csopsFlags <span style="color:#555">=</span> <span style="color:#f60">0</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#078;font-weight:bold">int</span> checkResult <span style="color:#555">=</span> csops(childPid, <span style="color:#f60">0</span>, <span style="color:#555">&amp;</span>csopsFlags, <span style="color:#069;font-weight:bold">sizeof</span>(csopsFlags));
-</span></span><span style="display:flex;"><span>    <span style="color:#078;font-weight:bold">int</span> csrCheckResult <span style="color:#555">=</span> csr_check(CSR_ALLOW_UNRESTRICTED_FS);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Perform checks on the spawned process
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> csopsFlags <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> checkResult <span style="color:#f92672">=</span> csops(childPid, <span style="color:#ae81ff">0</span>, <span style="color:#f92672">&amp;</span>csopsFlags, <span style="color:#66d9ef">sizeof</span>(csopsFlags));
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> csrCheckResult <span style="color:#f92672">=</span> csr_check(CSR_ALLOW_UNRESTRICTED_FS);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">// Clean up and terminate child process if necessary
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    NSString <span style="color:#555">*</span>unlinkPath <span style="color:#555">=</span> [finalURL path];
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Clean up and terminate child process if necessary
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    NSString <span style="color:#f92672">*</span>unlinkPath <span style="color:#f92672">=</span> [finalURL path];
 </span></span><span style="display:flex;"><span>    unlink([unlinkPath UTF8String]);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (csrCheckResult <span style="color:#555">!=</span> <span style="color:#f60">0</span> <span style="color:#555">&amp;&amp;</span> (checkResult <span style="color:#555">!=</span> <span style="color:#f60">0</span> <span style="color:#555">||</span> (csopsFlags <span style="color:#555">&amp;</span> <span style="color:#f60">0x4000000</span>) <span style="color:#555">==</span> <span style="color:#f60">0</span>)) {
-</span></span><span style="display:flex;"><span>        fprintf(stderr, <span style="color:#c30">&#34;Killing child, it did not pass the platform check.</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (csrCheckResult <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> (checkResult <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">||</span> (csopsFlags <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0x4000000</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>)) {
+</span></span><span style="display:flex;"><span>        fprintf(stderr, <span style="color:#e6db74">&#34;Killing child, it did not pass the platform check.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
 </span></span><span style="display:flex;"><span>        kill(childPid, SIGKILL);
-</span></span><span style="display:flex;"><span>        exit(<span style="color:#f60">0</span>);
+</span></span><span style="display:flex;"><span>        exit(<span style="color:#ae81ff">0</span>);
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">// Resume child process and wait for it to finish
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    kill(childPid, SIGCONT);
-</span></span><span style="display:flex;"><span>    <span style="color:#078;font-weight:bold">int</span> status <span style="color:#555">=</span> <span style="color:#f60">0</span>;
-</span></span><span style="display:flex;"><span>    waitpid(childPid, <span style="color:#555">&amp;</span>status, <span style="color:#f60">0</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Resume child process and wait for it to finish
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    kill(childPid, SIGCONT);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> status <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    waitpid(childPid, <span style="color:#f92672">&amp;</span>status, <span style="color:#ae81ff">0</span>);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span> <span style="color:#f60">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>Let me summarize what this does:</p>
 <ol>
@@ -301,10 +301,10 @@ TL;DR - This is a practically completely useless persistence, as this can be onl
 <p>I honestly found this pretty dope. By setting an NVRAM variable you can get the system execute code if it&rsquo;s an Apple signed binary. Interestingly, the key <code>apple-trusted-trampoline</code> doesn&rsquo;t exists by default.</p>
 <p>So I created a small tool, which will read a file and write it to the IO Registry. I started to play around how to trigger the actual execution, and also start reversing <code>launchd</code> as it didn&rsquo;t want to work at first.</p>
 <p>Turned out that the <code>rc.trampoline</code> boot arg has to be set in order to run the <code>rc.trampoline</code> boot task. <code>launchd</code> will check quite a few boot-args when it starts up (there is one for most of the items in the boot task list), including the one we need.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>flag_trampoline <span style="color:#555">=</span> <span style="color:#c0f">sub_100041188</span>(bootargs, (<span style="color:#069;font-weight:bold">__int64</span>)<span style="color:#c30">&#34;rc.trampoline=&#34;</span>) <span style="color:#555">!=</span> <span style="color:#f60">0</span>;
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>flag_trampoline <span style="color:#f92672">=</span> <span style="color:#a6e22e">sub_100041188</span>(bootargs, (<span style="color:#66d9ef">__int64</span>)<span style="color:#e6db74">&#34;rc.trampoline=&#34;</span>) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>;
 </span></span></code></pre></div><p>It will set a flag if the relevant boot arg is found and later it will check that flag and if set, it will run the <code>rc.trampoline</code> boot task.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">if</span> ( flag_trampoline )
-</span></span><span style="display:flex;"><span>      v50 <span style="color:#555">=</span> <span style="color:#c0f">sub_100042D68</span>(<span style="color:#c30">&#34;rc.trampoline&#34;</span>, <span style="color:#f60">0LL</span>);
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> ( flag_trampoline )
+</span></span><span style="display:flex;"><span>      v50 <span style="color:#f92672">=</span> <span style="color:#a6e22e">sub_100042D68</span>(<span style="color:#e6db74">&#34;rc.trampoline&#34;</span>, <span style="color:#ae81ff">0LL</span>);
 </span></span></code></pre></div><p>This is all nice, but there are two issues:</p>
 <ol>
 <li>We can&rsquo;t set the boot-args in NVRAM is SIP is enabled (unless we find a bypass).</li>

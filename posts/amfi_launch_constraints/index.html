@@ -59,7 +59,7 @@ Do the following experiment: Copy Terminal.app to your HOME folder and try to ru
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.cf9ddd8f927a64ebeaf4fc847b0d4ad73601b6a45ef3c8fc24771e71437ab230.css" integrity="sha256-z53dj5J6ZOvq9PyEew1K1zYBtqRe88j8JHcecUN6sjA=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.b886fe0d9034709648f91f4ce178f51dd367d9350f82dd1132d54fd69bfca66f.css" integrity="sha256-uIb&#43;DZA0cJZI&#43;R9M4Xj1HdNn2TUPgt0RMtVP1pv8pm8=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -238,89 +238,89 @@ info: c[1]p[1]m[1]e[1], (Constraint not matched) launching proc[vc: 1 pid: 1195]
 ConfigurationSettings::allow3rdPartyLaunchConstraints(void)
 _proc_check_launch_constraints(proc *,int,int,void *,ulong,launch_constraint_data *,char **,ulong *)
 </code></pre><p>The settings are initialized in:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#078;font-weight:bold">char</span> <span style="color:#c0f">configurationSettingsInit</span>(<span style="color:#078;font-weight:bold">void</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">char</span> <span style="color:#a6e22e">configurationSettingsInit</span>(<span style="color:#66d9ef">void</span>)
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>  IORegistryEntry <span style="color:#555">*</span>v0; <span style="color:#09f;font-style:italic">// r12
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>  <span style="color:#069;font-weight:bold">const</span> OSMetaClassBase <span style="color:#555">*</span>v1; <span style="color:#09f;font-style:italic">// rax
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>  OSMetaClassBase <span style="color:#555">*</span>v2; <span style="color:#09f;font-style:italic">// rax
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>  <span style="color:#078;font-weight:bold">boolean_t</span> v3; <span style="color:#09f;font-style:italic">// ebx
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>  <span style="color:#078;font-weight:bold">int</span> v4; <span style="color:#09f;font-style:italic">// r13d
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>  <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>v5; <span style="color:#09f;font-style:italic">// rax
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>  <span style="color:#078;font-weight:bold">int</span> v6; <span style="color:#09f;font-style:italic">// r15d
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>  <span style="color:#078;font-weight:bold">int</span> v7; <span style="color:#09f;font-style:italic">// r14d
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>  <span style="color:#078;font-weight:bold">bool</span> v8; <span style="color:#09f;font-style:italic">// zf
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>  <span style="color:#078;font-weight:bold">bool</span> v9; <span style="color:#09f;font-style:italic">// bl
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>  <span style="color:#078;font-weight:bold">bool</span> v10; <span style="color:#09f;font-style:italic">// r15
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>  <span style="color:#078;font-weight:bold">boolean_t</span> v12; <span style="color:#09f;font-style:italic">// [rsp+Ch] [rbp-34h]
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>  <span style="color:#078;font-weight:bold">int</span> v13; <span style="color:#09f;font-style:italic">// [rsp+10h] [rbp-30h]
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>  <span style="color:#078;font-weight:bold">int</span> v14[<span style="color:#f60">11</span>]; <span style="color:#09f;font-style:italic">// [rsp+14h] [rbp-2Ch] BYREF
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>
-</span></span><span style="display:flex;"><span>  <span style="color:#c0f">sysctl_register_oid</span>(<span style="color:#555">&amp;</span>sysctl__security_mac_amfi);
-</span></span><span style="display:flex;"><span>  <span style="color:#c0f">sysctl_register_oid</span>(<span style="color:#555">&amp;</span>sysctl__security_mac_amfi_developer_mode_status);
-</span></span><span style="display:flex;"><span>  <span style="color:#c0f">sysctl_register_oid</span>(<span style="color:#555">&amp;</span>sysctl__security_mac_amfi_developer_mode_resolved);
-</span></span><span style="display:flex;"><span>  <span style="color:#c0f">sysctl_register_oid</span>(<span style="color:#555">&amp;</span>sysctl__security_mac_amfi_launch_constraints_enforced);
-</span></span><span style="display:flex;"><span>  <span style="color:#c0f">sysctl_register_oid</span>(<span style="color:#555">&amp;</span>sysctl__security_mac_amfi_launch_constraints_3rd_party_allowed);
-</span></span><span style="display:flex;"><span>  <span style="color:#c0f">sysctl_register_oid</span>(<span style="color:#555">&amp;</span>sysctl__security_mac_amfi_launch_env_logging);
-</span></span><span style="display:flex;"><span>  v0 <span style="color:#555">=</span> IORegistryEntry<span style="color:#555">::</span><span style="color:#c0f">fromPath</span>(<span style="color:#c30">&#34;/chosen&#34;</span>, gIODTPlane, <span style="color:#f60">0LL</span>, <span style="color:#f60">0LL</span>, <span style="color:#f60">0LL</span>);
-</span></span><span style="display:flex;"><span>  <span style="color:#069;font-weight:bold">if</span> ( v0 )
+</span></span><span style="display:flex;"><span>  IORegistryEntry <span style="color:#f92672">*</span>v0; <span style="color:#75715e">// r12
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">const</span> OSMetaClassBase <span style="color:#f92672">*</span>v1; <span style="color:#75715e">// rax
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  OSMetaClassBase <span style="color:#f92672">*</span>v2; <span style="color:#75715e">// rax
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">boolean_t</span> v3; <span style="color:#75715e">// ebx
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v4; <span style="color:#75715e">// r13d
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>v5; <span style="color:#75715e">// rax
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v6; <span style="color:#75715e">// r15d
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v7; <span style="color:#75715e">// r14d
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">bool</span> v8; <span style="color:#75715e">// zf
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">bool</span> v9; <span style="color:#75715e">// bl
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">bool</span> v10; <span style="color:#75715e">// r15
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">boolean_t</span> v12; <span style="color:#75715e">// [rsp+Ch] [rbp-34h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v13; <span style="color:#75715e">// [rsp+10h] [rbp-30h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v14[<span style="color:#ae81ff">11</span>]; <span style="color:#75715e">// [rsp+14h] [rbp-2Ch] BYREF
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">sysctl_register_oid</span>(<span style="color:#f92672">&amp;</span>sysctl__security_mac_amfi);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">sysctl_register_oid</span>(<span style="color:#f92672">&amp;</span>sysctl__security_mac_amfi_developer_mode_status);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">sysctl_register_oid</span>(<span style="color:#f92672">&amp;</span>sysctl__security_mac_amfi_developer_mode_resolved);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">sysctl_register_oid</span>(<span style="color:#f92672">&amp;</span>sysctl__security_mac_amfi_launch_constraints_enforced);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">sysctl_register_oid</span>(<span style="color:#f92672">&amp;</span>sysctl__security_mac_amfi_launch_constraints_3rd_party_allowed);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">sysctl_register_oid</span>(<span style="color:#f92672">&amp;</span>sysctl__security_mac_amfi_launch_env_logging);
+</span></span><span style="display:flex;"><span>  v0 <span style="color:#f92672">=</span> IORegistryEntry<span style="color:#f92672">::</span><span style="color:#a6e22e">fromPath</span>(<span style="color:#e6db74">&#34;/chosen&#34;</span>, gIODTPlane, <span style="color:#ae81ff">0LL</span>, <span style="color:#ae81ff">0LL</span>, <span style="color:#ae81ff">0LL</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( v0 )
 </span></span><span style="display:flex;"><span>  {
-</span></span><span style="display:flex;"><span>    v1 <span style="color:#555">=</span> (<span style="color:#069;font-weight:bold">const</span> OSMetaClassBase <span style="color:#555">*</span>)((<span style="color:#069;font-weight:bold">__int64</span> (<span style="color:#069;font-weight:bold">__fastcall</span> <span style="color:#555">*</span>)(IORegistryEntry <span style="color:#555">*</span>, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>))v0<span style="color:#555">-&gt;</span>getProperty_1)(
+</span></span><span style="display:flex;"><span>    v1 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">const</span> OSMetaClassBase <span style="color:#f92672">*</span>)((<span style="color:#66d9ef">__int64</span> (<span style="color:#66d9ef">__fastcall</span> <span style="color:#f92672">*</span>)(IORegistryEntry <span style="color:#f92672">*</span>, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>))v0<span style="color:#f92672">-&gt;</span>getProperty_1)(
 </span></span><span style="display:flex;"><span>                                    v0,
-</span></span><span style="display:flex;"><span>                                    <span style="color:#c30">&#34;security-mode-change-enable&#34;</span>);
-</span></span><span style="display:flex;"><span>    v2 <span style="color:#555">=</span> OSMetaClassBase<span style="color:#555">::</span><span style="color:#c0f">safeMetaCast</span>(v1, OSData<span style="color:#555">::</span>metaClass);
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> ( v2 )
+</span></span><span style="display:flex;"><span>                                    <span style="color:#e6db74">&#34;security-mode-change-enable&#34;</span>);
+</span></span><span style="display:flex;"><span>    v2 <span style="color:#f92672">=</span> OSMetaClassBase<span style="color:#f92672">::</span><span style="color:#a6e22e">safeMetaCast</span>(v1, OSData<span style="color:#f92672">::</span>metaClass);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( v2 )
 </span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>      <span style="color:#069;font-weight:bold">if</span> ( <span style="color:#555">*</span>(_DWORD <span style="color:#555">*</span>)((<span style="color:#069;font-weight:bold">__int64</span> (<span style="color:#069;font-weight:bold">__fastcall</span> <span style="color:#555">*</span>)(OSMetaClassBase <span style="color:#555">*</span>))v2<span style="color:#555">-&gt;</span>__vftable[<span style="color:#f60">2</span>]._RESERVEDOSMetaClassBase4)(v2) )
-</span></span><span style="display:flex;"><span>        bootedWithModeChangeEnabled <span style="color:#555">=</span> <span style="color:#f60">1</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">*</span>(_DWORD <span style="color:#f92672">*</span>)((<span style="color:#66d9ef">__int64</span> (<span style="color:#66d9ef">__fastcall</span> <span style="color:#f92672">*</span>)(OSMetaClassBase <span style="color:#f92672">*</span>))v2<span style="color:#f92672">-&gt;</span>__vftable[<span style="color:#ae81ff">2</span>]._RESERVEDOSMetaClassBase4)(v2) )
+</span></span><span style="display:flex;"><span>        bootedWithModeChangeEnabled <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>  <span style="color:#c0f">macOSPolicyConfigurationInit</span>();
-</span></span><span style="display:flex;"><span>  v14[<span style="color:#f60">0</span>] <span style="color:#555">=</span> <span style="color:#f60">0</span>;
-</span></span><span style="display:flex;"><span>  v3 <span style="color:#555">=</span> <span style="color:#c0f">PE_parse_boot_argn</span>(<span style="color:#c30">&#34;amfi_enforce_launch_constraints&#34;</span>, v14, <span style="color:#f60">4</span>);
-</span></span><span style="display:flex;"><span>  v4 <span style="color:#555">=</span> v3;
-</span></span><span style="display:flex;"><span>  <span style="color:#069;font-weight:bold">if</span> ( v3 )
-</span></span><span style="display:flex;"><span>    v4 <span style="color:#555">=</span> v14[<span style="color:#f60">0</span>];
-</span></span><span style="display:flex;"><span>  v12 <span style="color:#555">=</span> <span style="color:#c0f">PE_parse_boot_argn</span>(<span style="color:#c30">&#34;amfi_allow_3p_launch_constraints&#34;</span>, v14, <span style="color:#f60">4</span>);
-</span></span><span style="display:flex;"><span>  v13 <span style="color:#555">=</span> v14[<span style="color:#f60">0</span>];
-</span></span><span style="display:flex;"><span>  <span style="color:#c0f">LODWORD</span>(v5) <span style="color:#555">=</span> <span style="color:#c0f">PE_parse_boot_argn</span>(<span style="color:#c30">&#34;BATS_TESTPLAN_ID&#34;</span>, v14, <span style="color:#f60">4</span>);
-</span></span><span style="display:flex;"><span>  v6 <span style="color:#555">=</span> (<span style="color:#078;font-weight:bold">int</span>)v5;
-</span></span><span style="display:flex;"><span>  v7 <span style="color:#555">=</span> v14[<span style="color:#f60">0</span>];
-</span></span><span style="display:flex;"><span>  v8 <span style="color:#555">=</span> v3 <span style="color:#555">==</span> <span style="color:#f60">0</span>;
-</span></span><span style="display:flex;"><span>  v9 <span style="color:#555">=</span> v3 <span style="color:#555">!=</span> <span style="color:#f60">0</span>;
-</span></span><span style="display:flex;"><span>  <span style="color:#069;font-weight:bold">if</span> ( v8 <span style="color:#555">||</span> <span style="color:#555">!</span>v4 )
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">macOSPolicyConfigurationInit</span>();
+</span></span><span style="display:flex;"><span>  v14[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  v3 <span style="color:#f92672">=</span> <span style="color:#a6e22e">PE_parse_boot_argn</span>(<span style="color:#e6db74">&#34;amfi_enforce_launch_constraints&#34;</span>, v14, <span style="color:#ae81ff">4</span>);
+</span></span><span style="display:flex;"><span>  v4 <span style="color:#f92672">=</span> v3;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( v3 )
+</span></span><span style="display:flex;"><span>    v4 <span style="color:#f92672">=</span> v14[<span style="color:#ae81ff">0</span>];
+</span></span><span style="display:flex;"><span>  v12 <span style="color:#f92672">=</span> <span style="color:#a6e22e">PE_parse_boot_argn</span>(<span style="color:#e6db74">&#34;amfi_allow_3p_launch_constraints&#34;</span>, v14, <span style="color:#ae81ff">4</span>);
+</span></span><span style="display:flex;"><span>  v13 <span style="color:#f92672">=</span> v14[<span style="color:#ae81ff">0</span>];
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">LODWORD</span>(v5) <span style="color:#f92672">=</span> <span style="color:#a6e22e">PE_parse_boot_argn</span>(<span style="color:#e6db74">&#34;BATS_TESTPLAN_ID&#34;</span>, v14, <span style="color:#ae81ff">4</span>);
+</span></span><span style="display:flex;"><span>  v6 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">int</span>)v5;
+</span></span><span style="display:flex;"><span>  v7 <span style="color:#f92672">=</span> v14[<span style="color:#ae81ff">0</span>];
+</span></span><span style="display:flex;"><span>  v8 <span style="color:#f92672">=</span> v3 <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  v9 <span style="color:#f92672">=</span> v3 <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( v8 <span style="color:#f92672">||</span> <span style="color:#f92672">!</span>v4 )
 </span></span><span style="display:flex;"><span>  {
-</span></span><span style="display:flex;"><span>    <span style="color:#c0f">LODWORD</span>(v5) <span style="color:#555">=</span> <span style="color:#c0f">csr_check</span>(<span style="color:#f60">2LL</span>);
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> ( (_DWORD)v5 )
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">LODWORD</span>(v5) <span style="color:#f92672">=</span> <span style="color:#a6e22e">csr_check</span>(<span style="color:#ae81ff">2LL</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( (_DWORD)v5 )
 </span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>      <span style="color:#c0f">LODWORD</span>(v5) <span style="color:#555">=</span> <span style="color:#c0f">csr_check</span>(<span style="color:#555">&amp;</span>dword_10);
-</span></span><span style="display:flex;"><span>      <span style="color:#069;font-weight:bold">if</span> ( <span style="color:#555">!</span>(_DWORD)v5 )
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">LODWORD</span>(v5) <span style="color:#f92672">=</span> <span style="color:#a6e22e">csr_check</span>(<span style="color:#f92672">&amp;</span>dword_10);
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">!</span>(_DWORD)v5 )
 </span></span><span style="display:flex;"><span>      {
-</span></span><span style="display:flex;"><span>        v5 <span style="color:#555">=</span> <span style="color:#555">&amp;</span>BootedDevice;
-</span></span><span style="display:flex;"><span>        <span style="color:#069;font-weight:bold">if</span> ( BootedDevice
-</span></span><span style="display:flex;"><span>          <span style="color:#555">||</span> (v10 <span style="color:#555">=</span> v6 <span style="color:#555">!=</span> <span style="color:#f60">0</span>,
-</span></span><span style="display:flex;"><span>              <span style="color:#c0f">LOBYTE</span>(v5) <span style="color:#555">=</span> macOSPolicyConfig<span style="color:#555">::</span><span style="color:#c0f">bniAllowAsPlatform</span>((macOSPolicyConfig <span style="color:#555">*</span>)<span style="color:#555">&amp;</span>dword_10),
+</span></span><span style="display:flex;"><span>        v5 <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>BootedDevice;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ( BootedDevice
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">||</span> (v10 <span style="color:#f92672">=</span> v6 <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>              <span style="color:#a6e22e">LOBYTE</span>(v5) <span style="color:#f92672">=</span> macOSPolicyConfig<span style="color:#f92672">::</span><span style="color:#a6e22e">bniAllowAsPlatform</span>((macOSPolicyConfig <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>dword_10),
 </span></span><span style="display:flex;"><span>              (_BYTE)v5)
-</span></span><span style="display:flex;"><span>          <span style="color:#555">||</span> v7 <span style="color:#555">!=</span> <span style="color:#f60">0</span> <span style="color:#555">&amp;&amp;</span> v10
-</span></span><span style="display:flex;"><span>          <span style="color:#555">||</span> (<span style="color:#c0f">LOBYTE</span>(v5) <span style="color:#555">=</span> v4 <span style="color:#555">==</span> <span style="color:#f60">0</span>, v4 <span style="color:#555">==</span> <span style="color:#f60">0</span> <span style="color:#555">&amp;&amp;</span> v9) )
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">||</span> v7 <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> v10
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">||</span> (<span style="color:#a6e22e">LOBYTE</span>(v5) <span style="color:#f92672">=</span> v4 <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>, v4 <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> v9) )
 </span></span><span style="display:flex;"><span>        {
-</span></span><span style="display:flex;"><span>          launchConstraintsEnforced <span style="color:#555">=</span> <span style="color:#f60">0</span>;
+</span></span><span style="display:flex;"><span>          launchConstraintsEnforced <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>        <span style="color:#069;font-weight:bold">if</span> ( v12 <span style="color:#555">&amp;&amp;</span> v13 )
-</span></span><span style="display:flex;"><span>          launchConstraint3rdPartyAllowed <span style="color:#555">=</span> <span style="color:#f60">1</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ( v12 <span style="color:#f92672">&amp;&amp;</span> v13 )
+</span></span><span style="display:flex;"><span>          launchConstraint3rdPartyAllowed <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
 </span></span><span style="display:flex;"><span>      }
 </span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">else</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>
 </span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>      launchConstraintsEnforced <span style="color:#555">=</span> <span style="color:#f60">0</span>;
+</span></span><span style="display:flex;"><span>      launchConstraintsEnforced <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>  <span style="color:#069;font-weight:bold">else</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">else</span>
 </span></span><span style="display:flex;"><span>  {
-</span></span><span style="display:flex;"><span>    launchConstraintsEnforced <span style="color:#555">=</span> <span style="color:#f60">1</span>;
+</span></span><span style="display:flex;"><span>    launchConstraintsEnforced <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
 </span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>  <span style="color:#069;font-weight:bold">if</span> ( v0 )
-</span></span><span style="display:flex;"><span>    <span style="color:#c0f">LOBYTE</span>(v5) <span style="color:#555">=</span> ((<span style="color:#069;font-weight:bold">__int64</span> (<span style="color:#069;font-weight:bold">__fastcall</span> <span style="color:#555">*</span>)(IORegistryEntry <span style="color:#555">*</span>))v0<span style="color:#555">-&gt;</span>release_0)(v0);
-</span></span><span style="display:flex;"><span>  <span style="color:#069;font-weight:bold">return</span> (<span style="color:#078;font-weight:bold">char</span>)v5;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( v0 )
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">LOBYTE</span>(v5) <span style="color:#f92672">=</span> ((<span style="color:#66d9ef">__int64</span> (<span style="color:#66d9ef">__fastcall</span> <span style="color:#f92672">*</span>)(IORegistryEntry <span style="color:#f92672">*</span>))v0<span style="color:#f92672">-&gt;</span>release_0)(v0);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> (<span style="color:#66d9ef">char</span>)v5;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>We find two things. One is that the settings are taken from the PE boot_args and that there is an associated sysctl entry. We can find that:</p>
 <pre tabindex="0"><code>ace@ventura ~ % sysctl security | grep launch_constraints                      
@@ -328,10 +328,10 @@ security.mac.amfi.launch_constraints_enforced: 1
 security.mac.amfi.launch_constraints_3rd_party_allowed: 0
 </code></pre><p><code>_proc_check_launch_constraints</code> does the heavy lifting, and it will need further reversing, as it&rsquo;s a long function. It will be interesting to see how it works in the deep.</p>
 <p>If SIP is disabled this feature won&rsquo;t be enforced:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">if</span> ( ConfigurationSettings<span style="color:#555">::</span><span style="color:#c0f">launchEnvDebugLoggingEnabled</span>((ConfigurationSettings <span style="color:#555">*</span>)<span style="color:#555">&amp;</span>v51) )
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> ( ConfigurationSettings<span style="color:#f92672">::</span><span style="color:#a6e22e">launchEnvDebugLoggingEnabled</span>((ConfigurationSettings <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>v51) )
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>  v17 <span style="color:#555">=</span> <span style="color:#f60">0</span>;
-</span></span><span style="display:flex;"><span>  <span style="color:#c0f">IOLog</span>(<span style="color:#c30">&#34;SIP is disabled, not checking launch constraints</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>  v17 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">IOLog</span>(<span style="color:#e6db74">&#34;SIP is disabled, not checking launch constraints</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>I think this feature mitigates a whole exploit class and I think this was long overdue by Apple. So good job to everyone who was involved! Regardless it&rsquo;s nice to see this in work, even if my job is harder now :D</p>
 

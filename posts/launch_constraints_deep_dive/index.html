@@ -52,7 +52,7 @@ Apple introduced Launch Constraints in macOS Ventura (13) as a response to some 
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.b886fe0d9034709648f91f4ce178f51dd367d9350f82dd1132d54fd69bfca66f.css" integrity="sha256-uIb&#43;DZA0cJZI&#43;R9M4Xj1HdNn2TUPgt0RMtVP1pv8pm8=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -221,19 +221,19 @@ Apple introduced Launch Constraints in macOS Ventura (13) as a response to some 
   </a>
 </h3>
 <p>This vulnerability was discovered by Adam Chester (<a href="https://twitter.com/_xpn_"  class="external-link" target="_blank" rel="noopener"><em>xpn</em></a>) back in 2019 and documented on his blog post <a href="https://blog.xpnsec.com/bypassing-macos-privacy-controls/"  class="external-link" target="_blank" rel="noopener">&ldquo;Bypassing MacOS Privacy Controls&rdquo;</a>. The idea is that the <code>imagent.app</code>, located at <code>/System/Library/PrivateFrameworks/IMCore.framework/imagent.app</code> had some very interesting entitlements, which allowed it to access the contacts and some entries in the keychain. This is shown below.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;key&gt;</span>com.apple.private.tcc.allow.overridable<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;array&gt;</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;string&gt;</span>kTCCServiceAddressBook<span style="color:#f92672">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/array&gt;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.private.tcc.allow.overridable<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#309;font-weight:bold">&lt;string&gt;</span>kTCCServiceAddressBook<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;key&gt;</span>keychain-access-groups<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;array&gt;</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;string&gt;</span>ichat<span style="color:#f92672">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;string&gt;</span>apple<span style="color:#f92672">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;string&gt;</span>appleaccount<span style="color:#f92672">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;string&gt;</span>InternetAccounts<span style="color:#f92672">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;string&gt;</span>IMCore<span style="color:#f92672">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>keychain-access-groups<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#309;font-weight:bold">&lt;string&gt;</span>ichat<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#309;font-weight:bold">&lt;string&gt;</span>apple<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#309;font-weight:bold">&lt;string&gt;</span>appleaccount<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#309;font-weight:bold">&lt;string&gt;</span>InternetAccounts<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#309;font-weight:bold">&lt;string&gt;</span>IMCore<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
 </span></span></code></pre></div><p>Adam found that this application will try to load plugins from <code>imagent.app/Contents/PlugIns</code>, and its code signing properties allowed to load any third party, non Apple signed plugins. The only issue was that the application resided in a SIP protected directory. However nothing prevented us from making a copy of it, for example into <code>/tmp/</code>, create a plugin, and launch it from there.</p>
 <p>This way we could load an arbitrary plugin into this powerful application and inherit its entitlements and so bypass TCC and keychain.</p>
 <h3 id="tcc-bypass-using-directory-utilityapp-cve-2020-27937">
@@ -244,10 +244,10 @@ Apple introduced Launch Constraints in macOS Ventura (13) as a response to some 
   </a>
 </h3>
 <p>This vulnerability was discovered by Wojciech Reguła (<a href="https://twitter.com/_r3ggi"  class="external-link" target="_blank" rel="noopener">_r3ggi</a>) back in 2020, and it&rsquo;s similar to the previous one. It was also documented in Wojciech&rsquo;s blog post, <a href="https://wojciechregula.blog/post/change-home-directory-and-bypass-tcc-aka-cve-2020-27937/"  class="external-link" target="_blank" rel="noopener">&ldquo;Change home directory and bypass TCC aka CVE-2020-27937&rdquo;</a>. Directory Utility had some very powerful entitlement, which granted it rights to change the user&rsquo;s properties, like HOME folder.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span> <span style="color:#f92672">&lt;key&gt;</span>com.apple.private.tcc.allow<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span> <span style="color:#f92672">&lt;array&gt;</span>
-</span></span><span style="display:flex;"><span>     <span style="color:#f92672">&lt;string&gt;</span>kTCCServiceSystemPolicySysAdminFiles<span style="color:#f92672">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span> <span style="color:#f92672">&lt;/array&gt;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span> <span style="color:#309;font-weight:bold">&lt;key&gt;</span>com.apple.private.tcc.allow<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#309;font-weight:bold">&lt;string&gt;</span>kTCCServiceSystemPolicySysAdminFiles<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
 </span></span></code></pre></div><p>Similarly to imagent, the application&rsquo;s code signing properties were not restrictive enough, and allowed us injecting code into the application by creating plugins. So we could make a copy again, and inject code into the app. This again allowed us inheriting the utility&rsquo;s entitlements. By changing the HOME directory, we can plant a new TCC database with our custom rules.</p>
 <h3 id="tcc-bypass-using-configd-powerdir">
   TCC Bypass Using configd, &ldquo;powerdir&rdquo;
@@ -278,13 +278,13 @@ Parent Constraints - These are constraints related to the parent process of the 
 Responsible Constraints - These are constraints related to the process which is responsible for launching the application.</p>
 <p>For example when we invoke an XPC service, the application will be the service, the parent will be <code>launchd</code> and the responsible process will be the one, which invoked the service at first place.</p>
 <p>Let&rsquo;s see it in action. We make a copy of the <code>FindMy.app</code> and try to launch it. It will crash.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>csaby@max /tmp % cp -r /System/Applications/FindMy.app .
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>csaby@max /tmp % cp -r /System/Applications/FindMy.app .
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>csaby@max /tmp % open FindMy.app 
-</span></span><span style="display:flex;"><span>The application cannot be opened <span style="color:#66d9ef">for</span> an unexpected reason, error<span style="color:#f92672">=</span>Error Domain<span style="color:#f92672">=</span>RBSRequestErrorDomain Code<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span> <span style="color:#e6db74">&#34;Launch failed.&#34;</span> UserInfo<span style="color:#f92672">={</span>NSLocalizedFailureReason<span style="color:#f92672">=</span>Launch failed., NSUnderlyingError<span style="color:#f92672">=</span>0x6000000032d0 <span style="color:#f92672">{</span>Error Domain<span style="color:#f92672">=</span>NSPOSIXErrorDomain Code<span style="color:#f92672">=</span><span style="color:#ae81ff">162</span> <span style="color:#e6db74">&#34;Unknown error: 162&#34;</span> UserInfo<span style="color:#f92672">={</span>NSLocalizedDescription<span style="color:#f92672">=</span>Launchd job spawn failed<span style="color:#f92672">}}}</span>
+</span></span><span style="display:flex;"><span>The application cannot be opened <span style="color:#069;font-weight:bold">for</span> an unexpected reason, <span style="color:#033">error</span><span style="color:#555">=</span>Error <span style="color:#033">Domain</span><span style="color:#555">=</span>RBSRequestErrorDomain <span style="color:#033">Code</span><span style="color:#555">=</span><span style="color:#f60">5</span> <span style="color:#c30">&#34;Launch failed.&#34;</span> <span style="color:#033">UserInfo</span><span style="color:#555">={</span><span style="color:#033">NSLocalizedFailureReason</span><span style="color:#555">=</span>Launch failed., <span style="color:#033">NSUnderlyingError</span><span style="color:#555">=</span>0x6000000032d0 <span style="color:#555">{</span>Error <span style="color:#033">Domain</span><span style="color:#555">=</span>NSPOSIXErrorDomain <span style="color:#033">Code</span><span style="color:#555">=</span><span style="color:#f60">162</span> <span style="color:#c30">&#34;Unknown error: 162&#34;</span> <span style="color:#033">UserInfo</span><span style="color:#555">={</span><span style="color:#033">NSLocalizedDescription</span><span style="color:#555">=</span>Launchd job spawn failed<span style="color:#555">}}}</span>
 </span></span></code></pre></div><p>The error message is not very descriptive, but if we monitor AMFI logs, we will find the following.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>csaby@max /tmp % log stream | grep AMFI
-</span></span><span style="display:flex;"><span>2023-09-19 14:18:21.273482+0200 0x2e3486   Default     0x0                  <span style="color:#ae81ff">0</span>      <span style="color:#ae81ff">0</span>    kernel: <span style="color:#f92672">(</span>AppleMobileFileIntegrity<span style="color:#f92672">)</span> AMFI: Launch Constraint Violation <span style="color:#f92672">(</span>enforcing<span style="color:#f92672">)</span>, error info: c<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span>p<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span>m<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span>e<span style="color:#f92672">[</span>2<span style="color:#f92672">]</span>, <span style="color:#f92672">(</span>Constraint not matched<span style="color:#f92672">)</span> launching proc<span style="color:#f92672">[</span>vc: <span style="color:#ae81ff">1</span> pid: 52468<span style="color:#f92672">]</span>: /private/tmp/FindMy.app/Contents/MacOS/FindMy, launch type 0, failure proc <span style="color:#f92672">[</span>vc: <span style="color:#ae81ff">1</span> pid: 52468<span style="color:#f92672">]</span>: /private/tmp/FindMy.app/Contents/MacOS/FindMy
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>csaby@max /tmp % log stream | grep AMFI
+</span></span><span style="display:flex;"><span>2023-09-19 14:18:21.273482+0200 0x2e3486   Default     0x0                  <span style="color:#f60">0</span>      <span style="color:#f60">0</span>    kernel: <span style="color:#555">(</span>AppleMobileFileIntegrity<span style="color:#555">)</span> AMFI: Launch Constraint Violation <span style="color:#555">(</span>enforcing<span style="color:#555">)</span>, error info: c<span style="color:#555">[</span>1<span style="color:#555">]</span>p<span style="color:#555">[</span>1<span style="color:#555">]</span>m<span style="color:#555">[</span>1<span style="color:#555">]</span>e<span style="color:#555">[</span>2<span style="color:#555">]</span>, <span style="color:#555">(</span>Constraint not matched<span style="color:#555">)</span> launching proc<span style="color:#555">[</span>vc: <span style="color:#f60">1</span> pid: 52468<span style="color:#555">]</span>: /private/tmp/FindMy.app/Contents/MacOS/FindMy, launch <span style="color:#366">type</span> 0, failure proc <span style="color:#555">[</span>vc: <span style="color:#f60">1</span> pid: 52468<span style="color:#555">]</span>: /private/tmp/FindMy.app/Contents/MacOS/FindMy
 </span></span></code></pre></div><p>We see that we violated Launch Constraints.</p>
 <h3 id="launch-constraints-categories">
   Launch Constraints Categories
@@ -347,13 +347,13 @@ entry count = 13713
 002655b46255b6fb2f5b2a4987345cc0e46836f8 [none] [2] [2]
 002aa16545d098699c706c27a08e834243f5b984 [none] [2] [2]
 </code></pre><p>The trust cache follows the following structure:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> trust_cache_entry2 {
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">uint8_t</span> cdhash[CS_CDHASH_LEN];
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">uint8_t</span> hash_type;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">uint8_t</span> flags;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">uint8_t</span> constraintCategory;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">uint8_t</span> reserved0;
-</span></span><span style="display:flex;"><span>} <span style="color:#a6e22e">__attribute__</span>((__packed__));
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">struct</span> trust_cache_entry2 {
+</span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">uint8_t</span> cdhash[CS_CDHASH_LEN];
+</span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">uint8_t</span> hash_type;
+</span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">uint8_t</span> flags;
+</span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">uint8_t</span> constraintCategory;
+</span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">uint8_t</span> reserved0;
+</span></span><span style="display:flex;"><span>} <span style="color:#c0f">__attribute__</span>((__packed__));
 </span></span></code></pre></div><p>Thus the 4th column defines the constraint category.</p>
 <p>I have a script, which looks through the file system, and looks up each binary against the trust caches, and the categories. For Category 1 we said that it&rsquo;s a system service, and expected to be launched by launchd only. If we look up files that are indeed in this category we indeed find daemons, like:</p>
 <pre tabindex="0"><code>/usr/libexec/routined
@@ -539,13 +539,13 @@ kConstraintCategory18_Parent
 <blockquote>
 <p>Just like in real parent-child relationships, parent processes have a huge amount of influence over how a child behaves. On macOS, the power to posix_spawn another process gives the parent the ability to control nearly all input to the child. The parent process can also limit the child’s access to system resources. This level of control can cause the child to load unexpected code, to run unexpected features, or to behave in ways that make the process more vulnerable to attack.</p></blockquote>
 <p>So the idea would be to limit the parent to control the client. We can eliminate the spawn issue with setting <code>launch-type</code> to &ldquo;3&rdquo;, which means that the application has to be opened by LaunchService, with the user clicking on the app. However the <code>open</code> command has the same impact, which allows us to control arguments or environment variables, or we can use the Launch Services API as follows.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objective-c" data-lang="objective-c"><span style="display:flex;"><span>NSWorkspaceOpenConfiguration <span style="color:#f92672">*</span>conf <span style="color:#f92672">=</span> [NSWorkspaceOpenConfiguration configuration];
-</span></span><span style="display:flex;"><span>conf.environment <span style="color:#f92672">=</span> <span style="color:#ae81ff">@{</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">@&#34;ELECTRON_RUN_AS_NODE&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">@&#34;1&#34;</span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">}</span>;
-</span></span><span style="display:flex;"><span>[[NSWorkspace sharedWorkspace] openURL:[NSURL fileURLWithPath:<span style="color:#e6db74">@&#34;/Applications/Electron.app&#34;</span>]
-</span></span><span style="display:flex;"><span>                               configuration:conf
-</span></span><span style="display:flex;"><span>                               completionHandler:nil];
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objective-c" data-lang="objective-c"><span style="display:flex;"><span>NSWorkspaceOpenConfiguration <span style="color:#555">*</span>conf <span style="color:#555">=</span> [NSWorkspaceOpenConfiguration configuration];
+</span></span><span style="display:flex;"><span>conf.environment <span style="color:#555">=</span> @{
+</span></span><span style="display:flex;"><span>    <span style="color:#c30">@&#34;ELECTRON_RUN_AS_NODE&#34;</span><span style="color:#555">:</span> <span style="color:#c30">@&#34;1&#34;</span>
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>[[NSWorkspace sharedWorkspace] <span style="color:#99f">openURL</span>:[NSURL <span style="color:#99f">fileURLWithPath</span>:<span style="color:#c30">@&#34;/Applications/Electron.app&#34;</span>]
+</span></span><span style="display:flex;"><span>                               <span style="color:#99f">configuration</span>:conf
+</span></span><span style="display:flex;"><span>                               <span style="color:#99f">completionHandler</span>:<span style="color:#366">nil</span>];
 </span></span></code></pre></div><p>Although it&rsquo;s not the same as <code>posix_spawn</code> and it&rsquo;s somewhat more limited, we can still control crucial parts (arguments and environmental variables) of the application. So our Electron app issue is not quite solved yet.</p>
 <h2 id="final-thoughts">
   Final thoughts

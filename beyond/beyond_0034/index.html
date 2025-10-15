@@ -52,7 +52,7 @@ The all mighty launchd, contains an embedded plist file in its __TEXT __config s
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.b886fe0d9034709648f91f4ce178f51dd367d9350f82dd1132d54fd69bfca66f.css" integrity="sha256-uIb&#43;DZA0cJZI&#43;R9M4Xj1HdNn2TUPgt0RMtVP1pv8pm8=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -174,77 +174,77 @@ The all mighty launchd, contains an embedded plist file in its __TEXT __config s
 </code></pre><p>I think the <code>BootStrap</code> config is very interesting as it contains more locations for <code>Launch*</code> files, than we are normally aware of. <code>/private/var/db/ManagedConfigurationFiles/BackgroundTaskServices/Launch*/</code> especially stands out, this location is also SIP protected.</p>
 <p>But let&rsquo;s focus on how we can utilize this configuration to persist our own stuff.</p>
 <p>There are 6 entries that we can potentially utilize, but each of them will require extra access beyond having <code>root</code> privileges. The first three are binaries which can be found either in <code>/Library/Apple/</code> or <code>/private/var/install</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;key&gt;</span>finish-demo-restore<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;dict&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>Program<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;string&gt;</span>/Library/Apple/usr/libexec/finish_demo_restore<span style="color:#f92672">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>PerformAfterUserspaceReboot<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;true/&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>RequireSuccess<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;true/&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/dict&gt;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>finish-demo-restore<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>Program<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/Library/Apple/usr/libexec/finish_demo_restore<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>PerformAfterUserspaceReboot<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>RequireSuccess<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;key&gt;</span>shutdown_installer_tasks<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;dict&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>Program<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;string&gt;</span>/private/var/install/shutdown_installer_tasks<span style="color:#f92672">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>RequireSuccess<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;true/&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>PerformAfterUserspaceReboot<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;true/&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>shutdown_installer_tasks<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>Program<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/private/var/install/shutdown_installer_tasks<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>RequireSuccess<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>PerformAfterUserspaceReboot<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;key&gt;</span>deferred_install<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;dict&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>RebootOnSuccess<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;true/&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>RequireSuccess<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;true/&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>Program<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;string&gt;</span>/private/var/install/deferred_install<span style="color:#f92672">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>PerformAfterUserspaceReboot<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;true/&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>deferred_install<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>RebootOnSuccess<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>RequireSuccess<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>Program<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/private/var/install/deferred_install<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>PerformAfterUserspaceReboot<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
 </span></span></code></pre></div><p>These files don&rsquo;t exists by default, and will only show up during installations, but in order for us to place them we need some sort of SIP bypass privileges.</p>
 <p>The second set of three items are scripts from <code>/etc/</code>, and all of them are <code>rc.*</code> files.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;key&gt;</span>rc.server<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;dict&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>Program<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;string&gt;</span>/etc/rc.server<span style="color:#f92672">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>PerformAfterUserspaceReboot<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;true/&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>AllowCrash<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;true/&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/dict&gt;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>rc.server<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>Program<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/etc/rc.server<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>PerformAfterUserspaceReboot<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>AllowCrash<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;key&gt;</span>rc.cdrom<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;dict&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>PassLaunchBootModeAsArgument<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;true/&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>PerformInBaseSystem<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;true/&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>ProgramArguments<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;array&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;string&gt;</span>rc.cdrom<span style="color:#f92672">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;/array&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>Program<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;string&gt;</span>/etc/rc.cdrom<span style="color:#f92672">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>AllowCrash<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;true/&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>rc.cdrom<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>PassLaunchBootModeAsArgument<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>PerformInBaseSystem<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>ProgramArguments<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>rc.cdrom<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>Program<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/etc/rc.cdrom<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>AllowCrash<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;key&gt;</span>rc.netboot<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;dict&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>RequireSuccess<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;true/&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>ProgramArguments<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;array&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;string&gt;</span>rc.netboot<span style="color:#f92672">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">&lt;string&gt;</span>init<span style="color:#f92672">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;/array&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;key&gt;</span>Program<span style="color:#f92672">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&lt;string&gt;</span>/etc/rc.netboot<span style="color:#f92672">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/dict&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>rc.netboot<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>RequireSuccess<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>ProgramArguments<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;array&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>rc.netboot<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#309;font-weight:bold">&lt;string&gt;</span>init<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>Program<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/etc/rc.netboot<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
 </span></span></code></pre></div><p>From these three only <code>rc.netboot</code> exists on default installations in macOS Sequoia. To create or edit any of these files, we will need <code>kTCCServiceSystempolicySysAdminFiles</code> TCC permissions (or the joker - Full Disk Access). If we don&rsquo;t have one we will be presented with the following dialog.</p>
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0034_0.png" alt="TCC Prompt"></p>
 <p>Although it&rsquo;s easier to obtain than a SIP bypass exploit, it can be still a massive limitation.</p>

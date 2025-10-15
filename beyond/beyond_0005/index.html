@@ -52,7 +52,7 @@ PAM originated from Red Hat Linux, but made its way to most *nix based system, i
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.b886fe0d9034709648f91f4ce178f51dd367d9350f82dd1132d54fd69bfca66f.css" integrity="sha256-uIb&#43;DZA0cJZI&#43;R9M4Xj1HdNn2TUPgt0RMtVP1pv8pm8=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -190,39 +190,39 @@ session    optional       pam_mount.so
 <p>But there is more! We can load our own module by adding it to the configuration.</p>
 <pre tabindex="0"><code>auth       sufficient     /Users/Shared/pam.dylib
 </code></pre><p>This will call our module whenever there is an authentication request. Here is an empty skeleton for a PAM module, I found it on <a href="https://stackoverflow.com/questions/25515077/writing-pluggable-authentication-module-pam-for-osx"  class="external-link" target="_blank" rel="noopener">Stack Overflow</a>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#define PAM_SM_ACCOUNT
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define PAM_SM_AUTH
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define PAM_SM_PASSWORD
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define PAM_SM_SESSION
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;security/pam_appl.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;security/pam_modules.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#define PAM_SM_ACCOUNT
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#define PAM_SM_AUTH
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#define PAM_SM_PASSWORD
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#define PAM_SM_SESSION
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
+</span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;security/pam_appl.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;security/pam_modules.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdlib.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>PAM_EXTERN <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">pam_sm_open_session</span>(<span style="color:#66d9ef">pam_handle_t</span> <span style="color:#f92672">*</span>pamh, <span style="color:#66d9ef">int</span> flags, <span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>argv) {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>(PAM_SUCCESS);
+</span></span><span style="display:flex;"><span>PAM_EXTERN <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">pam_sm_open_session</span>(<span style="color:#078;font-weight:bold">pam_handle_t</span> <span style="color:#555">*</span>pamh, <span style="color:#078;font-weight:bold">int</span> flags, <span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv) {
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span>(PAM_SUCCESS);
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>PAM_EXTERN <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">pam_sm_close_session</span>(<span style="color:#66d9ef">pam_handle_t</span> <span style="color:#f92672">*</span>pamh, <span style="color:#66d9ef">int</span> flags, <span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>argv)           {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>(PAM_SUCCESS);
+</span></span><span style="display:flex;"><span>PAM_EXTERN <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">pam_sm_close_session</span>(<span style="color:#078;font-weight:bold">pam_handle_t</span> <span style="color:#555">*</span>pamh, <span style="color:#078;font-weight:bold">int</span> flags, <span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)           {
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span>(PAM_SUCCESS);
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>PAM_EXTERN <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">pam_sm_acct_mgmt</span>(<span style="color:#66d9ef">pam_handle_t</span> <span style="color:#f92672">*</span>pamh, <span style="color:#66d9ef">int</span> flags, <span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>argv) {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>(PAM_SUCCESS);
+</span></span><span style="display:flex;"><span>PAM_EXTERN <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">pam_sm_acct_mgmt</span>(<span style="color:#078;font-weight:bold">pam_handle_t</span> <span style="color:#555">*</span>pamh, <span style="color:#078;font-weight:bold">int</span> flags, <span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv) {
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span>(PAM_SUCCESS);
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>PAM_EXTERN <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">pam_sm_authenticate</span>(<span style="color:#66d9ef">pam_handle_t</span> <span style="color:#f92672">*</span>pamh, <span style="color:#66d9ef">int</span> flags, <span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>argv) {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>(PAM_SUCCESS);
+</span></span><span style="display:flex;"><span>PAM_EXTERN <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">pam_sm_authenticate</span>(<span style="color:#078;font-weight:bold">pam_handle_t</span> <span style="color:#555">*</span>pamh, <span style="color:#078;font-weight:bold">int</span> flags, <span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv) {
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span>(PAM_SUCCESS);
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>PAM_EXTERN <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">pam_sm_setcred</span>(<span style="color:#66d9ef">pam_handle_t</span> <span style="color:#f92672">*</span>pamh, <span style="color:#66d9ef">int</span> flags, <span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>argv) {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>(PAM_SUCCESS);
+</span></span><span style="display:flex;"><span>PAM_EXTERN <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">pam_sm_setcred</span>(<span style="color:#078;font-weight:bold">pam_handle_t</span> <span style="color:#555">*</span>pamh, <span style="color:#078;font-weight:bold">int</span> flags, <span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv) {
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span>(PAM_SUCCESS);
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>PAM_EXTERN <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">pam_sm_chauthtok</span>(<span style="color:#66d9ef">pam_handle_t</span> <span style="color:#f92672">*</span>pamh, <span style="color:#66d9ef">int</span> flags, <span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>argv) {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>(PAM_SUCCESS);
+</span></span><span style="display:flex;"><span>PAM_EXTERN <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">pam_sm_chauthtok</span>(<span style="color:#078;font-weight:bold">pam_handle_t</span> <span style="color:#555">*</span>pamh, <span style="color:#078;font-weight:bold">int</span> flags, <span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv) {
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span>(PAM_SUCCESS);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>We can add our own code, and do whatever we want, although we likely want to be non-blocking, otherwise the machine could become unusable. As these services run as root, this is a very nice backdoor if we have root level access.</p>
 <p>The reason we can load our modules (by design) is because of the entitlement of these services. For example, here is <code>sshd</code>.</p>

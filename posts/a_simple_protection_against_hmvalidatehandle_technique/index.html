@@ -57,7 +57,7 @@ What is HMValidateHandle? Link to heading HMValidateHandle is an internal, unexp
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.b886fe0d9034709648f91f4ce178f51dd367d9350f82dd1132d54fd69bfca66f.css" integrity="sha256-uIb&#43;DZA0cJZI&#43;R9M4Xj1HdNn2TUPgt0RMtVP1pv8pm8=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -218,21 +218,21 @@ There are awful lot of documentation about this, and it was widely abused in man
   </a>
 </h3>
 <p>Conceptually it’s very simple. This function is frequently called from inside <code>user32.dll</code> so we just need to parse through it, and grab / calculate its address. The most common technique is locating the <code>IsMenu</code> function in <code>user32.dll</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>HMODULE hUser32 <span style="color:#f92672">=</span> <span style="color:#a6e22e">LoadLibraryA</span>(<span style="color:#e6db74">&#34;user32.dll&#34;</span>);
-</span></span><span style="display:flex;"><span>BYTE<span style="color:#f92672">*</span> pIsMenu <span style="color:#f92672">=</span> (BYTE <span style="color:#f92672">*</span>)<span style="color:#a6e22e">GetProcAddress</span>(hUser32, <span style="color:#e6db74">&#34;IsMenu&#34;</span>);
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>HMODULE hUser32 <span style="color:#555">=</span> <span style="color:#c0f">LoadLibraryA</span>(<span style="color:#c30">&#34;user32.dll&#34;</span>);
+</span></span><span style="display:flex;"><span>BYTE<span style="color:#555">*</span> pIsMenu <span style="color:#555">=</span> (BYTE <span style="color:#555">*</span>)<span style="color:#c0f">GetProcAddress</span>(hUser32, <span style="color:#c30">&#34;IsMenu&#34;</span>);
 </span></span></code></pre></div><p>Then parsing through it, and calculate the address of it. It’s being called very early in the function, and the opcode <code>E8</code> will indicate that, we can go from there.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> uiHMValidateHandleOffset <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0x1000</span>; i<span style="color:#f92672">++</span>) {
-</span></span><span style="display:flex;"><span>		BYTE<span style="color:#f92672">*</span> test <span style="color:#f92672">=</span> pIsMenu <span style="color:#f92672">+</span> i;
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> (<span style="color:#f92672">*</span>test <span style="color:#f92672">==</span> <span style="color:#ae81ff">0xE8</span>) {
-</span></span><span style="display:flex;"><span>			uiHMValidateHandleOffset <span style="color:#f92672">=</span> i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">break</span>;
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#078;font-weight:bold">int</span> uiHMValidateHandleOffset <span style="color:#555">=</span> <span style="color:#f60">0</span>;
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">for</span> (<span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#078;font-weight:bold">int</span> i <span style="color:#555">=</span> <span style="color:#f60">0</span>; i <span style="color:#555">&lt;</span> <span style="color:#f60">0x1000</span>; i<span style="color:#555">++</span>) {
+</span></span><span style="display:flex;"><span>		BYTE<span style="color:#555">*</span> test <span style="color:#555">=</span> pIsMenu <span style="color:#555">+</span> i;
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">*</span>test <span style="color:#555">==</span> <span style="color:#f60">0xE8</span>) {
+</span></span><span style="display:flex;"><span>			uiHMValidateHandleOffset <span style="color:#555">=</span> i <span style="color:#555">+</span> <span style="color:#f60">1</span>;
+</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">break</span>;
 </span></span><span style="display:flex;"><span>		}
 </span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> addr <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>)(pIsMenu <span style="color:#f92672">+</span> uiHMValidateHandleOffset);
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> offset <span style="color:#f92672">=</span> ((<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)pIsMenu <span style="color:#f92672">-</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)hUser32) <span style="color:#f92672">+</span> addr;
-</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//The +11 is to skip the padding bytes as on Windows 10 these aren&#39;t nops
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	pHmValidateHandle <span style="color:#f92672">=</span> (lHMValidateHandle)((ULONG_PTR)hUser32 <span style="color:#f92672">+</span> offset <span style="color:#f92672">+</span> <span style="color:#ae81ff">11</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#078;font-weight:bold">int</span> addr <span style="color:#555">=</span> <span style="color:#555">*</span>(<span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#078;font-weight:bold">int</span> <span style="color:#555">*</span>)(pIsMenu <span style="color:#555">+</span> uiHMValidateHandleOffset);
+</span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#078;font-weight:bold">int</span> offset <span style="color:#555">=</span> ((<span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#078;font-weight:bold">int</span>)pIsMenu <span style="color:#555">-</span> (<span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#078;font-weight:bold">int</span>)hUser32) <span style="color:#555">+</span> addr;
+</span></span><span style="display:flex;"><span>	<span style="color:#09f;font-style:italic">//The +11 is to skip the padding bytes as on Windows 10 these aren&#39;t nops
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>	pHmValidateHandle <span style="color:#555">=</span> (lHMValidateHandle)((ULONG_PTR)hUser32 <span style="color:#555">+</span> offset <span style="color:#555">+</span> <span style="color:#f60">11</span>);
 </span></span></code></pre></div><p>The most well known implementation (from where the above code is also taken) can be found here:
 <a href="https://github.com/sam-b/windows_kernel_address_leaks/tree/master/HMValidateHandle"  class="external-link" target="_blank" rel="noopener">windows_kernel_address_leaks/HMValidateHandle at master · sam-b/windows_kernel_address_leaks · GitHub</a></p>
 <p>Here is how <code>IsMenu</code> function looks like in the latest Windows 10 version:
@@ -242,9 +242,9 @@ There are awful lot of documentation about this, and it was widely abused in man
 <p>For example picking up <code>GetMenuItemCount</code> would be similarly easy:
 <img src="https://theevilbit.github.io/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.08.19.png" alt="image"></p>
 <p>Likely the only thing you would need to change is this:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>BYTE<span style="color:#f92672">*</span> pIsMenu <span style="color:#f92672">=</span> (BYTE <span style="color:#f92672">*</span>)<span style="color:#a6e22e">GetProcAddress</span>(hUser32, <span style="color:#e6db74">&#34;IsMenu&#34;</span>);
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>BYTE<span style="color:#555">*</span> pIsMenu <span style="color:#555">=</span> (BYTE <span style="color:#555">*</span>)<span style="color:#c0f">GetProcAddress</span>(hUser32, <span style="color:#c30">&#34;IsMenu&#34;</span>);
 </span></span></code></pre></div><p>to:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>BYTE<span style="color:#f92672">*</span> pGetMenuItemCount <span style="color:#f92672">=</span> (BYTE <span style="color:#f92672">*</span>)<span style="color:#a6e22e">GetProcAddress</span>(hUser32, <span style="color:#e6db74">&#34;GetMenuItemCount&#34;</span>);
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>BYTE<span style="color:#555">*</span> pGetMenuItemCount <span style="color:#555">=</span> (BYTE <span style="color:#555">*</span>)<span style="color:#c0f">GetProcAddress</span>(hUser32, <span style="color:#c30">&#34;GetMenuItemCount&#34;</span>);
 </span></span></code></pre></div><p>and maybe the offset calculation at the end because of some nops, but otherwise easy-peasy.</p>
 <p>In older versions of Windows it was a bit less used, but still pretty good, this one is from Windows 7 x86:
 <img src="https://theevilbit.github.io/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.23.05.png" alt="image"></p>
@@ -275,7 +275,7 @@ This will build all the examples, create the <code>lib</code> files, etc… Now 
   </a>
 </h3>
 <p>In you C / C++ code you need to include the header:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;detours.h&gt;</span><span style="color:#75715e">
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;detours.h&gt;</span><span style="color:#099">
 </span></span></span></code></pre></div><p>In the <code>Project -&gt; C/C++ -&gt; General -&gt; Additional Include Directories</code> add the folder where the header files present.
 <img src="https://theevilbit.github.io/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.24.53.png" alt="image"></p>
 <p>And under <code>Project -&gt; Linker -&gt; General -&gt; Additional Library Directories</code> add the folder where the compiled lib files present.
@@ -290,16 +290,16 @@ This will build all the examples, create the <code>lib</code> files, etc… Now 
 </h3>
 <p>It is super easy. I’m not a coder at all, but it was easy even for me. Essentially you can take this example from the official WiKi page: <a href="https://github.com/Microsoft/Detours/wiki/Using-Detours"  class="external-link" target="_blank" rel="noopener">Using Detours · microsoft/Detours Wiki · GitHub</a> and change it. This is what I did.
 This is how you hook:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#a6e22e">DetourRestoreAfterWith</span>();
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">DetourTransactionBegin</span>();
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">DetourUpdateThread</span>(<span style="color:#a6e22e">GetCurrentThread</span>());
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">DetourAttach</span>(<span style="color:#f92672">&amp;</span>(PVOID<span style="color:#f92672">&amp;</span>)pHmValidateHandle, ProtectHMValidateHandle);
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">DetourTransactionCommit</span>();
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#c0f">DetourRestoreAfterWith</span>();
+</span></span><span style="display:flex;"><span><span style="color:#c0f">DetourTransactionBegin</span>();
+</span></span><span style="display:flex;"><span><span style="color:#c0f">DetourUpdateThread</span>(<span style="color:#c0f">GetCurrentThread</span>());
+</span></span><span style="display:flex;"><span><span style="color:#c0f">DetourAttach</span>(<span style="color:#555">&amp;</span>(PVOID<span style="color:#555">&amp;</span>)pHmValidateHandle, ProtectHMValidateHandle);
+</span></span><span style="display:flex;"><span><span style="color:#c0f">DetourTransactionCommit</span>();
 </span></span></code></pre></div><p>and this is how you unhook:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#a6e22e">DetourTransactionBegin</span>();
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">DetourUpdateThread</span>(<span style="color:#a6e22e">GetCurrentThread</span>());
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">DetourDetach</span>(<span style="color:#f92672">&amp;</span>(PVOID<span style="color:#f92672">&amp;</span>)pHmValidateHandle, ProtectHMValidateHandle);
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">DetourTransactionCommit</span>();
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#c0f">DetourTransactionBegin</span>();
+</span></span><span style="display:flex;"><span><span style="color:#c0f">DetourUpdateThread</span>(<span style="color:#c0f">GetCurrentThread</span>());
+</span></span><span style="display:flex;"><span><span style="color:#c0f">DetourDetach</span>(<span style="color:#555">&amp;</span>(PVOID<span style="color:#555">&amp;</span>)pHmValidateHandle, ProtectHMValidateHandle);
+</span></span><span style="display:flex;"><span><span style="color:#c0f">DetourTransactionCommit</span>();
 </span></span></code></pre></div><p><code>pHmValidateHandle</code> contains the address of the original function you want to hook and <code>ProtectHMValidateHandle</code> is my function which is implementing the alternate functionality.</p>
 <h3 id="implementing-the-protection">
   Implementing the protection
@@ -309,10 +309,10 @@ This is how you hook:</p>
   </a>
 </h3>
 <p>Again the basic idea is to verify if the call is coming from <code>user32.dll</code> vs. somewhere else. For this we need to verify the call stack. First I was afraid that I will need to do some assembly magic for that, but luckily Windows has an API to retrieve items from the stack, and the function is: <code>CaptureStackBackTrace</code>, MSDN: <a href="https://docs.microsoft.com/en-us/windows/win32/debug/capturestackbacktrace"  class="external-link" target="_blank" rel="noopener">CaptureStackBackTrace function - Windows applications | Microsoft Docs</a>. It looks like this:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>USHORT WINAPI <span style="color:#a6e22e">CaptureStackBackTrace</span>(
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>USHORT WINAPI <span style="color:#c0f">CaptureStackBackTrace</span>(
 </span></span><span style="display:flex;"><span>  _In_      ULONG  FramesToSkip,
 </span></span><span style="display:flex;"><span>  _In_      ULONG  FramesToCapture,
-</span></span><span style="display:flex;"><span>  _Out_     PVOID  <span style="color:#f92672">*</span>BackTrace,
+</span></span><span style="display:flex;"><span>  _Out_     PVOID  <span style="color:#555">*</span>BackTrace,
 </span></span><span style="display:flex;"><span>  _Out_opt_ PULONG BackTraceHash
 </span></span><span style="display:flex;"><span>);
 </span></span></code></pre></div><p>What is important to us is:
@@ -339,28 +339,28 @@ This is how you hook:</p>
 [  1] = 00007FF73C601278
 </code></pre><p>We can see that that the 1st frame is always pointing to the same place, the trampoline function. The 2nd frame is the original caller, in case of <code>IsMenu</code> the address falls in the range of the <code>user32.dll</code> code segment, while in the second case where I call the function directly, like you would do in an exploit, the return address is pointing to somewhere else.</p>
 <p>Essentially the entire protector function looks like this:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#ifdef _WIN64
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>VOID<span style="color:#f92672">*</span> WINAPI <span style="color:#a6e22e">ProtectHMValidateHandle</span>(HWND h, <span style="color:#66d9ef">int</span> type)
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#else
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>PVOID <span style="color:#66d9ef">__fastcall</span> <span style="color:#a6e22e">ProtectHMValidateHandle</span>(HWND h, <span style="color:#66d9ef">int</span> type)
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>{
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[*] Hooked function called</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> stack[STACK_ENTRIES] <span style="color:#f92672">=</span> { <span style="color:#ae81ff">0</span> }; 
-</span></span><span style="display:flex;"><span>	WORD numberOfFrames <span style="color:#f92672">=</span> <span style="color:#a6e22e">CaptureStackBackTrace</span>(<span style="color:#ae81ff">0</span>, STACK_ENTRIES, stack, NULL);
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> (USHORT iFrame <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; iFrame <span style="color:#f92672">&lt;</span> numberOfFrames; <span style="color:#f92672">++</span>iFrame) {
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[%3d] = %p</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, iFrame, stack[iFrame]);
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#ifdef _WIN64
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>VOID<span style="color:#555">*</span> WINAPI <span style="color:#c0f">ProtectHMValidateHandle</span>(HWND h, <span style="color:#078;font-weight:bold">int</span> type)
+</span></span><span style="display:flex;"><span><span style="color:#099">#else
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>PVOID <span style="color:#069;font-weight:bold">__fastcall</span> <span style="color:#c0f">ProtectHMValidateHandle</span>(HWND h, <span style="color:#078;font-weight:bold">int</span> type)
+</span></span><span style="display:flex;"><span><span style="color:#099">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[*] Hooked function called</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">void</span><span style="color:#555">*</span> stack[STACK_ENTRIES] <span style="color:#555">=</span> { <span style="color:#f60">0</span> }; 
+</span></span><span style="display:flex;"><span>	WORD numberOfFrames <span style="color:#555">=</span> <span style="color:#c0f">CaptureStackBackTrace</span>(<span style="color:#f60">0</span>, STACK_ENTRIES, stack, <span style="color:#366">NULL</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">for</span> (USHORT iFrame <span style="color:#555">=</span> <span style="color:#f60">0</span>; iFrame <span style="color:#555">&lt;</span> numberOfFrames; <span style="color:#555">++</span>iFrame) {
+</span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[%3d] = %p</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, iFrame, stack[iFrame]);
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>	
-</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//the 1st item on the stack is the hook, the 2nd item is the original caller, which should be always originate from user32.dll as the function is not exported
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#75715e">//verify if the call origin is inside the user32.dll code segment
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> ((SIZE_T)stack[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">&lt;</span> user32_dll_start <span style="color:#f92672">||</span> (SIZE_T)stack[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">&gt;</span> user32_dll_end)
+</span></span><span style="display:flex;"><span>	<span style="color:#09f;font-style:italic">//the 1st item on the stack is the hook, the 2nd item is the original caller, which should be always originate from user32.dll as the function is not exported
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>	<span style="color:#09f;font-style:italic">//verify if the call origin is inside the user32.dll code segment
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>	<span style="color:#069;font-weight:bold">if</span> ((SIZE_T)stack[<span style="color:#f60">1</span>] <span style="color:#555">&lt;</span> user32_dll_start <span style="color:#555">||</span> (SIZE_T)stack[<span style="color:#f60">1</span>] <span style="color:#555">&gt;</span> user32_dll_end)
 </span></span><span style="display:flex;"><span>	{
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;[</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">o/] Exploit detected, exiting program...</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">ExitProcess</span>(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[</span><span style="color:#c30;font-weight:bold">\\</span><span style="color:#c30">o/] Exploit detected, exiting program...</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>		<span style="color:#c0f">ExitProcess</span>(<span style="color:#555">-</span><span style="color:#f60">1</span>);
 </span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//call the original function
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">pHmValidateHandle</span>(h, type);
+</span></span><span style="display:flex;"><span>	<span style="color:#09f;font-style:italic">//call the original function
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>	<span style="color:#069;font-weight:bold">return</span> <span style="color:#c0f">pHmValidateHandle</span>(h, type);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>If I see an exploit attempt, I simply quit the process. I put the entire code to GitHub under my <code>kex</code> library:
 <a href="https://github.com/theevilbit/kex/tree/master/HookHMVH"  class="external-link" target="_blank" rel="noopener">kex/HookHMVH at master · theevilbit/kex · GitHub</a></p>
@@ -376,7 +376,7 @@ This is how you hook:</p>
 <p>To test it with a real world exploit, not just a test app I picked up a recent exploit for <code>CVE-2019-1132</code> which can be downloaded from here:
 <a href="https://github.com/Vlad-tri/CVE-2019-1132"  class="external-link" target="_blank" rel="noopener">GitHub - Vlad-tri/CVE-2019-1132: EoP POC for CVE-2019-1132</a>
 To simulate the hook of an AV vendor I put a line to the beginning of the exploit, to load my DLL:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#a6e22e">LoadLibraryA</span>(<span style="color:#e6db74">&#34;HookHMVH.dll&#34;</span>);
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#c0f">LoadLibraryA</span>(<span style="color:#c30">&#34;HookHMVH.dll&#34;</span>);
 </span></span></code></pre></div><p>and compiled it again with that.
 The normal version worked as expected:
 <img src="https://theevilbit.github.io/images/A_simple_protection_against_HMValidateHandle_technique/Screenshot%202019-07-31%20at%2021.54.58.png" alt="image"></p>

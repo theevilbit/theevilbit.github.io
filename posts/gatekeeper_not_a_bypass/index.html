@@ -58,7 +58,7 @@ mmap Link to heading Part of GateKeeper is implemented on macOS in the Quarantin
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.b886fe0d9034709648f91f4ce178f51dd367d9350f82dd1132d54fd69bfca66f.css" integrity="sha256-uIb&#43;DZA0cJZI&#43;R9M4Xj1HdNn2TUPgt0RMtVP1pv8pm8=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -276,24 +276,24 @@ mmap Link to heading Part of GateKeeper is implemented on macOS in the Quarantin
 <p>The problem is that an attacker can load a dylib through other means as well, using the deprecated <code>NSCreateObjectFileImageFromMemory</code> API.</p>
 <p>What we can do is call this API on any dynamic library outside of our bundle, which can be even unsigned and have the quarantine flag, and it will be still loaded and executed.</p>
 <p>The following code snippet does it.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>NSObjectFileImage fileImage <span style="color:#f92672">=</span> NULL;
-</span></span><span style="display:flex;"><span>NSModule module <span style="color:#f92672">=</span> NULL;
-</span></span><span style="display:flex;"><span>NSSymbol symbol <span style="color:#f92672">=</span> NULL;
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>NSObjectFileImage fileImage <span style="color:#555">=</span> <span style="color:#366">NULL</span>;
+</span></span><span style="display:flex;"><span>NSModule module <span style="color:#555">=</span> <span style="color:#366">NULL</span>;
+</span></span><span style="display:flex;"><span>NSSymbol symbol <span style="color:#555">=</span> <span style="color:#366">NULL</span>;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> stat stat_buf;
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> (<span style="color:#f92672">*</span>function)();
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">struct</span> stat stat_buf;
+</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">*</span>function)();
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> fd <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#34;/Volumes/QB/test.bundle&#34;</span>, O_RDONLY, <span style="color:#ae81ff">0</span>);
-</span></span><span style="display:flex;"><span>fstat(fd, <span style="color:#f92672">&amp;</span>stat_buf);
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> codeAddr <span style="color:#f92672">=</span> mmap(NULL, stat_buf.st_size, PROT_READ, MAP_FILE <span style="color:#f92672">|</span> MAP_PRIVATE, fd, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span> fd <span style="color:#555">=</span> open(<span style="color:#c30">&#34;/Volumes/QB/test.bundle&#34;</span>, O_RDONLY, <span style="color:#f60">0</span>);
+</span></span><span style="display:flex;"><span>fstat(fd, <span style="color:#555">&amp;</span>stat_buf);
+</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">void</span><span style="color:#555">*</span> codeAddr <span style="color:#555">=</span> mmap(<span style="color:#366">NULL</span>, stat_buf.st_size, PROT_READ, MAP_FILE <span style="color:#555">|</span> MAP_PRIVATE, fd, <span style="color:#f60">0</span>);
 </span></span><span style="display:flex;"><span>close(fd);
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>NSCreateObjectFileImageFromMemory(codeAddr, stat_buf.st_size, <span style="color:#f92672">&amp;</span>fileImage);
+</span></span><span style="display:flex;"><span>NSCreateObjectFileImageFromMemory(codeAddr, stat_buf.st_size, <span style="color:#555">&amp;</span>fileImage);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>module <span style="color:#f92672">=</span> NSLinkModule(fileImage, <span style="color:#e6db74">&#34;module&#34;</span>, NSLINKMODULE_OPTION_NONE);
-</span></span><span style="display:flex;"><span>symbol <span style="color:#f92672">=</span> NSLookupSymbolInModule(module, <span style="color:#e6db74">&#34;_execute&#34;</span>);
-</span></span><span style="display:flex;"><span>function <span style="color:#f92672">=</span> NSAddressOfSymbol(symbol);
+</span></span><span style="display:flex;"><span>module <span style="color:#555">=</span> NSLinkModule(fileImage, <span style="color:#c30">&#34;module&#34;</span>, NSLINKMODULE_OPTION_NONE);
+</span></span><span style="display:flex;"><span>symbol <span style="color:#555">=</span> NSLookupSymbolInModule(module, <span style="color:#c30">&#34;_execute&#34;</span>);
+</span></span><span style="display:flex;"><span>function <span style="color:#555">=</span> NSAddressOfSymbol(symbol);
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>function();
 </span></span><span style="display:flex;"><span>
@@ -307,25 +307,25 @@ mmap Link to heading Part of GateKeeper is implemented on macOS in the Quarantin
   </a>
 </h3>
 <p>I developed a simple App, called QB.app, which I notarized and it will load this binary from the path above (<code>/Volumes/QB/test.bundle</code>). The app is packed inside a DMG with this <code>test.bundle</code>. The code of this binary is very simple.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">__attribute__</span>((constructor))
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">custom</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>argv)
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdlib.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">__attribute__</span>((constructor))
+</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">custom</span>(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Executed constructor!</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">system</span>(<span style="color:#e6db74">&#34;/System/Applications/Calculator.app/Contents/MacOS/Calculator&#34;</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;Executed constructor!</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">system</span>(<span style="color:#c30">&#34;/System/Applications/Calculator.app/Contents/MacOS/Calculator&#34;</span>);
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">execute</span>()
+</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">execute</span>()
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Executed execute!</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">system</span>(<span style="color:#e6db74">&#34;/System/Applications/Calculator.app/Contents/MacOS/Calculator&#34;</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;Executed execute!</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">system</span>(<span style="color:#c30">&#34;/System/Applications/Calculator.app/Contents/MacOS/Calculator&#34;</span>);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>It has a constructor and an execute function. Both print a message and start Calculator.</p>
 <p>If we load this from our app it will start Calculator twice (once the first is closed), because the constructor will be called and also the <code>execute</code> function.</p>
 <p>I also added a line to my app to try to do the same load with <code>dlopen</code> to show that it doesn&rsquo;t work:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#a6e22e">dlopen</span>(<span style="color:#e6db74">&#34;/Volumes/QB/test.bundle&#34;</span>,<span style="color:#ae81ff">1</span>);
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#c0f">dlopen</span>(<span style="color:#c30">&#34;/Volumes/QB/test.bundle&#34;</span>,<span style="color:#f60">1</span>);
 </span></span></code></pre></div><p>When this is invoked we will get the popup shown above.</p>
 <p>However on the dynamic mapping it will be loaded and Calculator will be executed.</p>
 <p>Note, that <code>test.bundle</code> is unsigned!</p>
@@ -357,72 +357,72 @@ mmap Link to heading Part of GateKeeper is implemented on macOS in the Quarantin
 <p>When users download a screen saver bundle (<code>.saver</code>) and instead of double clicking the screen saver for installation, directly place it in the <code>~/Library/Screen Saver</code> directory, the system will load the screen saver if the users select it in the screen saver preferences. There is no alert that they are trying to execute an app downloaded form the Internet.</p>
 <p>The screen saver has to be notarized, or signed with an old certificate in order to avoid a prompt. Even if an app is notarized an alert should be generated at first execution by Gatekeeper.</p>
 <p>I created a simple screen saver with the following code, to see which part is executed.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#75715e">//
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//  DemoScreenView.m
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//  DemoScreen
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//  Created by csaby on 2021. 05. 26..
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#import &#34;DemoScreenView.h&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//  DemoScreenView.m
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//  DemoScreen
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//  Created by csaby on 2021. 05. 26..
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#099">#import &#34;DemoScreenView.h&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
 </span></span><span style="display:flex;"><span>__attribute__((constructor))
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> custom(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>argv)
+</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">void</span> custom(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#e6db74">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">@implementation</span> <span style="color:#a6e22e">DemoScreenView</span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@implementation</span> <span style="color:#0a8;font-weight:bold">DemoScreenView</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>- (<span style="color:#66d9ef">instancetype</span>)<span style="color:#a6e22e">initWithFrame:</span>(NSRect)frame <span style="color:#a6e22e">isPreview:</span>(<span style="color:#66d9ef">BOOL</span>)isPreview
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">instancetype</span>)<span style="color:#c0f">initWithFrame:</span>(NSRect)<span style="color:#033">frame</span> <span style="color:#c0f">isPreview:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">isPreview</span>
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span> 
-</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#e6db74">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
-</span></span><span style="display:flex;"><span>    self <span style="color:#f92672">=</span> [super initWithFrame:frame isPreview:isPreview];
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (self) {
-</span></span><span style="display:flex;"><span>        [self setAnimationTimeInterval:<span style="color:#ae81ff">1</span><span style="color:#f92672">/</span><span style="color:#ae81ff">30.0</span>];
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
+</span></span><span style="display:flex;"><span>    <span style="color:#366">self</span> <span style="color:#555">=</span> [<span style="color:#366">super</span> <span style="color:#99f">initWithFrame</span>:frame <span style="color:#99f">isPreview</span>:isPreview];
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (<span style="color:#366">self</span>) {
+</span></span><span style="display:flex;"><span>        [<span style="color:#366">self</span> <span style="color:#99f">setAnimationTimeInterval</span>:<span style="color:#f60">1</span><span style="color:#555">/</span><span style="color:#f60">30.0</span>];
 </span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> self;
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span> <span style="color:#366">self</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>- (<span style="color:#66d9ef">void</span>)<span style="color:#a6e22e">startAnimation</span>
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">startAnimation</span>
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#e6db74">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
-</span></span><span style="display:flex;"><span>    [super startAnimation];
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
+</span></span><span style="display:flex;"><span>    [<span style="color:#366">super</span> startAnimation];
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>- (<span style="color:#66d9ef">void</span>)<span style="color:#a6e22e">stopAnimation</span>
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">stopAnimation</span>
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#e6db74">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
-</span></span><span style="display:flex;"><span>    [super stopAnimation];
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
+</span></span><span style="display:flex;"><span>    [<span style="color:#366">super</span> stopAnimation];
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>- (<span style="color:#66d9ef">void</span>)<span style="color:#a6e22e">drawRect:</span>(NSRect)rect
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">drawRect:</span>(NSRect)<span style="color:#033">rect</span>
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#e6db74">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
-</span></span><span style="display:flex;"><span>    [super drawRect:rect];
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
+</span></span><span style="display:flex;"><span>    [<span style="color:#366">super</span> <span style="color:#99f">drawRect</span>:rect];
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>- (<span style="color:#66d9ef">void</span>)<span style="color:#a6e22e">animateOneFrame</span>
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">animateOneFrame</span>
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#e6db74">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>- (<span style="color:#66d9ef">BOOL</span>)<span style="color:#a6e22e">hasConfigureSheet</span>
+</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#c0f">hasConfigureSheet</span>
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#e6db74">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> NO;
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span> <span style="color:#366">NO</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>- (NSWindow<span style="color:#f92672">*</span>)<span style="color:#a6e22e">configureSheet</span>
+</span></span><span style="display:flex;"><span>- (NSWindow<span style="color:#555">*</span>)<span style="color:#c0f">configureSheet</span>
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#e6db74">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> nil;
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span> <span style="color:#366">nil</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">@end</span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@end</span>
 </span></span></code></pre></div><p>As soon as it&rsquo;s selected it will be loaded, and run what we can see in the logs</p>
 <pre tabindex="0"><code>csaby@bigsur ~ % log stream | grep hello_screensaver
 2021-05-28 08:43:59.329660-0700 0x1eb6     Default     0x6b54               692    0    legacyScreenSaver: (DemoScreen) hello_screensaver void custom(int, const char **)
@@ -463,19 +463,19 @@ mmap Link to heading Part of GateKeeper is implemented on macOS in the Quarantin
   </a>
 </h3>
 <p>To test my theory I created a dylib, which simply logs a message.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#75715e">#import &lt;Foundation/Foundation.h&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#099">#import &lt;Foundation/Foundation.h&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
 </span></span><span style="display:flex;"><span>__attribute__((constructor))
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> custom(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>argv)
+</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">void</span> custom(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#e6db74">@&#34;hello_dylib %s&#34;</span>, __PRETTY_FUNCTION__);
+</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;hello_dylib %s&#34;</span>, __PRETTY_FUNCTION__);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>and an executable, which loads the dylib.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#import &lt;dlfcn.h&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">void</span>)
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#import &lt;dlfcn.h&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
+</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">main</span>(<span style="color:#078;font-weight:bold">void</span>)
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span> <span style="color:#a6e22e">dlopen</span>(<span style="color:#e6db74">&#34;log.dylib&#34;</span>, RTLD_LAZY);
+</span></span><span style="display:flex;"><span> <span style="color:#c0f">dlopen</span>(<span style="color:#c30">&#34;log.dylib&#34;</span>, RTLD_LAZY);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>Then I notarized the dylib, and downloaded it so it got a quarantine flag. Then started the executable and the dylib was loaded without any prompts. This was really weird.</p>
 <p>Thus I decided to take a look at the GK logs from <code>syspolicyd</code>. The following shows the <code>syspolicyd</code> logs concerning the load of the <code>log.dylib</code>.</p>
@@ -504,29 +504,29 @@ mmap Link to heading Part of GateKeeper is implemented on macOS in the Quarantin
 </code></pre><p>If yo don&rsquo;t find it, let me highlight the key part:</p>
 <pre tabindex="0"><code>syspolicyd: [com.apple.syspolicy.exec:default] Library loads never require a first launch prompt.
 </code></pre><p>Looks like it&rsquo;s a design decision not to generate prompt on library loads. We can find this if we reverse <code>syspolicyd</code>. <code>/usr/libexec/syspolicyd</code> has the method <code>determineGatekeeperEvaluationTypeForTarget:withResponsibleTarget:</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int64</span> <span style="color:#66d9ef">__cdecl</span> <span style="color:#f92672">-</span>[EvaluationPolicy determineGatekeeperEvaluationTypeForTarget:withResponsibleTarget:](
-</span></span><span style="display:flex;"><span>        EvaluationPolicy <span style="color:#f92672">*</span>self,
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">SEL</span> a2,
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">id</span> a3,
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">id</span> a4)
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#069;font-weight:bold">__int64</span> <span style="color:#069;font-weight:bold">__cdecl</span> <span style="color:#555">-</span>[EvaluationPolicy <span style="color:#99f">determineGatekeeperEvaluationTypeForTarget</span>:<span style="color:#99f">withResponsibleTarget</span>:](
+</span></span><span style="display:flex;"><span>        EvaluationPolicy <span style="color:#555">*</span><span style="color:#366">self</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#078;font-weight:bold">SEL</span> a2,
+</span></span><span style="display:flex;"><span>        <span style="color:#078;font-weight:bold">id</span> a3,
+</span></span><span style="display:flex;"><span>        <span style="color:#078;font-weight:bold">id</span> a4)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>...
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int8</span>)objc_msgSend(v5, <span style="color:#e6db74">&#34;triggeredByLibraryLoad&#34;</span>) )
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> ( (<span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#069;font-weight:bold">__int8</span>)objc_msgSend(v5, <span style="color:#c30">&#34;triggeredByLibraryLoad&#34;</span>) )
 </span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>      v12 <span style="color:#f92672">=</span> <span style="color:#f92672">+</span>[SBRUtilities alertIcon]_3(<span style="color:#f92672">&amp;</span>OBJC_CLASS___SPLog, <span style="color:#e6db74">&#34;exec&#34;</span>);
-</span></span><span style="display:flex;"><span>      v13 <span style="color:#f92672">=</span> (os_log_s <span style="color:#f92672">*</span>)objc_retainAutoreleasedReturnValue(v12);
-</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> ( os_log_type_enabled(v13, OS_LOG_TYPE_INFO) )
+</span></span><span style="display:flex;"><span>      v12 <span style="color:#555">=</span> <span style="color:#555">+</span>[SBRUtilities alertIcon]_3(<span style="color:#555">&amp;</span>OBJC_CLASS___SPLog, <span style="color:#c30">&#34;exec&#34;</span>);
+</span></span><span style="display:flex;"><span>      v13 <span style="color:#555">=</span> (os_log_s <span style="color:#555">*</span>)objc_retainAutoreleasedReturnValue(v12);
+</span></span><span style="display:flex;"><span>      <span style="color:#069;font-weight:bold">if</span> ( os_log_type_enabled(v13, OS_LOG_TYPE_INFO) )
 </span></span><span style="display:flex;"><span>      {
-</span></span><span style="display:flex;"><span>        LOWORD(buf) <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>        LOWORD(buf) <span style="color:#555">=</span> <span style="color:#f60">0</span>;
 </span></span><span style="display:flex;"><span>        _os_log_impl(
-</span></span><span style="display:flex;"><span>          (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>_mh_execute_header,
+</span></span><span style="display:flex;"><span>          (<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#555">&amp;</span>_mh_execute_header,
 </span></span><span style="display:flex;"><span>          v13,
 </span></span><span style="display:flex;"><span>          OS_LOG_TYPE_INFO,
-</span></span><span style="display:flex;"><span>          <span style="color:#e6db74">&#34;Library loads never require a first launch prompt.&#34;</span>,
-</span></span><span style="display:flex;"><span>          (uint8_t <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>buf,
-</span></span><span style="display:flex;"><span>          <span style="color:#ae81ff">2u</span>);
+</span></span><span style="display:flex;"><span>          <span style="color:#c30">&#34;Library loads never require a first launch prompt.&#34;</span>,
+</span></span><span style="display:flex;"><span>          (uint8_t <span style="color:#555">*</span>)<span style="color:#555">&amp;</span>buf,
+</span></span><span style="display:flex;"><span>          <span style="color:#f60">2u</span>);
 </span></span><span style="display:flex;"><span>      }
-</span></span><span style="display:flex;"><span>      v14 <span style="color:#f92672">=</span> v13;
+</span></span><span style="display:flex;"><span>      v14 <span style="color:#555">=</span> v13;
 </span></span><span style="display:flex;"><span>    }
 </span></span></code></pre></div><p>Here we can find the log messages that we saw in the logs.</p>
 <h3 id="implications-1">

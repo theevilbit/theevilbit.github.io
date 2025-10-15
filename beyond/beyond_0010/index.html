@@ -52,7 +52,7 @@ I started to explore to possibility of persisting on macOS through script files 
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.b886fe0d9034709648f91f4ce178f51dd367d9350f82dd1132d54fd69bfca66f.css" integrity="sha256-uIb&#43;DZA0cJZI&#43;R9M4Xj1HdNn2TUPgt0RMtVP1pv8pm8=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -169,10 +169,10 @@ I started to explore to possibility of persisting on macOS through script files 
     <blockquote>
 <p>This is part 10 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p></blockquote>
 <p>I started to explore to possibility of persisting on macOS through script files contained in an application. The basic idea is that if we find a script file, which is being executed by a given application, we can edit that script file, put our code inside, and wait for an execution. Such technique is highly dependent on the applications the user has installed, so I looked through first how rare / frequent is having such scripts inside applications. I started with the below searches:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>find /Applications/ -name <span style="color:#e6db74">&#34;*.sh&#34;</span>
-</span></span><span style="display:flex;"><span>find /Applications/ -name <span style="color:#e6db74">&#34;*.py&#34;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>find /Applications/ -name <span style="color:#c30">&#34;*.sh&#34;</span>
+</span></span><span style="display:flex;"><span>find /Applications/ -name <span style="color:#c30">&#34;*.py&#34;</span>
 </span></span></code></pre></div><p>I have two Macs, one I use for private stuff and one for work, the second has significantly lower number of apps installed, only those I really need. First I checked my work MacBook as it has a much lower ‘attack surface’ and it turns out that these scripts files are not that rare at all, but they are also not everywhere. There is a common pattern of apps using scripts for specific purpose, at least based on the name, a few examples:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/Applications//Bear.app/Contents/Resources/Custom Tag Keywords/keywordsplist_to_csv.py
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/Applications//Bear.app/Contents/Resources/Custom Tag Keywords/keywordsplist_to_csv.py
 </span></span><span style="display:flex;"><span>/Applications//Hopper Disassembler v4.app/Contents/Resources/script_disassemble.py
 </span></span><span style="display:flex;"><span>/Applications//BBEdit.app/Contents/PlugIns/Language Modules/Python.bblm/Contents/SharedSupport/py_check_syntax.py
 </span></span><span style="display:flex;"><span>
@@ -197,10 +197,10 @@ I started to explore to possibility of persisting on macOS through script files 
   </a>
 </h2>
 <p>This one is much more promising. This is a very popular text editor application, so you are likely to find it somewhere. Second, you install it by drag &amp; drop to the application folder, so the user has the rights to edit the script file. If we edit the following file:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/Applications//Sublime<span style="color:#ae81ff">\ </span>Text.app/Contents/MacOS/sublime.py 
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/Applications//Sublime<span style="color:#c30;font-weight:bold">\ </span>Text.app/Contents/MacOS/sublime.py 
 </span></span></code></pre></div><p>It will be executed every time you start up Sublime Text. That’s awesome! I used the following POC code:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> os
-</span></span><span style="display:flex;"><span>os<span style="color:#f92672">.</span>system(<span style="color:#e6db74">&#34;osascript -e &#39;Tell application </span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">System Events</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74"> to display dialog </span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74"> Message </span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">&#39;&#34;</span>)
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">os</span>
+</span></span><span style="display:flex;"><span>os<span style="color:#555">.</span>system(<span style="color:#c30">&#34;osascript -e &#39;Tell application </span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">System Events</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30"> to display dialog </span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30"> Message </span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">&#39;&#34;</span>)
 </span></span></code></pre></div><p>You will get a prompt on Mojave to grant access, but you can add other code, which would do something else to avoid this prompt, and even if you get it, an average user will just grant access.</p>
 <p>Sublime has a code signature and hash for this script, the reason macOS will not block tampering with the script, was covered by Thomas Reed in his talk about “Code Signing flaw in macOS“: <a href="https://objectivebythesea.com/v1/talks/OBTS_v1_Reed.pdf"  class="external-link" target="_blank" rel="noopener">https://objectivebythesea.com/v1/talks/OBTS_v1_Reed.pdf</a>
 In short macOS will only verify code signature upon first execution, anything changes after that will be undetected.</p>
@@ -212,13 +212,13 @@ In short macOS will only verify code signature upon first execution, anything ch
   </a>
 </h2>
 <p>If I run the same search on my private MacBook there are a whole lot of other apps that has scripts inside, and I found one particularly funny. I used to buy games from <a href="https://gog.com"  class="external-link" target="_blank" rel="noopener">https://gog.com</a> I like that they are DRM free, I can backup the game, don’t need to rely on online connectivity, etc… It turns out that they have very interesting script in one of the main packages to launch games:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#!/bin/bash
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e"># GOG.com (www.gog.com)</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># GOGLauncher Script</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#099">#!/bin/bash
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span><span style="color:#09f;font-style:italic"># GOG.com (www.gog.com)</span>
+</span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"># GOGLauncher Script</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>FIND_GAME<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>find game/ -type d -maxdepth <span style="color:#ae81ff">1</span> -name <span style="color:#e6db74">&#34;*.app&#34;</span><span style="color:#e6db74">`</span>
-</span></span><span style="display:flex;"><span>xattr -r -d com.apple.quarantine <span style="color:#e6db74">&#34;</span>$FIND_GAME<span style="color:#e6db74">&#34;</span>
-</span></span><span style="display:flex;"><span>open <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>FIND_GAME<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#033">FIND_GAME</span><span style="color:#555">=</span><span style="color:#c30">`</span>find game/ -type d -maxdepth <span style="color:#f60">1</span> -name <span style="color:#c30">&#34;*.app&#34;</span><span style="color:#c30">`</span>
+</span></span><span style="display:flex;"><span>xattr -r -d com.apple.quarantine <span style="color:#c30">&#34;</span><span style="color:#033">$FIND_GAME</span><span style="color:#c30">&#34;</span>
+</span></span><span style="display:flex;"><span>open <span style="color:#c30">&#34;</span><span style="color:#a00">${</span><span style="color:#033">FIND_GAME</span><span style="color:#a00">}</span><span style="color:#c30">&#34;</span>
 </span></span></code></pre></div><p>Stop for a minute and let the script sink in :) Here is what does it do in human language:</p>
 <p>Upon starting the launcher script, it will look for apps in the game/ folder, remove the quarantine attribute and launch the app with the open command. The open command would invoke Gatekeeper, but only if the attribute is not removed! What this means, that you can replace the game-to-be-launched with anything you want (!!!) and it will be executed, even if it has a quarantine flag set. This is a signed launcher, which will launch code embedded within the app. BUT! There is always a BUT! It is not as good as it looks for first sight.
 It will only do this if the application was already run once, if not then the entire package, including the embedded game’s file hashes will be verified, because there is a list of all files in the <code>Contents/_CodeSignature/CodeResources</code> file, which can’t be altered, although this is an XML plist file as its hash is in the app’s signature. See the above talk again. This means that you can’t use this launcher to bypass Gatekeeper in a generic way. (Yes I spent some time to explore this option :)).</p>
@@ -247,10 +247,10 @@ find /Library/ -name &#34;*.py&#34; -perm -u+w -user username
   </a>
 </h2>
 <p>This idea came from <a href="https://twitter.com/philofishal"  class="external-link" target="_blank" rel="noopener">@philofishal</a>. <a href="https://brew.sh/"  class="external-link" target="_blank" rel="noopener">Homebrew</a> is a very popular macOS package manager. Most powerusers have it installed. It&rsquo;s located at <code>/usr/local/bin/brew</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>% which brew
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>% which brew
 </span></span><span style="display:flex;"><span>/usr/local/bin/brew
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>% file <span style="color:#e6db74">`</span>which brew<span style="color:#e6db74">`</span>
+</span></span><span style="display:flex;"><span>% file <span style="color:#c30">`</span>which brew<span style="color:#c30">`</span>
 </span></span><span style="display:flex;"><span>/usr/local/bin/brew: Bourne-Again shell script text executable, ASCII text
 </span></span></code></pre></div><p>If we check the type of that file we can notice that it&rsquo;s a regular bash script file. As it&rsquo;s frequently run to install new packages or updates, it&rsquo;s an excellent target for backdoor and persistence.</p>
 <h2 id="wireshark">
@@ -261,10 +261,10 @@ find /Library/ -name &#34;*.py&#34; -perm -u+w -user username
   </a>
 </h2>
 <p>Another idea that came from <a href="https://twitter.com/philofishal"  class="external-link" target="_blank" rel="noopener">@philofishal</a>. Wireshark installs a launchd file at <code>/Library/LaunchDaemons/org.wireshark.ChmodBPF.plist</code>, which means that it will be executed as root.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>% cat /Library/LaunchDaemons/org.wireshark.ChmodBPF.plist
-</span></span><span style="display:flex;"><span>&lt;?xml version<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1.0&#34;</span> encoding<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;UTF-8&#34;</span>?&gt;
-</span></span><span style="display:flex;"><span>&lt;!DOCTYPE plist PUBLIC <span style="color:#e6db74">&#34;-//Apple Computer//DTD PLIST 1.0//EN&#34;</span> <span style="color:#e6db74">&#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;plist version<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1.0&#34;</span>&gt;
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>% cat /Library/LaunchDaemons/org.wireshark.ChmodBPF.plist
+</span></span><span style="display:flex;"><span>&lt;?xml <span style="color:#033">version</span><span style="color:#555">=</span><span style="color:#c30">&#34;1.0&#34;</span> <span style="color:#033">encoding</span><span style="color:#555">=</span><span style="color:#c30">&#34;UTF-8&#34;</span>?&gt;
+</span></span><span style="display:flex;"><span>&lt;!DOCTYPE plist PUBLIC <span style="color:#c30">&#34;-//Apple Computer//DTD PLIST 1.0//EN&#34;</span> <span style="color:#c30">&#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;plist <span style="color:#033">version</span><span style="color:#555">=</span><span style="color:#c30">&#34;1.0&#34;</span>&gt;
 </span></span><span style="display:flex;"><span>&lt;dict&gt;
 </span></span><span style="display:flex;"><span>	&lt;key&gt;Label&lt;/key&gt;
 </span></span><span style="display:flex;"><span>	&lt;string&gt;org.wireshark.ChmodBPF&lt;/string&gt;
@@ -275,7 +275,7 @@ find /Library/ -name &#34;*.py&#34; -perm -u+w -user username
 </span></span><span style="display:flex;"><span>&lt;/dict&gt;
 </span></span><span style="display:flex;"><span>&lt;/plist&gt;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>% file <span style="color:#e6db74">&#34;/Library/Application Support/Wireshark/ChmodBPF/ChmodBPF&#34;</span>
+</span></span><span style="display:flex;"><span>% file <span style="color:#c30">&#34;/Library/Application Support/Wireshark/ChmodBPF/ChmodBPF&#34;</span>
 </span></span><span style="display:flex;"><span>/Library/Application Support/Wireshark/ChmodBPF/ChmodBPF: Bourne-Again shell script text executable, ASCII text
 </span></span></code></pre></div><p>If we check the file, it&rsquo;s again a bash script, which we can easily backdoor if we got root level access. It can be hardly noticed.</p>
 <h2 id="python-import-hijacking">
@@ -302,45 +302,45 @@ Type &#34;help&#34;, &#34;copyright&#34;, &#34;credits&#34; or &#34;license&#34;
   </a>
 </h2>
 <p>I think this is something very hard to detect, especially if someone backdoors the Python libraries, however one potential solution would be to compare the timestamps of the files of a given application. They should be the same or at least pretty close. I did a few checks and the actual hour/minute value can differ, so you can go for the date. This is a quick and dirty python script to do that:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> os
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> time
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> sys
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">os</span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">time</span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">sys</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#original: https://stackoverflow.com/questions/17372696/pulling-files-and-timestamps-from-a-directory-and-subdirectories</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">find_timestamps</span>(directory_path):
-</span></span><span style="display:flex;"><span>	all_files <span style="color:#f92672">=</span> []
-</span></span><span style="display:flex;"><span>	<span style="color:#75715e"># Walk through files in directory_path, including subdirectories</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> root, _, filenames <span style="color:#f92672">in</span> os<span style="color:#f92672">.</span>walk(directory_path):
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">for</span> filename <span style="color:#f92672">in</span> filenames:
-</span></span><span style="display:flex;"><span>			file_path   <span style="color:#f92672">=</span> root <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;/&#39;</span> <span style="color:#f92672">+</span> filename
-</span></span><span style="display:flex;"><span>			modified	<span style="color:#f92672">=</span> time<span style="color:#f92672">.</span>strftime(<span style="color:#e6db74">&#39;%Y-%m-</span><span style="color:#e6db74">%d</span><span style="color:#e6db74">&#39;</span>, time<span style="color:#f92672">.</span>localtime(os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>getmtime(file_path)))
-</span></span><span style="display:flex;"><span>			<span style="color:#75715e">#time.ctime(os.path.getmtime(file_path))</span>
+</span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">#original: https://stackoverflow.com/questions/17372696/pulling-files-and-timestamps-from-a-directory-and-subdirectories</span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">find_timestamps</span>(directory_path):
+</span></span><span style="display:flex;"><span>	all_files <span style="color:#555">=</span> []
+</span></span><span style="display:flex;"><span>	<span style="color:#09f;font-style:italic"># Walk through files in directory_path, including subdirectories</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">for</span> root, _, filenames <span style="color:#000;font-weight:bold">in</span> os<span style="color:#555">.</span>walk(directory_path):
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">for</span> filename <span style="color:#000;font-weight:bold">in</span> filenames:
+</span></span><span style="display:flex;"><span>			file_path   <span style="color:#555">=</span> root <span style="color:#555">+</span> <span style="color:#c30">&#39;/&#39;</span> <span style="color:#555">+</span> filename
+</span></span><span style="display:flex;"><span>			modified	<span style="color:#555">=</span> time<span style="color:#555">.</span>strftime(<span style="color:#c30">&#39;%Y-%m-</span><span style="color:#a00">%d</span><span style="color:#c30">&#39;</span>, time<span style="color:#555">.</span>localtime(os<span style="color:#555">.</span>path<span style="color:#555">.</span>getmtime(file_path)))
+</span></span><span style="display:flex;"><span>			<span style="color:#09f;font-style:italic">#time.ctime(os.path.getmtime(file_path))</span>
 </span></span><span style="display:flex;"><span>			
-</span></span><span style="display:flex;"><span>			<span style="color:#75715e"># Process stuff for the file here, for example...</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#75715e">#print &#34;File: %s&#34; % file_path</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#75715e">#print &#34;	Last modified: %s&#34; % modified</span>
-</span></span><span style="display:flex;"><span>			all_files<span style="color:#f92672">.</span>append((file_path, modified))
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> all_files
+</span></span><span style="display:flex;"><span>			<span style="color:#09f;font-style:italic"># Process stuff for the file here, for example...</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#09f;font-style:italic">#print &#34;File: %s&#34; % file_path</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#09f;font-style:italic">#print &#34;	Last modified: %s&#34; % modified</span>
+</span></span><span style="display:flex;"><span>			all_files<span style="color:#555">.</span>append((file_path, modified))
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">return</span> all_files
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> (len(sys<span style="color:#f92672">.</span>argv) <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2</span>):
-</span></span><span style="display:flex;"><span>		print <span style="color:#e6db74">&#34;[-] no folder specified, useage: </span><span style="color:#ae81ff">\n</span><span style="color:#e6db74"> find_discrepancy.py /path/to/app&#34;</span>
-</span></span><span style="display:flex;"><span>		sys<span style="color:#f92672">.</span>exit(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
-</span></span><span style="display:flex;"><span>	dir <span style="color:#f92672">=</span> sys<span style="color:#f92672">.</span>argv[<span style="color:#ae81ff">1</span>]
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span>(<span style="color:#f92672">not</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>isdir(dir)):
-</span></span><span style="display:flex;"><span>		print <span style="color:#e6db74">&#34;[-] This is not a directory&#34;</span>
-</span></span><span style="display:flex;"><span>		sys<span style="color:#f92672">.</span>exit(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
-</span></span><span style="display:flex;"><span>	all_files <span style="color:#f92672">=</span> find_timestamps(dir)
-</span></span><span style="display:flex;"><span>	t <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> f <span style="color:#f92672">in</span> all_files:
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> t <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;&#39;</span>: <span style="color:#75715e">#we set the first timestamp found as reference, could be improved using stats</span>
-</span></span><span style="display:flex;"><span>			t <span style="color:#f92672">=</span> f[<span style="color:#ae81ff">1</span>] <span style="color:#75715e">#the modified param is the second item in the tuple</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">else</span>:
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">if</span> f[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">!=</span> t:
-</span></span><span style="display:flex;"><span>				print <span style="color:#e6db74">&#34;[!] The file </span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> timestamp is different form the rest, file: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">, rest: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> - potential backdoor&#34;</span> <span style="color:#f92672">%</span> (f[<span style="color:#ae81ff">0</span>], f[<span style="color:#ae81ff">1</span>], t)
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">def</span> <span style="color:#c0f">main</span>():
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (<span style="color:#366">len</span>(sys<span style="color:#555">.</span>argv) <span style="color:#555">&lt;</span> <span style="color:#f60">2</span>):
+</span></span><span style="display:flex;"><span>		<span style="color:#366">print</span> <span style="color:#c30">&#34;[-] no folder specified, useage: </span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30"> find_discrepancy.py /path/to/app&#34;</span>
+</span></span><span style="display:flex;"><span>		sys<span style="color:#555">.</span>exit(<span style="color:#555">-</span><span style="color:#f60">1</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#366">dir</span> <span style="color:#555">=</span> sys<span style="color:#555">.</span>argv[<span style="color:#f60">1</span>]
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span>(<span style="color:#000;font-weight:bold">not</span> os<span style="color:#555">.</span>path<span style="color:#555">.</span>isdir(<span style="color:#366">dir</span>)):
+</span></span><span style="display:flex;"><span>		<span style="color:#366">print</span> <span style="color:#c30">&#34;[-] This is not a directory&#34;</span>
+</span></span><span style="display:flex;"><span>		sys<span style="color:#555">.</span>exit(<span style="color:#555">-</span><span style="color:#f60">1</span>)
+</span></span><span style="display:flex;"><span>	all_files <span style="color:#555">=</span> find_timestamps(<span style="color:#366">dir</span>)
+</span></span><span style="display:flex;"><span>	t <span style="color:#555">=</span> <span style="color:#c30">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">for</span> f <span style="color:#000;font-weight:bold">in</span> all_files:
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> t <span style="color:#555">==</span> <span style="color:#c30">&#39;&#39;</span>: <span style="color:#09f;font-style:italic">#we set the first timestamp found as reference, could be improved using stats</span>
+</span></span><span style="display:flex;"><span>			t <span style="color:#555">=</span> f[<span style="color:#f60">1</span>] <span style="color:#09f;font-style:italic">#the modified param is the second item in the tuple</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">else</span>:
+</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">if</span> f[<span style="color:#f60">1</span>]<span style="color:#555">!=</span> t:
+</span></span><span style="display:flex;"><span>				<span style="color:#366">print</span> <span style="color:#c30">&#34;[!] The file </span><span style="color:#a00">%s</span><span style="color:#c30"> timestamp is different form the rest, file: </span><span style="color:#a00">%s</span><span style="color:#c30">, rest: </span><span style="color:#a00">%s</span><span style="color:#c30"> - potential backdoor&#34;</span> <span style="color:#555">%</span> (f[<span style="color:#f60">0</span>], f[<span style="color:#f60">1</span>], t)
 </span></span><span style="display:flex;"><span>				
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__<span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">if</span> <span style="color:#033">__name__</span><span style="color:#555">==</span> <span style="color:#c30">&#34;__main__&#34;</span>:
 </span></span><span style="display:flex;"><span>	main()
 </span></span></code></pre></div><p>You could also monitor the hashes of all the files, and alert on changes. Here you will need to deal with updates, etc…</p>
 <p>The same persistence idea is valid for Windows and Linux as well.</p>

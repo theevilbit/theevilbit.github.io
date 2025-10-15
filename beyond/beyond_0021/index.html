@@ -59,7 +59,7 @@ I guess, most users keep it selected, and then macOS will reopen all apps.">
 
   
   
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.b886fe0d9034709648f91f4ce178f51dd367d9350f82dd1132d54fd69bfca66f.css" integrity="sha256-uIb&#43;DZA0cJZI&#43;R9M4Xj1HdNn2TUPgt0RMtVP1pv8pm8=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -180,39 +180,39 @@ I guess, most users keep it selected, and then macOS will reopen all apps.">
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0021_0.png" alt="Re-open Applications Prompt"></p>
 <p>I guess, most users keep it selected, and then macOS will reopen all apps.</p>
 <p>This information is stored in <code>~/Library/Preferences/ByHost/com.apple.loginwindow.&lt;UUID&gt;.plist</code>. The UUID is our Mac&rsquo;s UUID, which we can get by <a href="https://community.jamf.com/t5/jamf-pro/disable-self-service-from-launching-at-reboot/td-p/155904"  class="external-link" target="_blank" rel="noopener">running the following command</a>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ioreg -rd1 -c IOPlatformExpertDevice | awk -F<span style="color:#e6db74">&#39;&#34;&#39;</span> <span style="color:#e6db74">&#39;/IOPlatformUUID/{print $4}&#39;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ioreg -rd1 -c IOPlatformExpertDevice | awk -F<span style="color:#c30">&#39;&#34;&#39;</span> <span style="color:#c30">&#39;/IOPlatformUUID/{print $4}&#39;</span>
 </span></span></code></pre></div><p>We can query the apps by either running the command:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>defaults -currentHost read com.apple.loginwindow TALAppsToRelaunchAtLogin
-</span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        BackgroundState <span style="color:#f92672">=</span> 2;
-</span></span><span style="display:flex;"><span>        BundleID <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;com.apple.terminal&#34;</span>;
-</span></span><span style="display:flex;"><span>        Hide <span style="color:#f92672">=</span> 0;
-</span></span><span style="display:flex;"><span>        Path <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;/System/Applications/Utilities/Terminal.app&#34;</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        BackgroundState <span style="color:#f92672">=</span> 2;
-</span></span><span style="display:flex;"><span>        BundleID <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;com.apple.finder&#34;</span>;
-</span></span><span style="display:flex;"><span>        Hide <span style="color:#f92672">=</span> 0;
-</span></span><span style="display:flex;"><span>        Path <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;/System/Library/CoreServices/Finder.app&#34;</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>,
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>defaults -currentHost <span style="color:#366">read</span> com.apple.loginwindow TALAppsToRelaunchAtLogin
+</span></span><span style="display:flex;"><span><span style="color:#555">(</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#555">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#033">BackgroundState</span> <span style="color:#555">=</span> 2;
+</span></span><span style="display:flex;"><span>        <span style="color:#033">BundleID</span> <span style="color:#555">=</span> <span style="color:#c30">&#34;com.apple.terminal&#34;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#033">Hide</span> <span style="color:#555">=</span> 0;
+</span></span><span style="display:flex;"><span>        <span style="color:#033">Path</span> <span style="color:#555">=</span> <span style="color:#c30">&#34;/System/Applications/Utilities/Terminal.app&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#555">}</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#555">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#033">BackgroundState</span> <span style="color:#555">=</span> 2;
+</span></span><span style="display:flex;"><span>        <span style="color:#033">BundleID</span> <span style="color:#555">=</span> <span style="color:#c30">&#34;com.apple.finder&#34;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#033">Hide</span> <span style="color:#555">=</span> 0;
+</span></span><span style="display:flex;"><span>        <span style="color:#033">Path</span> <span style="color:#555">=</span> <span style="color:#c30">&#34;/System/Library/CoreServices/Finder.app&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#555">}</span>,
 </span></span><span style="display:flex;"><span>...
 </span></span></code></pre></div><p>or:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>plutil -p ~/Library/Preferences/ByHost/com.apple.loginwindow.&lt;UUID&gt;.plist
-</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;TALAppsToRelaunchAtLogin&#34;</span> <span style="color:#f92672">=</span>&gt; <span style="color:#f92672">[</span>
-</span></span><span style="display:flex;"><span>    0 <span style="color:#f92672">=</span>&gt; <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;BackgroundState&#34;</span> <span style="color:#f92672">=</span>&gt; <span style="color:#ae81ff">2</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;BundleID&#34;</span> <span style="color:#f92672">=</span>&gt; <span style="color:#e6db74">&#34;com.apple.terminal&#34;</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;Hide&#34;</span> <span style="color:#f92672">=</span>&gt; <span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;Path&#34;</span> <span style="color:#f92672">=</span>&gt; <span style="color:#e6db74">&#34;/System/Applications/Utilities/Terminal.app&#34;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>    1 <span style="color:#f92672">=</span>&gt; <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;BackgroundState&#34;</span> <span style="color:#f92672">=</span>&gt; <span style="color:#ae81ff">2</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;BundleID&#34;</span> <span style="color:#f92672">=</span>&gt; <span style="color:#e6db74">&#34;com.apple.finder&#34;</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;Hide&#34;</span> <span style="color:#f92672">=</span>&gt; <span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;Path&#34;</span> <span style="color:#f92672">=</span>&gt; <span style="color:#e6db74">&#34;/System/Library/CoreServices/Finder.app&#34;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>plutil -p ~/Library/Preferences/ByHost/com.apple.loginwindow.&lt;UUID&gt;.plist
+</span></span><span style="display:flex;"><span><span style="color:#555">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#c30">&#34;TALAppsToRelaunchAtLogin&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#555">[</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#033">0</span> <span style="color:#555">=</span>&gt; <span style="color:#555">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#c30">&#34;BackgroundState&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#f60">2</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#c30">&#34;BundleID&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#c30">&#34;com.apple.terminal&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#c30">&#34;Hide&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#f60">0</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#c30">&#34;Path&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#c30">&#34;/System/Applications/Utilities/Terminal.app&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#555">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#033">1</span> <span style="color:#555">=</span>&gt; <span style="color:#555">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#c30">&#34;BackgroundState&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#f60">2</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#c30">&#34;BundleID&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#c30">&#34;com.apple.finder&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#c30">&#34;Hide&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#f60">0</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#c30">&#34;Path&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#c30">&#34;/System/Library/CoreServices/Finder.app&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#555">}</span>
 </span></span><span style="display:flex;"><span>...
 </span></span></code></pre></div><p>The only thing attackers need to do is add their app to this list.</p>
 

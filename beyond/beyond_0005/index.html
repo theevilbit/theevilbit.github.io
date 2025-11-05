@@ -15,6 +15,7 @@
 <meta name="author" content="Csaba Fitzl">
 <meta name="description" content="
 This is part 5 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+
 PAM originated from Red Hat Linux, but made its way to most *nix based system, including macOS. It&rsquo;s a modular system, that allows third party additions to various authentication related operations. I highly recommend checking out the FreeBSD documentation to get a full picture.">
 <meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
 
@@ -167,7 +168,8 @@ PAM originated from Red Hat Linux, but made its way to most *nix based system, i
     </header>
 
     <blockquote>
-<p>This is part 5 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p></blockquote>
+<p>This is part 5 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p>
+</blockquote>
 <p><a href="https://en.wikipedia.org/wiki/Pluggable_authentication_module"  class="external-link" target="_blank" rel="noopener">PAM</a> originated from Red Hat Linux, but made its way to most *nix based system, including macOS. It&rsquo;s a modular system, that allows third party additions to various authentication related operations. I highly recommend checking out the <a href="https://docs.freebsd.org/en/articles/pam/"  class="external-link" target="_blank" rel="noopener">FreeBSD documentation</a> to get a full picture.</p>
 <p>PAM has four facilities concerning authentication, <em>auth</em>, <em>account</em>, <em>session</em> and <em>password</em>. These are related to authentication, account management, session management and password management respectively. I will focus here on <em>auth</em> which is responsible for user authentication.</p>
 <p>Each service that uses PAM, has a configuration file, where the various facilities, the responsible modules and their policy in the chain of modules is defined. On macOS the PAM configuration files can be found in <code>/etc/pam.d/</code>. Let&rsquo;s take a look at <code>sshd</code>, which configures authentication for the <code>sshd</code> service.</p>

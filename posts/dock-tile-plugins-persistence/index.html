@@ -228,10 +228,12 @@ A set of methods implemented by plug-ins…allow an app’s Dock tile to be cust
 <p>I recently came across a persistence feature in macOS that&rsquo;s tied to Dock tile plugins.</p>
 <p>Dock tiles are the small icons that appear on your Dock when an application runs. Plugins for these Dock tiles have been available since macOS Snow Leopard (10.6). In its developer documentation, Apple says about them:</p>
 <blockquote>
-<p>A set of methods implemented by plug-ins&hellip;allow an app’s Dock tile to be customized while the app is not running.</p></blockquote>
+<p>A set of methods implemented by plug-ins&hellip;allow an app’s Dock tile to be customized while the app is not running.</p>
+</blockquote>
 <p>The documentation also says:</p>
 <blockquote>
-<p>The plugin is loaded in a system process at login time or when the application tile is added to the Dock.</p></blockquote>
+<p>The plugin is loaded in a system process at login time or when the application tile is added to the Dock.</p>
+</blockquote>
 <p>&ldquo;Loaded in a system process at login time” means persistence, no matter how it’s framed. If these plugins have a vulnerability, such persistence means it could be exploited.</p>
 <p>&hellip;</p>
 <p>The full blog was published at my company&rsquo;s (Kandji) website: <a href="https://www.kandji.io/blog/dock-tile-plugins-persistence"  class="external-link" target="_blank" rel="noopener">https://www.kandji.io/blog/dock-tile-plugins-persistence</a></p>

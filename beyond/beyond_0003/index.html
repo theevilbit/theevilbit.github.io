@@ -15,6 +15,7 @@
 <meta name="author" content="Csaba Fitzl">
 <meta name="description" content="
 This is part 3 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+
 To clear up some expectations. The below tweet is not about this method, that is deferred for now. :)
 
 Login items are probably one of the most well documented methods to persist on macOS. It&rsquo;s widely used by various application to launch themselves upon user login. These applications show up in the menubar most of the time.">
@@ -171,7 +172,8 @@ Login items are probably one of the most well documented methods to persist on m
     </header>
 
     <blockquote>
-<p>This is part 3 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p></blockquote>
+<p>This is part 3 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p>
+</blockquote>
 <p>To clear up some expectations. The below tweet is not about this method, that is deferred for now. :)</p>
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0003_0.png" alt="Twitter"></p>
 <p>Login items are probably one of the most well documented methods to persist on macOS. It&rsquo;s widely used by various application to launch themselves upon user login. These applications show up in the menubar most of the time.</p>
@@ -203,7 +205,8 @@ Do Not Disturb Helper, Backup and sync from Google, LuLu, BlockBlock Helper, Ove
 <p>Adding and removing items can be done via a single API call, <a href="https://developer.apple.com/documentation/servicemanagement/1501557-smloginitemsetenabled?language=objc"  class="external-link" target="_blank" rel="noopener">SMLoginItemSetEnabled</a>. This is what I use for Shield at the time of this writing.</p>
 <p>The Apple developer guide says:</p>
 <blockquote>
-<p>Login items installed using the Service Management framework are not visible in System Preferences and can only be removed by the application that installed them.</p></blockquote>
+<p>Login items installed using the Service Management framework are not visible in System Preferences and can only be removed by the application that installed them.</p>
+</blockquote>
 <p>This confirms why Shield is not visible. This is also interesting, especially for an attacker or malware, as it doesn&rsquo;t leave an obvious visual trace. But we can still find these login items.</p>
 <pre tabindex="0"><code>csaby@mac ~ % ls -l /var/db/com.apple.xpc.launchd 
 total 32

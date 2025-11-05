@@ -15,6 +15,7 @@
 <meta name="author" content="Csaba Fitzl">
 <meta name="description" content="
 This is part 30 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+
 I was watching an old BSidesLuxemburg 2019 talk by Aaron Jewitt, called &ldquo;Threat Hunting On Linux And Mac With Auditbeat System Module&rdquo;, it&rsquo;s up on YouTube. Aaron mentioned in one of the slides that you can persist using man.conf files. It looked really odd, I tried to quickly Google it, but haven’t found anything about it. So I took a look at the configuration file, and indeed, it turns out you can persist via man’s configuration file, man.conf, which can be found at /private/etc/man.conf.">
 <meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
 
@@ -167,7 +168,8 @@ I was watching an old BSidesLuxemburg 2019 talk by Aaron Jewitt, called “Threa
     </header>
 
     <blockquote>
-<p>This is part 30 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p></blockquote>
+<p>This is part 30 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p>
+</blockquote>
 <p>I was watching an old BSidesLuxemburg 2019 talk by Aaron Jewitt, called &ldquo;Threat Hunting On Linux And Mac With Auditbeat System Module&rdquo;, it&rsquo;s up on <a href="https://www.youtube.com/watch?v=teq6r7XbBug"  class="external-link" target="_blank" rel="noopener">YouTube</a>. Aaron mentioned in one of the slides that you can persist using <code>man.conf</code> files. It looked really odd, I tried to quickly Google it, but haven’t found anything about it. So I took a look at the configuration file, and indeed, it turns out you can persist via man’s configuration file, <code>man.conf</code>, which can be found at <code>/private/etc/man.conf</code>.</p>
 <p>Looking at the configuration file, there are a handful of option, and some of them are related to external tools.</p>
 <pre tabindex="0"><code># The default MANPAGER is less(1), while the default WHATISPAGER for whatis and

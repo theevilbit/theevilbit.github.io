@@ -218,7 +218,8 @@ The GitHub Desktop app doesn’t add the quarantine extended attribute to files 
 </h2>
 <p>I recently came across a very good blog post about an RCE vulnerability on GitHub Desktop: <a href="https://pwning.re/2018/12/04/github-desktop-rce/"  class="external-link" target="_blank" rel="noopener">GitHub Desktop RCE (OSX) - André Baptista</a> via its custom URL handlers. Although it’s fixed, there was a sentence that caught my attention:</p>
 <blockquote>
-<p>First, I thought that OSX would be able to detect that this app was downloaded from the Internet. Since the app is cloned through Git the OS will not prompt the user to confirm this action.</p></blockquote>
+<p>First, I thought that OSX would be able to detect that this app was downloaded from the Internet. Since the app is cloned through Git the OS will not prompt the user to confirm this action.</p>
+</blockquote>
 <p>This is a clear indication that GitHub Desktop doesn’t add the quarantine flag to the downloaded content and thus GateKeeper never comes into play. I quickly went ahead and verified it, and indeed it was missing even in the latest version.</p>
 <p>The other idea that immediately popped up in my mind is what if the app I clone contains custom URL handlers? That could be auto-registered, and we could gain a few click RCE. But let’s not rush that fast.</p>
 <h2 id="the-details">

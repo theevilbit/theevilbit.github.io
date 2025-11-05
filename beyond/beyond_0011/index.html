@@ -16,6 +16,7 @@
 <meta name="description" content="
 This is part 11 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
 
+
   TL;DR
   
     
@@ -174,7 +175,8 @@ TL;DR Link to heading It works, but very limited due to heavy sandboxing, you ca
     </header>
 
     <blockquote>
-<p>This is part 11 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p></blockquote>
+<p>This is part 11 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p>
+</blockquote>
 <h2 id="tldr">
   TL;DR
   <a class="heading-link" href="#tldr">
@@ -254,7 +256,8 @@ The <code>/System/Library/Spotlight</code> contains the built in importers and a
 <p>I’m not a developer in general and definitely not a macOS developer, although I had a tiny exposure in the past, I’m far from being able to code anything. Apple’s most recent article on the subject is 6 years old: <a href="https://developer.apple.com/library/archive/documentation/Carbon/Conceptual/MDImporters/Concepts/WritingAnImp.html"  class="external-link" target="_blank" rel="noopener">Writing a Spotlight Importer</a> If you Google for how to create Spotlight Importers, all of the articles will say that open Xcode, and create a Spotlight Importer project, there is a template for it. NOPE, it’s gone. It was there up-until Xcode 9, and right now we are at Xcode 11, so you either download the old one, or look for an existing project to modify. I did the second, searched Github, and eventually found several projects, and I chose this: <a href="https://github.com/GenjiApp/EPUB-Plugins"  class="external-link" target="_blank" rel="noopener">GitHub - GenjiApp/EPUB-Plugins: OS X Spotlight / Quick Look plugins for EPUBs</a>
 It’s pretty old, but works. First I just compiled it to see if this importer is working at all or not, and it did. It indexed ePub files, with extra attributes, like Author.</p>
 <blockquote>
-<p>You can use the <code>mdls /path/to/file</code> command to view attributes of the file.</p></blockquote>
+<p>You can use the <code>mdls /path/to/file</code> command to view attributes of the file.</p>
+</blockquote>
 <p>What I did after that is cleaning up the project, I removed the other targets (like Quicklook) and also cleaned up the metadata generator function. Here are the mandatory building blocks your importer will have to have, I will try to explain them to the best of my understanding, but please bear in mind that I’m a n00b for Objective-C or macOS development. If you want to follow here is the one I made / modified: <a href="https://github.com/theevilbit/macos/tree/master/PersistentImporter"  class="external-link" target="_blank" rel="noopener">macos/PersistentImporter at master · theevilbit/macos · GitHub</a></p>
 <ol>
 <li>schema.xml - this will contain the attributes your importer will support. The attributes are the metadata buckets your importer can extract data into, and which will be indexed by Spotlight. For the above project I actually made it mostly intact, but I could likely clean it completely.</li>

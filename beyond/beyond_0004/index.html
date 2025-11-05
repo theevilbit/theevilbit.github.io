@@ -15,6 +15,7 @@
 <meta name="author" content="Csaba Fitzl">
 <meta name="description" content="
 This is part 4 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+
 cron is probably one of the most well known persistence mechanisms for macOS and basically any *nix operating system. It was originally developed for Unix back in 1975, and made its way to most platforms, which has Unix origins, like Linux, FreeBSD and thus macOS.">
 <meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
 
@@ -167,7 +168,8 @@ cron is probably one of the most well known persistence mechanisms for macOS and
     </header>
 
     <blockquote>
-<p>This is part 4 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p></blockquote>
+<p>This is part 4 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p>
+</blockquote>
 <p><a href="https://en.wikipedia.org/wiki/Cron"  class="external-link" target="_blank" rel="noopener">cron</a> is probably one of the most well known persistence mechanisms for macOS and basically any *nix operating system. It was originally developed for Unix back in 1975, and made its way to most platforms, which has Unix origins, like Linux, FreeBSD and thus macOS.</p>
 <p>We can use the <code>crontab</code> utility to manage our cron jobs. The <code>-l</code> option will list our currently scheduled jobs.</p>
 <pre tabindex="0"><code>csaby@mac ~ % crontab -l

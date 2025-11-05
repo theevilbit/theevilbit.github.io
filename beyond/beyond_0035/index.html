@@ -15,6 +15,7 @@
 <meta name="author" content="Csaba Fitzl">
 <meta name="description" content="
 This is part 35 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+
 TL;DR - This is a practically completely useless persistence, as this can be only set and enabled when SIP is actually disabled. On the other hand I still find it a pretty amazing way to persist, as we can do that by putting a binary into NVRAM and get that executed. Here follows the details of the discovery.">
 <meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
 
@@ -167,7 +168,8 @@ TL;DR - This is a practically completely useless persistence, as this can be onl
     </header>
 
     <blockquote>
-<p>This is part 35 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p></blockquote>
+<p>This is part 35 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p>
+</blockquote>
 <p>TL;DR - This is a practically completely useless persistence, as this can be only set and enabled when SIP is actually disabled. On the other hand I still find it a pretty amazing way to persist, as we can do that by putting a binary into NVRAM and get that executed. Here follows the details of the discovery.</p>
 <p>When I recently wrote about the launchd boot task persistence, I kept reading through the massive list of various boot tasks. Eventually one caught my attention.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>rc.trampoline<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>

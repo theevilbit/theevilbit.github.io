@@ -15,6 +15,7 @@
 <meta name="author" content="Csaba Fitzl">
 <meta name="description" content="
 This is part 22 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+
 This method is considered deprecated by Apple, yet it still works.
 LoginHooks and LogoutHooks have been widely documented by many people, so this post is mostly for completeness. The official, Apple documentation can be found here: Customizing Login and Logout
 LoginHooks and LogoutHooks are executed, well&hellip; at logins and logouts just as the name suggest, and they are run as root. They are set in the preferences of the  com.apple.loginwindow process, and so it&rsquo;s stored in the file /var/root/Library/Preferences/com.apple.loginwindow.plist.">
@@ -173,7 +174,8 @@ LoginHooks and LogoutHooks are executed, well… at logins and logouts just as t
     </header>
 
     <blockquote>
-<p>This is part 22 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p></blockquote>
+<p>This is part 22 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p>
+</blockquote>
 <p>This method is considered deprecated by Apple, yet it still works.</p>
 <p>LoginHooks and LogoutHooks have been widely documented by many people, so this post is mostly for completeness. The official, Apple documentation can be found here: <a href="https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CustomLogin.html#//apple_ref/doc/uid/10000172i-SW10-SW1"  class="external-link" target="_blank" rel="noopener">Customizing Login and Logout</a></p>
 <p>LoginHooks and LogoutHooks are executed, well&hellip; at logins and logouts just as the name suggest, and they are run as root. They are set in the preferences of the  <code>com.apple.loginwindow</code> process, and so it&rsquo;s stored in the file <code>/var/root/Library/Preferences/com.apple.loginwindow.plist</code>.</p>

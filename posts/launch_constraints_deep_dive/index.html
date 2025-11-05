@@ -15,6 +15,7 @@
 <meta name="author" content="Csaba Fitzl">
 <meta name="description" content="
 UPDATE 2023.10.10.: After chatting with Thijs Alkemade, @xnyhps, updated the XPC part of the post as I originally misunderstood Apple&rsquo;s intent.
+
 Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.">
 <meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
 
@@ -204,7 +205,8 @@ Apple introduced Launch Constraints in macOS Ventura (13) as a response to some 
       <div class="post-content">
         
         <blockquote>
-<p>UPDATE 2023.10.10.: After chatting with Thijs Alkemade, <a href="https://mastodon.social/@xnyhps@infosec.exchange"  class="external-link" target="_blank" rel="noopener">@xnyhps</a>, updated the XPC part of the post as I originally misunderstood Apple&rsquo;s intent.</p></blockquote>
+<p>UPDATE 2023.10.10.: After chatting with Thijs Alkemade, <a href="https://mastodon.social/@xnyhps@infosec.exchange"  class="external-link" target="_blank" rel="noopener">@xnyhps</a>, updated the XPC part of the post as I originally misunderstood Apple&rsquo;s intent.</p>
+</blockquote>
 <p>Apple introduced Launch Constraints in macOS Ventura (13) as a response to some common attack scenarios. LC was probably the most impactful mitigation against various type of vulnerabilities. Before we dwell into LC let&rsquo;s review a couple of old vulnerabilities, which would have been not exploitable if LC was present.</p>
 <h2 id="old-macos-vulnerabilities">
   Old macOS Vulnerabilities
@@ -447,7 +449,8 @@ kConstraintCategory18_Parent
 <p>&ldquo;TCC bypass using configd&rdquo; is mitigated by having the <code>Parent Constraint: is-init-proc</code> in <code>configd</code>&rsquo;s requirement. This means that we won&rsquo;t be able to run it from the command line, and load an arbitrary bundle.</p>
 <p>Although these vulnerabilities have been fixed, Launch Constraints would have made them unexplainable at the first place.</p>
 <blockquote>
-<p>Although unrelated but the trust cache helps to mitigate common downgrade attacks, when someone used an old and vulnerable binary from an old macOS version on a newer one. As the old one was still properly signed and entitled, it could be used to execute attacks again.</p></blockquote>
+<p>Although unrelated but the trust cache helps to mitigate common downgrade attacks, when someone used an old and vulnerable binary from an old macOS version on a newer one. As the old one was still properly signed and entitled, it could be used to execute attacks again.</p>
+</blockquote>
 <h2 id="old-third-party-vulnerabilities">
   Old Third Party Vulnerabilities
   <a class="heading-link" href="#old-third-party-vulnerabilities">
@@ -523,10 +526,12 @@ kConstraintCategory18_Parent
 </h3>
 <p>In Apple&rsquo;s <a href="https://developer.apple.com/videos/play/wwdc2023/10266/?time=326"  class="external-link" target="_blank" rel="noopener">Protect your Mac app with environment constraints</a> WWDC 2023 talk Robert says the following:</p>
 <blockquote>
-<p>Now let&rsquo;s walk through some process relationships and talk about how you can use launch constraints to secure them. First assume that MyDemo.app is your app. You can set a self constraint on my MyDemo.app to require that it launch as an application from Launch Services. When your app requests a connection to your XPC service, launchd spawns the XPC service and is the parent of that XPC service but your app is &ldquo;responsible&rdquo; for that XPC service. You could set a responsible process constraint on MyXPCDemo.xpc to indicate that only MyDemo.app should be responsible for it.</p></blockquote>
+<p>Now let&rsquo;s walk through some process relationships and talk about how you can use launch constraints to secure them. First assume that MyDemo.app is your app. You can set a self constraint on my MyDemo.app to require that it launch as an application from Launch Services. When your app requests a connection to your XPC service, launchd spawns the XPC service and is the parent of that XPC service but your app is &ldquo;responsible&rdquo; for that XPC service. You could set a responsible process constraint on MyXPCDemo.xpc to indicate that only MyDemo.app should be responsible for it.</p>
+</blockquote>
 <p>This suggests that if we set our main app as the responsible for launching the XPC service makes the service secure. After talking to Thijs I realized that Apple talks about embedded XPC services here and not global daemon type services. In that case setting the responsible process to the main app can likely* mitigate attacks abusing these services.</p>
 <blockquote>
-<p>*Although I&rsquo;m not sure what happens if we add an XPC bundle to an app using xpc_add_bundles_for_domain, if that bundle is inside another app. Can it belong to two domains? If yes, can we connect to it if it&rsquo;s already launched? Lot&rsquo;s of questions to dig into.</p></blockquote>
+<p>*Although I&rsquo;m not sure what happens if we add an XPC bundle to an app using xpc_add_bundles_for_domain, if that bundle is inside another app. Can it belong to two domains? If yes, can we connect to it if it&rsquo;s already launched? Lot&rsquo;s of questions to dig into.</p>
+</blockquote>
 <p>If we look at global XPC services the story is different. Responsible process for global XPC services might be meaningless really, as there can be many events starting it (monitored folders, etc&hellip;), thus at this point I&rsquo;m not sure if the following behaviour is intentional or not. At the time of this writing (Sonoma release) the responsible process for the daemon XPC service is the XPC service itself instead of the connecting client. (Submitted FB: FB13206884). Assuming for a second that it&rsquo;s a bug, we still won&rsquo;t be able to launch the XPC service in our attacker code, but if it&rsquo;s active already (maybe because it was invoked by the original app), there is nothing preventing us from connecting to it. So while setting the constraint might be a good idea, and would limit the attack timeframe, it doesn&rsquo;t solve the main issue, and our XPC service should still properly validate the connecting client. That is still the only way to secure it. Also as mentioned in the beginning it doesn&rsquo;t even work this way now.</p>
 <h3 id="securing-electron-applications">
   Securing Electron Applications
@@ -537,7 +542,8 @@ kConstraintCategory18_Parent
 </h3>
 <p>In Apple&rsquo;s <a href="https://developer.apple.com/videos/play/wwdc2023/10266/?time=326"  class="external-link" target="_blank" rel="noopener">Protect your Mac app with environment constraints</a> WWDC 2023 talk Robert says the following:</p>
 <blockquote>
-<p>Just like in real parent-child relationships, parent processes have a huge amount of influence over how a child behaves. On macOS, the power to posix_spawn another process gives the parent the ability to control nearly all input to the child. The parent process can also limit the child’s access to system resources. This level of control can cause the child to load unexpected code, to run unexpected features, or to behave in ways that make the process more vulnerable to attack.</p></blockquote>
+<p>Just like in real parent-child relationships, parent processes have a huge amount of influence over how a child behaves. On macOS, the power to posix_spawn another process gives the parent the ability to control nearly all input to the child. The parent process can also limit the child’s access to system resources. This level of control can cause the child to load unexpected code, to run unexpected features, or to behave in ways that make the process more vulnerable to attack.</p>
+</blockquote>
 <p>So the idea would be to limit the parent to control the client. We can eliminate the spawn issue with setting <code>launch-type</code> to &ldquo;3&rdquo;, which means that the application has to be opened by LaunchService, with the user clicking on the app. However the <code>open</code> command has the same impact, which allows us to control arguments or environment variables, or we can use the Launch Services API as follows.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objective-c" data-lang="objective-c"><span style="display:flex;"><span>NSWorkspaceOpenConfiguration <span style="color:#555">*</span>conf <span style="color:#555">=</span> [NSWorkspaceOpenConfiguration configuration];
 </span></span><span style="display:flex;"><span>conf.environment <span style="color:#555">=</span> @{

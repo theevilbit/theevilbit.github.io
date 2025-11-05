@@ -15,6 +15,7 @@
 <meta name="author" content="Csaba Fitzl">
 <meta name="description" content="
 This is part 18 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+
 I learned about XQuartz while reading Armin Briegel&rsquo;s ‎macOS Terminal and shell book. It&rsquo;s one of the alternative third party terminals we can install on macOS. As most terminals, this one also offers unique options to persist on the system.
 X11 used to be part of OS X, till 10.7, and it was open source, which we can find here.">
 <meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
@@ -170,11 +171,13 @@ X11 used to be part of OS X, till 10.7, and it was open source, which we can fin
     </header>
 
     <blockquote>
-<p>This is part 18 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p></blockquote>
+<p>This is part 18 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p>
+</blockquote>
 <p>I learned about <a href="https://www.xquartz.org/"  class="external-link" target="_blank" rel="noopener">XQuartz</a> while reading Armin Briegel&rsquo;s <a href="https://books.apple.com/hu/book/macos-terminal-and-shell/id1550617226"  class="external-link" target="_blank" rel="noopener">‎macOS Terminal and shell</a> book. It&rsquo;s one of the alternative third party terminals we can install on macOS. As most terminals, this one also offers unique options to persist on the system.</p>
 <p>X11 used to be part of OS X, till 10.7, and it was open source, which we can find <a href="https://opensource.apple.com/source/X11server/X11server-106.7/"  class="external-link" target="_blank" rel="noopener">here</a>.</p>
 <blockquote>
-<p>The XQuartz project is an open-source effort to develop a version of the  <a href="https://www.x.org/"  class="external-link" target="_blank" rel="noopener">X.Org X Window System</a>  that runs on macOS.</p></blockquote>
+<p>The XQuartz project is an open-source effort to develop a version of the  <a href="https://www.x.org/"  class="external-link" target="_blank" rel="noopener">X.Org X Window System</a>  that runs on macOS.</p>
+</blockquote>
 <p>This X window environment supports various initialization script. They can be found under the <code>/opt/X11/etc/X11/xinit</code> directory.</p>
 <pre tabindex="0"><code>csaby@bigsur ~ % ls -lR /opt/X11/etc/X11/xinit         
 total 8

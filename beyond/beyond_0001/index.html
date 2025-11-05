@@ -15,6 +15,7 @@
 <meta name="author" content="Csaba Fitzl">
 <meta name="description" content="
 This is part 1 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+
 Shell startup files are executed when our shell environment like zsh or bash is starting up. macOS defaults to /bin/zsh  these days, and whenever we open Terminal or SSH into the device, this is the shell environment we are placed into. bash and sh are still available, however they have to be specifically started.">
 <meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
 
@@ -167,7 +168,8 @@ Shell startup files are executed when our shell environment like zsh or bash is 
     </header>
 
     <blockquote>
-<p>This is part 1 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p></blockquote>
+<p>This is part 1 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p>
+</blockquote>
 <p>Shell startup files are executed when our shell environment like <code>zsh</code> or <code>bash</code> is starting up. macOS defaults to <code>/bin/zsh</code>  these days, and whenever we open <code>Terminal</code> or SSH into the device, this is the shell environment we are placed into. <code>bash</code> and <code>sh</code> are still available, however they have to be specifically started.</p>
 <p>When we start <code>zsh</code> it checks number of files, and if there is an environment variable or command inside, it will be set or executed. Probably the most common is <code>.zshrc</code>, which is used to set the shell environment and execute commands. It can be found in the user&rsquo;s home directory. <code>bash</code> has a similar one, called <code>.bashrc</code>.</p>
 <p>The man page of zsh, which we can read with <code>man zsh</code> has a long description of the startup files.</p>

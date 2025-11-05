@@ -15,6 +15,7 @@
 <meta name="author" content="Csaba Fitzl">
 <meta name="description" content="
 This is part 7 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+
 This technique came from @bradleyjkemp in one of his Twitter posts.
 xbar is an application that can put the output of a script into the menubar. The scripts should be placed in ~/Library/Application\ Support/xbar/plugins/. Standard shell scripts are supported, and so I tried the one listed on their GitHub page as an example.">
 <meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
@@ -170,7 +171,8 @@ xbar is an application that can put the output of a script into the menubar. The
     </header>
 
     <blockquote>
-<p>This is part 7 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p></blockquote>
+<p>This is part 7 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p>
+</blockquote>
 <p>This technique came from <a href="https://twitter.com/bradleyjkemp"  class="external-link" target="_blank" rel="noopener">@bradleyjkemp</a> in one of his Twitter <a href="https://twitter.com/bradleyjkemp/status/13743463128759787550"  class="external-link" target="_blank" rel="noopener">posts</a>.</p>
 <p><a href="https://github.com/matryer/xbar"  class="external-link" target="_blank" rel="noopener">xbar</a> is an application that can put the output of a script into the menubar. The scripts should be placed in <code>~/Library/Application\ Support/xbar/plugins/</code>. Standard shell scripts are supported, and so I tried the one listed on their GitHub page as an example.</p>
 <pre tabindex="0"><code>#!/bin/bash

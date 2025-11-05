@@ -15,6 +15,7 @@
 <meta name="author" content="Csaba Fitzl">
 <meta name="description" content="
 This is part 6 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
+
 I learned about this trick from @0xdade when he posted it on Twitter.
 If we create a file in the user&rsquo;s HOME directory at ~/.ssh/rc it will be executed prior to the user&rsquo;s login shell becomes available. The man page of sshd describes this in more detail.">
 <meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
@@ -170,7 +171,8 @@ If we create a file in the user’s HOME directory at ~/.ssh/rc it will be execu
     </header>
 
     <blockquote>
-<p>This is part 6 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p></blockquote>
+<p>This is part 6 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p>
+</blockquote>
 <p>I learned about this trick from <a href="https://twitter.com/0xdade"  class="external-link" target="_blank" rel="noopener">@0xdade</a> when he <a href="https://twitter.com/0xdade/status/1373145566943711235"  class="external-link" target="_blank" rel="noopener">posted</a> it on Twitter.</p>
 <p>If we create a file in the user&rsquo;s HOME directory at <code>~/.ssh/rc</code> it will be executed prior to the user&rsquo;s login shell becomes available. The man page of <code>sshd</code> describes this in more detail.</p>
 <pre tabindex="0"><code> If ~/.ssh/rc exists and the sshd_config(5) PermitUserRC option is set, runs it; else if /etc/ssh/sshrc exists, runs it; otherwise runs xauth.  The ``rc&#39;&#39; files are given the X11 authenti-cation protocol and cookie in standard input.  See SSHRC, below.

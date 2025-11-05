@@ -16,6 +16,7 @@
 <meta name="description" content="After my recent blog post, my old mate @_Dark_Knight_ reached out to me and he asked me a question:
 
 “Do you typically callout user apps that allow dyld_insert_libraries?”
+
 And a few similar ones, and I will be honest, I had no idea what is he talking about, if only I understood the question :D Despite the fact that my recent blog posts and talks are about macOS, I deal much more with Windows on a daily basis, probably like 95%, and macOS is still a whole new territory for me. So I decided to dig into the question and learn a bit more about this.">
 <meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
 
@@ -208,7 +209,8 @@ And a few similar ones, and I will be honest, I had no idea what is he talking a
         
         <p>After my recent blog post, my old mate <a href="https://twitter.com/_Dark_Knight_"  class="external-link" target="_blank" rel="noopener">@_Dark_Knight_</a> reached out to me and he asked me a question:</p>
 <blockquote>
-<p>“Do you typically callout user apps that allow dyld_insert_libraries?”</p></blockquote>
+<p>“Do you typically callout user apps that allow dyld_insert_libraries?”</p>
+</blockquote>
 <p>And a few similar ones, and I will be honest, I had no idea what is he talking about, if only I understood the question :D Despite the fact that my recent blog posts and talks are about macOS, I deal much more with Windows on a daily basis, probably like 95%, and macOS is still a whole new territory for me. So I decided to dig into the question and learn a bit more about this.</p>
 <p>As it turns out there is a very well known injection technique for macOS utilizing <code>DYLD_INSERT_LIBRARIES</code> environment variable. Here is the description of the variable from the <a href="https://web.archive.org/web/20160409091449/https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/dyld.1.html"  class="external-link" target="_blank" rel="noopener">dyld man document</a>:</p>
 <pre tabindex="0"><code>DYLD_INSERT_LIBRARIES

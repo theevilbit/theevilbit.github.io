@@ -246,14 +246,15 @@ A Little History Link to heading There is a very long history of this specific b
 </ol>
 <p>That’s it.</p>
 <p>Here is a video showing this working with an old version of Microsoft Teams.</p>
-<video preload="metadata" controls>
+<video 
+    style="max-width: 100%; width: 100%; height: auto; display: block;"
+    preload="metadata" controls>
     <source
       src="https://theevilbit.github.io/videos/localized/packagekit-localized.mov"
       type="video/mp4"
     >
     Your browser does not support the video element.
   </video>
-<!-- raw HTML omitted -->
 <p><a href="https://gist.github.com/theevilbit/5994185969e6e36dffc740c4796ea259"  class="external-link" target="_blank" rel="noopener">POC</a></p>
 <p>I think this is a problem at Apple side, as you can’t expect <em>ALL</em> third party vendors preparing for this edge case. We, as a security community, can either start reporting issues to every impacted third party vendor, which is not feasible and doesn’t scale, or we can get Apple fixing this.</p>
 <p>So because this is an evolution of the issue I kept reporting for 7 years, I submitted a new ticket to Apple, OE110192294822. After 8 months going back and forth I had no luck convincing them that they should fix it. They closed it as “We’re unable to identify a security issue in your report.” and they claim it’s a problem in the installer.</p>

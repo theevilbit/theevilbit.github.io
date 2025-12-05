@@ -6,8 +6,15 @@
     <description>Recent content in Categories on theevilbit blog</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 13 Jun 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 05 Dec 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://theevilbit.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>BLOG</title>
+      <link>https://theevilbit.github.io/categories/blog/</link>
+      <pubDate>Fri, 05 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://theevilbit.github.io/categories/blog/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Talk</title>
       <link>https://theevilbit.github.io/categories/talk/</link>
@@ -20,13 +27,6 @@
       <link>https://theevilbit.github.io/categories/workshops/</link>
       <pubDate>Fri, 13 Jun 2025 00:00:00 +0000</pubDate>
       <guid>https://theevilbit.github.io/categories/workshops/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>BLOG</title>
-      <link>https://theevilbit.github.io/categories/blog/</link>
-      <pubDate>Thu, 12 Dec 2024 00:00:00 +0000</pubDate>
-      <guid>https://theevilbit.github.io/categories/blog/</guid>
       <description></description>
     </item>
     <item>

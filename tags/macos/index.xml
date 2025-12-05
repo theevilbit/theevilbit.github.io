@@ -6,8 +6,15 @@
     <description>Recent content in Macos on theevilbit blog</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 12 Dec 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 05 Dec 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://theevilbit.github.io/tags/macos/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>macOS LPE via the .localized directory</title>
+      <link>https://theevilbit.github.io/posts/localized/</link>
+      <pubDate>Fri, 05 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://theevilbit.github.io/posts/localized/</guid>
+      <description>&lt;p&gt;This blog is about a vulnerability on macOS which impacts &lt;em&gt;every&lt;/em&gt; third party installer if they try to run a privileged command from within the application bundle.&lt;/p&gt;&#xA;&lt;p&gt;This vulnerability has a very long history, and Apple never managed to properly fix it, and I never got a CVE only a note in the “Additional Recognition” section.&lt;/p&gt;&#xA;&lt;h2 id=&#34;a-little-history&#34;&gt;&#xA;  A Little History&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#a-little-history&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;There is a very long history of this specific bug that I kept reporting to Apple since 2018 (7 years!!). This bug can be exploited when we install third party software on the system. Actually this was my very first vulnerability I submitted to Apple, and my very first macOS talk back in 2019, called &lt;a href=&#34;https://theevilbit.github.io/posts/getting_root_with_benign_appstore_apps/&#34;  class=&#34;external-link&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;macOS - Getting root with benign AppStore apps&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>The diskarbitrationd and storagekitd Audit Story Part 2</title>
       <link>https://theevilbit.github.io/posts/macos-audit-story-part2/</link>

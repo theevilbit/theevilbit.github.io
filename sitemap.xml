@@ -2,16 +2,43 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://theevilbit.github.io/year/2025/</loc>
+    <lastmod>2025-12-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/categories/blog/</loc>
+    <lastmod>2025-12-05T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://theevilbit.github.io/categories/</loc>
-    <lastmod>2025-06-13T00:00:00+00:00</lastmod>
+    <lastmod>2025-12-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/tags/installer/</loc>
+    <lastmod>2025-12-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/tags/lpe/</loc>
+    <lastmod>2025-12-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/tags/macos/</loc>
+    <lastmod>2025-12-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/posts/localized/</loc>
+    <lastmod>2025-12-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/posts/</loc>
+    <lastmod>2025-12-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/tags/</loc>
+    <lastmod>2025-12-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/</loc>
+    <lastmod>2025-12-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://theevilbit.github.io/year/</loc>
+    <lastmod>2025-12-05T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/categories/talk/</loc>
     <lastmod>2025-06-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/talks/</loc>
-    <lastmod>2025-06-13T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/</loc>
     <lastmod>2025-06-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/categories/workshops/</loc>
@@ -20,31 +47,13 @@
     <loc>https://theevilbit.github.io/year/2024/</loc>
     <lastmod>2024-12-12T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://theevilbit.github.io/categories/blog/</loc>
-    <lastmod>2024-12-12T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://theevilbit.github.io/tags/cve/</loc>
-    <lastmod>2024-12-12T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/tags/lpe/</loc>
-    <lastmod>2024-12-12T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/tags/macos/</loc>
-    <lastmod>2024-12-12T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/posts/</loc>
-    <lastmod>2024-12-12T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/tags/</loc>
     <lastmod>2024-12-12T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/posts/macos-audit-story-part2/</loc>
     <lastmod>2024-12-12T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/tags/vulnerability/</loc>
-    <lastmod>2024-12-12T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://theevilbit.github.io/year/</loc>
     <lastmod>2024-12-12T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://theevilbit.github.io/posts/macos-audit-story-part1/</loc>

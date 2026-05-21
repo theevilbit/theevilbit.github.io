@@ -64,7 +64,7 @@ The GitHub Desktop app doesn’t add the quarantine extended attribute to files 
   
     
     
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -255,16 +255,16 @@ In short upon download of the application launch services daemon (<code>lsd</cod
   </a>
 </h3>
 <p>As noted above, I created an app, which will launch Calculator, and do nothing else, the URL handler it will use is <code>evilapp://</code> its source is very simple:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//  AppDelegate.m
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//  Github Desktop
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//  Created by Csaba Fitzl on 2019. 09. 26..
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//  Copyright © 2019. Csaba Fitzl. All rights reserved.
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>
+</span></span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#099">#import &#34;AppDelegate.h&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
+</span></span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@interface</span> <span style="color:#0a8;font-weight:bold">AppDelegate</span> ()
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@property</span> (<span style="color:#069;font-weight:bold">weak</span>) <span style="color:#078;font-weight:bold">IBOutlet</span> NSWindow <span style="color:#555">*</span>window;
@@ -274,7 +274,7 @@ In short upon download of the application launch services daemon (<code>lsd</cod
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">applicationDidFinishLaunching:</span>(NSNotification <span style="color:#555">*</span>)<span style="color:#033">aNotification</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">// Insert code here to initialize your application
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>    <span style="color:#078;font-weight:bold">int</span> pid <span style="color:#555">=</span> [[NSProcessInfo processInfo] processIdentifier];
+</span></span></span><span style="display:flex;"><span>    <span style="color:#078;font-weight:bold">int</span> pid <span style="color:#555">=</span> [[NSProcessInfo processInfo] processIdentifier];
 </span></span><span style="display:flex;"><span>    NSPipe <span style="color:#555">*</span>pipe <span style="color:#555">=</span> [NSPipe pipe];
 </span></span><span style="display:flex;"><span>    NSFileHandle <span style="color:#555">*</span>file <span style="color:#555">=</span> pipe.fileHandleForReading;
 </span></span><span style="display:flex;"><span>
@@ -289,13 +289,13 @@ In short upon download of the application launch services daemon (<code>lsd</cod
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">applicationWillTerminate:</span>(NSNotification <span style="color:#555">*</span>)<span style="color:#033">aNotification</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">// Insert code here to tear down your application
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>}
+</span></span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@end</span>
 </span></span></code></pre></div><p>The compiled application is hosted here, along with the full Xcode project: <a href="https://github.com/theevilbit/githubpoc"  class="external-link" target="_blank" rel="noopener">GitHub - theevilbit/githubpoc</a> The name of the app is <code>Github Desktop</code> (lower case ‘h’!). The reason for this is when it’s triggered the user will see a popup saying that the page wants to execute <code>Github Desktop.app</code>, this will lower the victim suspicion, as it’s something expected, and more likely to click.</p>
 <p>I created a simple HTML page that has a link to this repo, and it also has a JavaScript, which will add an <code>iframe</code> to the page’s DOM, with a link to <code>evilapp://</code>to trigger the downloaded application, the page will be refreshed every 10 seconds. The page source is:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span><span style="color:#099">&lt;!doctype html&gt;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-html" data-lang="html"><span style="display:flex;"><span><span style="color:#099">&lt;!doctype html&gt;</span>
 </span></span><span style="display:flex;"><span>&lt;<span style="color:#309;font-weight:bold">html</span> <span style="color:#309">lang</span><span style="color:#555">=</span><span style="color:#c30">&#34;en&#34;</span> <span style="color:#309">class</span><span style="color:#555">=</span><span style="color:#c30">&#34;windows&#34;</span>&gt;
 </span></span><span style="display:flex;"><span>  &lt;<span style="color:#309;font-weight:bold">head</span>&gt;
 </span></span><span style="display:flex;"><span>  &lt;<span style="color:#309;font-weight:bold">meta</span> <span style="color:#309">charset</span><span style="color:#555">=</span><span style="color:#c30">&#34;utf-8&#34;</span>&gt;
@@ -410,7 +410,7 @@ In short upon download of the application launch services daemon (<code>lsd</cod
     
       2019 -
     
-    2025
+    2026
      Csaba Fitzl 
     ·
     

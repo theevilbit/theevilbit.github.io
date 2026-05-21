@@ -68,7 +68,7 @@ mmap Link to heading Part of GateKeeper is implemented on macOS in the Quarantin
   
     
     
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -276,7 +276,7 @@ mmap Link to heading Part of GateKeeper is implemented on macOS in the Quarantin
 <p>The problem is that an attacker can load a dylib through other means as well, using the deprecated <code>NSCreateObjectFileImageFromMemory</code> API.</p>
 <p>What we can do is call this API on any dynamic library outside of our bundle, which can be even unsigned and have the quarantine flag, and it will be still loaded and executed.</p>
 <p>The following code snippet does it.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>NSObjectFileImage fileImage <span style="color:#555">=</span> <span style="color:#366">NULL</span>;
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>NSObjectFileImage fileImage <span style="color:#555">=</span> <span style="color:#366">NULL</span>;
 </span></span><span style="display:flex;"><span>NSModule module <span style="color:#555">=</span> <span style="color:#366">NULL</span>;
 </span></span><span style="display:flex;"><span>NSSymbol symbol <span style="color:#555">=</span> <span style="color:#366">NULL</span>;
 </span></span><span style="display:flex;"><span>
@@ -307,9 +307,9 @@ mmap Link to heading Part of GateKeeper is implemented on macOS in the Quarantin
   </a>
 </h3>
 <p>I developed a simple App, called QB.app, which I notarized and it will load this binary from the path above (<code>/Volumes/QB/test.bundle</code>). The app is packed inside a DMG with this <code>test.bundle</code>. The code of this binary is very simple.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
 </span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdlib.h&gt;</span><span style="color:#099">
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
+</span></span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#c0f">__attribute__</span>((constructor))
 </span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">custom</span>(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)
 </span></span><span style="display:flex;"><span>{
@@ -325,7 +325,7 @@ mmap Link to heading Part of GateKeeper is implemented on macOS in the Quarantin
 </span></span></code></pre></div><p>It has a constructor and an execute function. Both print a message and start Calculator.</p>
 <p>If we load this from our app it will start Calculator twice (once the first is closed), because the constructor will be called and also the <code>execute</code> function.</p>
 <p>I also added a line to my app to try to do the same load with <code>dlopen</code> to show that it doesn&rsquo;t work:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#c0f">dlopen</span>(<span style="color:#c30">&#34;/Volumes/QB/test.bundle&#34;</span>,<span style="color:#f60">1</span>);
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#c0f">dlopen</span>(<span style="color:#c30">&#34;/Volumes/QB/test.bundle&#34;</span>,<span style="color:#f60">1</span>);
 </span></span></code></pre></div><p>When this is invoked we will get the popup shown above.</p>
 <p>However on the dynamic mapping it will be loaded and Calculator will be executed.</p>
 <p>Note, that <code>test.bundle</code> is unsigned!</p>
@@ -357,15 +357,15 @@ mmap Link to heading Part of GateKeeper is implemented on macOS in the Quarantin
 <p>When users download a screen saver bundle (<code>.saver</code>) and instead of double clicking the screen saver for installation, directly place it in the <code>~/Library/Screen Saver</code> directory, the system will load the screen saver if the users select it in the screen saver preferences. There is no alert that they are trying to execute an app downloaded form the Internet.</p>
 <p>The screen saver has to be notarized, or signed with an old certificate in order to avoid a prompt. Even if an app is notarized an alert should be generated at first execution by Gatekeeper.</p>
 <p>I created a simple screen saver with the following code, to see which part is executed.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//  DemoScreenView.m
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//  DemoScreen
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//  Created by csaby on 2021. 05. 26..
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>
+</span></span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#099">#import &#34;DemoScreenView.h&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
+</span></span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>__attribute__((constructor))
 </span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">void</span> custom(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)
 </span></span><span style="display:flex;"><span>{
@@ -463,16 +463,16 @@ mmap Link to heading Part of GateKeeper is implemented on macOS in the Quarantin
   </a>
 </h3>
 <p>To test my theory I created a dylib, which simply logs a message.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#099">#import &lt;Foundation/Foundation.h&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#099">#import &lt;Foundation/Foundation.h&gt;
+</span></span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>__attribute__((constructor))
 </span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">void</span> custom(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;hello_dylib %s&#34;</span>, __PRETTY_FUNCTION__);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>and an executable, which loads the dylib.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#import &lt;dlfcn.h&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#import &lt;dlfcn.h&gt;
+</span></span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">main</span>(<span style="color:#078;font-weight:bold">void</span>)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span> <span style="color:#c0f">dlopen</span>(<span style="color:#c30">&#34;log.dylib&#34;</span>, RTLD_LAZY);
@@ -504,7 +504,7 @@ mmap Link to heading Part of GateKeeper is implemented on macOS in the Quarantin
 </code></pre><p>If yo don&rsquo;t find it, let me highlight the key part:</p>
 <pre tabindex="0"><code>syspolicyd: [com.apple.syspolicy.exec:default] Library loads never require a first launch prompt.
 </code></pre><p>Looks like it&rsquo;s a design decision not to generate prompt on library loads. We can find this if we reverse <code>syspolicyd</code>. <code>/usr/libexec/syspolicyd</code> has the method <code>determineGatekeeperEvaluationTypeForTarget:withResponsibleTarget:</code>:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#069;font-weight:bold">__int64</span> <span style="color:#069;font-weight:bold">__cdecl</span> <span style="color:#555">-</span>[EvaluationPolicy <span style="color:#99f">determineGatekeeperEvaluationTypeForTarget</span>:<span style="color:#99f">withResponsibleTarget</span>:](
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#069;font-weight:bold">__int64</span> <span style="color:#069;font-weight:bold">__cdecl</span> <span style="color:#555">-</span>[EvaluationPolicy <span style="color:#99f">determineGatekeeperEvaluationTypeForTarget</span>:<span style="color:#99f">withResponsibleTarget</span>:](
 </span></span><span style="display:flex;"><span>        EvaluationPolicy <span style="color:#555">*</span><span style="color:#366">self</span>,
 </span></span><span style="display:flex;"><span>        <span style="color:#078;font-weight:bold">SEL</span> a2,
 </span></span><span style="display:flex;"><span>        <span style="color:#078;font-weight:bold">id</span> a3,
@@ -575,7 +575,7 @@ mmap Link to heading Part of GateKeeper is implemented on macOS in the Quarantin
     
       2019 -
     
-    2025
+    2026
      Csaba Fitzl 
     ·
     

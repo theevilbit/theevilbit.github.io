@@ -74,7 +74,7 @@ In this post we will look into an other case study which will show us (again) wh
   
     
     
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -254,7 +254,7 @@ In this post we will look into an other case study which will show us (again) wh
 /Library/LaunchDaemons/com.f-secure.fsctelemetryd.plist:	&lt;key&gt;MachServices&lt;/key&gt;
 /Library/LaunchDaemons/com.f-secure.fsvpn-service.production.plist:	&lt;key&gt;MachServices&lt;/key&gt;
 </code></pre><p>All of them did the same verification towards the connecting client at the <code>codesignValidForProcess</code> function.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>(<span style="color:#078;font-weight:bold">char</span>)<span style="color:#99f">codesignValidForProcess</span>:(<span style="color:#078;font-weight:bold">int</span>)arg2 {
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>(<span style="color:#078;font-weight:bold">char</span>)<span style="color:#99f">codesignValidForProcess</span>:(<span style="color:#078;font-weight:bold">int</span>)arg2 {
 </span></span><span style="display:flex;"><span>    var_B4 <span style="color:#555">=</span> arg2;
 </span></span><span style="display:flex;"><span>    var_140 <span style="color:#555">=</span> intrinsic_movdqa(var_140, intrinsic_punpcklqdq(zero_extend_64(<span style="color:#c30">@&#34;anchor apple generic and certificate leaf[subject.OU] = </span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">6KALSAFZJC</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">&#34;</span>), zero_extend_64(<span style="color:#c30">@&#34;anchor apple and (identifier com.apple.systempreferences or identifier com.apple.systempreferences.legacyLoader)&#34;</span>)));
 </span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [NSArray <span style="color:#99f">arrayWithObjects</span>:rdx <span style="color:#99f">count</span>:<span style="color:#f60">0x2</span>];
@@ -271,7 +271,7 @@ In this post we will look into an other case study which will show us (again) wh
 </h2>
 <p>The way XPC services implement authorization in F-Secure somewhat limit the vulnerability, however for being bulletproof the guideline at the end of the article should be followed, as not all commands need authorization. Here follows a brief description of why Authorization limits the exploit.</p>
 <p>The XPC service will try to authorize the connecting client, with the right <code>system.privilege.admin</code>. This  right looks like this:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span>% security authorizationdb read system.privilege.admin                                   
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span>% security authorizationdb read system.privilege.admin                                   
 </span></span><span style="display:flex;"><span><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
@@ -318,7 +318,7 @@ debug	14:57:42.801397+0100	authd	Failed to authorize right &#39;system.privilege
 debug	14:57:42.801444+0100	authd	engine 82: authorize result: -60007
 error	14:57:42.801471+0100	authd	copy_rights: authorization failed
 </code></pre><p>The related code part in F-Secure is (decompiled with Hopper):</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">else</span> {
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">else</span> {
 </span></span><span style="display:flex;"><span>        r12 <span style="color:#555">=</span> <span style="color:#f60">0x2</span>;
 </span></span><span style="display:flex;"><span>        r14 <span style="color:#555">=</span> <span style="color:#c30">&#34;system.privilege.admin&#34;</span>;
 </span></span><span style="display:flex;"><span>}
@@ -338,7 +338,7 @@ error	14:57:42.801471+0100	authd	copy_rights: authorization failed
 </h2>
 <p>I picked the <code>com.f-secure.fscsafeadmind</code> service to connect to and develop a POC. It implements the <code>fscsafeadmindProtocol</code> protocol, and we can use that interface to talk to the service.</p>
 <p>We can use <code>class-dump</code> to dump the available classes, interfaces, etc&hellip; for the binary. From that the protocol we can use:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@protocol</span> <span style="color:#0a8;font-weight:bold">fscsafeadmindProtocol</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@protocol</span> <span style="color:#0a8;font-weight:bold">fscsafeadmindProtocol</span>
 </span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getScreenSaverPasswordState:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg1</span>;
 </span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">isKextLoaded:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg2</span>;
 </span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">isServiceRunning:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg2</span>;
@@ -372,7 +372,7 @@ error	14:57:42.801471+0100	authd	copy_rights: authorization failed
 </span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@end</span>
 </span></span></code></pre></div><p>The functions that end with <code>NoAuth</code> are not allowed by default, and that will be denied. We have the rest where we either need or don&rsquo;t need authorization. In this case the functions that don&rsquo;t require are related to reading settings.</p>
 <p>Authorization can be implement as follows. We setup an empty authorization and then we add the right <code>system.privilege.admin</code> with the flag <code>kAuthorizationFlagInteractionAllowed</code> to allow for user authentication. This is what will be popup as F-Secure as the screenshot above shows, as we inject into an old version of this app. Authorization will be granted if the user is in the admin group and enters his/her password.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>     NSData                      <span style="color:#555">*</span>authorization;
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>     NSData                      <span style="color:#555">*</span>authorization;
 </span></span><span style="display:flex;"><span>     OSStatus                    err;
 </span></span><span style="display:flex;"><span>     AuthorizationExternalForm   extForm;
 </span></span><span style="display:flex;"><span>     AuthorizationRef            authref;
@@ -398,7 +398,7 @@ error	14:57:42.801471+0100	authd	copy_rights: authorization failed
 </span></span><span style="display:flex;"><span>         printf(<span style="color:#c30">&#34;OSStatus: %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>,str);
 </span></span><span style="display:flex;"><span>     }
 </span></span></code></pre></div><p>Then we can connect to the XPC service easily:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>NSString<span style="color:#555">*</span>  _serviceName <span style="color:#555">=</span> XPCHelperMachServiceName;
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>NSString<span style="color:#555">*</span>  _serviceName <span style="color:#555">=</span> XPCHelperMachServiceName;
 </span></span><span style="display:flex;"><span>NSXPCConnection<span style="color:#555">*</span> _agentConnection <span style="color:#555">=</span> [[NSXPCConnection alloc] <span style="color:#99f">initWithMachServiceName</span>:_serviceName <span style="color:#99f">options</span>:<span style="color:#f60">4096</span>];
 </span></span><span style="display:flex;"><span>[_agentConnection <span style="color:#99f">setRemoteObjectInterface</span>:[NSXPCInterface <span style="color:#99f">interfaceWithProtocol</span>:@protocol(fscsafeadmindProtocol)]];
 </span></span><span style="display:flex;"><span>[_agentConnection resume];
@@ -411,12 +411,12 @@ error	14:57:42.801471+0100	authd	copy_rights: authorization failed
 </span></span><span style="display:flex;"><span>NSLog(<span style="color:#c30">@&#34;obj: %@&#34;</span>, obj);
 </span></span><span style="display:flex;"><span>NSLog(<span style="color:#c30">@&#34;conn: %@&#34;</span>, _agentConnection);
 </span></span><span style="display:flex;"><span>        <span style="color:#09f;font-style:italic">//get FW state
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>[obj <span style="color:#99f">getFirewallState</span>:<span style="color:#555">^</span>(<span style="color:#078;font-weight:bold">long</span> <span style="color:#078;font-weight:bold">long</span> b){
+</span></span></span><span style="display:flex;"><span>[obj <span style="color:#99f">getFirewallState</span>:<span style="color:#555">^</span>(<span style="color:#078;font-weight:bold">long</span> <span style="color:#078;font-weight:bold">long</span> b){
 </span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;Response: %llx&#34;</span>,b);
 </span></span><span style="display:flex;"><span>        }];
 </span></span><span style="display:flex;"><span>        
 </span></span><span style="display:flex;"><span>       <span style="color:#09f;font-style:italic">// set frs state
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>[obj <span style="color:#99f">setFRSEnabled</span>:<span style="color:#366">true</span> <span style="color:#99f">authorization</span>:authorization <span style="color:#99f">callback</span>:<span style="color:#555">^</span>(<span style="color:#078;font-weight:bold">BOOL</span> b){
+</span></span></span><span style="display:flex;"><span>[obj <span style="color:#99f">setFRSEnabled</span>:<span style="color:#366">true</span> <span style="color:#99f">authorization</span>:authorization <span style="color:#99f">callback</span>:<span style="color:#555">^</span>(<span style="color:#078;font-weight:bold">BOOL</span> b){
 </span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span>(b) {NSLog(<span style="color:#c30">@&#34;Response: frs yes&#34;</span>);} <span style="color:#069;font-weight:bold">else</span> {NSLog(<span style="color:#c30">@&#34;Response: frs no&#34;</span>);}
 </span></span><span style="display:flex;"><span>        }];
 </span></span><span style="display:flex;"><span>		
@@ -501,7 +501,7 @@ com.apple.security.get-task-allow
     
       2019 -
     
-    2025
+    2026
      Csaba Fitzl 
     ·
     

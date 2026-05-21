@@ -59,7 +59,7 @@
   
     
     
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -220,14 +220,14 @@
 <p><img src="https://theevilbit.github.io/images/Reversing_CVE_2020_9771/yoda.jpg" alt=""></p>
 <p>During the past year Apple released the source code for XNU till macOS 10.15.6, so I decided to start looking there. I keep a copy of all tarballs, so extracted an earlier version of XNU, 6153.41.3 and also the one used in macOS 10.15.4, which is 6153.141.1. If any changes were made in the open source part we should see that. Let&rsquo;s try to find out if anything changed.</p>
 <p>First we will start with tracking how snapshot mounting happens through system calls using <code>xnu-6153.41.3</code>. The file <code>./xnu-6153.41.3/libsyscall/wrappers/fs_snapshot.c</code> contains wrapper for various snapshot mounting related system calls. The one that is interesting for us is <code>fs_snapshot_mount</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#c0f">fs_snapshot_mount</span>(<span style="color:#078;font-weight:bold">int</span> dirfd, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>dir, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>snapshot,
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#c0f">fs_snapshot_mount</span>(<span style="color:#078;font-weight:bold">int</span> dirfd, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>dir, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>snapshot,
 </span></span><span style="display:flex;"><span>    <span style="color:#078;font-weight:bold">uint32_t</span> flags)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">return</span> <span style="color:#c0f">__fs_snapshot</span>(SNAPSHOT_OP_MOUNT, dirfd, snapshot, dir,
 </span></span><span style="display:flex;"><span>	           <span style="color:#366">NULL</span>, flags);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>This function does a call to <code>fs_snapshot</code> with the opcode <code>SNAPSHOT_OP_MOUNT</code>. This function eventually leads to <code>fs_snapshot </code>, which can be found in <code>./xnu-6153.41.3/bsd/vfs/vfs_syscalls.c</code>. Here is a small section of it.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">/*
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> * FS snapshot operations dispatcher
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> */</span>
 </span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span>
@@ -241,7 +241,7 @@
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">break</span>;
 </span></span><span style="display:flex;"><span>...
 </span></span></code></pre></div><p>It&rsquo;s not a very long function, and at the very end it has a switch table, which is based on the opcodes passed. In our case it leads to  <code>snapshot_mount</code>. This function is in the same file, and it looks like the following.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">int</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">int</span>
 </span></span><span style="display:flex;"><span><span style="color:#c0f">snapshot_mount</span>(<span style="color:#078;font-weight:bold">int</span> dirfd, <span style="color:#078;font-weight:bold">user_addr_t</span> name, <span style="color:#078;font-weight:bold">user_addr_t</span> directory,
 </span></span><span style="display:flex;"><span>    __unused <span style="color:#078;font-weight:bold">user_addr_t</span> mnt_data, __unused <span style="color:#078;font-weight:bold">uint32_t</span> flags, <span style="color:#078;font-weight:bold">vfs_context_t</span> ctx)
 </span></span><span style="display:flex;"><span>{
@@ -308,8 +308,8 @@
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">return</span> error;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>This function is eventually calls out to <code>mount_common</code>, which is also in the same file, and it will be responsible for the actual mount. Let&rsquo;s see how this function has changed, and for that we will use the code from <code>xnu-6153.141.1</code> specifically the file <code>./xnu-6153.141.1/bsd/vfs/vfs_syscalls.c</code>. I won&rsquo;t paste the entire function again, just the new important part.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#if CONFIG_MACF
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	error <span style="color:#555">=</span> <span style="color:#c0f">mac_mount_check_snapshot_mount</span>(ctx, rvp, vp, <span style="color:#555">&amp;</span>dirndp<span style="color:#555">-&gt;</span>ni_cnd, snapndp<span style="color:#555">-&gt;</span>ni_cnd.cn_nameptr,
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#if CONFIG_MACF
+</span></span></span><span style="display:flex;"><span>	error <span style="color:#555">=</span> <span style="color:#c0f">mac_mount_check_snapshot_mount</span>(ctx, rvp, vp, <span style="color:#555">&amp;</span>dirndp<span style="color:#555">-&gt;</span>ni_cnd, snapndp<span style="color:#555">-&gt;</span>ni_cnd.cn_nameptr,
 </span></span><span style="display:flex;"><span>	    mp<span style="color:#555">-&gt;</span>mnt_vfsstat.f_fstypename);
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (error) {
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">goto</span> out2;
@@ -319,7 +319,7 @@
 <p>This is where things start to make sense, because if we recall that Apple considered this a bug in &ldquo;Sandbox&rdquo;, this callout makes sense.</p>
 <p>Apparently the bug is that a Sandbox check was missing. If we search for <code>mac_mount_*</code> in the old source code, we will see that there are many callouts, but not with the snapshot call, and specifically the <code>mac_mount_check_snapshot_mount</code> doesn&rsquo;t exists in earlier versions.</p>
 <p>Let&rsquo;s move on. This function is defined in two places, first in <code>xnu-6153.141.1/security/mac_base.c</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">mac_mount_check_snapshot_mount</span>(<span style="color:#078;font-weight:bold">vfs_context_t</span> ctx, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>rvp, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>vp, <span style="color:#069;font-weight:bold">struct</span> componentname <span style="color:#555">*</span>cnp,
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">mac_mount_check_snapshot_mount</span>(<span style="color:#078;font-weight:bold">vfs_context_t</span> ctx, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>rvp, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>vp, <span style="color:#069;font-weight:bold">struct</span> componentname <span style="color:#555">*</span>cnp,
 </span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>name, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>vfc_name);
 </span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span>
 </span></span><span style="display:flex;"><span><span style="color:#c0f">mac_mount_check_snapshot_mount</span>(<span style="color:#078;font-weight:bold">vfs_context_t</span> ctx __unused, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>rvp __unused, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>vp __unused,
@@ -329,19 +329,19 @@
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>Here this function simply returns 0, which in case of the MACF framework, means &ldquo;allow&rdquo;. I&rsquo;m guessing here, but I think this is just to ensure that if none of the MACF policy hooks support this check, the operation will be allowed. I think this is like a default allow action.</p>
 <p>The other implementation is in <code>xnu-6153.141.1/security/mac_vfs.c</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#c0f">mac_mount_check_snapshot_mount</span>(<span style="color:#078;font-weight:bold">vfs_context_t</span> ctx, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>rvp, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>vp, <span style="color:#069;font-weight:bold">struct</span> componentname <span style="color:#555">*</span>cnp,
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#c0f">mac_mount_check_snapshot_mount</span>(<span style="color:#078;font-weight:bold">vfs_context_t</span> ctx, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>rvp, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>vp, <span style="color:#069;font-weight:bold">struct</span> componentname <span style="color:#555">*</span>cnp,
 </span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>name, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>vfc_name)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">kauth_cred_t</span> cred;
 </span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">int</span> error;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#099">#if SECURITY_MAC_CHECK_ENFORCE
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	<span style="color:#09f;font-style:italic">/* 21167099 - only check if we allow write */</span>
+</span></span></span><span style="display:flex;"><span>	<span style="color:#09f;font-style:italic">/* 21167099 - only check if we allow write */</span>
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span>mac_vnode_enforce) {
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> <span style="color:#f60">0</span>;
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span><span style="color:#099">#endif
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	cred <span style="color:#555">=</span> <span style="color:#c0f">vfs_context_ucred</span>(ctx);
+</span></span></span><span style="display:flex;"><span>	cred <span style="color:#555">=</span> <span style="color:#c0f">vfs_context_ucred</span>(ctx);
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span><span style="color:#c0f">mac_cred_check_enforce</span>(cred)) {
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> <span style="color:#f60">0</span>;
 </span></span><span style="display:flex;"><span>	}
@@ -351,7 +351,7 @@
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">return</span> error;
 </span></span><span style="display:flex;"><span>} 
 </span></span></code></pre></div><p>This function uses the macro <code>MAC_CHECK</code>. This is defined in <code>./xnu-6153.141.1/security/mac_internal.h</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#define MAC_CHECK(check, args...) do {                                  \
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#define MAC_CHECK(check, args...) do {                                  \
 </span></span></span><span style="display:flex;"><span><span style="color:#099">	struct mac_policy_conf *mpc;                                    \
 </span></span></span><span style="display:flex;"><span><span style="color:#099">	u_int i;                                                        \
 </span></span></span><span style="display:flex;"><span><span style="color:#099">                                                                        \
@@ -381,7 +381,7 @@
 </span></span></span><span style="display:flex;"><span><span style="color:#099">	}                                                               \
 </span></span></span><span style="display:flex;"><span><span style="color:#099">} while (0)
 </span></span></span></code></pre></div><p>Eventually this macro will iterate over all MACF policy extension, and call the related function. There are many callouts to <code>mac_error_select</code> function, which is implemented in <code>./xnu-6153.141.1/security/mac_base.c</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">/*
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> * Define an error value precedence, and given two arguments, selects the
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> * value with the higher precedence.
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> */</span>
@@ -425,7 +425,7 @@
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>What it does is comparing the error messages returned by the various MACF policy extensions, and ensure that if one of those didn&rsquo;t allow the operation, it will return the error accordingly. There is a certain priority for the various errors, and the &ldquo;highest&rdquo; will be returned. This also means that if any of the extension denies the action, it will be denied.</p>
 <p>The fact that a 0 is expected as return for an allowed operation is well documented at the <code>mpo_mount_check_snapshot_mount_t</code> type definition inside <code>./xnu-6153.141.1/security/mac_policy.h</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">/**
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">/**
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> *  @brief Access control check for fs_snapshot_mount
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> *  @param cred Subject credential
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> *  @param rvp Vnode of either the root directory of the
@@ -628,7 +628,7 @@ Target 0: (kernel) stopped.
     
       2019 -
     
-    2025
+    2026
      Csaba Fitzl 
     ·
     

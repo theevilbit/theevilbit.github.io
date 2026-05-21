@@ -110,7 +110,7 @@ When doing some research on macOS I came across the following LaunchAgent: /Syst
   
     
     
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -218,7 +218,7 @@ When doing some research on macOS I came across the following LaunchAgent: /Syst
 <p>This is part 29 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p>
 </blockquote>
 <p>When doing some research on macOS I came across the following LaunchAgent: <code>/System/Library/LaunchAgents/com.apple.amstoold.plist</code>. Its content is the following.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
@@ -284,7 +284,7 @@ When doing some research on macOS I came across the following LaunchAgent: /Syst
 117:    (global-name &#34;com.apple.xpc.amstoold&#34;)
 </code></pre><p>The XPC service is being referenced by a single framework, namely <code>AppleMediaServices</code>. Based on this I guess <code>amstoold</code> stands for <code>Apple Media Services Tool Daemon</code>.</p>
 <p>Essentially the lack of this binary would also allow us to hijack a system defined XPC service. I didn&rsquo;t take the time to reverse its invocation, beyond finding the XPC connection setup, which is show below.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span> <span style="color:#555">-</span>[AMSHTTPArchiveService _createRemoteConnection](<span style="color:#078;font-weight:bold">int</span> arg0) {
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span> <span style="color:#555">-</span>[AMSHTTPArchiveService _createRemoteConnection](<span style="color:#078;font-weight:bold">int</span> arg0) {
 </span></span><span style="display:flex;"><span>    r12 <span style="color:#555">=</span> <span style="color:#555">*</span>_objc_msgSend;
 </span></span><span style="display:flex;"><span>    dispatch_assert_queue<span style="color:#a00;background-color:#faa">$</span>V2([[arg0 queue] <span style="color:#069;font-weight:bold">retain</span>]);
 </span></span><span style="display:flex;"><span>    [rax <span style="color:#069;font-weight:bold">release</span>];
@@ -335,7 +335,7 @@ When doing some research on macOS I came across the following LaunchAgent: /Syst
     
       2019 -
     
-    2025
+    2026
      Csaba Fitzl 
     ·
     

@@ -66,7 +66,7 @@ Periodic scripts have a FreeBSD origin. These scripts are doing some maintenance
   
     
     
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -210,7 +210,7 @@ Periodic scripts have a FreeBSD origin. These scripts are doing some maintenance
 local_periodic=&#34;/usr/local/etc/periodic&#34;
 </code></pre><p>Anyone who has <a href="https://brew.sh/"  class="external-link" target="_blank" rel="noopener">Homebrew</a> installed knows that the owner of the <code>/usr/local/</code> directory is changed from root to the admin user. This means that an admin user can write to this location without further privilege elevation. Thus if we create the above folder, and drop our script inside we gain code execution as root.</p>
 <p>I reported this to Apple, and although it&rsquo;s not a default configuration they still fixed it. To my surprise they fixed it the way I recommended it. Here is a shortened version of the <code>diff</code> of the old and patched periodic bash script.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>csaby@mac ~ % diff periodic_11.4 periodic_11.5
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>csaby@mac ~ % diff periodic_11.4 periodic_11.5
 </span></span><span style="display:flex;"><span>...
 </span></span><span style="display:flex;"><span><span style="color:#033">result</span><span style="color:#555">=(</span><span style="color:#c30">`</span>/usr/bin/stat -f <span style="color:#c30">&#39;%Su %Ul&#39;</span> <span style="color:#033">$file</span><span style="color:#c30">`</span><span style="color:#555">)</span>
 </span></span><span style="display:flex;"><span><span style="color:#033">user</span><span style="color:#555">=</span><span style="color:#a00">${</span><span style="color:#033">result</span>[0]<span style="color:#a00">}</span>
@@ -267,7 +267,7 @@ periodic_conf_files=&#34;/etc/periodic.conf /etc/periodic.conf.local&#34;
     
       2019 -
     
-    2025
+    2026
      Csaba Fitzl 
     ·
     

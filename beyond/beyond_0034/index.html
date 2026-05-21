@@ -63,7 +63,7 @@ The all mighty launchd, contains an embedded plist file in its __TEXT __config s
   
     
     
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -176,7 +176,7 @@ The all mighty launchd, contains an embedded plist file in its __TEXT __config s
 </code></pre><p>I think the <code>BootStrap</code> config is very interesting as it contains more locations for <code>Launch*</code> files, than we are normally aware of. <code>/private/var/db/ManagedConfigurationFiles/BackgroundTaskServices/Launch*/</code> especially stands out, this location is also SIP protected.</p>
 <p>But let&rsquo;s focus on how we can utilize this configuration to persist our own stuff.</p>
 <p>There are 6 entries that we can potentially utilize, but each of them will require extra access beyond having <code>root</code> privileges. The first three are binaries which can be found either in <code>/Library/Apple/</code> or <code>/private/var/install</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>finish-demo-restore<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>finish-demo-restore<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
 </span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>Program<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
 </span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/Library/Apple/usr/libexec/finish_demo_restore<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
@@ -209,7 +209,7 @@ The all mighty launchd, contains an embedded plist file in its __TEXT __config s
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
 </span></span></code></pre></div><p>These files don&rsquo;t exists by default, and will only show up during installations, but in order for us to place them we need some sort of SIP bypass privileges.</p>
 <p>The second set of three items are scripts from <code>/etc/</code>, and all of them are <code>rc.*</code> files.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>rc.server<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>rc.server<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
 </span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>Program<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
 </span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>/etc/rc.server<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
@@ -274,7 +274,7 @@ The all mighty launchd, contains an embedded plist file in its __TEXT __config s
     
       2019 -
     
-    2025
+    2026
      Csaba Fitzl 
     ·
     

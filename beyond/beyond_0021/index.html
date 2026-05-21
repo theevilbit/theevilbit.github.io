@@ -70,7 +70,7 @@ I guess, most users keep it selected, and then macOS will reopen all apps.">
   
     
     
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -182,9 +182,9 @@ I guess, most users keep it selected, and then macOS will reopen all apps.">
 <p><img src="https://theevilbit.github.io/images/beyond/beyond_0021_0.png" alt="Re-open Applications Prompt"></p>
 <p>I guess, most users keep it selected, and then macOS will reopen all apps.</p>
 <p>This information is stored in <code>~/Library/Preferences/ByHost/com.apple.loginwindow.&lt;UUID&gt;.plist</code>. The UUID is our Mac&rsquo;s UUID, which we can get by <a href="https://community.jamf.com/t5/jamf-pro/disable-self-service-from-launching-at-reboot/td-p/155904"  class="external-link" target="_blank" rel="noopener">running the following command</a>:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ioreg -rd1 -c IOPlatformExpertDevice | awk -F<span style="color:#c30">&#39;&#34;&#39;</span> <span style="color:#c30">&#39;/IOPlatformUUID/{print $4}&#39;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ioreg -rd1 -c IOPlatformExpertDevice | awk -F<span style="color:#c30">&#39;&#34;&#39;</span> <span style="color:#c30">&#39;/IOPlatformUUID/{print $4}&#39;</span>
 </span></span></code></pre></div><p>We can query the apps by either running the command:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>defaults -currentHost <span style="color:#366">read</span> com.apple.loginwindow TALAppsToRelaunchAtLogin
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>defaults -currentHost <span style="color:#366">read</span> com.apple.loginwindow TALAppsToRelaunchAtLogin
 </span></span><span style="display:flex;"><span><span style="color:#555">(</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#555">{</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#033">BackgroundState</span> <span style="color:#555">=</span> 2;
@@ -200,7 +200,7 @@ I guess, most users keep it selected, and then macOS will reopen all apps.">
 </span></span><span style="display:flex;"><span>    <span style="color:#555">}</span>,
 </span></span><span style="display:flex;"><span>...
 </span></span></code></pre></div><p>or:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>plutil -p ~/Library/Preferences/ByHost/com.apple.loginwindow.&lt;UUID&gt;.plist
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>plutil -p ~/Library/Preferences/ByHost/com.apple.loginwindow.&lt;UUID&gt;.plist
 </span></span><span style="display:flex;"><span><span style="color:#555">{</span>
 </span></span><span style="display:flex;"><span>  <span style="color:#c30">&#34;TALAppsToRelaunchAtLogin&#34;</span> <span style="color:#555">=</span>&gt; <span style="color:#555">[</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#033">0</span> <span style="color:#555">=</span>&gt; <span style="color:#555">{</span>
@@ -231,7 +231,7 @@ I guess, most users keep it selected, and then macOS will reopen all apps.">
     
       2019 -
     
-    2025
+    2026
      Csaba Fitzl 
     ·
     

@@ -76,7 +76,7 @@ Intro Link to heading With the release of Big Sur, I noticed that many of the sy
   
     
     
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -246,11 +246,11 @@ Intro Link to heading With the release of Big Sur, I noticed that many of the sy
   </a>
 </h2>
 <p>I didn&rsquo;t dig into this new entitlement until I run into a new <code>csops</code> operation code listed below, which can be found in <code>xnu-7195.50.7.100.1/bsd/sys/codesign.h</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#define CS_OPS_CLEAR_LV     15  </span><span style="color:#09f;font-style:italic">/* clear the library validation flag */</span><span style="color:#099">
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#define CS_OPS_CLEAR_LV     15  </span><span style="color:#09f;font-style:italic">/* clear the library validation flag */</span><span style="color:#099">
 </span></span></span></code></pre></div><p><code>csops</code> is a system call that can be used to perform various code signing related operation on processes. We can query the status of a process, set various flags during runtime, query its code signing blob, and so on. This was a new one that I didn&rsquo;t spot before, so I started to go after it.</p>
 <p>The description of this constant says that we can use this operation code to clear the library validation flag of a process. This means that if we can run this on a process we can load third party libraries into it if the call is successful.</p>
 <p>This constant is only referenced inside the <code>xnu-7195.50.7.100.1/bsd/kern/kern_proc.c</code> source file, which contains the source for the <code>csops_internal</code> function. This is the function that will be run when the system call is made. Here is the relevant part of the source code concerning the <code>CS_OPS_CLEAR_LV</code> operation.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">int</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">int</span>
 </span></span><span style="display:flex;"><span><span style="color:#c0f">csops_internal</span>(<span style="color:#078;font-weight:bold">pid_t</span> pid, <span style="color:#078;font-weight:bold">int</span> ops, <span style="color:#078;font-weight:bold">user_addr_t</span> uaddr, <span style="color:#078;font-weight:bold">user_size_t</span> usersize, <span style="color:#078;font-weight:bold">user_addr_t</span> uaudittoken)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>(...)
@@ -285,7 +285,7 @@ Intro Link to heading With the release of Big Sur, I noticed that many of the sy
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>(...)
 </span></span><span style="display:flex;"><span><span style="color:#099">#if CONFIG_MACF
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	<span style="color:#069;font-weight:bold">switch</span> (ops) {
+</span></span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">switch</span> (ops) {
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_MARKINVALID</span>:
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_MARKHARD</span>:
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_MARKKILL</span>:
@@ -304,7 +304,7 @@ Intro Link to heading With the release of Big Sur, I noticed that many of the sy
 </span></span><span style="display:flex;"><span>		}
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span><span style="color:#099">#endif
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	<span style="color:#069;font-weight:bold">switch</span> (ops) {
+</span></span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">switch</span> (ops) {
 </span></span><span style="display:flex;"><span>(...)
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEAR_LV</span>: {
 </span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">/*
@@ -320,10 +320,10 @@ Intro Link to heading With the release of Big Sur, I noticed that many of the sy
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * fork an untrusted child.
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 */</span>
 </span></span><span style="display:flex;"><span><span style="color:#099">#if !defined(XNU_TARGET_OS_OSX)
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>		<span style="color:#09f;font-style:italic">// We only support dropping library validation on macOS
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>		error <span style="color:#555">=</span> ENOTSUP;
+</span></span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">// We only support dropping library validation on macOS
+</span></span></span><span style="display:flex;"><span>		error <span style="color:#555">=</span> ENOTSUP;
 </span></span><span style="display:flex;"><span><span style="color:#099">#else
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>		<span style="color:#09f;font-style:italic">/*
+</span></span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * if we have the flag set, and the caller wants
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * to remove it, and they&#39;re entitled to, then
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * we remove it from the csflags
@@ -345,7 +345,7 @@ Intro Link to heading With the release of Big Sur, I noticed that many of the sy
 </span></span><span style="display:flex;"><span>(...)
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>We will go through this piece by piece.  There are three places where it gets checked. We will start with the first <code>switch</code> case.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">switch</span> (ops) {
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">switch</span> (ops) {
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_STATUS</span>:
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CDHASH</span>:
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_PIDOFFSET</span>:
@@ -363,8 +363,8 @@ Intro Link to heading With the release of Big Sur, I noticed that many of the sy
 </span></span><span style="display:flex;"><span>	}
 </span></span></code></pre></div><p>What happens here is that the system will allow non-root execution of the operations listed in the switch table, including the one, which is in the focus of our interest. This means that we can call <code>csops</code> with the <code>CS_OPS_CLEAR_LV</code> operation even if we are not running as root.</p>
 <p>Let&rsquo;s move on to the other switch case.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#if CONFIG_MACF
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	<span style="color:#069;font-weight:bold">switch</span> (ops) {
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#if CONFIG_MACF
+</span></span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">switch</span> (ops) {
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_MARKINVALID</span>:
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_MARKHARD</span>:
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_MARKKILL</span>:
@@ -384,19 +384,19 @@ Intro Link to heading With the release of Big Sur, I noticed that many of the sy
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span><span style="color:#099">#endif
 </span></span></span></code></pre></div><p>Here we have a MACF policy call, using the function <code>mac_proc_check_get_cs_info</code>. MACF policy calls return 0 if they are successful, and this is what being check on the condition. The <code>mac_proc_check_get_cs_info</code> function is implemented inside <code>xnu-7195.50.7.100.1/security/mac_process.c</code>. Let&rsquo;s follow it.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span>
 </span></span><span style="display:flex;"><span><span style="color:#c0f">mac_proc_check_set_cs_info</span>(<span style="color:#078;font-weight:bold">proc_t</span> curp, <span style="color:#078;font-weight:bold">proc_t</span> target, <span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#078;font-weight:bold">int</span> op)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">kauth_cred_t</span> cred;
 </span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">int</span> error <span style="color:#555">=</span> <span style="color:#f60">0</span>;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#099">#if SECURITY_MAC_CHECK_ENFORCE
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	<span style="color:#09f;font-style:italic">/* 21167099 - only check if we allow write */</span>
+</span></span></span><span style="display:flex;"><span>	<span style="color:#09f;font-style:italic">/* 21167099 - only check if we allow write */</span>
 </span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span>mac_proc_enforce) {
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> <span style="color:#f60">0</span>;
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span><span style="color:#099">#endif
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>	<span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span><span style="color:#c0f">mac_proc_check_enforce</span>(curp)) {
+</span></span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span><span style="color:#c0f">mac_proc_check_enforce</span>(curp)) {
 </span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> <span style="color:#f60">0</span>;
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>
@@ -417,7 +417,7 @@ Intro Link to heading With the release of Big Sur, I noticed that many of the sy
 </code></pre><p>This will make an internal call to <code>_cred_sb_evaluate</code> with the opcode <code>0x65</code>, I also discussed this in my previous post.</p>
 <p>Going back to our <code>csops</code> call, we can determine that a MACF policy check will be run if this operation is allowed or not for the calling process.</p>
 <p>Assuming yes, we move on, and finally reach the point where the operation is actually implemented.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEAR_LV</span>: {
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEAR_LV</span>: {
 </span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * This option is used to remove library validation from
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * a running process. This is used in plugin architectures
@@ -431,10 +431,10 @@ Intro Link to heading With the release of Big Sur, I noticed that many of the sy
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * fork an untrusted child.
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 */</span>
 </span></span><span style="display:flex;"><span><span style="color:#099">#if !defined(XNU_TARGET_OS_OSX)
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>		<span style="color:#09f;font-style:italic">// We only support dropping library validation on macOS
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"></span>		error <span style="color:#555">=</span> ENOTSUP;
+</span></span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">// We only support dropping library validation on macOS
+</span></span></span><span style="display:flex;"><span>		error <span style="color:#555">=</span> ENOTSUP;
 </span></span><span style="display:flex;"><span><span style="color:#099">#else
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>		<span style="color:#09f;font-style:italic">/*
+</span></span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * if we have the flag set, and the caller wants
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * to remove it, and they&#39;re entitled to, then
 </span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * we remove it from the csflags
@@ -455,7 +455,7 @@ Intro Link to heading With the release of Big Sur, I noticed that many of the sy
 </span></span><span style="display:flex;"><span>		}
 </span></span></code></pre></div><p>I think the description added by Apple is very nice, detailed and explains everything. If the requirements are satisfied it will clear the library validation flag of the target process (<code>pt-&gt;p_csflags &amp;= (~(CS_REQUIRE_LV | CS_FORCED_LV));</code>).</p>
 <p>The condition is very strict. This operation can be called by processes only on themselves (<code>forself == 1</code>) and those that has the entitlement defined by the constant <code>CLEAR_LV_ENTITLEMENT</code>. This is defined in <code>xnu-7195.50.7.100.1/bsd/sys/codesign.h</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#define CLEAR_LV_ENTITLEMENT &#34;com.apple.private.security.clear-library-validation&#34;
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#define CLEAR_LV_ENTITLEMENT &#34;com.apple.private.security.clear-library-validation&#34;
 </span></span></span></code></pre></div><p>And the loop is closed we got the entitlement which we saw before.</p>
 <p>To sum up, we can say that a process owning the <code>com.apple.private.security.clear-library-validation</code> entitlement can call the <code>csops</code> system call using the <code>CLEAR_LV_ENTITLEMENT</code> to clear the library validation code signing flag on itself. This works even if the process is not running as root.</p>
 <h2 id="ssh">
@@ -538,7 +538,7 @@ Unsatisfied Entitlements:
     
       2019 -
     
-    2025
+    2026
      Csaba Fitzl 
     ·
     

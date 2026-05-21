@@ -67,7 +67,7 @@ I think almost everything has been already told about this method and emond in g
   
     
     
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -194,7 +194,7 @@ I think almost everything has been already told about this method and emond in g
   </a>
 </h2>
 <p>The <code>emond</code> service is defined in <code>/System/Library/LaunchDaemons/com.apple.emond.plist</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
@@ -233,7 +233,7 @@ I think almost everything has been already told about this method and emond in g
 </code></pre><p>Then <code>emond</code> will started by <code>launchd</code> and it will process the rules found inside <code>/etc/emond.d/rules/</code>. These rules define what action to perform when a specific event occurs. For a detailed explanation of these events and actions please refer to the blog posts I linked at the very beginning. For the persistence example I will show how we can run a simple command when <code>emond</code> is starting up. First, let&rsquo;s make a copy of the default sample rule.</p>
 <pre tabindex="0"><code>sudo cp /etc/emond.d/rules/SampleRules.plist /etc/emond.d/rules/startup.plist
 </code></pre><p>and edit it so it looks like this.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;array&gt;</span>
@@ -268,7 +268,7 @@ I think almost everything has been already told about this method and emond in g
 </span></span></code></pre></div><p>Here we define a command that will be executed when <code>emond</code> starts (<code>eventTypes</code>:<code>startup</code>). Note that <code>emond</code> will startup during boot time, when the user is not yet logged in. We can control the command with the <code>command</code> , <code>arguments</code> and <code>user</code> keys. The above will execute <code>/bin/bash -c touch /Library/emondstarted.txt</code> as root. Note that the <code>enabled</code> key is set to <code>true</code>.</p>
 <p>Now if we restart <code>emond</code> by killing it or rebooting our machine the above command will be executed and the file <code>/Library/emondstarted.txt</code> will be created.</p>
 <p>The <code>/etc/emond.d/emond.plist</code> file contains configuration options, like other rule directories (<code>additionalRulesPaths</code>) and also the following filter:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>filterByUID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>filterByUID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;string&gt;</span>0<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;key&gt;</span>filterByGID<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;string&gt;&lt;/string&gt;</span>
@@ -282,7 +282,7 @@ I think almost everything has been already told about this method and emond in g
 </h2>
 <p>I decided to dig into a bit into the XPC internals of <code>emond</code>, which I think was not documented before.</p>
 <p>As defined in the launchd file, the XPC service name is <code>com.apple.emond.evtq</code>. If we open <code>emond</code> in a disassembler, we can find that it&rsquo;s created here:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">/* @class Monitor */</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">/* @class Monitor */</span>
 </span></span><span style="display:flex;"><span><span style="color:#555">-</span>(<span style="color:#078;font-weight:bold">int</span>)<span style="color:#99f">SetXPCListenerFor</span>:(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)arg2 {
 </span></span><span style="display:flex;"><span>    r15 <span style="color:#555">=</span> arg2;
 </span></span><span style="display:flex;"><span>    r14 <span style="color:#555">=</span> self;
@@ -307,7 +307,7 @@ I think almost everything has been already told about this method and emond in g
 </span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span> rax;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>Inside the connection handler we find a call to <code>filterBySourceUID:GID:</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">sub_10000e621</span>(<span style="color:#078;font-weight:bold">int</span> arg0, <span style="color:#078;font-weight:bold">int</span> arg1, <span style="color:#078;font-weight:bold">int</span> arg2, <span style="color:#078;font-weight:bold">int</span> arg3, <span style="color:#078;font-weight:bold">int</span> arg4, <span style="color:#078;font-weight:bold">int</span> arg5) {
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">sub_10000e621</span>(<span style="color:#078;font-weight:bold">int</span> arg0, <span style="color:#078;font-weight:bold">int</span> arg1, <span style="color:#078;font-weight:bold">int</span> arg2, <span style="color:#078;font-weight:bold">int</span> arg3, <span style="color:#078;font-weight:bold">int</span> arg4, <span style="color:#078;font-weight:bold">int</span> arg5) {
 </span></span><span style="display:flex;"><span>...
 </span></span><span style="display:flex;"><span>            r15 <span style="color:#555">=</span> <span style="color:#c0f">xpc_connection_get_euid</span>(r13);
 </span></span><span style="display:flex;"><span>            rax <span style="color:#555">=</span> <span style="color:#c0f">xpc_connection_get_egid</span>(r13);
@@ -316,7 +316,7 @@ I think almost everything has been already told about this method and emond in g
 </span></span><span style="display:flex;"><span>            <span style="color:#069;font-weight:bold">if</span> ([<span style="color:#555">*</span>(r14 <span style="color:#555">+</span> <span style="color:#f60">0x20</span>) <span style="color:#99f">filterBySourceUID</span>:r15 <span style="color:#99f">GID</span>:r12] <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) {
 </span></span><span style="display:flex;"><span>...
 </span></span></code></pre></div><p>The actual UID/GID filter is populated at the <code>EntryPoint</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#555">*</span>qword_100038cb8 <span style="color:#555">=</span> [[Monitor alloc] <span style="color:#99f">initWithRulebase</span>:<span style="color:#555">*</span>qword_100038ca8 <span style="color:#99f">andVariables</span>:r13];
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#555">*</span>qword_100038cb8 <span style="color:#555">=</span> [[Monitor alloc] <span style="color:#99f">initWithRulebase</span>:<span style="color:#555">*</span>qword_100038ca8 <span style="color:#99f">andVariables</span>:r13];
 </span></span><span style="display:flex;"><span>[<span style="color:#555">*</span>qword_100038cb8 <span style="color:#99f">setEventFilterUID</span>:<span style="color:#c0f">sub_10000c060</span>([<span style="color:#555">*</span>qword_100038ca0 <span style="color:#99f">objectForKey</span>:<span style="color:#a00;background-color:#faa">@</span><span style="color:#c30">&#34;filterByUID&#34;</span>, r13]) <span style="color:#99f">FilterGID</span>:<span style="color:#c0f">sub_10000c060</span>([<span style="color:#555">*</span>qword_100038ca0 <span style="color:#99f">objectForKey</span>:<span style="color:#a00;background-color:#faa">@</span><span style="color:#c30">&#34;filterByGID&#34;</span>, r13])];
 </span></span></code></pre></div><p>Without going into further details, if we follow these function, we will find that it parses the config file, and reads in the values defined in <code>filterByUID</code> and <code>filterByGID</code>. This means that by default only <code>root</code> level processes can communicate with <code>emond</code>, but we can also modify this setting if needed, allowing other processes.</p>
 <p>So we know that only root can connect. But how normally messages are sent? The <code>/System/Library/LaunchDaemons/com.apple.emlog.plist</code> defines a perl script at <code>/usr/libexec/emlog.pl</code>. This script uses the <code>/usr/libexec/xssendevent</code> binary to send messages to <code>emond</code>.</p>
@@ -324,7 +324,7 @@ I think almost everything has been already told about this method and emond in g
 <pre tabindex="0"><code>echo &#34;{ eventType = auth.failure; eventSource = emlog.pl; eventDetails = {clientIP = \&#34;1.1.1.1\&#34;; hostPort = 21; protocolName = \&#34;ftp\&#34;;};}&#34; | /usr/libexec/xssendevent
 </code></pre><p>Since only root can send messages, we need to execute this command as root.</p>
 <p>I edited my <code>/private/etc/emond.d/rules/SampleRules.plist</code> to log a message for the <code>auth.failure</code> event type.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;array&gt;</span>
@@ -354,7 +354,7 @@ I think almost everything has been already told about this method and emond in g
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/array&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
 </span></span></code></pre></div><p>Now if we execute the command above, we will see a log message in the log stream.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sh-3.2# <span style="color:#366">echo</span> <span style="color:#c30">&#34;{ eventType = auth.failure; eventSource = emlog.pl; eventDetails = {clientIP = \&#34;1.1.1.1\&#34;; hostPort = 21; protocolName = \&#34;ftp\&#34;;};}&#34;</span> | /usr/libexec/xssendevent
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sh-3.2# <span style="color:#366">echo</span> <span style="color:#c30">&#34;{ eventType = auth.failure; eventSource = emlog.pl; eventDetails = {clientIP = \&#34;1.1.1.1\&#34;; hostPort = 21; protocolName = \&#34;ftp\&#34;;};}&#34;</span> | /usr/libexec/xssendevent
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>-----------
 </span></span><span style="display:flex;"><span>
@@ -363,9 +363,9 @@ I think almost everything has been already told about this method and emond in g
 </span></span></code></pre></div><p>We can save the event in a json plist file, and specify it as the input for <code>xssendevent</code>. The json formatted event PLIST file:</p>
 <pre tabindex="0"><code>{ eventType = auth.failure; eventSource = emlog.pl; eventDetails = {clientIP = &#34;1.1.1.1&#34;; hostPort = 21; protocolName = &#34;ftp&#34;;};}
 </code></pre><p>Then using the <code>-e</code> option, we can specify the previously saved file.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/usr/libexec/xssendevent -e event.plist
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/usr/libexec/xssendevent -e event.plist
 </span></span></code></pre></div><p>But how can we do this directly with xpc? <code>xssendevent</code> uses the <code>/usr/lib/libXSEvent.dylib</code> library to send a message.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sh-3.2# otool -L /usr/libexec/xssendevent
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sh-3.2# otool -L /usr/libexec/xssendevent
 </span></span><span style="display:flex;"><span>/usr/libexec/xssendevent:
 </span></span><span style="display:flex;"><span>	/usr/lib/libXSEvent.dylib <span style="color:#555">(</span>compatibility version 1.0.0, current version 1.0.0<span style="color:#555">)</span>
 </span></span><span style="display:flex;"><span>	/System/Library/Frameworks/Security.framework/Versions/A/Security <span style="color:#555">(</span>compatibility version 1.0.0, current version 60157.40.30<span style="color:#555">)</span>
@@ -375,7 +375,7 @@ I think almost everything has been already told about this method and emond in g
 </span></span><span style="display:flex;"><span>	/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation <span style="color:#555">(</span>compatibility version 150.0.0, current version 1855.103.0<span style="color:#555">)</span>
 </span></span></code></pre></div><p>Instead of reversing everything, we can use Jonathan Levin&rsquo;s <code>XPoCe</code> utility to sniff the XPC communication, and then recreate the code ourselves. This is much easier as we will see the messages directly without doing lot&rsquo;s of manual reversing.</p>
 <p>To do this we need a machine with SIP disabled, as <code>XPoCe</code> injects code into the target process. Then we can send our event again.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sh-3.2#  <span style="color:#366">echo</span> <span style="color:#c30">&#34;{ eventType = auth.failure; eventSource = emlog.pl; eventDetails = {clientIP = \&#34;1.1.1.1\&#34;; hostPort = 21; protocolName = \&#34;ftp\&#34;;};}&#34;</span> | ./XPoCe /usr/libexec/xssendevent
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sh-3.2#  <span style="color:#366">echo</span> <span style="color:#c30">&#34;{ eventType = auth.failure; eventSource = emlog.pl; eventDetails = {clientIP = \&#34;1.1.1.1\&#34;; hostPort = 21; protocolName = \&#34;ftp\&#34;;};}&#34;</span> | ./XPoCe /usr/libexec/xssendevent
 </span></span><span style="display:flex;"><span>xpc_connection_create <span style="color:#555">(</span> <span style="color:#c30">&#34;com.apple.emond.evtq&#34;</span>,0x7f9c3640a0f0<span style="color:#555">)</span>  <span style="color:#555">=</span> 0x7f9c36504080 <span style="color:#555">()</span> 
 </span></span><span style="display:flex;"><span>xpc_connection_send_message <span style="color:#555">(</span> connection@0x7f9c36504080,dictionary@0x7f9c3640b070<span style="color:#555">)</span> 
 </span></span><span style="display:flex;"><span>
@@ -391,10 +391,10 @@ I think almost everything has been already told about this method and emond in g
 </span></span></span><span style="display:flex;"><span><span style="color:#c30">	&#34;</span>eventTimestamp<span style="color:#c30">&#34; =&gt; &lt;double: 0x7f9c3640b130&gt;: 659713961.621497
 </span></span></span><span style="display:flex;"><span><span style="color:#c30">}&#34;</span>
 </span></span></code></pre></div><p>We can easily translate the above output to the following C code suing the standard XPC libraries.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
 </span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdlib.h&gt;</span><span style="color:#099">
 </span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;xpc/xpc.h&gt;</span><span style="color:#099">
-</span></span></span><span style="display:flex;"><span><span style="color:#099"></span>
+</span></span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">main</span>(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">**</span>argv) {
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#078;font-weight:bold">xpc_connection_t</span> service;
@@ -439,7 +439,7 @@ I think almost everything has been already told about this method and emond in g
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>Then, once we compile it and execute, we can verify that our event message was properly logged by <code>emond</code>, by our rule.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>csaby@mac emond % sudo ./emondxpc
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>csaby@mac emond % sudo ./emondxpc
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>------------------------------
 </span></span><span style="display:flex;"><span>
@@ -461,7 +461,7 @@ I think almost everything has been already told about this method and emond in g
     
       2019 -
     
-    2025
+    2026
      Csaba Fitzl 
     ·
     

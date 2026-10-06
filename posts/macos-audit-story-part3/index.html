@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The diskarbitrationd and storagekitd Audit Story Part 3 · theevilbit</title>
+<meta name="description" content="Over the past two parts of this series, we&#x27;ve explored vulnerabilities in macOS&#x27;s diskarbitrationd daemon. In part 1, we explored how an attacker could use it to escape the sandbox or escalate privileges. In part 2, we e">
+<meta name="author" content="Csaba Fitzl">
+<link rel="canonical" href="https://theevilbit.github.io/posts/macos-audit-story-part3/">
+<link rel="alternate" type="application/rss+xml" title="theevilbit" href="/index.xml">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>try { var t = localStorage.getItem("tb.theme"); document.documentElement.dataset.theme = t || "dark"; } catch (e) { document.documentElement.dataset.theme = "dark"; }</script>
+<link rel="preload" href="/fonts/IBMPlexSans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts.css?v=1791269065">
+<link rel="stylesheet" href="/style.css?v=1791269065">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/">the<span>evil</span>bit<i class="cursor"></i></a>
+    <nav class="nav"><a href="/posts/" class=on>Posts</a><a href="/beyond/">Beyond</a><a href="/talks/">Talks</a><a href="/shield/">Shield</a><a href="/about/">About</a><a href="/tags/">Tags</a></nav>
+    <button type="button" class="theme" id="theme" aria-label="switch light / dark">◐</button>
+  </header>
+  <main><article class="post">
+<header class="post-head"><h1>The diskarbitrationd and storagekitd Audit Story Part 3</h1>
+<div class="meta"><time datetime="2025-02-21">Feb 21, 2025</time><span>1 min read</span><span class="tags"><a class="tag" href="/tags/macos/">macos</a><a class="tag" href="/tags/lpe/">lpe</a><a class="tag" href="/tags/tcc/">tcc</a><a class="tag" href="/tags/vulnerability/">vulnerability</a><a class="tag" href="/tags/cve/">cve</a></span></div></header>
+<div class="prose"><h2 id="intro">Intro<a class="anchor" href="#intro" aria-label="link to this section">#</a></h2>
+<p>Over the past two parts of this series, we've explored vulnerabilities in macOS's diskarbitrationd daemon. In part 1, we explored how an attacker could use it to escape the sandbox or escalate privileges. In part 2, we explored how a directory traversal attack could be used to bypass Transparency, Consent, and Control (TCC) protections.</p>
+<p>In this third and final part of the series, we will discuss a vulnerability which impacted storagekitd. The vulnerability allowed an attacker to escalate their privileges to root. Apple fixed this and assigned CVE-2024-27848. However, because the patch was insufficient, we could bypass it and perform the same attack; moreover we could also fully bypass TCC. This issue is identified now as CVE-2024-44210.</p>
+<p>...</p>
+<p>The full blog was published at my company's (Iru, formerly Kandji) website: <a href="https://www.iru.com/blog/macos-audit-story-part3" rel="noopener"><a href="https://www.iru.com/blog/macos-audit-story-part3" rel="noopener">https://www.iru.com/blog/macos-audit-story-part3</a></a></p></div>
+<nav class="pn"><a class="prev" href="/posts/macos-audit-story-part2/"><span>← previous</span>The diskarbitrationd and storagekitd Audit Story Part 2</a><a class="next" href="/posts/finding-vulnerabilities-in-apple-packages/"><span>next →</span>Finding Vulnerabilities in Apple Packages at Scale</a></nav></article></main>
+  <footer class="foot">
+    <span>© 2026 Csaba Fitzl</span>
+    <span class="social"><a href="https://github.com/theevilbit/" rel="me noopener">GitHub</a><a href="https://x.com/theevilbit" rel="me noopener">X</a><a href="/index.xml" rel="me noopener">RSS</a></span>
+  </footer>
+</div>
+<script>
+document.getElementById("theme").addEventListener("click", function () {
+  var t = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem("tb.theme", t); } catch (e) {}
+});
+</script>
+</body>
+</html>

@@ -1,580 +1,268 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-  <title>
-  Let&#39;s talk macOS Authorization · theevilbit blog
-</title>
-  <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light dark">
-
-
-
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Let&#x27;s talk macOS Authorization · theevilbit</title>
+<meta name="description" content="This is a blog post I wanted to write for a while now, but somehow never got the time for it, and I also knew that it will require lots of time, so I kept delaying it. I finally kicked my ass, sat down, and wrote it.">
 <meta name="author" content="Csaba Fitzl">
-<meta name="description" content="This is a blog post I wanted to write for a while now, but somehow never got the time for it, and I also knew that it will require lots of time, so I kept delaying it. I finally kicked my ass, sat down, and wrote it.
-The goal of the post is to cover many aspects of authorization, which I found interesting from security perspective. Honestly, partially for selfish reasons so I will have a goto summary when I need to lookup something later instead of browsing through 8-10 different articles. All of these information I try catch here in one post, are known, but spread all over the place in various blog posts and articles, and I never found a good, central location with all the details. Also some of the items are very confusing and it took me some time to clear things in my head as not everything is obvious or intuitive.">
-<meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
-
-
-
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Let&#39;s talk macOS Authorization">
-  <meta name="twitter:description" content="This is a blog post I wanted to write for a while now, but somehow never got the time for it, and I also knew that it will require lots of time, so I kept delaying it. I finally kicked my ass, sat down, and wrote it.
-The goal of the post is to cover many aspects of authorization, which I found interesting from security perspective. Honestly, partially for selfish reasons so I will have a goto summary when I need to lookup something later instead of browsing through 8-10 different articles. All of these information I try catch here in one post, are known, but spread all over the place in various blog posts and articles, and I never found a good, central location with all the details. Also some of the items are very confusing and it took me some time to clear things in my head as not everything is obvious or intuitive.">
-
-<meta property="og:url" content="https://theevilbit.github.io/posts/macos_authorization/">
-  <meta property="og:site_name" content="theevilbit blog">
-  <meta property="og:title" content="Let&#39;s talk macOS Authorization">
-  <meta property="og:description" content="This is a blog post I wanted to write for a while now, but somehow never got the time for it, and I also knew that it will require lots of time, so I kept delaying it. I finally kicked my ass, sat down, and wrote it.
-The goal of the post is to cover many aspects of authorization, which I found interesting from security perspective. Honestly, partially for selfish reasons so I will have a goto summary when I need to lookup something later instead of browsing through 8-10 different articles. All of these information I try catch here in one post, are known, but spread all over the place in various blog posts and articles, and I never found a good, central location with all the details. Also some of the items are very confusing and it took me some time to clear things in my head as not everything is obvious or intuitive.">
-  <meta property="og:locale" content="en">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2020-10-22T00:00:00+00:00">
-    <meta property="article:modified_time" content="2020-10-22T00:00:00+00:00">
-    <meta property="article:tag" content="Macos">
-    <meta property="article:tag" content="Internals">
-    <meta property="article:tag" content="Authorization">
-
-
-
-
 <link rel="canonical" href="https://theevilbit.github.io/posts/macos_authorization/">
-
-
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
-
-
-  
-  
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
-
-
-
-
-
-
-  
-    
-    
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
-  
-
-
-
- 
-
-
-
-
-<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
-
-<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-
-<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
-<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
-
-
-
-
-
-
-
-
-
+<link rel="alternate" type="application/rss+xml" title="theevilbit" href="/index.xml">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>try { var t = localStorage.getItem("tb.theme"); document.documentElement.dataset.theme = t || "dark"; } catch (e) { document.documentElement.dataset.theme = "dark"; }</script>
+<link rel="preload" href="/fonts/IBMPlexSans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts.css?v=1791269065">
+<link rel="stylesheet" href="/style.css?v=1791269065">
 </head>
-
-
-
-
-
-
-<body class="preload-transitions colorscheme-auto">
-  
-<div class="float-container">
-    <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
-    </a>
-</div>
-
-
-  <main class="wrapper">
-    <nav class="navigation">
-  <section class="container">
-    
-    <a class="navigation-title" href="https://theevilbit.github.io/">
-      theevilbit blog
-    </a>
-    
-    
-      <input type="checkbox" id="menu-toggle" />
-      <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
-      </label>
-      <ul class="navigation-list">
-        
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/posts/">Posts</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/shield/">Shield.app</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/tags/">Tags</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/about/">About</a>
-            </li>
-          
-        
-        
-      </ul>
-    
-  </section>
-</nav>
-
-
-    <div class="content">
-      
-  <section class="container post">
-    <article>
-      <header>
-        <div class="post-title">
-          <h1 class="title">
-            <a class="title-link" href="https://theevilbit.github.io/posts/macos_authorization/">
-              Let&#39;s talk macOS Authorization
-            </a>
-          </h1>
-        </div>
-        <div class="post-meta">
-          <div class="date">
-            <span class="posted-on">
-              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
-              <time datetime="2020-10-22T00:00:00Z">
-                October 22, 2020
-              </time>
-            </span>
-            <span class="reading-time">
-              <i class="fa-solid fa-clock" aria-hidden="true"></i>
-              15-minute read
-            </span>
-          </div>
-          
-          <div class="categories">
-  <i class="fa-solid fa-folder" aria-hidden="true"></i>
-    <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
-
-          <div class="tags">
-  <i class="fa-solid fa-tag" aria-hidden="true"></i>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/macos/">Macos</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/internals/">Internals</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/authorization/">Authorization</a>
-    </span></div>
-
-        </div>
-      </header>
-
-      <div class="post-content">
-        
-        <p>This is a blog post I wanted to write for a while now, but somehow never got the time for it, and I also knew that it will require lots of time, so I kept delaying it. I finally kicked my ass, sat down, and wrote it.</p>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/">the<span>evil</span>bit<i class="cursor"></i></a>
+    <nav class="nav"><a href="/posts/" class=on>Posts</a><a href="/beyond/">Beyond</a><a href="/talks/">Talks</a><a href="/shield/">Shield</a><a href="/about/">About</a><a href="/tags/">Tags</a></nav>
+    <button type="button" class="theme" id="theme" aria-label="switch light / dark">◐</button>
+  </header>
+  <main><article class="post">
+<header class="post-head"><h1>Let&#x27;s talk macOS Authorization</h1>
+<div class="meta"><time datetime="2020-10-22">Oct 22, 2020</time><span>14 min read</span><span class="tags"><a class="tag" href="/tags/macos/">macos</a><a class="tag" href="/tags/internals/">internals</a><a class="tag" href="/tags/authorization/">authorization</a></span></div></header>
+<details class="toc"><summary>Contents</summary><ol><li class="l2"><a href="#main-authorization-concept">Main authorization concept</a></li><li class="l2"><a href="#the-authorization-database">The authorization database</a></li><li class="l2"><a href="#factored-applications-privileged-helper-tools">Factored applications (privileged helper tools)</a></li><li class="l2"><a href="#the-authorization-api">The Authorization API</a></li><li class="l2"><a href="#logs">Logs</a></li><li class="l2"><a href="#exploitation-consideration">Exploitation consideration</a></li><li class="l2"><a href="#wrap-up">Wrap up</a></li><li class="l2"><a href="#references">References</a></li></ol></details><div class="prose"><p>This is a blog post I wanted to write for a while now, but somehow never got the time for it, and I also knew that it will require lots of time, so I kept delaying it. I finally kicked my ass, sat down, and wrote it.</p>
 <p>The goal of the post is to cover many aspects of authorization, which I found interesting from security perspective. Honestly, partially for selfish reasons so I will have a goto summary when I need to lookup something later instead of browsing through 8-10 different articles. All of these information I try catch here in one post, are known, but spread all over the place in various blog posts and articles, and I never found a good, central location with all the details. Also some of the items are very confusing and it took me some time to clear things in my head as not everything is obvious or intuitive.</p>
 <p>When I talk about authorization here, I mean the user mode authorization on macOS, which is handled by the <code>authd</code>process. There is also a kernel authorization framework, <code>kauth</code>, but this post is not about that.</p>
-<p>Let&rsquo;s begin.</p>
-<h2 id="main-authorization-concept">
-  Main authorization concept
-  <a class="heading-link" href="#main-authorization-concept">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>I think the concepts are best described at Apple&rsquo;s <a href="https://developer.apple.com/library/archive/documentation/Security/Conceptual/authorization_concepts/02authconcepts/authconcepts.html"  class="external-link" target="_blank" rel="noopener">Authorization Concepts</a> documentation. It&rsquo;s rather old, but still valid.</p>
-<p>There is an authorization database on the system, with various rights, that can be asked for, and if the requirement are satisfied, authorization will be granted and the asked right will be given. Based on this it might sound that an authorization could give extra rights to our process, which is both true and false at the same time. Let&rsquo;s discuss first why it&rsquo;s not true, as I think this is the more confusing part.</p>
-<p>Let&rsquo;s say <strong>Process A</strong> runs as a regular user and asks for the <strong>Right X</strong>, which is required to perform <strong>Task A</strong>. Let&rsquo;s also assume that in order to perform <strong>Task A</strong> a process has to run as root, because it needs to write to a location where only root has access. Now, after obtaining <strong>Right X</strong>, will our process be able to perform <strong>Task A</strong>? The answer is: <del>NO</del>. It still runs as the standard user, which has no write access to that location. How can it still perform <strong>Task A</strong>? It can ask <strong>Process B</strong>, which runs as root, to perform <strong>Task A</strong> with showing the authorization <strong>Right X</strong>, which will be verified by <strong>Process B</strong>. If it can&rsquo;t obtain the right <strong>Process B</strong> will deny the request.</p>
+<p>Let's begin.</p>
+<h2 id="main-authorization-concept">Main authorization concept<a class="anchor" href="#main-authorization-concept" aria-label="link to this section">#</a></h2>
+<p>I think the concepts are best described at Apple's <a href="https://developer.apple.com/library/archive/documentation/Security/Conceptual/authorization_concepts/02authconcepts/authconcepts.html" rel="noopener">Authorization Concepts</a> documentation. It's rather old, but still valid.</p>
+<p>There is an authorization database on the system, with various rights, that can be asked for, and if the requirement are satisfied, authorization will be granted and the asked right will be given. Based on this it might sound that an authorization could give extra rights to our process, which is both true and false at the same time. Let's discuss first why it's not true, as I think this is the more confusing part.</p>
+<p>Let's say <strong>Process A</strong> runs as a regular user and asks for the <strong>Right X</strong>, which is required to perform <strong>Task A</strong>. Let's also assume that in order to perform <strong>Task A</strong> a process has to run as root, because it needs to write to a location where only root has access. Now, after obtaining <strong>Right X</strong>, will our process be able to perform <strong>Task A</strong>? The answer is: ~NO~. It still runs as the standard user, which has no write access to that location. How can it still perform <strong>Task A</strong>? It can ask <strong>Process B</strong>, which runs as root, to perform <strong>Task A</strong> with showing the authorization <strong>Right X</strong>, which will be verified by <strong>Process B</strong>. If it can't obtain the right <strong>Process B</strong> will deny the request.</p>
 <p>This example can also be done in another way. We only have <strong>Process B</strong> running as root. Prior to executing <strong>Task A</strong>, it will try to obtain the authorization <strong>Right X</strong>, and if successful it will do the task.</p>
-<p>These examples show that authorization is a self-restrictive model, which means that our standard POSIX processes won&rsquo;t have more privileges when obtaining a right but they can limit themselves to perform specific actions and tie it to an authorization right. I think this is crucial to understand going forward.</p>
+<p>These examples show that authorization is a self-restrictive model, which means that our standard POSIX processes won't have more privileges when obtaining a right but they can limit themselves to perform specific actions and tie it to an authorization right. I think this is crucial to understand going forward.</p>
 <p>The authorization rights that can be obtained are stored in the authorization database, which we will discuss next.</p>
-<h2 id="the-authorization-database">
-  The authorization database
-  <a class="heading-link" href="#the-authorization-database">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
+<h2 id="the-authorization-database">The authorization database<a class="anchor" href="#the-authorization-database" aria-label="link to this section">#</a></h2>
 <p>The default authorization PLIST file is located at <code>/System/Library/Security/authorization.plist</code>. This is the file that is used to initialize the SQLITE3 authorization database, which is located at <code>/var/db/auth.db</code>. The database is only readable and writeable for the root user. We have two ways to read and write to this database.</p>
-<ol>
-<li>Using the <code>security</code> command line tool</li>
-<li>Using <code>sqlite3</code> directly on the database</li>
-</ol>
-<p>The <code>security</code> command line tool has an <code>authorizationdb</code> argument which allows reading and writing to the DB. We can read as a normal user from the database using this tool, for any modifications we need to run it as root. Using <code>sqlite3</code> will only work if we run it as root, because of the file permissions.</p>
-<p>Let&rsquo;s review method one first. Here is an example reading out the <code>system.preferences.accounts</code> right, which is the right required to make changes to users.</p>
-<pre tabindex="0"><code>csaby@mac ~ % security authorizationdb read system.preferences.accounts
-&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;
-&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;
-&lt;plist version=&#34;1.0&#34;&gt;
+<ol><li>Using the <code>security</code> command line tool</li><li>Using <code>sqlite3</code> directly on the database</li></ol>
+<p>The <code>security</code> command line tool has an <code>authorizationdb</code> argument which allows reading and writing to the DB. We can read as a normal user from the database using this tool, for any modifications we need to run it as root. Using <code>sqlite3</code> will only work if we run it as root, because of the file permissions. </p>
+<p>Let's review method one first. Here is an example reading out the <code>system.preferences.accounts</code> right, which is the right required to make changes to users.</p>
+<pre><code>csaby@mac ~ % security authorizationdb read system.preferences.accounts
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
 &lt;dict&gt;
-	&lt;key&gt;allow-root&lt;/key&gt;
-	&lt;true/&gt;
-	&lt;key&gt;authenticate-user&lt;/key&gt;
-	&lt;true/&gt;
-	&lt;key&gt;class&lt;/key&gt;
-	&lt;string&gt;user&lt;/string&gt;
-	&lt;key&gt;comment&lt;/key&gt;
-	&lt;string&gt;Checked by the Admin framework when making changes to the Users &amp;amp; Groups preference pane.&lt;/string&gt;
-	&lt;key&gt;created&lt;/key&gt;
-	&lt;real&gt;609094350.06486595&lt;/real&gt;
-	&lt;key&gt;group&lt;/key&gt;
-	&lt;string&gt;admin&lt;/string&gt;
-	&lt;key&gt;modified&lt;/key&gt;
-	&lt;real&gt;609094350.06486595&lt;/real&gt;
-	&lt;key&gt;session-owner&lt;/key&gt;
-	&lt;false/&gt;
-	&lt;key&gt;shared&lt;/key&gt;
-	&lt;false/&gt;
-	&lt;key&gt;timeout&lt;/key&gt;
-	&lt;integer&gt;2147483647&lt;/integer&gt;
-	&lt;key&gt;tries&lt;/key&gt;
-	&lt;integer&gt;10000&lt;/integer&gt;
-	&lt;key&gt;version&lt;/key&gt;
-	&lt;integer&gt;0&lt;/integer&gt;
+    &lt;key&gt;allow-root&lt;/key&gt;
+    &lt;true/&gt;
+    &lt;key&gt;authenticate-user&lt;/key&gt;
+    &lt;true/&gt;
+    &lt;key&gt;class&lt;/key&gt;
+    &lt;string&gt;user&lt;/string&gt;
+    &lt;key&gt;comment&lt;/key&gt;
+    &lt;string&gt;Checked by the Admin framework when making changes to the Users &amp;amp; Groups preference pane.&lt;/string&gt;
+    &lt;key&gt;created&lt;/key&gt;
+    &lt;real&gt;609094350.06486595&lt;/real&gt;
+    &lt;key&gt;group&lt;/key&gt;
+    &lt;string&gt;admin&lt;/string&gt;
+    &lt;key&gt;modified&lt;/key&gt;
+    &lt;real&gt;609094350.06486595&lt;/real&gt;
+    &lt;key&gt;session-owner&lt;/key&gt;
+    &lt;false/&gt;
+    &lt;key&gt;shared&lt;/key&gt;
+    &lt;false/&gt;
+    &lt;key&gt;timeout&lt;/key&gt;
+    &lt;integer&gt;2147483647&lt;/integer&gt;
+    &lt;key&gt;tries&lt;/key&gt;
+    &lt;integer&gt;10000&lt;/integer&gt;
+    &lt;key&gt;version&lt;/key&gt;
+    &lt;integer&gt;0&lt;/integer&gt;
 &lt;/dict&gt;
 &lt;/plist&gt;
-YES (0)
-</code></pre><p>We get back a typical PLIST representation. We will review some of the key parts of the entry. The <code>class</code> key is set to <code>user</code>, which means that it&rsquo;s a user based right. <code>allow-root</code> being set to <code>true</code> means that the right will be granted for root, without any further authentication. The <code>authenticate-user</code> means to authenticate the user for this right, however this will be only effective if the user is in the <code>admin</code> group as specified later under the <code>group</code> key. This means that if our user is in this group, we can be authenticated, and if that is successful the right will be granted.</p>
-<p>There is another type of <code>class</code> for authorization, and it&rsquo;s not <code>user</code>, but <code>rule</code> based. The <code>config.remove.</code> right is an example for this.</p>
-<pre tabindex="0"><code>csaby@mac ~ % security authorizationdb read config.remove.
-&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;
-&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;
-&lt;plist version=&#34;1.0&#34;&gt;
+YES (0)</code></pre>
+<p>We get back a typical PLIST representation. We will review some of the key parts of the entry. The <code>class</code> key is set to <code>user</code>, which means that it's a user based right. <code>allow-root</code> being set to <code>true</code> means that the right will be granted for root, without any further authentication. The <code>authenticate-user</code> means to authenticate the user for this right, however this will be only effective if the user is in the <code>admin</code> group as specified later under the <code>group</code> key. This means that if our user is in this group, we can be authenticated, and if that is successful the right will be granted.</p>
+<p>There is another type of <code>class</code> for authorization, and it's not <code>user</code>, but <code>rule</code> based. The <code>config.remove.</code> right is an example for this.</p>
+<pre><code>csaby@mac ~ % security authorizationdb read config.remove.
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
 &lt;dict&gt;
-	&lt;key&gt;class&lt;/key&gt;
-	&lt;string&gt;rule&lt;/string&gt;
-	&lt;key&gt;comment&lt;/key&gt;
-	&lt;string&gt;Wildcard right for deleting rights.  Admins are allowed to delete any (non-wildcard) rights.  Root does not require authentication.&lt;/string&gt;
-	&lt;key&gt;created&lt;/key&gt;
-	&lt;real&gt;609094350.06486595&lt;/real&gt;
-	&lt;key&gt;k-of-n&lt;/key&gt;
-	&lt;integer&gt;1&lt;/integer&gt;
-	&lt;key&gt;modified&lt;/key&gt;
-	&lt;real&gt;609094350.06486595&lt;/real&gt;
-	&lt;key&gt;rule&lt;/key&gt;
-	&lt;array&gt;
-		&lt;string&gt;is-root&lt;/string&gt;
-		&lt;string&gt;authenticate-admin&lt;/string&gt;
-	&lt;/array&gt;
-	&lt;key&gt;version&lt;/key&gt;
-	&lt;integer&gt;0&lt;/integer&gt;
+    &lt;key&gt;class&lt;/key&gt;
+    &lt;string&gt;rule&lt;/string&gt;
+    &lt;key&gt;comment&lt;/key&gt;
+    &lt;string&gt;Wildcard right for deleting rights.  Admins are allowed to delete any (non-wildcard) rights.  Root does not require authentication.&lt;/string&gt;
+    &lt;key&gt;created&lt;/key&gt;
+    &lt;real&gt;609094350.06486595&lt;/real&gt;
+    &lt;key&gt;k-of-n&lt;/key&gt;
+    &lt;integer&gt;1&lt;/integer&gt;
+    &lt;key&gt;modified&lt;/key&gt;
+    &lt;real&gt;609094350.06486595&lt;/real&gt;
+    &lt;key&gt;rule&lt;/key&gt;
+    &lt;array&gt;
+        &lt;string&gt;is-root&lt;/string&gt;
+        &lt;string&gt;authenticate-admin&lt;/string&gt;
+    &lt;/array&gt;
+    &lt;key&gt;version&lt;/key&gt;
+    &lt;integer&gt;0&lt;/integer&gt;
 &lt;/dict&gt;
 &lt;/plist&gt;
-YES (0)
-</code></pre><p>Here we can see the authorization <code>class</code> is set to <code>rule</code>, and later on we have a <code>rule</code> key, which stores, well&hellip; rules. Here it&rsquo;s set to <code>is-root</code> and <code>authenticate-admin</code>. This means that the root user, and admin users after authentication can get this right.</p>
-<p>There is also a <code>k-of-n</code> key, which specifies how many of the rules specified in the army has to be satisfied for granting the rule. In this case it&rsquo;s <code>1</code>.</p>
+YES (0)</code></pre>
+<p>Here we can see the authorization <code>class</code> is set to <code>rule</code>, and later on we have a <code>rule</code> key, which stores, well... rules. Here it's set to <code>is-root</code> and <code>authenticate-admin</code>. This means that the root user, and admin users after authentication can get this right.</p>
+<p>There is also a <code>k-of-n</code> key, which specifies how many of the rules specified in the army has to be satisfied for granting the rule. In this case it's <code>1</code>.</p>
 <p>There is another important authorization class, which is <code>allow</code>,  and the <code>config.add.</code> right is a good example for this. This class means that anyone can get the right.</p>
-<pre tabindex="0"><code>csaby@mac ~ % security authorizationdb read config.add.   
-&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;
-&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;
-&lt;plist version=&#34;1.0&#34;&gt;
+<pre><code>csaby@mac ~ % security authorizationdb read config.add.   
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
 &lt;dict&gt;
-	&lt;key&gt;class&lt;/key&gt;
-	&lt;string&gt;allow&lt;/string&gt;
-	&lt;key&gt;comment&lt;/key&gt;
-	&lt;string&gt;Wildcard right for adding rights.  Anyone is allowed to add any (non-wildcard) rights.&lt;/string&gt;
-	&lt;key&gt;created&lt;/key&gt;
-	&lt;real&gt;609094350.06486595&lt;/real&gt;
-	&lt;key&gt;modified&lt;/key&gt;
-	&lt;real&gt;609094350.06486595&lt;/real&gt;
-	&lt;key&gt;version&lt;/key&gt;
-	&lt;integer&gt;0&lt;/integer&gt;
+    &lt;key&gt;class&lt;/key&gt;
+    &lt;string&gt;allow&lt;/string&gt;
+    &lt;key&gt;comment&lt;/key&gt;
+    &lt;string&gt;Wildcard right for adding rights.  Anyone is allowed to add any (non-wildcard) rights.&lt;/string&gt;
+    &lt;key&gt;created&lt;/key&gt;
+    &lt;real&gt;609094350.06486595&lt;/real&gt;
+    &lt;key&gt;modified&lt;/key&gt;
+    &lt;real&gt;609094350.06486595&lt;/real&gt;
+    &lt;key&gt;version&lt;/key&gt;
+    &lt;integer&gt;0&lt;/integer&gt;
 &lt;/dict&gt;
 &lt;/plist&gt;
-YES (0)
-</code></pre><p>This specific right is required to add an entry to the authorization database.</p>
-<p>There are other classes, like <code>evaluate-mechanisms</code>, which will list several <code>mechanisms</code>, which will be handled by various authorization plugins. I won&rsquo;t discuss this topic here. For the <code>rule</code> based rights, there are many other options to specify under the key, like <code>entitled</code> or <code>entitled-admin</code>.</p>
+YES (0)</code></pre>
+<p>This specific right is required to add an entry to the authorization database.</p>
+<p>There are other classes, like <code>evaluate-mechanisms</code>, which will list several <code>mechanisms</code>, which will be handled by various authorization plugins. I won't discuss this topic here. For the <code>rule</code> based rights, there are many other options to specify under the key, like <code>entitled</code> or <code>entitled-admin</code>.</p>
 <p>The other way reading this database is via sqlite3, which is less convenient as the columns are not so descriptive, however it allows us an easy dump and offline review of the database. We can dump it as follows.</p>
-<pre tabindex="0"><code>csaby@mac ~ % sudo sqlite3 /var/db/auth.db .dump &gt; auth.txt
-</code></pre><p>This will contain entries like the following:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">INSERT</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">INTO</span><span style="color:#bbb"> </span>rules<span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">VALUES</span>(<span style="color:#f60">130</span>,<span style="color:#c30">&#39;config.add.&#39;</span>,<span style="color:#f60">1</span>,<span style="color:#f60">4</span>,<span style="color:#069;font-weight:bold">NULL</span>,<span style="color:#069;font-weight:bold">NULL</span>,<span style="color:#069;font-weight:bold">NULL</span>,<span style="color:#f60">0</span>,<span style="color:#069;font-weight:bold">NULL</span>,<span style="color:#f60">0</span>,<span style="color:#f60">609094350</span>.<span style="color:#f60">06486594677</span>,<span style="color:#f60">609094350</span>.<span style="color:#f60">06486594677</span>,<span style="color:#069;font-weight:bold">NULL</span>,<span style="color:#069;font-weight:bold">NULL</span>,<span style="color:#069;font-weight:bold">NULL</span>,<span style="color:#c30">&#39;Wildcard right for adding rights.  Anyone is allowed to add any (non-wildcard) rights.&#39;</span>);<span style="color:#bbb">
-</span></span></span></code></pre></div><p>If we print the schema of the database, we can check what each entry means.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span>sqlite<span style="color:#555">&gt;</span><span style="color:#bbb"> </span>.<span style="color:#069;font-weight:bold">schema</span><span style="color:#bbb">
-</span></span></span><span style="display:flex;"><span>...<span style="color:#bbb">
-</span></span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">CREATE</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">TABLE</span><span style="color:#bbb"> </span>rules<span style="color:#bbb"> </span>(id<span style="color:#bbb"> </span><span style="color:#366">INTEGER</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">PRIMARY</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">KEY</span><span style="color:#bbb"> </span>AUTOINCREMENT<span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">UNIQUE</span>,name<span style="color:#bbb"> </span><span style="color:#366">TEXT</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">NOT</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">NULL</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">UNIQUE</span>,<span style="color:#069;font-weight:bold">type</span><span style="color:#bbb"> </span><span style="color:#366">INTEGER</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">CHECK</span><span style="color:#bbb"> </span>(<span style="color:#069;font-weight:bold">type</span><span style="color:#bbb"> </span><span style="color:#555">=</span><span style="color:#bbb"> </span><span style="color:#f60">1</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">OR</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">type</span><span style="color:#bbb"> </span><span style="color:#555">=</span><span style="color:#bbb"> </span><span style="color:#f60">2</span>)<span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">NOT</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">NULL</span>,<span style="color:#069;font-weight:bold">class</span><span style="color:#bbb"> </span><span style="color:#366">INTEGER</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">CHECK</span><span style="color:#bbb"> </span>(<span style="color:#069;font-weight:bold">class</span><span style="color:#bbb"> </span><span style="color:#555">&gt;</span><span style="color:#bbb"> </span><span style="color:#f60">0</span>),<span style="color:#c30">&#39;group&#39;</span><span style="color:#bbb"> </span><span style="color:#366">TEXT</span>,kofn<span style="color:#bbb"> </span><span style="color:#366">INTEGER</span>,timeout<span style="color:#bbb"> </span><span style="color:#366">INTEGER</span>,flags<span style="color:#bbb"> </span><span style="color:#366">INTEGER</span>,tries<span style="color:#bbb"> </span><span style="color:#366">INTEGER</span>,<span style="color:#069;font-weight:bold">version</span><span style="color:#bbb"> </span><span style="color:#366">INTEGER</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">NOT</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">NULL</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">DEFAULT</span><span style="color:#bbb"> </span>(<span style="color:#f60">0</span>),created<span style="color:#bbb"> </span><span style="color:#366">REAL</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">NOT</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">NULL</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">DEFAULT</span><span style="color:#bbb"> </span>(<span style="color:#f60">0</span>),modified<span style="color:#bbb"> </span><span style="color:#366">REAL</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">NOT</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">NULL</span><span style="color:#bbb"> </span><span style="color:#069;font-weight:bold">DEFAULT</span><span style="color:#bbb"> </span>(<span style="color:#f60">0</span>),hash<span style="color:#bbb"> </span><span style="color:#366">BLOB</span>,identifier<span style="color:#bbb"> </span><span style="color:#366">TEXT</span>,requirement<span style="color:#bbb"> </span><span style="color:#366">BLOB</span>,<span style="color:#069;font-weight:bold">comment</span><span style="color:#bbb"> </span><span style="color:#366">TEXT</span>);<span style="color:#bbb">
-</span></span></span><span style="display:flex;"><span>...<span style="color:#bbb">
-</span></span></span></code></pre></div><p>It has one great benefit, we can list all the rule names, which is not available through the other method, so if we search for a rule where we don&rsquo;t know its name exactly, this is the way we can get to it.</p>
-<p>There is one more interesting entry in some rules, which opens up lots of confusion, and that&rsquo;s the <code>requirement</code> key. We can typically see this when third party apps, especially privilege helper tools install new rights to the database. I have Proxyman installed, which entered the right <code>com.proxyman.NSProxy.HelperTool.overrideProxySystemPreferences</code>.</p>
-<pre tabindex="0"><code>csaby@mac ~ % security authorizationdb read com.proxyman.NSProxy.HelperTool.overrideProxySystemPreferences                                       
-&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;
-&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;
-&lt;plist version=&#34;1.0&#34;&gt;
+<pre><code>csaby@mac ~ % sudo sqlite3 /var/db/auth.db .dump &gt; auth.txt</code></pre>
+<p>This will contain entries like the following:</p>
+<pre><code class=language-sql>INSERT INTO rules VALUES(130,'config.add.',1,4,NULL,NULL,NULL,0,NULL,0,609094350.06486594677,609094350.06486594677,NULL,NULL,NULL,'Wildcard right for adding rights.  Anyone is allowed to add any (non-wildcard) rights.');</code></pre>
+<p>If we print the schema of the database, we can check what each entry means.</p>
+<pre><code class=language-sql>sqlite&gt; .schema
+...
+CREATE TABLE rules (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,name TEXT NOT NULL UNIQUE,type INTEGER CHECK (type = 1 OR type = 2) NOT NULL,class INTEGER CHECK (class &gt; 0),'group' TEXT,kofn INTEGER,timeout INTEGER,flags INTEGER,tries INTEGER,version INTEGER NOT NULL DEFAULT (0),created REAL NOT NULL DEFAULT (0),modified REAL NOT NULL DEFAULT (0),hash BLOB,identifier TEXT,requirement BLOB,comment TEXT);
+...</code></pre>
+<p>It has one great benefit, we can list all the rule names, which is not available through the other method, so if we search for a rule where we don't know its name exactly, this is the way we can get to it.</p>
+<p>There is one more interesting entry in some rules, which opens up lots of confusion, and that's the <code>requirement</code> key. We can typically see this when third party apps, especially privilege helper tools install new rights to the database. I have Proxyman installed, which entered the right <code>com.proxyman.NSProxy.HelperTool.overrideProxySystemPreferences</code>.</p>
+<pre><code>csaby@mac ~ % security authorizationdb read com.proxyman.NSProxy.HelperTool.overrideProxySystemPreferences                                       
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
 &lt;dict&gt;
-	&lt;key&gt;class&lt;/key&gt;
-	&lt;string&gt;rule&lt;/string&gt;
-	&lt;key&gt;created&lt;/key&gt;
-	&lt;real&gt;610018350.78242695&lt;/real&gt;
-	&lt;key&gt;default-prompt&lt;/key&gt;
-	&lt;dict&gt;
-		&lt;key&gt;&lt;/key&gt;
-		&lt;string&gt;Proxyman is trying to override Proxy config in System Preferences.&lt;/string&gt;
-	&lt;/dict&gt;
-	&lt;key&gt;identifier&lt;/key&gt;
-	&lt;string&gt;com.proxyman.NSProxy&lt;/string&gt;
-	&lt;key&gt;modified&lt;/key&gt;
-	&lt;real&gt;610018350.78242695&lt;/real&gt;
-	&lt;key&gt;requirement&lt;/key&gt;
-	&lt;string&gt;anchor apple generic and identifier &#34;com.proxyman.NSProxy&#34; and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = &#34;3X57WP8E8V&#34;)&lt;/string&gt;
-	&lt;key&gt;rule&lt;/key&gt;
-	&lt;array&gt;
-		&lt;string&gt;allow&lt;/string&gt;
-	&lt;/array&gt;
-	&lt;key&gt;version&lt;/key&gt;
-	&lt;integer&gt;0&lt;/integer&gt;
+    &lt;key&gt;class&lt;/key&gt;
+    &lt;string&gt;rule&lt;/string&gt;
+    &lt;key&gt;created&lt;/key&gt;
+    &lt;real&gt;610018350.78242695&lt;/real&gt;
+    &lt;key&gt;default-prompt&lt;/key&gt;
+    &lt;dict&gt;
+        &lt;key&gt;&lt;/key&gt;
+        &lt;string&gt;Proxyman is trying to override Proxy config in System Preferences.&lt;/string&gt;
+    &lt;/dict&gt;
+    &lt;key&gt;identifier&lt;/key&gt;
+    &lt;string&gt;com.proxyman.NSProxy&lt;/string&gt;
+    &lt;key&gt;modified&lt;/key&gt;
+    &lt;real&gt;610018350.78242695&lt;/real&gt;
+    &lt;key&gt;requirement&lt;/key&gt;
+    &lt;string&gt;anchor apple generic and identifier "com.proxyman.NSProxy" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "3X57WP8E8V")&lt;/string&gt;
+    &lt;key&gt;rule&lt;/key&gt;
+    &lt;array&gt;
+        &lt;string&gt;allow&lt;/string&gt;
+    &lt;/array&gt;
+    &lt;key&gt;version&lt;/key&gt;
+    &lt;integer&gt;0&lt;/integer&gt;
 &lt;/dict&gt;
 &lt;/plist&gt;
-YES (0)
-</code></pre><p>As we can see, there is a <code>requirement</code> key with a long code signing blob. In fact this is the <code>csreq</code> (=code signing requirement) of the application installed this right, which is Proxyman in this case. Using common sense, one would think that only apps satisfying the code signing requirement can obtain this right, however that is not right. This requirement has nothing to do about who can obtain the right. Anyone satisfying the <code>rule</code> can get it. In this particular case it&rsquo;s set to <code>allow</code>, which means anyone asking for the right will obtain it. This false understanding lead to privilege escalation bugs in the past, like <a href="https://blog.obdev.at/what-we-have-learned-from-a-vulnerability/"  class="external-link" target="_blank" rel="noopener">CVE-2019-13013</a>.</p>
+YES (0)</code></pre>
+<p>As we can see, there is a <code>requirement</code> key with a long code signing blob. In fact this is the <code>csreq</code> (=code signing requirement) of the application installed this right, which is Proxyman in this case. Using common sense, one would think that only apps satisfying the code signing requirement can obtain this right, however that is not right. This requirement has nothing to do about who can obtain the right. Anyone satisfying the <code>rule</code> can get it. In this particular case it's set to <code>allow</code>, which means anyone asking for the right will obtain it. This false understanding lead to privilege escalation bugs in the past, like <a href="https://blog.obdev.at/what-we-have-learned-from-a-vulnerability/" rel="noopener">CVE-2019-13013</a>.</p>
 <p>The only place where the <code>requirement</code> is (was) important is when we want to modify the rule.  We can find this in <code>Security-59306.61.1/OSX/authd/server.c</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">bool</span> <span style="color:#c0f">_prompt_for_modifications</span>(<span style="color:#078;font-weight:bold">process_t</span> __unused proc, <span style="color:#078;font-weight:bold">rule_t</span> __unused rule)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//    &lt;rdar://problem/13853228&gt; will put back it back at some later date
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//    SecRequirementRef ruleReq = rule_get_requirement(rule);
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//    if (ruleReq &amp;&amp; process_verify_requirment(proc, ruleReq)) {
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//        return false;
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">//    }
-</span></span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span> <span style="color:#366">true</span>;
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>We can see that if the process satisfies the code signing requirements then there is no need to prompt otherwise yes. However it was set to always prompt, due to some issues and the actual check is commented out.</p>
+<pre><code class=language-c>static bool _prompt_for_modifications(process_t __unused proc, rule_t __unused rule)
+{
+//    &lt;rdar://problem/13853228&gt; will put back it back at some later date
+//    SecRequirementRef ruleReq = rule_get_requirement(rule);
+//
+//    if (ruleReq &amp;&amp; process_verify_requirment(proc, ruleReq)) {
+//        return false;
+//    }
+    
+    return true;
+}</code></pre>
+<p>We can see that if the process satisfies the code signing requirements then there is no need to prompt otherwise yes. However it was set to always prompt, due to some issues and the actual check is commented out.</p>
 <p>Next I go back to the authorization concepts to discuss how these come into play in factored applications, because that can be interesting from security perspective.</p>
-<h2 id="factored-applications-privileged-helper-tools">
-  Factored applications (privileged helper tools)
-  <a class="heading-link" href="#factored-applications-privileged-helper-tools">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
+<h2 id="factored-applications-privileged-helper-tools">Factored applications (privileged helper tools)<a class="anchor" href="#factored-applications-privileged-helper-tools" aria-label="link to this section">#</a></h2>
 <p>Apple offers two main methods for applications to execute privilege actions. Using the <code>AuthorizationExecuteWithPrivileges</code> API, which is deprecated or using a factored application. A factored application means that we install a privileged helper tool through <code>launchd</code>, which runs as root, and we talk to this helper app through some form of IPC and asks action. The IPC is mostly XPC these days, however sockets, Mach, and Distributed Objects can be still found.</p>
-<p>Let&rsquo;s discuss briefly the deprecated API. This was extensively covered by Patrick Wardle in his <a href="https://objective-see.com/blog/blog_0x55.html"  class="external-link" target="_blank" rel="noopener">blogpost</a>, I will only do a high level overview here.</p>
+<p>Let's discuss briefly the deprecated API. This was extensively covered by Patrick Wardle in his <a href="https://objective-see.com/blog/blog_0x55.html" rel="noopener">blogpost</a>, I will only do a high level overview here. </p>
 <p>When this API is invoked, an XPC message will be sent to the authorization daemon, <code>authd</code>. It will check the database for the <code>system.privilege.admin</code> rule, and if needed authenticate the user through <code>Security Server</code>. If authorization was successful, <code>security_authtrampoline</code> will be invoked to execute the required binary. <code>security_authtrampoline</code> is a SUID binary, owned by root, so it will run with root privileges. It will also verify the authorization info before execution.</p>
-<p>This API is considered insecure, as <code>security_authtrampoline</code> won&rsquo;t perform any validation of the binary, and if it&rsquo;s writeable for the user, it opens the door for privilege escalations.</p>
-<p>Moving on to factored applications, authorization can work through several ways. The recommended way doing this is using pre-authorization for better performance, however it&rsquo;s not strictly needed as it doesn&rsquo;t add extra security. The process is illustrated on Apple&rsquo;s flow chart I took from the <a href="https://developer.apple.com/library/archive/documentation/Security/Conceptual/authorization_concepts/02authconcepts/authconcepts.html"  class="external-link" target="_blank" rel="noopener">Authorization Concepts</a> document.</p>
-<p><img src="https://theevilbit.github.io/images/macos_authorization/privilegedapp_2x.png" alt="Pre-authorization flow in the main app"></p>
-<p>The calling app has to create an empty <code>AuthorizationReference</code> first. If pre-authorization happening it needs to try to get authorization rights and ad it to the <code>AuthorizationReference</code>. When the application tries to obtain the rights it can chose if user prompting is allowed or not. However if user authentication is required by the specific rule for the given right, and the application doesn&rsquo;t allow prompting, the authorization will fail.</p>
+<p>This API is considered insecure, as <code>security_authtrampoline</code> won't perform any validation of the binary, and if it's writeable for the user, it opens the door for privilege escalations.</p>
+<p>Moving on to factored applications, authorization can work through several ways. The recommended way doing this is using pre-authorization for better performance, however it's not strictly needed as it doesn't add extra security. The process is illustrated on Apple's flow chart I took from the <a href="https://developer.apple.com/library/archive/documentation/Security/Conceptual/authorization_concepts/02authconcepts/authconcepts.html" rel="noopener">Authorization Concepts</a> document.</p>
+<p><img src="/images/macos_authorization/privilegedapp_2x.png" alt="Pre-authorization flow in the main app" loading="lazy"></p>
+<p>The calling app has to create an empty <code>AuthorizationReference</code> first. If pre-authorization happening it needs to try to get authorization rights and ad it to the <code>AuthorizationReference</code>. When the application tries to obtain the rights it can chose if user prompting is allowed or not. However if user authentication is required by the specific rule for the given right, and the application doesn't allow prompting, the authorization will fail.</p>
 <p>Next it needs to crate an <code>AuthorizationExternalForm</code> from the <code>AuthorizationReference</code>, and pass it to the helper tool. This external reference is a 32 byte long binary data, which, if guessed by any application it can be used and potentially lead to privilege escalation.</p>
-<p>The helper tool process is shown on Apple&rsquo;s drawing.</p>
-<p><img src="https://theevilbit.github.io/images/macos_authorization/helpertool_2x.png" alt="Authorization flow in helper tool"></p>
+<p>The helper tool process is shown on Apple's drawing.</p>
+<p><img src="/images/macos_authorization/helpertool_2x.png" alt="Authorization flow in helper tool" loading="lazy"></p>
 <p>The helper tool takes the <code>AuthorizationExternalForm</code> and converts it back to a <code>AuthorizationReference</code> and performs the authorization. If successful it will perform the privileged action.</p>
 <p>I need to highlight that the authorization which is happening at the privilege helper tool is happening on behalf of the original client based on the reference. This is important as the helper tool runs as root, and as such it could get almost any right from the system. When performing authorization it can chose again to prompt for user authentication or not. If it was done in the main app already during preauthorization, there is no need for that, otherwise yes.</p>
-<p>To give an example, let&rsquo;s examine the following logs. These are from my very first attempt to exploit F-Secure&rsquo;s XPC privileged helper tool, which I documented <a href="https://theevilbit.github.io/posts/secure_coding_xpc_part5/"  class="external-link" target="_blank" rel="noopener">here</a> in more detail.</p>
-<pre tabindex="0"><code>info	14:57:42.800020+0100	authd	Process /usr/local/f-secure/bin/fscsafeadmind.xpc (PID 300) evaluates 1 rights with flags 00000002 (engine 82): (
-    &#34;system.privilege.admin&#34;
+<p>To give an example, let's examine the following logs. These are from my very first attempt to exploit F-Secure's XPC privileged helper tool, which I documented <a href="/posts/secure_coding_xpc_part5/">here</a> in more detail.</p>
+<pre><code>info    14:57:42.800020+0100    authd    Process /usr/local/f-secure/bin/fscsafeadmind.xpc (PID 300) evaluates 1 rights with flags 00000002 (engine 82): (
+    "system.privilege.admin"
 )
-debug	14:57:42.800041+0100	authd	engine 82: user not used password
-debug	14:57:42.800060+0100	authd	engine 82: checking if rule system.privilege.admin contains password-only item
-debug	14:57:42.801121+0100	authd	engine 82: _preevaluate_rule system.privilege.admin
-debug	14:57:42.801198+0100	authd	engine 82: evaluate right system.privilege.admin
-debug	14:57:42.801316+0100	authd	engine 82: using rule system.privilege.admin
-error	14:57:42.801378+0100	authd	Fatal: interaction not allowed (kAuthorizationFlagInteractionAllowed not set) (engine 82)
-debug	14:57:42.801397+0100	authd	Failed to authorize right &#39;system.privilege.admin&#39; by client &#39;/usr/local/f-secure/bin/fscsafeadmind.xpc&#39; [300] for authorization created by &#39;/Users/csaby/Desktop/F-Secure Mac Protection.app&#39; [1180] (2,0) (-60007) (engine 82)
-debug	14:57:42.801444+0100	authd	engine 82: authorize result: -60007
-error	14:57:42.801471+0100	authd	copy_rights: authorization failed
-</code></pre><p>F-Secure used pre-authorization for sensitive actions, and it prompted the user during that phase on the main application. As preauthentication already happened, the privileged helper had no need to prompt for user interaction. Thus if authentication wasn&rsquo;t performed before, the privilege helper failed, and this is what we see in the logs, where I didn&rsquo;t do preauthorization. The <code>fscsafeadmind.xpc</code> process tries to obtain the <code>system.privilege.admin</code> right. We can see next that the rule is being evaluated, and then it fails. The log clearly indicates that the authorization was performed for the client <code>F-Secure Mac Protection.app</code> (where I injected my dylib).</p>
-<p>I still think that relying only on authorization only in privilege helper tools is not secure enough, as macOS users are used to get authentication prompts frequently and they will likely authenticate even if a malicious app asks for it. I discussed this in more detail <a href="https://theevilbit.github.io/posts/secure_coding_xpc_part1/"  class="external-link" target="_blank" rel="noopener">here</a>.</p>
+debug    14:57:42.800041+0100    authd    engine 82: user not used password
+debug    14:57:42.800060+0100    authd    engine 82: checking if rule system.privilege.admin contains password-only item
+debug    14:57:42.801121+0100    authd    engine 82: _preevaluate_rule system.privilege.admin
+debug    14:57:42.801198+0100    authd    engine 82: evaluate right system.privilege.admin
+debug    14:57:42.801316+0100    authd    engine 82: using rule system.privilege.admin
+error    14:57:42.801378+0100    authd    Fatal: interaction not allowed (kAuthorizationFlagInteractionAllowed not set) (engine 82)
+debug    14:57:42.801397+0100    authd    Failed to authorize right 'system.privilege.admin' by client '/usr/local/f-secure/bin/fscsafeadmind.xpc' [300] for authorization created by '/Users/csaby/Desktop/F-Secure Mac Protection.app' [1180] (2,0) (-60007) (engine 82)
+debug    14:57:42.801444+0100    authd    engine 82: authorize result: -60007
+error    14:57:42.801471+0100    authd    copy_rights: authorization failed</code></pre>
+<p>F-Secure used pre-authorization for sensitive actions, and it prompted the user during that phase on the main application. As preauthentication already happened, the privileged helper had no need to prompt for user interaction. Thus if authentication wasn't performed before, the privilege helper failed, and this is what we see in the logs, where I didn't do preauthorization. The <code>fscsafeadmind.xpc</code> process tries to obtain the <code>system.privilege.admin</code> right. We can see next that the rule is being evaluated, and then it fails. The log clearly indicates that the authorization was performed for the client <code>F-Secure Mac Protection.app</code> (where I injected my dylib).</p>
+<p>I still think that relying only on authorization only in privilege helper tools is not secure enough, as macOS users are used to get authentication prompts frequently and they will likely authenticate even if a malicious app asks for it. I discussed this in more detail <a href="/posts/secure_coding_xpc_part1/">here</a>.</p>
 <p>Next we will review how the Authorization API works.</p>
-<h2 id="the-authorization-api">
-  The Authorization API
-  <a class="heading-link" href="#the-authorization-api">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
+<h2 id="the-authorization-api">The Authorization API<a class="anchor" href="#the-authorization-api" aria-label="link to this section">#</a></h2>
 <p>I will start with a sample code I frequently use in XPC exploits to obtain an empty authorization.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>AuthorizationExternalForm <span style="color:#c0f">create_auth</span>(AuthorizationRef authref) {
-</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">//local variables
-</span></span></span><span style="display:flex;"><span>    NSData                      <span style="color:#555">*</span>authorization;
-</span></span><span style="display:flex;"><span>    OSStatus                    err;
-</span></span><span style="display:flex;"><span>    AuthorizationExternalForm   extForm;
-</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">//setup an empty authorization
-</span></span></span><span style="display:flex;"><span>     err <span style="color:#555">=</span> AuthorizationCreate(<span style="color:#366">NULL</span>, kAuthorizationEmptyEnvironment, kAuthorizationFlagDefaults, <span style="color:#555">&amp;</span>authref);
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>     <span style="color:#069;font-weight:bold">if</span> (err <span style="color:#555">==</span> errAuthorizationSuccess)
-</span></span><span style="display:flex;"><span>     {
-</span></span><span style="display:flex;"><span>         err <span style="color:#555">=</span> AuthorizationMakeExternalForm(authref, <span style="color:#555">&amp;</span>extForm);
-</span></span><span style="display:flex;"><span>     }
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span> extForm;
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>The first function we need to start with is <a href="https://developer.apple.com/documentation/security/1397453-authorizationcreate?language=objc"  class="external-link" target="_blank" rel="noopener">AuthorizationCreate</a>. With passing <code>kAuthorizationEmptyEnvironment</code> and  <code>kAuthorizationFlagDefaults</code> it will create an empty authorization reference. If successful we can convert it to an <code>AuthorizationExternalForm</code> using <a href="https://developer.apple.com/documentation/security/1397335-authorizationmakeexternalform?language=objc"  class="external-link" target="_blank" rel="noopener">AuthorizationMakeExternalForm</a>. This operation is normally successful as anyone can get an empty right.</p>
-<p>To obtain an actual authorization right we need to use the <a href="https://developer.apple.com/documentation/security/1395770-authorizationcopyrights?language=objc"  class="external-link" target="_blank" rel="noopener">AuthorizationCopyRights</a> function, shown below.</p>
-<pre tabindex="0"><code>AuthorizationCopyRights(
+<pre><code class=language-objectivec>AuthorizationExternalForm create_auth(AuthorizationRef authref) {
+    //local variables
+    NSData                      *authorization;
+    OSStatus                    err;
+    AuthorizationExternalForm   extForm;
+    //setup an empty authorization
+     err = AuthorizationCreate(NULL, kAuthorizationEmptyEnvironment, kAuthorizationFlagDefaults, &amp;authref);
+
+     if (err == errAuthorizationSuccess)
+     {
+         err = AuthorizationMakeExternalForm(authref, &amp;extForm);
+     }
+    return extForm;
+}</code></pre>
+<p>The first function we need to start with is <a href="https://developer.apple.com/documentation/security/1397453-authorizationcreate?language=objc" rel="noopener">AuthorizationCreate</a>. With passing <code>kAuthorizationEmptyEnvironment</code> and  <code>kAuthorizationFlagDefaults</code> it will create an empty authorization reference. If successful we can convert it to an <code>AuthorizationExternalForm</code> using <a href="https://developer.apple.com/documentation/security/1397335-authorizationmakeexternalform?language=objc" rel="noopener">AuthorizationMakeExternalForm</a>. This operation is normally successful as anyone can get an empty right.</p>
+<p>To obtain an actual authorization right we need to use the <a href="https://developer.apple.com/documentation/security/1395770-authorizationcopyrights?language=objc" rel="noopener">AuthorizationCopyRights</a> function, shown below.</p>
+<pre><code>AuthorizationCopyRights(
                 authRef,
                 &amp;rights,
                 NULL,
                 kAuthorizationFlagExtendRights | kAuthorizationFlagInteractionAllowed,
                 NULL
-            ); 
-</code></pre><p>This is the function where we can specify if we allow user interaction during obtaining the right or not using the <code>kAuthorizationFlagInteractionAllowed</code> flag.</p>
-<p>To interact with the database we can use <a href="https://developer.apple.com/documentation/security/1397961-authorizationrightget?language=objc"  class="external-link" target="_blank" rel="noopener">AuthorizationRightGet</a>, <a href="https://developer.apple.com/documentation/security/1399311-authorizationrightset?language=objc"  class="external-link" target="_blank" rel="noopener">AuthorizationRightSet</a> and <a href="https://developer.apple.com/documentation/security/1393681-authorizationrightremove?language=objc"  class="external-link" target="_blank" rel="noopener">AuthorizationRightRemove</a>.  The full API documentation is available at Apple&rsquo;s <a href="https://developer.apple.com/documentation/security/authorization_services?language=objc"  class="external-link" target="_blank" rel="noopener">Authorization Services Documentation</a>.</p>
+            ); </code></pre>
+<p>This is the function where we can specify if we allow user interaction during obtaining the right or not using the <code>kAuthorizationFlagInteractionAllowed</code> flag.</p>
+<p>To interact with the database we can use <a href="https://developer.apple.com/documentation/security/1397961-authorizationrightget?language=objc" rel="noopener">AuthorizationRightGet</a>, <a href="https://developer.apple.com/documentation/security/1399311-authorizationrightset?language=objc" rel="noopener">AuthorizationRightSet</a> and <a href="https://developer.apple.com/documentation/security/1393681-authorizationrightremove?language=objc" rel="noopener">AuthorizationRightRemove</a>.  The full API documentation is available at Apple's <a href="https://developer.apple.com/documentation/security/authorization_services?language=objc" rel="noopener">Authorization Services Documentation</a>.</p>
 <p>Next we will see how we can retrieve logs.</p>
-<h2 id="logs">
-  Logs
-  <a class="heading-link" href="#logs">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>In the past there was the <code>/var/log/authd.log</code> file, however since unified logging was introduced back in 2016, it faded away, and it doesn&rsquo;t exists anymore. If we need to read <code>authd</code> related logs we can query the <code>com.apple.Authorization</code> subsystem with the <code>log show</code> command as shown below.</p>
-<pre tabindex="0"><code>csaby@mac ~ % log show --style syslog --predicate &#39;subsystem == &#34;com.apple.Authorization&#34;&#39; --last 1h 
-Filtering the log data using &#34;subsystem == &#34;com.apple.Authorization&#34;&#34;
+<h2 id="logs">Logs<a class="anchor" href="#logs" aria-label="link to this section">#</a></h2>
+<p>In the past there was the <code>/var/log/authd.log</code> file, however since unified logging was introduced back in 2016, it faded away, and it doesn't exists anymore. If we need to read <code>authd</code> related logs we can query the <code>com.apple.Authorization</code> subsystem with the <code>log show</code> command as shown below.</p>
+<pre><code>csaby@mac ~ % log show --style syslog --predicate 'subsystem == "com.apple.Authorization"' --last 1h 
+Filtering the log data using "subsystem == "com.apple.Authorization""
 Skipping info and debug messages, pass --info and/or --debug to include.
 Timestamp                       (process)[PID]    
 2020-10-21 23:13:48.701287+0200  localhost authd[230]: [com.apple.Authorization:authd] session owner 501 is member of group admin (does satisfy rule) (engine 6437)
-2020-10-21 23:13:48.799285+0200  localhost authd[230]: [com.apple.Authorization:authd] engine 6437: running mechanism builtin:authenticate (1 of 4)
-</code></pre><h2 id="exploitation-consideration">
-  Exploitation consideration
-  <a class="heading-link" href="#exploitation-consideration">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>I wanted to document two issues I run into during exploit development, and it took me long time to figure out what&rsquo;s the problem, and why authorization fails.</p>
-<p>If we run a binary from a TCC protected location, like <code>Desktop</code> authorization will fail. This is because <code>authd</code> doesn&rsquo;t have access to these places, and thus error out. Running the same application from <code>/tmp/</code> or any other place which is not privacy protected will work.</p>
+2020-10-21 23:13:48.799285+0200  localhost authd[230]: [com.apple.Authorization:authd] engine 6437: running mechanism builtin:authenticate (1 of 4)</code></pre>
+<h2 id="exploitation-consideration">Exploitation consideration<a class="anchor" href="#exploitation-consideration" aria-label="link to this section">#</a></h2>
+<p>I wanted to document two issues I run into during exploit development, and it took me long time to figure out what's the problem, and why authorization fails.</p>
+<p>If we run a binary from a TCC protected location, like <code>Desktop</code> authorization will fail. This is because <code>authd</code> doesn't have access to these places, and thus error out. Running the same application from <code>/tmp/</code> or any other place which is not privacy protected will work.</p>
 <p>If we pass <code>AuthorizationExternalForm</code> via IPC to another process, we must wait till the target process consumes our request and performs authorization, as if the calling application exists too fast or uses <code>AuthorizationFree</code> on the original <code>AuthorizationReference</code> the <code>AuthorizationExternalForm</code> will be invalidated by the system, and thus authorization will fail.</p>
-<h2 id="wrap-up">
-  Wrap up
-  <a class="heading-link" href="#wrap-up">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
+<h2 id="wrap-up">Wrap up<a class="anchor" href="#wrap-up" aria-label="link to this section">#</a></h2>
 <p>I hope this post will be useful for others as well who wants to dive into the authorization framework on macOS. I put together a reference where someone can read even further, these are the posts I used as a resource, and I recommend them as further reading.</p>
-<p>The framework is open sourced by Apple, and it can be found in the <a href="https://opensource.apple.com/tarballs/Security/"  class="external-link" target="_blank" rel="noopener">Security</a> pack.</p>
-<h2 id="references">
-  References
-  <a class="heading-link" href="#references">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<ol>
-<li><a href="https://theevilbit.github.io/posts/secure_coding_xpc_part1/"  class="external-link" target="_blank" rel="noopener">Secure coding XPC services - Part 1 - Why EvenBetterAuthorization is not enough? (CVE-2019-20057)</a></li>
-<li><a href="https://developer.apple.com/library/archive/documentation/Security/Conceptual/authorization_concepts/02authconcepts/authconcepts.html"  class="external-link" target="_blank" rel="noopener">Authorization Concepts</a></li>
-<li><a href="https://developer.apple.com/documentation/security/1540038-authorizationexecutewithprivileg"  class="external-link" target="_blank" rel="noopener">AuthorizationExecuteWithPrivileges</a></li>
-<li><a href="https://www.dssw.co.uk/blog/2013-10-26-authorization-rights-and-mavericks/"  class="external-link" target="_blank" rel="noopener">Authorization Rights and Mavericks</a></li>
-<li><a href="https://www.dssw.co.uk/reference/authorization-rights/"  class="external-link" target="_blank" rel="noopener">Authorization Rights available on macOS</a></li>
-<li><a href="https://scriptingosx.com/2018/05/demystifying-root-on-macos-part-4-the-authorization-database/"  class="external-link" target="_blank" rel="noopener">Demystifying root on macOS, Part 4 —The Authorization Database – Scripting OS X</a></li>
-<li><a href="https://derflounder.wordpress.com/2014/02/16/managing-the-authorization-database-in-os-x-mavericks/"  class="external-link" target="_blank" rel="noopener">Managing the Authorization Database in OS X Mavericks | Der Flounder</a></li>
-<li><a href="https://a2nkf.github.io/unauthd_Logic_bugs_FTW/"  class="external-link" target="_blank" rel="noopener">Unauthd</a></li>
-<li><a href="https://objective-see.com/blog/blog_0x55.html"  class="external-link" target="_blank" rel="noopener">Sniffing Authentication References on macOS</a></li>
-<li><a href="https://blog.obdev.at/what-we-have-learned-from-a-vulnerability/"  class="external-link" target="_blank" rel="noopener">The Story Behind CVE-2019-13013</a></li>
-</ol>
-
-      </div>
-
-
-      <footer>
-        
-
-
-        
-        
-        
-        
-        
-        
-        
-      </footer>
-    </article>
-
-    
-  </section>
-
-    </div>
-
-    <footer class="footer">
-  <section class="container">
-    ©
-    
-      2019 -
-    
-    2026
-     Csaba Fitzl 
-    ·
-    
-    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
-    
-  </section>
-</footer>
-
-  </main>
-
-  
-
-  
-  
-  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
-  
-
-  
-
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
+<p>The framework is open sourced by Apple, and it can be found in the <a href="https://opensource.apple.com/tarballs/Security/" rel="noopener">Security</a> pack.</p>
+<h2 id="references">References<a class="anchor" href="#references" aria-label="link to this section">#</a></h2>
+<ol><li><a href="/posts/secure_coding_xpc_part1/">Secure coding XPC services - Part 1 - Why EvenBetterAuthorization is not enough? (CVE-2019-20057)</a></li><li><a href="https://developer.apple.com/library/archive/documentation/Security/Conceptual/authorization_concepts/02authconcepts/authconcepts.html" rel="noopener">Authorization Concepts</a></li><li><a href="https://developer.apple.com/documentation/security/1540038-authorizationexecutewithprivileg" rel="noopener">AuthorizationExecuteWithPrivileges</a></li><li><a href="https://www.dssw.co.uk/blog/2013-10-26-authorization-rights-and-mavericks/" rel="noopener">Authorization Rights and Mavericks</a></li><li><a href="https://www.dssw.co.uk/reference/authorization-rights/" rel="noopener">Authorization Rights available on macOS</a></li><li><a href="https://scriptingosx.com/2018/05/demystifying-root-on-macos-part-4-the-authorization-database/" rel="noopener">Demystifying root on macOS, Part 4 —The Authorization Database – Scripting OS X</a></li><li><a href="https://derflounder.wordpress.com/2014/02/16/managing-the-authorization-database-in-os-x-mavericks/" rel="noopener">Managing the Authorization Database in OS X Mavericks | Der Flounder</a></li><li><a href="https://a2nkf.github.io/unauthd_Logic_bugs_FTW/" rel="noopener">Unauthd</a></li><li><a href="https://objective-see.com/blog/blog_0x55.html" rel="noopener">Sniffing Authentication References on macOS</a></li><li><a href="https://blog.obdev.at/what-we-have-learned-from-a-vulnerability/" rel="noopener">The Story Behind CVE-2019-13013</a></li></ol></div>
+<nav class="pn"><a class="prev" href="/posts/cve_2020_9771/"><span>← previous</span>CVE-2020-9771 - mount_apfs TCC bypass and privilege escalation</a><a class="next" href="/posts/microsoft_teams_lpe/"><span>next →</span>NOCVE - Microsoft Teams for macOS Local Privilege Escalation</a></nav></article></main>
+  <footer class="foot">
+    <span>© 2026 Csaba Fitzl</span>
+    <span class="social"><a href="https://github.com/theevilbit/" rel="me noopener">GitHub</a><a href="https://x.com/theevilbit" rel="me noopener">X</a><a href="/index.xml" rel="me noopener">RSS</a></span>
+  </footer>
+</div>
+<script>
+document.getElementById("theme").addEventListener("click", function () {
+  var t = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem("tb.theme", t); } catch (e) {}
+});
+</script>
 </body>
 </html>

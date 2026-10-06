@@ -1,465 +1,78 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-  <title>
-  Getting started in macOS security · theevilbit blog
-</title>
-  <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light dark">
-
-
-
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Getting started in macOS security · theevilbit</title>
+<meta name="description" content="Many people used to ask me where to start learning about macOS security or exploitation, what are the trainings or books out there that can help with this topic. Nowadays there are a few trainings, which can get you star">
 <meta name="author" content="Csaba Fitzl">
-<meta name="description" content="Many people used to ask me where to start learning about macOS security or exploitation, what are the trainings or books out there that can help with this topic. Nowadays there are a few trainings, which can get you started. Other great resources for macOS security are blog posts and conference talks.
-I thought I will try to collect some resources that can help people to get started in this field.">
-<meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
-
-
-
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Getting started in macOS security">
-  <meta name="twitter:description" content="Many people used to ask me where to start learning about macOS security or exploitation, what are the trainings or books out there that can help with this topic. Nowadays there are a few trainings, which can get you started. Other great resources for macOS security are blog posts and conference talks.
-I thought I will try to collect some resources that can help people to get started in this field.">
-
-<meta property="og:url" content="https://theevilbit.github.io/posts/getting_started_in_macos_security/">
-  <meta property="og:site_name" content="theevilbit blog">
-  <meta property="og:title" content="Getting started in macOS security">
-  <meta property="og:description" content="Many people used to ask me where to start learning about macOS security or exploitation, what are the trainings or books out there that can help with this topic. Nowadays there are a few trainings, which can get you started. Other great resources for macOS security are blog posts and conference talks.
-I thought I will try to collect some resources that can help people to get started in this field.">
-  <meta property="og:locale" content="en">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2021-09-27T00:00:00+00:00">
-    <meta property="article:modified_time" content="2021-09-27T00:00:00+00:00">
-    <meta property="article:tag" content="Macos">
-    <meta property="article:tag" content="Training">
-
-
-
-
 <link rel="canonical" href="https://theevilbit.github.io/posts/getting_started_in_macos_security/">
-
-
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
-
-
-  
-  
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
-
-
-
-
-
-
-  
-    
-    
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
-  
-
-
-
- 
-
-
-
-
-<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
-
-<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-
-<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
-<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
-
-
-
-
-
-
-
-
-
+<link rel="alternate" type="application/rss+xml" title="theevilbit" href="/index.xml">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>try { var t = localStorage.getItem("tb.theme"); document.documentElement.dataset.theme = t || "dark"; } catch (e) { document.documentElement.dataset.theme = "dark"; }</script>
+<link rel="preload" href="/fonts/IBMPlexSans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts.css?v=1791269065">
+<link rel="stylesheet" href="/style.css?v=1791269065">
 </head>
-
-
-
-
-
-
-<body class="preload-transitions colorscheme-auto">
-  
-<div class="float-container">
-    <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
-    </a>
-</div>
-
-
-  <main class="wrapper">
-    <nav class="navigation">
-  <section class="container">
-    
-    <a class="navigation-title" href="https://theevilbit.github.io/">
-      theevilbit blog
-    </a>
-    
-    
-      <input type="checkbox" id="menu-toggle" />
-      <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
-      </label>
-      <ul class="navigation-list">
-        
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/posts/">Posts</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/shield/">Shield.app</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/tags/">Tags</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/about/">About</a>
-            </li>
-          
-        
-        
-      </ul>
-    
-  </section>
-</nav>
-
-
-    <div class="content">
-      
-  <section class="container post">
-    <article>
-      <header>
-        <div class="post-title">
-          <h1 class="title">
-            <a class="title-link" href="https://theevilbit.github.io/posts/getting_started_in_macos_security/">
-              Getting started in macOS security
-            </a>
-          </h1>
-        </div>
-        <div class="post-meta">
-          <div class="date">
-            <span class="posted-on">
-              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
-              <time datetime="2021-09-27T00:00:00Z">
-                September 27, 2021
-              </time>
-            </span>
-            <span class="reading-time">
-              <i class="fa-solid fa-clock" aria-hidden="true"></i>
-              6-minute read
-            </span>
-          </div>
-          
-          <div class="categories">
-  <i class="fa-solid fa-folder" aria-hidden="true"></i>
-    <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
-
-          <div class="tags">
-  <i class="fa-solid fa-tag" aria-hidden="true"></i>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/macos/">Macos</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/training/">Training</a>
-    </span></div>
-
-        </div>
-      </header>
-
-      <div class="post-content">
-        
-        <p>Many people used to ask me where to start learning about macOS security or exploitation, what are the trainings or books out there that can help with this topic. Nowadays there are a few trainings, which can get you started. Other great resources for macOS security are blog posts and conference talks.</p>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/">the<span>evil</span>bit<i class="cursor"></i></a>
+    <nav class="nav"><a href="/posts/" class=on>Posts</a><a href="/beyond/">Beyond</a><a href="/talks/">Talks</a><a href="/shield/">Shield</a><a href="/about/">About</a><a href="/tags/">Tags</a></nav>
+    <button type="button" class="theme" id="theme" aria-label="switch light / dark">◐</button>
+  </header>
+  <main><article class="post">
+<header class="post-head"><h1>Getting started in macOS security</h1>
+<div class="meta"><time datetime="2021-09-27">Sep 27, 2021</time><span>5 min read</span><span class="tags"><a class="tag" href="/tags/macos/">macos</a><a class="tag" href="/tags/training/">training</a></span></div></header>
+<details class="toc"><summary>Contents</summary><ol><li class="l2"><a href="#training">Training</a></li><li class="l3"><a href="#internals">Internals</a></li><li class="l3"><a href="#offense">Offense</a></li><li class="l3"><a href="#defense">Defense</a></li><li class="l2"><a href="#books">Books</a></li><li class="l3"><a href="#internals-1">Internals</a></li><li class="l3"><a href="#exploitation">Exploitation</a></li><li class="l3"><a href="#malware-dfir">Malware &amp; DFIR</a></li><li class="l3"><a href="#programming">Programming</a></li><li class="l3"><a href="#reverse-engineering">Reverse engineering</a></li><li class="l2"><a href="#blogs">Blogs</a></li><li class="l2"><a href="#conference-talks-and-papers">Conference Talks and Papers</a></li><li class="l2"><a href="#apple">Apple</a></li></ol></details><div class="prose"><p>Many people used to ask me where to start learning about macOS security or exploitation, what are the trainings or books out there that can help with this topic. Nowadays there are a few trainings, which can get you started. Other great resources for macOS security are blog posts and conference talks.</p>
 <p>I thought I will try to collect some resources that can help people to get started in this field.</p>
-<h2 id="training">
-  Training
-  <a class="heading-link" href="#training">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>There are quite a few trainings as of 2021, this wasn&rsquo;t the case in the past, but as the popularity of macOS is growing, so the training offerings.</p>
-<h3 id="internals">
-  Internals
-  <a class="heading-link" href="#internals">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<ul>
-<li>
-<p><a href="https://twitter.com/i0n1c"  class="external-link" target="_blank" rel="noopener">Stefan Esser</a> created <a href="https://www.antid0te.com/stories/training.html"  class="external-link" target="_blank" rel="noopener">iOS and MacOS Kernel Internals for Security Researchers</a>, this one focuses on macOS kernel internals as the name suggests.</p>
-</li>
-<li>
-<p>The other is created by <a href="https://twitter.com/Technologeeks"  class="external-link" target="_blank" rel="noopener">Jonathan Levin / Technologeeks</a>, and is more broadly about <a href="http://technologeeks.com/courses.jl"  class="external-link" target="_blank" rel="noopener">OSX and iOS internals and security</a>. Although it&rsquo;s not offered live anymore, an online version should come out&hellip; but no one knows when, it&rsquo;s being promised for to years now.</p>
-</li>
-</ul>
-<h3 id="offense">
-  Offense
-  <a class="heading-link" href="#offense">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<ul>
-<li>
-<p><a href="https://www.offensive-security.com/"  class="external-link" target="_blank" rel="noopener">Offensive Security</a> offers now a full blown course, which covers macOS internals basics, vulnerability research, exploitation and pentesting macOS machines. It&rsquo;s called <a href="https://www.offensive-security.com/exp312-osmr/"  class="external-link" target="_blank" rel="noopener">macOS Control Bypasses</a>, and was created by myself.</p>
-</li>
-<li>
-<p><a href="https://specterops.io/"  class="external-link" target="_blank" rel="noopener">SpecterOps</a> offers <a href="https://specterops.io/how-we-help/training-offerings/adversary-tactics-mac-tradecraft"  class="external-link" target="_blank" rel="noopener">Adversary Tactics: Mac Tradecraft</a> and it&rsquo;s focused on Red Teaming specifically vs exploitation. It&rsquo;s only offered live, and it&rsquo;s 2 day long.</p>
-</li>
-<li>
-<p><a href="https://www.mdsec.co.uk/"  class="external-link" target="_blank" rel="noopener">MDSec Labs</a> covers macOS in their 4-day <a href="https://www.mdsec.co.uk/training/adversary-simulation-red-team-tactics/"  class="external-link" target="_blank" rel="noopener">Adversary Simulation and Red Team Tactics</a> training. It&rsquo;s limited to the last day, when Linux is also covered, and just like SpecterOps it&rsquo;s focusing on Red Teaming.</p>
-</li>
-</ul>
-<h3 id="defense">
-  Defense
-  <a class="heading-link" href="#defense">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<ul>
-<li><a href="https://www.sans.org/"  class="external-link" target="_blank" rel="noopener">SANS</a> has a <a href="https://www.sans.org/cyber-security-courses/mac-and-ios-forensic-analysis-and-incident-response/"  class="external-link" target="_blank" rel="noopener">Mac &amp; IOS Forensic Analysis &amp; Incident Response Training | SANS FOR518</a>, which is created by <a href="https://twitter.com/iamevltwin"  class="external-link" target="_blank" rel="noopener">Sarah Edwards</a>.</li>
-</ul>
-<h2 id="books">
-  Books
-  <a class="heading-link" href="#books">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>Similarly to the trainings there are not really books about macOS exploitation. There are two, but they are rather dated. The rest are mostly programming guides, or covering macOS internals.  All of them, expect Levin&rsquo;s new series are dated, but it doesn&rsquo;t mean there is no useful information in them.</p>
+<h2 id="training">Training<a class="anchor" href="#training" aria-label="link to this section">#</a></h2>
+<p>There are quite a few trainings as of 2021, this wasn't the case in the past, but as the popularity of macOS is growing, so the training offerings.</p>
+<h3 id="internals">Internals<a class="anchor" href="#internals" aria-label="link to this section">#</a></h3>
+<ul><li><a href="https://twitter.com/i0n1c" rel="noopener">Stefan Esser</a> created <a href="https://www.antid0te.com/stories/training.html" rel="noopener">iOS and MacOS Kernel Internals for Security Researchers</a>, this one focuses on macOS kernel internals as the name suggests.</li><li>The other is created by <a href="https://twitter.com/Technologeeks" rel="noopener">Jonathan Levin / Technologeeks</a>, and is more broadly about <a href="http://technologeeks.com/courses.jl" rel="noopener">OSX and iOS internals and security</a>. Although it's not offered live anymore, an online version should come out... but no one knows when, it's being promised for to years now.</li></ul>
+<h3 id="offense">Offense<a class="anchor" href="#offense" aria-label="link to this section">#</a></h3>
+<ul><li><a href="https://www.offensive-security.com/" rel="noopener">Offensive Security</a> offers now a full blown course, which covers macOS internals basics, vulnerability research, exploitation and pentesting macOS machines. It's called <a href="https://www.offensive-security.com/exp312-osmr/" rel="noopener">macOS Control Bypasses</a>, and was created by myself.</li><li><a href="https://specterops.io/" rel="noopener">SpecterOps</a> offers <a href="https://specterops.io/how-we-help/training-offerings/adversary-tactics-mac-tradecraft" rel="noopener">Adversary Tactics: Mac Tradecraft</a> and it's focused on Red Teaming specifically vs exploitation. It's only offered live, and it's 2 day long.</li><li><a href="https://www.mdsec.co.uk/" rel="noopener">MDSec Labs</a> covers macOS in their 4-day <a href="https://www.mdsec.co.uk/training/adversary-simulation-red-team-tactics/" rel="noopener">Adversary Simulation and Red Team Tactics</a> training. It's limited to the last day, when Linux is also covered, and just like SpecterOps it's focusing on Red Teaming.</li></ul>
+<h3 id="defense">Defense<a class="anchor" href="#defense" aria-label="link to this section">#</a></h3>
+<ul><li><a href="https://www.sans.org/" rel="noopener">SANS</a> has a <a href="https://www.sans.org/cyber-security-courses/mac-and-ios-forensic-analysis-and-incident-response/" rel="noopener">Mac &amp; IOS Forensic Analysis &amp; Incident Response Training | SANS FOR518</a>, which is created by <a href="https://twitter.com/iamevltwin" rel="noopener">Sarah Edwards</a>. </li></ul>
+<h2 id="books">Books<a class="anchor" href="#books" aria-label="link to this section">#</a></h2>
+<p>Similarly to the trainings there are not really books about macOS exploitation. There are two, but they are rather dated. The rest are mostly programming guides, or covering macOS internals.  All of them, expect Levin's new series are dated, but it doesn't mean there is no useful information in them.</p>
 <p>When it comes to defense, there are two <strong>free</strong> ebooks about macOS malware, which are up-to-date! This is pretty good considering how everything else is so much old.</p>
 <p>Here follows a list, that I think can be useful for security:</p>
-<h3 id="internals-1">
-  Internals
-  <a class="heading-link" href="#internals-1">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<ul>
-<li><a href="https://amazon.com/Mac-OS-Internals-Systems-Approach/dp/0321278542/"  class="external-link" target="_blank" rel="noopener">Amit Singh - Mac OS X Internals: A Systems Approach</a> - The first(?) book about OSX internals, it was released in 2006. It&rsquo;s rather old, however some old items which can be still relevant today are still documented here. It also contains many source code samples, so can be a useful go-to resource.</li>
-<li><a href="https://www.amazon.com/Mac-OS-iOS-Internals-Apples/dp/1118057651"  class="external-link" target="_blank" rel="noopener">Jonathan Levin - Mac OS X and iOS Internals: To the Apple&rsquo;s Core</a> - The first book of Jonathan Levin about *OS internals. It&rsquo;s also dated, but sometimes still relevant and some items better explained here as in the new books, or at least I found it easier to read sometimes. It&rsquo;s available for <strong>free</strong> from the author&rsquo;s website: <a href="http://newosxbook.com/MOXiI.pdf"  class="external-link" target="_blank" rel="noopener">MOXiI.pdf</a></li>
-<li><a href="http://newosxbook.com/index.php"  class="external-link" target="_blank" rel="noopener">Jonathan Levin - *OS Internals Vol I-II-III</a> - The most current books about *OS internals, and it&rsquo;s up-to-date till macOS Catalina. This is a must have series for anyone who is serious about the subject.</li>
-<li><a href="https://support.apple.com/guide/security/welcome/1/web"  class="external-link" target="_blank" rel="noopener">Apple Platform Security</a> - Apple&rsquo;s own page about the security of their platform.</li>
-<li><a href="https://www.peachpit.com/store/macos-support-essentials-11-apple-pro-training-series-9780137345953"  class="external-link" target="_blank" rel="noopener">macOS Support Essentials 11 - Apple Pro Training Series: Supporting and Troubleshooting macOS Big Sur</a> - This book is targeted for macadmins, however it contains a great deal of macOS internals as well.</li>
-</ul>
-<h3 id="exploitation">
-  Exploitation
-  <a class="heading-link" href="#exploitation">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<ul>
-<li><a href="https://www.wiley.com/en-us/The&#43;Mac&#43;Hacker%27s&#43;Handbook-p-9781118080337"  class="external-link" target="_blank" rel="noopener">Charlie Miller, Dino Dai Zovi - The Mac Hacker&rsquo;s Handbook</a> -  The only book dedicated to OSX exploitation. It was released in 2011, so it&rsquo;s rather old, and not so relevant anymore. It can be still useful for limited amount of information.</li>
-<li><a href="https://www.amazon.com/Guide-Kernel-Exploitation-Attacking-Core/dp/1597494860/"  class="external-link" target="_blank" rel="noopener">Enrico Perla, Massimiliano Oldani - A Guide to Kernel Exploitation: Attacking the Core</a> - Deals with kernel exploitation of OSX Leopard, which was ages ago. The concepts are not relevant in modern day macOS, however could be a good start to get an intro into macOS kernel exploitation</li>
-</ul>
-<h3 id="malware--dfir">
-  Malware &amp; DFIR
-  <a class="heading-link" href="#malware--dfir">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<ul>
-<li><a href="https://www.sentinelone.com/blog/reversing-macos-malware-ebook-intro-by-patrick-wardle/"  class="external-link" target="_blank" rel="noopener">Phil Stokes - How To Reverse Malware on macOS Without Getting Infected</a> - A new, free ebook about analyzing malware on macOS.</li>
-<li><a href="https://taomm.org/"  class="external-link" target="_blank" rel="noopener">Patrick Wardle - The Art Of Mac Malware</a> - Another free ebook about analyzing macOS malware, more detailed than the other one.</li>
-<li><a href="https://www.elsevier.com/books/os-x-incident-response/bradley/978-0-12-804456-8"  class="external-link" target="_blank" rel="noopener">Jaron Bradley - OS X Incident Response - 1st Edition</a> - The only book to cover incident response and forensics.</li>
-</ul>
-<h3 id="programming">
-  Programming
-  <a class="heading-link" href="#programming">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<ul>
-<li><a href="https://www.amazon.com/OS-X-iOS-Kernel-Programming/dp/1430235365"  class="external-link" target="_blank" rel="noopener">Ole Henry Halvorsen, Douglas Clarke - OS X and iOS Kernel Programming</a> - It&rsquo;s a developer book, but a very useful resource for macOS kernel programming.</li>
-<li><a href="https://amazon.com/Professional-Cocoa-Application-Security-Graham/dp/0470525959/"  class="external-link" target="_blank" rel="noopener">Graham J Lee - Professional Cocoa Application Security</a> - A book for developers about secure coding. As it&rsquo;s from 2010, it&rsquo;s also old, however still can be a good resource for certain topics or to better understand why some apps work the way they work.</li>
-</ul>
-<h3 id="reverse-engineering">
-  Reverse engineering
-  <a class="heading-link" href="#reverse-engineering">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<ul>
-<li><a href="https://www.raywenderlich.com/books/advanced-apple-debugging-reverse-engineering/v3.0"  class="external-link" target="_blank" rel="noopener">Derek Selander - Advanced Apple Debugging &amp; Reverse Engineering</a> - A book about debugging, tracing applications.</li>
-</ul>
-<h2 id="blogs">
-  Blogs
-  <a class="heading-link" href="#blogs">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
+<h3 id="internals-1">Internals<a class="anchor" href="#internals-1" aria-label="link to this section">#</a></h3>
+<ul><li><a href="https://amazon.com/Mac-OS-Internals-Systems-Approach/dp/0321278542/" rel="noopener">Amit Singh - Mac OS X Internals: A Systems Approach</a> - The first(?) book about OSX internals, it was released in 2006. It's rather old, however some old items which can be still relevant today are still documented here. It also contains many source code samples, so can be a useful go-to resource.</li><li><a href="https://www.amazon.com/Mac-OS-iOS-Internals-Apples/dp/1118057651" rel="noopener">Jonathan Levin - Mac OS X and iOS Internals: To the Apple's Core</a> - The first book of Jonathan Levin about *OS internals. It's also dated, but sometimes still relevant and some items better explained here as in the new books, or at least I found it easier to read sometimes. It's available for <strong>free</strong> from the author's website: <a href="http://newosxbook.com/MOXiI.pdf" rel="noopener">MOXiI.pdf</a></li><li><a href="http://newosxbook.com/index.php" rel="noopener">Jonathan Levin - *OS Internals Vol I-II-III</a> - The most current books about *OS internals, and it's up-to-date till macOS Catalina. This is a must have series for anyone who is serious about the subject.</li><li><a href="https://support.apple.com/guide/security/welcome/1/web" rel="noopener">Apple Platform Security</a> - Apple's own page about the security of their platform.</li><li><a href="https://www.peachpit.com/store/macos-support-essentials-11-apple-pro-training-series-9780137345953" rel="noopener">macOS Support Essentials 11 - Apple Pro Training Series: Supporting and Troubleshooting macOS Big Sur</a> - This book is targeted for macadmins, however it contains a great deal of macOS internals as well.</li></ul>
+<h3 id="exploitation">Exploitation<a class="anchor" href="#exploitation" aria-label="link to this section">#</a></h3>
+<ul><li><a href="https://www.wiley.com/en-us/The+Mac+Hacker%27s+Handbook-p-9781118080337" rel="noopener">Charlie Miller, Dino Dai Zovi - The Mac Hacker's Handbook</a> -  The only book dedicated to OSX exploitation. It was released in 2011, so it's rather old, and not so relevant anymore. It can be still useful for limited amount of information.</li><li><a href="https://www.amazon.com/Guide-Kernel-Exploitation-Attacking-Core/dp/1597494860/" rel="noopener">Enrico Perla, Massimiliano Oldani - A Guide to Kernel Exploitation: Attacking the Core</a> - Deals with kernel exploitation of OSX Leopard, which was ages ago. The concepts are not relevant in modern day macOS, however could be a good start to get an intro into macOS kernel exploitation</li></ul>
+<h3 id="malware-dfir">Malware &amp; DFIR<a class="anchor" href="#malware-dfir" aria-label="link to this section">#</a></h3>
+<ul><li><a href="https://www.sentinelone.com/blog/reversing-macos-malware-ebook-intro-by-patrick-wardle/" rel="noopener">Phil Stokes - How To Reverse Malware on macOS Without Getting Infected</a> - A new, free ebook about analyzing malware on macOS.</li><li><a href="https://taomm.org/" rel="noopener">Patrick Wardle - The Art Of Mac Malware</a> - Another free ebook about analyzing macOS malware, more detailed than the other one.</li><li><a href="https://www.elsevier.com/books/os-x-incident-response/bradley/978-0-12-804456-8" rel="noopener">Jaron Bradley - OS X Incident Response - 1st Edition</a> - The only book to cover incident response and forensics.</li></ul>
+<h3 id="programming">Programming<a class="anchor" href="#programming" aria-label="link to this section">#</a></h3>
+<ul><li><a href="https://www.amazon.com/OS-X-iOS-Kernel-Programming/dp/1430235365" rel="noopener">Ole Henry Halvorsen, Douglas Clarke - OS X and iOS Kernel Programming</a> - It's a developer book, but a very useful resource for macOS kernel programming.</li><li><a href="https://amazon.com/Professional-Cocoa-Application-Security-Graham/dp/0470525959/" rel="noopener">Graham J Lee - Professional Cocoa Application Security</a> - A book for developers about secure coding. As it's from 2010, it's also old, however still can be a good resource for certain topics or to better understand why some apps work the way they work.</li></ul>
+<h3 id="reverse-engineering">Reverse engineering<a class="anchor" href="#reverse-engineering" aria-label="link to this section">#</a></h3>
+<ul><li><a href="https://www.raywenderlich.com/books/advanced-apple-debugging-reverse-engineering/v3.0" rel="noopener">Derek Selander - Advanced Apple Debugging &amp; Reverse Engineering</a> - A book about debugging, tracing applications.</li></ul>
+<h2 id="blogs">Blogs<a class="anchor" href="#blogs" aria-label="link to this section">#</a></h2>
 <p>I found the following people having awesome blog posts on macOS internals or security on a constant basis.</p>
-<ul>
-<li><a href="https://www.objective-see.com/"  class="external-link" target="_blank" rel="noopener">Patrick Wardle (@patrickwardle) - Objective-See Blog</a></li>
-<li><a href="https://reverse.put.as/"  class="external-link" target="_blank" rel="noopener">Pedro Vilaça (@osxreverser) - Reverse Engineering</a></li>
-<li><a href="https://eclecticlight.co/"  class="external-link" target="_blank" rel="noopener">Howard Oakley (@howardnoakley) - The Eclectic Light Company – Macs, painting, and more</a></li>
-<li><a href="https://lapcatsoftware.com/articles/"  class="external-link" target="_blank" rel="noopener">Jeff Johnson (@lapcatsoftware) - The Desolation of Blog</a></li>
-<li><a href="https://wojciechregula.blog/"  class="external-link" target="_blank" rel="noopener">Wojciech Reguła (@_r3ggi) - IT Security blog</a></li>
-<li><a href="https://knight.sc/"  class="external-link" target="_blank" rel="noopener">Scott Knight (@sdotknight) - Reverse engineering and debugging.</a></li>
-<li><a href="https://blog.chichou.me/"  class="external-link" target="_blank" rel="noopener">Zhi Zhou (@CodeColorist) · Final Lullaby</a></li>
-<li><a href="https://www.fortinet.com/blog/tags-search?tag=mac-os"  class="external-link" target="_blank" rel="noopener">Kai Lu (@K3vinLuSec) - Fortinet&rsquo;s macOS posts</a></li>
-<li><a href="https://themittenmac.com/"  class="external-link" target="_blank" rel="noopener">Jaron Bradley (@jbradley89) - The Mitten Mac – Mac Incident Response and Threat Hunting</a></li>
-<li><a href="https://medium.com/@its_a_feature_"  class="external-link" target="_blank" rel="noopener">Cody Thomas (@its_a_feature_) – Medium</a></li>
-<li><a href="https://blog.xpnsec.com/"  class="external-link" target="_blank" rel="noopener">Adam Chester (@_xpn_) - InfoSec Blog</a></li>
-<li><a href="https://alexplaskett.github.io/"  class="external-link" target="_blank" rel="noopener">Alex Plaskett (@alexjplaskett) - Random Security Research</a></li>
-<li><a href="https://geosn0w.github.io/"  class="external-link" target="_blank" rel="noopener">George Johnson (@GeoSn0w) – Programmer. Hacking stuff. Failed ordinary man.</a></li>
-<li><a href="https://h3adsh0tzz.com/"  class="external-link" target="_blank" rel="noopener">Harry Moulton (@h3adsh0tzz) - Blog</a></li>
-<li><a href="https://www.mac4n6.com/"  class="external-link" target="_blank" rel="noopener">Sarah Edwards (@iamevltwin) - mac4n6</a></li>
-<li><a href="https://saagarjha.com/blog/"  class="external-link" target="_blank" rel="noopener">Saagar Jha - Blog</a></li>
-<li><a href="https://lockboxx.blogspot.com/2020/06/macos-post-summary.html"  class="external-link" target="_blank" rel="noopener">LockBoxx (@1njection) - macOS Post Summary</a></li>
-<li><a href="https://bazad.github.io/"  class="external-link" target="_blank" rel="noopener">Brandon Azad (@_bazad) - security blog</a></li>
-<li><a href="https://bugs.chromium.org/p/project-zero/issues/list?q=vendor%3DApple&amp;can=1"  class="external-link" target="_blank" rel="noopener">Google Project Zero Bug Tracker - Apple</a></li>
-<li><a href="https://medium.com/@clowens0716"  class="external-link" target="_blank" rel="noopener">Cedric Owens (@cedowens) – Medium</a></li>
-<li><a href="https://medium.com/@xorrior"  class="external-link" target="_blank" rel="noopener">Christopher Ross (@xorrior) – Medium</a></li>
-<li><a href="https://medium.com/@rrcyrus"  class="external-link" target="_blank" rel="noopener">Richie Cyrus (@rrcyrus) – Medium</a></li>
-<li><a href="https://blog.malwarebytes.com/author/treed/"  class="external-link" target="_blank" rel="noopener">Thomas Reed (@thomasareed) - Malwarebytes Labs</a></li>
-<li><a href="https://www.sentinelone.com/blog/tag/macos-security-sentinelone/"  class="external-link" target="_blank" rel="noopener">Phil Stokes (@philofishal) - SentinelOne</a></li>
-<li><a href="https://ubrigens.com/"  class="external-link" target="_blank" rel="noopener">Jakob Rieck (0xdead10cc) - Blog</a></li>
-<li><a href="https://theevilbit.github.io/"  class="external-link" target="_blank" rel="noopener">Csaba Fitzl (@theevilbit) - Blog</a></li>
-</ul>
-<h2 id="conference-talks-and-papers">
-  Conference Talks and Papers
-  <a class="heading-link" href="#conference-talks-and-papers">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p><a href="https://twitter.com/osxreverser"  class="external-link" target="_blank" rel="noopener">@osxreverser</a> maintains an awesome collection of paper and conference talks on his website:
-<a href="https://papers.put.as/macosx/macosx/"  class="external-link" target="_blank" rel="noopener">macOS · Papers, Slides and Thesis Archive</a></p>
-<p>Although it&rsquo;s covered in Pedro&rsquo;s collection, I still want to highlight the <a href="https://objectivebythesea.com/"  class="external-link" target="_blank" rel="noopener">Objective By The Sea</a> conference, which is entirely dedicated to macOS security.</p>
-<h2 id="apple">
-  Apple
-  <a class="heading-link" href="#apple">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>Apple&rsquo;s own developer documents can be also very useful, especially the older ones. These are also dated, yet a very valuable resources.
-<a href="https://developer.apple.com/library/archive/navigation/"  class="external-link" target="_blank" rel="noopener">Apple Documentation Archive</a></p>
+<ul><li><a href="https://www.objective-see.com/" rel="noopener">Patrick Wardle (@patrickwardle) - Objective-See Blog</a></li><li><a href="https://reverse.put.as/" rel="noopener">Pedro Vilaça (@osxreverser) - Reverse Engineering</a></li><li><a href="https://eclecticlight.co/" rel="noopener">Howard Oakley (@howardnoakley) - The Eclectic Light Company – Macs, painting, and more</a></li><li><a href="https://lapcatsoftware.com/articles/" rel="noopener">Jeff Johnson (@lapcatsoftware) - The Desolation of Blog</a></li><li><a href="https://wojciechregula.blog/" rel="noopener">Wojciech Reguła (@_r3ggi) - IT Security blog</a></li><li><a href="https://knight.sc/" rel="noopener">Scott Knight (@sdotknight) - Reverse engineering and debugging.</a></li><li><a href="https://blog.chichou.me/" rel="noopener">Zhi Zhou (@CodeColorist) · Final Lullaby</a></li><li><a href="https://www.fortinet.com/blog/tags-search?tag=mac-os" rel="noopener">Kai Lu (@K3vinLuSec) - Fortinet's macOS posts</a></li><li><a href="https://themittenmac.com/" rel="noopener">Jaron Bradley (@jbradley89) - The Mitten Mac – Mac Incident Response and Threat Hunting</a></li><li><a href="https://medium.com/@its_a_feature_" rel="noopener">Cody Thomas (@its_a_feature_) – Medium</a></li><li><a href="https://blog.xpnsec.com/" rel="noopener">Adam Chester (@_xpn_) - InfoSec Blog</a></li><li><a href="https://alexplaskett.github.io/" rel="noopener">Alex Plaskett (@alexjplaskett) - Random Security Research</a></li><li><a href="https://geosn0w.github.io/" rel="noopener">George Johnson (@GeoSn0w) – Programmer. Hacking stuff. Failed ordinary man.</a></li><li><a href="https://h3adsh0tzz.com/" rel="noopener">Harry Moulton (@h3adsh0tzz) - Blog</a></li><li><a href="https://www.mac4n6.com/" rel="noopener">Sarah Edwards (@iamevltwin) - mac4n6</a></li><li><a href="https://saagarjha.com/blog/" rel="noopener">Saagar Jha - Blog</a></li><li><a href="https://lockboxx.blogspot.com/2020/06/macos-post-summary.html" rel="noopener">LockBoxx (@1njection) - macOS Post Summary</a></li><li><a href="https://bazad.github.io/" rel="noopener">Brandon Azad (@_bazad) - security blog</a></li><li><a href="https://bugs.chromium.org/p/project-zero/issues/list?q=vendor%3DApple&amp;can=1" rel="noopener">Google Project Zero Bug Tracker - Apple</a></li><li><a href="https://medium.com/@clowens0716" rel="noopener">Cedric Owens (@cedowens) – Medium</a></li><li><a href="https://medium.com/@xorrior" rel="noopener">Christopher Ross (@xorrior) – Medium</a></li><li><a href="https://medium.com/@rrcyrus" rel="noopener">Richie Cyrus (@rrcyrus) – Medium</a></li><li><a href="https://blog.malwarebytes.com/author/treed/" rel="noopener">Thomas Reed (@thomasareed) - Malwarebytes Labs</a></li><li><a href="https://www.sentinelone.com/blog/tag/macos-security-sentinelone/" rel="noopener">Phil Stokes (@philofishal) - SentinelOne</a></li><li><a href="https://ubrigens.com/" rel="noopener">Jakob Rieck (0xdead10cc) - Blog</a></li><li><a href="/">Csaba Fitzl (@theevilbit) - Blog</a></li></ul>
+<h2 id="conference-talks-and-papers">Conference Talks and Papers<a class="anchor" href="#conference-talks-and-papers" aria-label="link to this section">#</a></h2>
+<p><a href="https://twitter.com/osxreverser" rel="noopener">@osxreverser</a> maintains an awesome collection of paper and conference talks on his website:
+<a href="https://papers.put.as/macosx/macosx/" rel="noopener">macOS · Papers, Slides and Thesis Archive</a></p>
+<p>Although it's covered in Pedro's collection, I still want to highlight the <a href="https://objectivebythesea.com/" rel="noopener">Objective By The Sea</a> conference, which is entirely dedicated to macOS security.</p>
+<h2 id="apple">Apple<a class="anchor" href="#apple" aria-label="link to this section">#</a></h2>
+<p>Apple's own developer documents can be also very useful, especially the older ones. These are also dated, yet a very valuable resources.
+<a href="https://developer.apple.com/library/archive/navigation/" rel="noopener">Apple Documentation Archive</a></p>
 <p>Part of the XNU kernel is open sourced by Apple, which is also an invaluable resource.
-<a href="https://opensource.apple.com/"  class="external-link" target="_blank" rel="noopener">Apple Open Source</a></p>
-<p>I hope these resources can get help people started and answer the question answered so frequently. It&rsquo;s probably far from being complete, and sorry if I missed anyone. If you know of a good resource let me know, and I can update this list.</p>
-
-      </div>
-
-
-      <footer>
-        
-
-
-        
-        
-        
-        
-        
-        
-        
-      </footer>
-    </article>
-
-    
-  </section>
-
-    </div>
-
-    <footer class="footer">
-  <section class="container">
-    ©
-    
-      2019 -
-    
-    2026
-     Csaba Fitzl 
-    ·
-    
-    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
-    
-  </section>
-</footer>
-
-  </main>
-
-  
-
-  
-  
-  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
-  
-
-  
-
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
+<a href="https://opensource.apple.com/" rel="noopener">Apple Open Source</a></p>
+<p>I hope these resources can get help people started and answer the question answered so frequently. It's probably far from being complete, and sorry if I missed anyone. If you know of a good resource let me know, and I can update this list.</p></div>
+<nav class="pn"><a class="prev" href="/posts/gatekeeper_not_a_bypass/"><span>← previous</span>GateKeeper - Not a Bypass (Again)</a><a class="next" href="/posts/cve-2021-30808/"><span>next →</span>CVE-2021-30808 - CVE-2021-1784 strikes back - TCC bypass via mounting</a></nav></article></main>
+  <footer class="foot">
+    <span>© 2026 Csaba Fitzl</span>
+    <span class="social"><a href="https://github.com/theevilbit/" rel="me noopener">GitHub</a><a href="https://x.com/theevilbit" rel="me noopener">X</a><a href="/index.xml" rel="me noopener">RSS</a></span>
+  </footer>
+</div>
+<script>
+document.getElementById("theme").addEventListener("click", function () {
+  var t = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem("tb.theme", t); } catch (e) {}
+});
+</script>
 </body>
 </html>

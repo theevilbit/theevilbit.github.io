@@ -1,277 +1,69 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-  <title>
-  Beyond the good ol&#39; LaunchAgents - 31 - BSM audit framework · theevilbit blog
-</title>
-  <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light dark">
-
-
-
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beyond the good ol&#x27; LaunchAgents - 31 - BSM audit framework · theevilbit</title>
+<meta name="description" content="This is part 31 in the series of &quot;Beyond the good ol&#x27; LaunchAgents&quot;, where I try to collect various persistence techniques for macOS. For more background check the introduction.">
 <meta name="author" content="Csaba Fitzl">
-<meta name="description" content="
-This is part 31 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-
-macOS implements the OpenBSM audit framework created by McAfee, which allows someone to audit system events, like login, file access, etc… This has been part of the system for very long time. Auditing has several components, the main one being the kernel, which handles all the events. The main user mode process is auditd, which is mainly responsible for logging. It’s a huge framework, detailed very well by Jonathan Levin in his *OS Internal Part 3 book. I suggest reading that part, but you can also find some information here:">
-<meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
-
-
-
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 31 - BSM audit framework">
-  <meta name="twitter:description" content="This is part 31 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-macOS implements the OpenBSM audit framework created by McAfee, which allows someone to audit system events, like login, file access, etc… This has been part of the system for very long time. Auditing has several components, the main one being the kernel, which handles all the events. The main user mode process is auditd, which is mainly responsible for logging. It’s a huge framework, detailed very well by Jonathan Levin in his *OS Internal Part 3 book. I suggest reading that part, but you can also find some information here:">
-
-<meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0031/">
-  <meta property="og:site_name" content="theevilbit blog">
-  <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 31 - BSM audit framework">
-  <meta property="og:description" content="This is part 31 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-macOS implements the OpenBSM audit framework created by McAfee, which allows someone to audit system events, like login, file access, etc… This has been part of the system for very long time. Auditing has several components, the main one being the kernel, which handles all the events. The main user mode process is auditd, which is mainly responsible for logging. It’s a huge framework, detailed very well by Jonathan Levin in his *OS Internal Part 3 book. I suggest reading that part, but you can also find some information here:">
-  <meta property="og:locale" content="en">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="beyond">
-    <meta property="article:published_time" content="2023-05-26T00:00:00+00:00">
-    <meta property="article:modified_time" content="2023-05-26T00:00:00+00:00">
-    <meta property="article:tag" content="Macos">
-    <meta property="article:tag" content="Persistence">
-    <meta property="article:tag" content="Beyond">
-
-
-
-
 <link rel="canonical" href="https://theevilbit.github.io/beyond/beyond_0031/">
-
-
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
-
-
-  
-  
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
-
-
-
-
-
-
-  
-    
-    
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
-  
-
-
-
- 
-
-
-
-
-<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
-
-<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-
-<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
-<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
-
-
-
-
-
-
-
-
-
+<link rel="alternate" type="application/rss+xml" title="theevilbit" href="/index.xml">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>try { var t = localStorage.getItem("tb.theme"); document.documentElement.dataset.theme = t || "dark"; } catch (e) { document.documentElement.dataset.theme = "dark"; }</script>
+<link rel="preload" href="/fonts/IBMPlexSans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts.css?v=1791269065">
+<link rel="stylesheet" href="/style.css?v=1791269065">
 </head>
-
-
-
-
-
-
-<body class="preload-transitions colorscheme-auto">
-  
-<div class="float-container">
-    <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
-    </a>
-</div>
-
-
-  <main class="wrapper">
-    <nav class="navigation">
-  <section class="container">
-    
-    <a class="navigation-title" href="https://theevilbit.github.io/">
-      theevilbit blog
-    </a>
-    
-    
-      <input type="checkbox" id="menu-toggle" />
-      <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
-      </label>
-      <ul class="navigation-list">
-        
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/posts/">Posts</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/shield/">Shield.app</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/tags/">Tags</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/about/">About</a>
-            </li>
-          
-        
-        
-      </ul>
-    
-  </section>
-</nav>
-
-
-    <div class="content">
-      
-  <section class="container page">
-  <article>
-    <header>
-      <h1 class="title">
-        <a class="title-link" href="https://theevilbit.github.io/beyond/beyond_0031/">
-          Beyond the good ol&#39; LaunchAgents - 31 - BSM audit framework
-        </a>
-      </h1>
-    </header>
-
-    <blockquote>
-<p>This is part 31 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p>
-</blockquote>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/">the<span>evil</span>bit<i class="cursor"></i></a>
+    <nav class="nav"><a href="/posts/">Posts</a><a href="/beyond/" class=on>Beyond</a><a href="/talks/">Talks</a><a href="/shield/">Shield</a><a href="/about/">About</a><a href="/tags/">Tags</a></nav>
+    <button type="button" class="theme" id="theme" aria-label="switch light / dark">◐</button>
+  </header>
+  <main><article class="post">
+<header class="post-head"><div class="kicker"><a href="/beyond/">Beyond the good ol' LaunchAgents</a> · part 31</div><h1>Beyond the good ol&#x27; LaunchAgents - 31 - BSM audit framework</h1>
+<div class="meta"><time datetime="2023-05-26">May 26, 2023</time><span>2 min read</span><span class="tags"><a class="tag" href="/tags/macos/">macos</a><a class="tag" href="/tags/persistence/">persistence</a><a class="tag" href="/tags/beyond/">beyond</a></span></div></header>
+<div class="prose"><blockquote><p>This is part 31 in the series of "Beyond the good ol' LaunchAgents", where I try to collect various persistence techniques for macOS. For more background check the <a href="/beyond/beyond_intro/">introduction</a>. </p></blockquote>
 <p>macOS implements the OpenBSM audit framework created by McAfee, which allows someone to audit system events, like login, file access, etc… This has been part of the system for very long time. Auditing has several components, the main one being the kernel, which handles all the events. The main user mode process is <code>auditd</code>, which is mainly responsible for logging. It’s a huge framework, detailed very well by Jonathan Levin in his <code>*OS Internal Part 3</code> book. I suggest reading that part, but you can also find some information here:</p>
-<p><a href="https://crucialsecurity.wordpress.com/2012/05/17/reading-mac-bsm-audit-logs-2/"  class="external-link" target="_blank" rel="noopener">Reading Mac BSM Audit Logs</a></p>
-<p><a href="https://www.scip.ch/en/?labs.20150108"  class="external-link" target="_blank" rel="noopener">Audit in a OS X System</a></p>
+<p><a href="https://crucialsecurity.wordpress.com/2012/05/17/reading-mac-bsm-audit-logs-2/" rel="noopener">Reading Mac BSM Audit Logs</a></p>
+<p><a href="https://www.scip.ch/en/?labs.20150108" rel="noopener">Audit in a OS X System</a></p>
 <p><code>auditd</code> can be configured via various files, which are located at <code>/etc/security/</code>. The logs can be found under <code>/private/var/audit/</code>, but they are not important for us now.</p>
-<pre tabindex="0"><code>max:~ root# ls -l /etc/security/
+<pre><code>max:~ root# ls -l /etc/security/
 total 48
 -r--r--r--  1 root  wheel    652 May 13 00:29 audit_class
 -r--------  1 root  wheel    358 May 13 00:29 audit_control
 -r--r--r--  1 root  wheel  26649 May 13 00:29 audit_event
 -r--------  1 root  wheel     77 May 13 00:29 audit_user
--r-xr-xr-x  1 root  wheel   1326 May 13 00:29 audit_warn
-</code></pre><p><code>audit_control</code> is the main configuration file, by default it configures <code>auditd</code> to log login and authentication events. The file which is interesting for us is <code>audit_warn</code>.  It’s a shell script, that is executed when an audit warning occurs.</p>
-<pre tabindex="0"><code>max:~ root# cat /etc/security/audit_warn 
+-r-xr-xr-x  1 root  wheel   1326 May 13 00:29 audit_warn</code></pre>
+<p><code>audit_control</code> is the main configuration file, by default it configures <code>auditd</code> to log login and authentication events. The file which is interesting for us is <code>audit_warn</code>.  It’s a shell script, that is executed when an audit warning occurs.</p>
+<pre><code>max:~ root# cat /etc/security/audit_warn 
 #!/bin/sh
 #
-...
-</code></pre><p>As root, we can edit this file, let’s add the following.</p>
-<pre tabindex="0"><code>touch /tmp/createdbyauditd.txt
-</code></pre><p>We can manually trigger a warning by forcing a log rotation by running the <code>sudo audit -n</code> command.</p>
+...</code></pre>
+<p>As root, we can edit this file, let’s add the following.</p>
+<pre><code>touch /tmp/createdbyauditd.txt</code></pre>
+<p>We can manually trigger a warning by forcing a log rotation by running the <code>sudo audit -n</code> command.</p>
 <p>Then our file will be created.</p>
-<h2 id="detection-consideration">
-  Detection Consideration
-  <a class="heading-link" href="#detection-consideration">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
+<h2 id="detection-consideration">Detection Consideration<a class="anchor" href="#detection-consideration" aria-label="link to this section">#</a></h2>
 <p>The most trivial way to detect this persistence is monitoring file modification of <code>audit_warn</code>.</p>
 <p>Additionally the process tree when our command is executed will look like the following:</p>
-<pre tabindex="0"><code>auditd
+<pre><code>auditd
 --&gt;/bin/sh
-----&gt;touch (or any command specified in the script)
-</code></pre><p>Note, that the main interpreter can be also changed from <code>#!/bin/sh</code> to anything else, so other child processes can be suspicious as well.</p>
-
-  </article>
-</section>
-
-  
-
-    </div>
-
-    <footer class="footer">
-  <section class="container">
-    ©
-    
-      2019 -
-    
-    2026
-     Csaba Fitzl 
-    ·
-    
-    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
-    
-  </section>
-</footer>
-
-  </main>
-
-  
-
-  
-  
-  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
-  
-
-  
-
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
+----&gt;touch (or any command specified in the script)</code></pre>
+<p>Note, that the main interpreter can be also changed from <code>#!/bin/sh</code> to anything else, so other child processes can be suspicious as well.</p></div>
+<nav class="pn"><a class="prev" href="/beyond/beyond_0030/"><span>← previous</span>Beyond the good ol&#x27; LaunchAgents - 30 - The man config file - man.conf</a><a class="next" href="/beyond/beyond_0032/"><span>next →</span>Beyond the good ol&#x27; LaunchAgents - 32 - Dock Tile Plugins</a></nav></article></main>
+  <footer class="foot">
+    <span>© 2026 Csaba Fitzl</span>
+    <span class="social"><a href="https://github.com/theevilbit/" rel="me noopener">GitHub</a><a href="https://x.com/theevilbit" rel="me noopener">X</a><a href="/index.xml" rel="me noopener">RSS</a></span>
+  </footer>
+</div>
+<script>
+document.getElementById("theme").addEventListener("click", function () {
+  var t = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem("tb.theme", t); } catch (e) {}
+});
+</script>
 </body>
 </html>

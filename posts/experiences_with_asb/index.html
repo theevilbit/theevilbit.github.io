@@ -1,373 +1,74 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-  <title>
-  Experiences with Apple Security Bounty · theevilbit blog
-</title>
-  <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light dark">
-
-
-
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Experiences with Apple Security Bounty · theevilbit</title>
+<meta name="description" content="Since Apple started their Apple Security Bounty program I have submitted around 50 cases to their product security team. I thought I will share my experiences working with Apple in the past 2 years. This will be useful t">
 <meta name="author" content="Csaba Fitzl">
-<meta name="description" content="Since Apple started their Apple Security Bounty program I have submitted around 50 cases to their product security team. I thought I will share my experiences working with Apple in the past 2 years. This will be useful to anyone thinking about participating in the program, and will help setting up expectations.
-Beyond Apple I do bug bounties also in other programs, like HackerOne, BugCrowd, VCP, ZDI or sometimes just working directly with vendors, so I have a good pool of other cases I can  compare to.">
-<meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
-
-
-
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Experiences with Apple Security Bounty">
-  <meta name="twitter:description" content="Since Apple started their Apple Security Bounty program I have submitted around 50 cases to their product security team. I thought I will share my experiences working with Apple in the past 2 years. This will be useful to anyone thinking about participating in the program, and will help setting up expectations.
-Beyond Apple I do bug bounties also in other programs, like HackerOne, BugCrowd, VCP, ZDI or sometimes just working directly with vendors, so I have a good pool of other cases I can compare to.">
-
-<meta property="og:url" content="https://theevilbit.github.io/posts/experiences_with_asb/">
-  <meta property="og:site_name" content="theevilbit blog">
-  <meta property="og:title" content="Experiences with Apple Security Bounty">
-  <meta property="og:description" content="Since Apple started their Apple Security Bounty program I have submitted around 50 cases to their product security team. I thought I will share my experiences working with Apple in the past 2 years. This will be useful to anyone thinking about participating in the program, and will help setting up expectations.
-Beyond Apple I do bug bounties also in other programs, like HackerOne, BugCrowd, VCP, ZDI or sometimes just working directly with vendors, so I have a good pool of other cases I can compare to.">
-  <meta property="og:locale" content="en">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2021-04-23T00:00:00+00:00">
-    <meta property="article:modified_time" content="2021-04-23T00:00:00+00:00">
-    <meta property="article:tag" content="Macos">
-    <meta property="article:tag" content="Asb">
-
-
-
-
 <link rel="canonical" href="https://theevilbit.github.io/posts/experiences_with_asb/">
-
-
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
-
-
-  
-  
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
-
-
-
-
-
-
-  
-    
-    
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
-  
-
-
-
- 
-
-
-
-
-<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
-
-<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-
-<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
-<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
-
-
-
-
-
-
-
-
-
+<link rel="alternate" type="application/rss+xml" title="theevilbit" href="/index.xml">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>try { var t = localStorage.getItem("tb.theme"); document.documentElement.dataset.theme = t || "dark"; } catch (e) { document.documentElement.dataset.theme = "dark"; }</script>
+<link rel="preload" href="/fonts/IBMPlexSans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts.css?v=1791269065">
+<link rel="stylesheet" href="/style.css?v=1791269065">
 </head>
-
-
-
-
-
-
-<body class="preload-transitions colorscheme-auto">
-  
-<div class="float-container">
-    <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
-    </a>
-</div>
-
-
-  <main class="wrapper">
-    <nav class="navigation">
-  <section class="container">
-    
-    <a class="navigation-title" href="https://theevilbit.github.io/">
-      theevilbit blog
-    </a>
-    
-    
-      <input type="checkbox" id="menu-toggle" />
-      <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
-      </label>
-      <ul class="navigation-list">
-        
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/posts/">Posts</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/shield/">Shield.app</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/tags/">Tags</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/about/">About</a>
-            </li>
-          
-        
-        
-      </ul>
-    
-  </section>
-</nav>
-
-
-    <div class="content">
-      
-  <section class="container post">
-    <article>
-      <header>
-        <div class="post-title">
-          <h1 class="title">
-            <a class="title-link" href="https://theevilbit.github.io/posts/experiences_with_asb/">
-              Experiences with Apple Security Bounty
-            </a>
-          </h1>
-        </div>
-        <div class="post-meta">
-          <div class="date">
-            <span class="posted-on">
-              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
-              <time datetime="2021-04-23T00:00:00Z">
-                April 23, 2021
-              </time>
-            </span>
-            <span class="reading-time">
-              <i class="fa-solid fa-clock" aria-hidden="true"></i>
-              5-minute read
-            </span>
-          </div>
-          
-          <div class="categories">
-  <i class="fa-solid fa-folder" aria-hidden="true"></i>
-    <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
-
-          <div class="tags">
-  <i class="fa-solid fa-tag" aria-hidden="true"></i>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/macos/">Macos</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/asb/">Asb</a>
-    </span></div>
-
-        </div>
-      </header>
-
-      <div class="post-content">
-        
-        <p>Since Apple started their <a href="https://developer.apple.com/security-bounty/"  class="external-link" target="_blank" rel="noopener">Apple Security Bounty</a> program I have submitted around 50 cases to their product security team. I thought I will share my experiences working with Apple in the past 2 years. This will be useful to anyone thinking about participating in the program, and will help setting up expectations.</p>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/">the<span>evil</span>bit<i class="cursor"></i></a>
+    <nav class="nav"><a href="/posts/" class=on>Posts</a><a href="/beyond/">Beyond</a><a href="/talks/">Talks</a><a href="/shield/">Shield</a><a href="/about/">About</a><a href="/tags/">Tags</a></nav>
+    <button type="button" class="theme" id="theme" aria-label="switch light / dark">◐</button>
+  </header>
+  <main><article class="post">
+<header class="post-head"><h1>Experiences with Apple Security Bounty</h1>
+<div class="meta"><time datetime="2021-04-23">Apr 23, 2021</time><span>5 min read</span><span class="tags"><a class="tag" href="/tags/macos/">macos</a><a class="tag" href="/tags/asb/">asb</a></span></div></header>
+<details class="toc"><summary>Contents</summary><ol><li class="l3"><a href="#submission">Submission</a></li><li class="l3"><a href="#communication">Communication</a></li><li class="l3"><a href="#time-to-fix">Time to Fix</a></li><li class="l3"><a href="#adjudication">Adjudication</a></li><li class="l3"><a href="#early-asb">Early ASB</a></li><li class="l3"><a href="#eligibility">Eligibility</a></li><li class="l3"><a href="#reward-amount">Reward amount</a></li><li class="l3"><a href="#payout">Payout</a></li><li class="l3"><a href="#conclusion">Conclusion</a></li></ol></details><div class="prose"><p>Since Apple started their <a href="https://developer.apple.com/security-bounty/" rel="noopener">Apple Security Bounty</a> program I have submitted around 50 cases to their product security team. I thought I will share my experiences working with Apple in the past 2 years. This will be useful to anyone thinking about participating in the program, and will help setting up expectations.</p>
 <p>Beyond Apple I do bug bounties also in other programs, like HackerOne, BugCrowd, VCP, ZDI or sometimes just working directly with vendors, so I have a good pool of other cases I can  compare to.</p>
-<p>I need to also highlight that I do BB as a hobby, beyond my primary work. It&rsquo;s mainly because I think I wouldn&rsquo;t easily handle the uncertainty that comes with making living out of these programs, and I also like doing other stuff.</p>
+<p>I need to also highlight that I do BB as a hobby, beyond my primary work. It's mainly because I think I wouldn't easily handle the uncertainty that comes with making living out of these programs, and I also like doing other stuff.</p>
 <p>Talking to other people who also participate in the program, we share the same experiences, so I can say that the below observations are universal.</p>
-<p>With that let&rsquo;s see what ASB has to offer.</p>
-<h3 id="submission">
-  Submission
-  <a class="heading-link" href="#submission">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
+<p>With that let's see what ASB has to offer. </p>
+<h3 id="submission">Submission<a class="anchor" href="#submission" aria-label="link to this section">#</a></h3>
 <p>I think the submission is smooth. When you send an email you are immediately assigned a case number and the process starts.</p>
-<h3 id="communication">
-  Communication
-  <a class="heading-link" href="#communication">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>Or more like, &ldquo;lack of communication&rdquo;. When you submit a ticket, in a few days you receive an automated template that they are investigating, and please don&rsquo;t disclose. They also state upfront, that they don&rsquo;t provide status updates, you need to ask for it.</p>
-<p>The issue is that even if you ask for an update, you don&rsquo;t get any. Often times, it feels like I&rsquo;m sending emails into a black hole. This is really frustrating. Even a reply like &ldquo;we don&rsquo;t have any update at the moment&rdquo; would be nice, but often times that is also missed.</p>
-<p>Sometimes they do reply, and the product security team replies more frequently than any other team at Apple I worked with. I guess this can be taken as a positive note, although there is room for improvement :) It seems from the outside, that there are less than 10 people who handle cases in the product security team. I&rsquo;m not sure if they are overloaded, but if yes, Apple should definitely hire more people.</p>
-<p>I think this communication problem is a systemic issue at Apple, as for example people don&rsquo;t get any response to issues submitted via the Feedback application. Similarly when I worked with the developer entitlement team regarding my Shield app, I also never got replies.</p>
+<h3 id="communication">Communication<a class="anchor" href="#communication" aria-label="link to this section">#</a></h3>
+<p>Or more like, "lack of communication". When you submit a ticket, in a few days you receive an automated template that they are investigating, and please don't disclose. They also state upfront, that they don't provide status updates, you need to ask for it.</p>
+<p>The issue is that even if you ask for an update, you don't get any. Often times, it feels like I'm sending emails into a black hole. This is really frustrating. Even a reply like "we don't have any update at the moment" would be nice, but often times that is also missed.</p>
+<p>Sometimes they do reply, and the product security team replies more frequently than any other team at Apple I worked with. I guess this can be taken as a positive note, although there is room for improvement :) It seems from the outside, that there are less than 10 people who handle cases in the product security team. I'm not sure if they are overloaded, but if yes, Apple should definitely hire more people.</p>
+<p>I think this communication problem is a systemic issue at Apple, as for example people don't get any response to issues submitted via the Feedback application. Similarly when I worked with the developer entitlement team regarding my Shield app, I also never got replies.</p>
 <p>My advise is that if you want to get updates, follow up frequently and eventually they will tell you what goes on.</p>
-<p>On the fair side, if you don&rsquo;t send any emails, and your issue is fixed and eligible for a bounty, they will notify you.</p>
-<h3 id="time-to-fix">
-  Time to Fix
-  <a class="heading-link" href="#time-to-fix">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>This varies, but overall it takes a long time. If you are a person who is not willing to wait more than three months, it&rsquo;s definitely not a program for you.</p>
-<p>Although compared to many programs in H1 or BugCrowd, they are not an outlier here, but some cases can easily go over a year. Especially design issues, which are typically addressed only in the next major release (e.g.: macOS 12). I&rsquo;m personally tracking 7 such cases.</p>
+<p>On the fair side, if you don't send any emails, and your issue is fixed and eligible for a bounty, they will notify you.</p>
+<h3 id="time-to-fix">Time to Fix<a class="anchor" href="#time-to-fix" aria-label="link to this section">#</a></h3>
+<p>This varies, but overall it takes a long time. If you are a person who is not willing to wait more than three months, it's definitely not a program for you.</p>
+<p>Although compared to many programs in H1 or BugCrowd, they are not an outlier here, but some cases can easily go over a year. Especially design issues, which are typically addressed only in the next major release (e.g.: macOS 12). I'm personally tracking 7 such cases.</p>
 <p>I think Apple should improve a lot here.</p>
-<h3 id="adjudication">
-  Adjudication
-  <a class="heading-link" href="#adjudication">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>Once the issue is fixed Apple will review the case and decide if it&rsquo;s eligible for a bounty or not. I think this is the <strong>worse</strong> part of the whole process. This can take extremely long time, I have issues, which were fixed in the initial release of Big Sur (half year ago!) and a decision hasn&rsquo;t been made yet. Unbelievable! I honestly don&rsquo;t know what takes so much time. Considering how much money Apple has, this is truly an unfair behavior with researchers.</p>
-<p>Apple will pay eventually if the issue is eligible, but why they sit on it for so long&hellip; who knows.</p>
-<p>I think this is the part why you can&rsquo;t rely on them for living, unless you have a buffer for a year or two. In that case it might work.</p>
-<h3 id="early-asb">
-  Early ASB
-  <a class="heading-link" href="#early-asb">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>Sometimes, and it&rsquo;s a mystery when it happens, Apple will pay a reward before the fix is rolled out to customers. I have no idea why and when they do it, but it&rsquo;s still nice. Although it&rsquo;s also rare: to me it only happened once.</p>
-<h3 id="eligibility">
-  Eligibility
-  <a class="heading-link" href="#eligibility">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
+<h3 id="adjudication">Adjudication<a class="anchor" href="#adjudication" aria-label="link to this section">#</a></h3>
+<p>Once the issue is fixed Apple will review the case and decide if it's eligible for a bounty or not. I think this is the <strong>worse</strong> part of the whole process. This can take extremely long time, I have issues, which were fixed in the initial release of Big Sur (half year ago!) and a decision hasn't been made yet. Unbelievable! I honestly don't know what takes so much time. Considering how much money Apple has, this is truly an unfair behavior with researchers.</p>
+<p>Apple will pay eventually if the issue is eligible, but why they sit on it for so long... who knows.</p>
+<p>I think this is the part why you can't rely on them for living, unless you have a buffer for a year or two. In that case it might work.</p>
+<h3 id="early-asb">Early ASB<a class="anchor" href="#early-asb" aria-label="link to this section">#</a></h3>
+<p>Sometimes, and it's a mystery when it happens, Apple will pay a reward before the fix is rolled out to customers. I have no idea why and when they do it, but it's still nice. Although it's also rare: to me it only happened once.</p>
+<h3 id="eligibility">Eligibility<a class="anchor" href="#eligibility" aria-label="link to this section">#</a></h3>
 <p>In my experience bugs that give you more privileges in any form will be eligible for a bounty. In the contrary, issues that fall under more systemic or design problems in the operating system, are not. They do fix them, or work on them, but it not only takes extended amount of time, these issues are often considered non eligible. I think this should change, as fixing design issues improves the platform security more than a single vulnerability.</p>
-<h3 id="reward-amount">
-  Reward amount
-  <a class="heading-link" href="#reward-amount">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>I think this is where Apple&rsquo;s bounty program shines, and makes a huge difference from any other program, including most private programs on H1 or BugCrowd. I think Apple pays the best rewards in the whole industry. The reward amounts advertised in their website are not fake, someone can easily get tens of thousands of $$$$ for privacy bypasses or privilege escalation cases. They also truly pay a minimum amount of 5k$. Although I could never max out a reward for a specific bug category, you can get pretty close.</p>
-<h3 id="payout">
-  Payout
-  <a class="heading-link" href="#payout">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
+<h3 id="reward-amount">Reward amount<a class="anchor" href="#reward-amount" aria-label="link to this section">#</a></h3>
+<p>I think this is where Apple's bounty program shines, and makes a huge difference from any other program, including most private programs on H1 or BugCrowd. I think Apple pays the best rewards in the whole industry. The reward amounts advertised in their website are not fake, someone can easily get tens of thousands of $$$$ for privacy bypasses or privilege escalation cases. They also truly pay a minimum amount of 5k$. Although I could never max out a reward for a specific bug category, you can get pretty close.</p>
+<h3 id="payout">Payout<a class="anchor" href="#payout" aria-label="link to this section">#</a></h3>
 <p>Once a decision has been made about the amount, this goes smoothly. They normally process the payment in a week or two, and you will receive it either at the end of that or the following month. No issues here at all.</p>
 <p>You need to enroll in the Apple Developer program, and they will pay via their iTunes Connect platform. If you are not enrolled already they are happy to refund the 99$, which is needed for the enrollment.</p>
-<h3 id="conclusion">
-  Conclusion
-  <a class="heading-link" href="#conclusion">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
-<p>I think Apple&rsquo;s bounty program is bittersweet. The reward amount is definitely a huge plus, but the lack of communication, the long adjudication time can cause a lot of frustration. I think these things could be easily improved, and if done, the full program could offer a really nice experience.</p>
-
-      </div>
-
-
-      <footer>
-        
-
-
-        
-        
-        
-        
-        
-        
-        
-      </footer>
-    </article>
-
-    
-  </section>
-
-    </div>
-
-    <footer class="footer">
-  <section class="container">
-    ©
-    
-      2019 -
-    
-    2026
-     Csaba Fitzl 
-    ·
-    
-    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
-    
-  </section>
-</footer>
-
-  </main>
-
-  
-
-  
-  
-  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
-  
-
-  
-
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
+<h3 id="conclusion">Conclusion<a class="anchor" href="#conclusion" aria-label="link to this section">#</a></h3>
+<p>I think Apple's bounty program is bittersweet. The reward amount is definitely a huge plus, but the lack of communication, the long adjudication time can cause a lot of frustration. I think these things could be easily improved, and if done, the full program could offer a really nice experience.</p></div>
+<nav class="pn"><a class="prev" href="/posts/macos_crashreporter/"><span>← previous</span>CVE-2020-9900 &amp; CVE-2021-1786 - Abusing macOS Crash Reporter</a><a class="next" href="/posts/teamviewer_lpe/"><span>next →</span>NOCVE - TeamViewer Local Privilege Escalation Vulnerability</a></nav></article></main>
+  <footer class="foot">
+    <span>© 2026 Csaba Fitzl</span>
+    <span class="social"><a href="https://github.com/theevilbit/" rel="me noopener">GitHub</a><a href="https://x.com/theevilbit" rel="me noopener">X</a><a href="/index.xml" rel="me noopener">RSS</a></span>
+  </footer>
+</div>
+<script>
+document.getElementById("theme").addEventListener("click", function () {
+  var t = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem("tb.theme", t); } catch (e) {}
+});
+</script>
 </body>
 </html>

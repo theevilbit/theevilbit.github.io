@@ -1,198 +1,53 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-  <title>
-  Beyond the good ol&#39; LaunchAgents - 30 - The man config file - man.conf · theevilbit blog
-</title>
-  <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light dark">
-
-
-
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beyond the good ol&#x27; LaunchAgents - 30 - The man config file - man.conf · theevilbit</title>
+<meta name="description" content="This is part 30 in the series of &quot;Beyond the good ol&#x27; LaunchAgents&quot;, where I try to collect various persistence techniques for macOS. For more background check the introduction.">
 <meta name="author" content="Csaba Fitzl">
-<meta name="description" content="
-This is part 30 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-
-I was watching an old BSidesLuxemburg 2019 talk by Aaron Jewitt, called &ldquo;Threat Hunting On Linux And Mac With Auditbeat System Module&rdquo;, it&rsquo;s up on YouTube. Aaron mentioned in one of the slides that you can persist using man.conf files. It looked really odd, I tried to quickly Google it, but haven’t found anything about it. So I took a look at the configuration file, and indeed, it turns out you can persist via man’s configuration file, man.conf, which can be found at /private/etc/man.conf.">
-<meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
-
-
-
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Beyond the good ol&#39; LaunchAgents - 30 - The man config file - man.conf">
-  <meta name="twitter:description" content="This is part 30 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-I was watching an old BSidesLuxemburg 2019 talk by Aaron Jewitt, called “Threat Hunting On Linux And Mac With Auditbeat System Module”, it’s up on YouTube. Aaron mentioned in one of the slides that you can persist using man.conf files. It looked really odd, I tried to quickly Google it, but haven’t found anything about it. So I took a look at the configuration file, and indeed, it turns out you can persist via man’s configuration file, man.conf, which can be found at /private/etc/man.conf.">
-
-<meta property="og:url" content="https://theevilbit.github.io/beyond/beyond_0030/">
-  <meta property="og:site_name" content="theevilbit blog">
-  <meta property="og:title" content="Beyond the good ol&#39; LaunchAgents - 30 - The man config file - man.conf">
-  <meta property="og:description" content="This is part 30 in the series of “Beyond the good ol’ LaunchAgents”, where I try to collect various persistence techniques for macOS. For more background check the introduction.
-I was watching an old BSidesLuxemburg 2019 talk by Aaron Jewitt, called “Threat Hunting On Linux And Mac With Auditbeat System Module”, it’s up on YouTube. Aaron mentioned in one of the slides that you can persist using man.conf files. It looked really odd, I tried to quickly Google it, but haven’t found anything about it. So I took a look at the configuration file, and indeed, it turns out you can persist via man’s configuration file, man.conf, which can be found at /private/etc/man.conf.">
-  <meta property="og:locale" content="en">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="beyond">
-    <meta property="article:published_time" content="2023-05-10T00:00:00+00:00">
-    <meta property="article:modified_time" content="2023-05-10T00:00:00+00:00">
-    <meta property="article:tag" content="Macos">
-    <meta property="article:tag" content="Persistence">
-    <meta property="article:tag" content="Beyond">
-
-
-
-
 <link rel="canonical" href="https://theevilbit.github.io/beyond/beyond_0030/">
-
-
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
-
-
-  
-  
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
-
-
-
-
-
-
-  
-    
-    
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
-  
-
-
-
- 
-
-
-
-
-<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
-
-<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-
-<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
-<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
-
-
-
-
-
-
-
-
-
+<link rel="alternate" type="application/rss+xml" title="theevilbit" href="/index.xml">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>try { var t = localStorage.getItem("tb.theme"); document.documentElement.dataset.theme = t || "dark"; } catch (e) { document.documentElement.dataset.theme = "dark"; }</script>
+<link rel="preload" href="/fonts/IBMPlexSans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts.css?v=1791269065">
+<link rel="stylesheet" href="/style.css?v=1791269065">
 </head>
-
-
-
-
-
-
-<body class="preload-transitions colorscheme-auto">
-  
-<div class="float-container">
-    <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
-    </a>
-</div>
-
-
-  <main class="wrapper">
-    <nav class="navigation">
-  <section class="container">
-    
-    <a class="navigation-title" href="https://theevilbit.github.io/">
-      theevilbit blog
-    </a>
-    
-    
-      <input type="checkbox" id="menu-toggle" />
-      <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
-      </label>
-      <ul class="navigation-list">
-        
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/posts/">Posts</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/shield/">Shield.app</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/tags/">Tags</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/about/">About</a>
-            </li>
-          
-        
-        
-      </ul>
-    
-  </section>
-</nav>
-
-
-    <div class="content">
-      
-  <section class="container page">
-  <article>
-    <header>
-      <h1 class="title">
-        <a class="title-link" href="https://theevilbit.github.io/beyond/beyond_0030/">
-          Beyond the good ol&#39; LaunchAgents - 30 - The man config file - man.conf
-        </a>
-      </h1>
-    </header>
-
-    <blockquote>
-<p>This is part 30 in the series of &ldquo;Beyond the good ol&rsquo; LaunchAgents&rdquo;, where I try to collect various persistence techniques for macOS. For more background check the <a href="https://theevilbit.github.io/beyond/beyond_intro/"  class="external-link" target="_blank" rel="noopener">introduction</a>.</p>
-</blockquote>
-<p>I was watching an old BSidesLuxemburg 2019 talk by Aaron Jewitt, called &ldquo;Threat Hunting On Linux And Mac With Auditbeat System Module&rdquo;, it&rsquo;s up on <a href="https://www.youtube.com/watch?v=teq6r7XbBug"  class="external-link" target="_blank" rel="noopener">YouTube</a>. Aaron mentioned in one of the slides that you can persist using <code>man.conf</code> files. It looked really odd, I tried to quickly Google it, but haven’t found anything about it. So I took a look at the configuration file, and indeed, it turns out you can persist via man’s configuration file, <code>man.conf</code>, which can be found at <code>/private/etc/man.conf</code>.</p>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/">the<span>evil</span>bit<i class="cursor"></i></a>
+    <nav class="nav"><a href="/posts/">Posts</a><a href="/beyond/" class=on>Beyond</a><a href="/talks/">Talks</a><a href="/shield/">Shield</a><a href="/about/">About</a><a href="/tags/">Tags</a></nav>
+    <button type="button" class="theme" id="theme" aria-label="switch light / dark">◐</button>
+  </header>
+  <main><article class="post">
+<header class="post-head"><div class="kicker"><a href="/beyond/">Beyond the good ol' LaunchAgents</a> · part 30</div><h1>Beyond the good ol&#x27; LaunchAgents - 30 - The man config file - man.conf</h1>
+<div class="meta"><time datetime="2023-05-10">May 10, 2023</time><span>2 min read</span><span class="tags"><a class="tag" href="/tags/macos/">macos</a><a class="tag" href="/tags/persistence/">persistence</a><a class="tag" href="/tags/beyond/">beyond</a></span></div></header>
+<div class="prose"><blockquote><p>This is part 30 in the series of "Beyond the good ol' LaunchAgents", where I try to collect various persistence techniques for macOS. For more background check the <a href="/beyond/beyond_intro/">introduction</a>. </p></blockquote>
+<p>I was watching an old BSidesLuxemburg 2019 talk by Aaron Jewitt, called "Threat Hunting On Linux And Mac With Auditbeat System Module", it's up on <a href="https://www.youtube.com/watch?v=teq6r7XbBug" rel="noopener">YouTube</a>. Aaron mentioned in one of the slides that you can persist using <code>man.conf</code> files. It looked really odd, I tried to quickly Google it, but haven’t found anything about it. So I took a look at the configuration file, and indeed, it turns out you can persist via man’s configuration file, <code>man.conf</code>, which can be found at <code>/private/etc/man.conf</code>. </p>
 <p>Looking at the configuration file, there are a handful of option, and some of them are related to external tools.</p>
-<pre tabindex="0"><code># The default MANPAGER is less(1), while the default WHATISPAGER for whatis and
+<pre><code># The default MANPAGER is less(1), while the default WHATISPAGER for whatis and
 # apropos remains more(1) for historical compatibility.  This can either
 # be switched in the environment, or globally on a system by setting MANPAGER or
 # WHATISPAGER:
 #
 # MANPAGER      /usr/bin/less -s
-# WHATISPAGER   /usr/bin/more -E
-</code></pre><p>Both <code>MANPAGER</code> and <code>WHATISPAGER</code> will set the binary to view man pages. For example we can do this:</p>
-<pre tabindex="0"><code>MANPAGER /tmp/view
-</code></pre><p>This will invoke <code>/tmp/view</code>. It can be even a script. If we don’t want to break man’s functionality we can invoke the default binary at the end of our script. For example:</p>
-<pre tabindex="0"><code>#!/bin/zsh
+# WHATISPAGER   /usr/bin/more -E</code></pre>
+<p>Both <code>MANPAGER</code> and <code>WHATISPAGER</code> will set the binary to view man pages. For example we can do this:</p>
+<pre><code>MANPAGER /tmp/view</code></pre>
+<p>This will invoke <code>/tmp/view</code>. It can be even a script. If we don’t want to break man’s functionality we can invoke the default binary at the end of our script. For example:</p>
+<pre><code>#!/bin/zsh
 
 touch /tmp/manconf
 
-/usr/bin/less -s
-</code></pre><p>The main drawback that we need root level access to edit the configuration file and it depends on the user running the <code>man</code> command. Yet it’s an interesting idea.</p>
+/usr/bin/less -s</code></pre>
+<p>The main drawback that we need root level access to edit the configuration file and it depends on the user running the <code>man</code> command. Yet it’s an interesting idea.</p>
 <p>I haven’t tested but I think the following can be also used.</p>
-<pre tabindex="0"><code># Useful paths - note that COL should not be defined when
-# NROFF is defined as &#34;groff -Tascii&#34; or &#34;groff -Tlatin1&#34;;
+<pre><code># Useful paths - note that COL should not be defined when
+# NROFF is defined as "groff -Tascii" or "groff -Tlatin1";
 # not only is it superfluous, but it actually damages the output.
-# For use with utf-8, NROFF should be &#34;nroff -mandoc&#34; without -T option.
+# For use with utf-8, NROFF should be "nroff -mandoc" without -T option.
 # (Maybe - but today I need -Tlatin1 to prevent double conversion to utf8.)   
 # 
 # If you have a new troff (version 1.18.1?) and its colored output
@@ -206,76 +61,19 @@ touch /tmp/manconf
 # TBL           /usr/local/bin/tbl
 # REFER         /usr/local/bin/refer
 # PIC           /usr/local/bin/pic
-# VGRIND
-</code></pre>
-  </article>
-</section>
-
-  
-
-    </div>
-
-    <footer class="footer">
-  <section class="container">
-    ©
-    
-      2019 -
-    
-    2026
-     Csaba Fitzl 
-    ·
-    
-    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
-    
-  </section>
-</footer>
-
-  </main>
-
-  
-
-  
-  
-  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
-  
-
-  
-
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
+# VGRIND</code></pre></div>
+<nav class="pn"><a class="prev" href="/beyond/beyond_0029/"><span>← previous</span>Beyond the good ol&#x27; LaunchAgents - 29 - amstoold</a><a class="next" href="/beyond/beyond_0031/"><span>next →</span>Beyond the good ol&#x27; LaunchAgents - 31 - BSM audit framework</a></nav></article></main>
+  <footer class="foot">
+    <span>© 2026 Csaba Fitzl</span>
+    <span class="social"><a href="https://github.com/theevilbit/" rel="me noopener">GitHub</a><a href="https://x.com/theevilbit" rel="me noopener">X</a><a href="/index.xml" rel="me noopener">RSS</a></span>
+  </footer>
+</div>
+<script>
+document.getElementById("theme").addEventListener("click", function () {
+  var t = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem("tb.theme", t); } catch (e) {}
+});
+</script>
 </body>
 </html>

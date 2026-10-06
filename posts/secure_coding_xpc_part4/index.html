@@ -1,433 +1,204 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-  <title>
-  CVE-2020-14978 - Secure coding XPC Services - Part 4 - Improved client authorization · theevilbit blog
-</title>
-  <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light dark">
-
-
-
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CVE-2020-14978 - Secure coding XPC Services - Part 4 - Improved client authorization · theevilbit</title>
+<meta name="description" content="In this post we will look into an other case study which will show us (again) why XPC client verification is crucial in XPC security, and how added authorization checks can slightly improve (but not fix) the problem. The">
 <meta name="author" content="Csaba Fitzl">
-<meta name="description" content="
-  F-Secure SAFE XPC service exploitation (CVE-2020-14978)
-  
-    
-    Link to heading
-  
-
-
-  Intro
-  
-    
-    Link to heading
-  
-
-In this post we will look into an other case study which will show us (again) why XPC client verification is crucial in XPC security, and how added authorization checks can slightly improve (but not fix) the problem. The F-Secure SAFE XPC services installed on macOS were not sufficiently hardened, and a malicious actor had the ability to interact with them. The vulnerability was fixed in version 17.8, it allowed an attacker to query specific settings, or if authorization used, it could prompt a user for password on behalf of F-Secure and ask for permissions to change settings.">
-<meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
-
-
-
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="CVE-2020-14978 - Secure coding XPC Services - Part 4 - Improved client authorization">
-  <meta name="twitter:description" content="F-Secure SAFE XPC service exploitation (CVE-2020-14978) Link to heading Intro Link to heading In this post we will look into an other case study which will show us (again) why XPC client verification is crucial in XPC security, and how added authorization checks can slightly improve (but not fix) the problem. The F-Secure SAFE XPC services installed on macOS were not sufficiently hardened, and a malicious actor had the ability to interact with them. The vulnerability was fixed in version 17.8, it allowed an attacker to query specific settings, or if authorization used, it could prompt a user for password on behalf of F-Secure and ask for permissions to change settings.">
-
-<meta property="og:url" content="https://theevilbit.github.io/posts/secure_coding_xpc_part4/">
-  <meta property="og:site_name" content="theevilbit blog">
-  <meta property="og:title" content="CVE-2020-14978 - Secure coding XPC Services - Part 4 - Improved client authorization">
-  <meta property="og:description" content="F-Secure SAFE XPC service exploitation (CVE-2020-14978) Link to heading Intro Link to heading In this post we will look into an other case study which will show us (again) why XPC client verification is crucial in XPC security, and how added authorization checks can slightly improve (but not fix) the problem. The F-Secure SAFE XPC services installed on macOS were not sufficiently hardened, and a malicious actor had the ability to interact with them. The vulnerability was fixed in version 17.8, it allowed an attacker to query specific settings, or if authorization used, it could prompt a user for password on behalf of F-Secure and ask for permissions to change settings.">
-  <meta property="og:locale" content="en">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2020-06-12T00:00:00+00:00">
-    <meta property="article:modified_time" content="2020-06-12T00:00:00+00:00">
-    <meta property="article:tag" content="Macos">
-    <meta property="article:tag" content="Xpc">
-    <meta property="article:tag" content="F-Secure">
-    <meta property="article:tag" content="Lpe">
-    <meta property="article:tag" content="Vulnerability">
-
-
-
-
 <link rel="canonical" href="https://theevilbit.github.io/posts/secure_coding_xpc_part4/">
-
-
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
-
-
-  
-  
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
-
-
-
-
-
-
-  
-    
-    
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
-  
-
-
-
- 
-
-
-
-
-<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
-
-<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-
-<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
-<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
-
-
-
-
-
-
-
-
-
+<link rel="alternate" type="application/rss+xml" title="theevilbit" href="/index.xml">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>try { var t = localStorage.getItem("tb.theme"); document.documentElement.dataset.theme = t || "dark"; } catch (e) { document.documentElement.dataset.theme = "dark"; }</script>
+<link rel="preload" href="/fonts/IBMPlexSans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts.css?v=1791269065">
+<link rel="stylesheet" href="/style.css?v=1791269065">
 </head>
-
-
-
-
-
-
-<body class="preload-transitions colorscheme-auto">
-  
-<div class="float-container">
-    <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
-    </a>
-</div>
-
-
-  <main class="wrapper">
-    <nav class="navigation">
-  <section class="container">
-    
-    <a class="navigation-title" href="https://theevilbit.github.io/">
-      theevilbit blog
-    </a>
-    
-    
-      <input type="checkbox" id="menu-toggle" />
-      <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
-      </label>
-      <ul class="navigation-list">
-        
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/posts/">Posts</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/shield/">Shield.app</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/tags/">Tags</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/about/">About</a>
-            </li>
-          
-        
-        
-      </ul>
-    
-  </section>
-</nav>
-
-
-    <div class="content">
-      
-  <section class="container post">
-    <article>
-      <header>
-        <div class="post-title">
-          <h1 class="title">
-            <a class="title-link" href="https://theevilbit.github.io/posts/secure_coding_xpc_part4/">
-              CVE-2020-14978 - Secure coding XPC Services - Part 4 - Improved client authorization
-            </a>
-          </h1>
-        </div>
-        <div class="post-meta">
-          <div class="date">
-            <span class="posted-on">
-              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
-              <time datetime="2020-06-12T00:00:00Z">
-                June 12, 2020
-              </time>
-            </span>
-            <span class="reading-time">
-              <i class="fa-solid fa-clock" aria-hidden="true"></i>
-              8-minute read
-            </span>
-          </div>
-          
-          <div class="categories">
-  <i class="fa-solid fa-folder" aria-hidden="true"></i>
-    <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
-
-          <div class="tags">
-  <i class="fa-solid fa-tag" aria-hidden="true"></i>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/macos/">Macos</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/xpc/">Xpc</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/f-secure/">F-Secure</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/lpe/">Lpe</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/vulnerability/">Vulnerability</a>
-    </span></div>
-
-        </div>
-      </header>
-
-      <div class="post-content">
-        
-        <h1 id="f-secure-safe-xpc-service-exploitation-cve-2020-14978">
-  F-Secure SAFE XPC service exploitation (CVE-2020-14978)
-  <a class="heading-link" href="#f-secure-safe-xpc-service-exploitation-cve-2020-14978">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h1>
-<h2 id="intro">
-  Intro
-  <a class="heading-link" href="#intro">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/">the<span>evil</span>bit<i class="cursor"></i></a>
+    <nav class="nav"><a href="/posts/" class=on>Posts</a><a href="/beyond/">Beyond</a><a href="/talks/">Talks</a><a href="/shield/">Shield</a><a href="/about/">About</a><a href="/tags/">Tags</a></nav>
+    <button type="button" class="theme" id="theme" aria-label="switch light / dark">◐</button>
+  </header>
+  <main><article class="post">
+<header class="post-head"><h1>CVE-2020-14978 - Secure coding XPC Services - Part 4 - Improved client authorization</h1>
+<div class="meta"><time datetime="2020-06-12">Jun 12, 2020</time><span>7 min read</span><span class="tags"><a class="tag" href="/tags/macos/">macos</a><a class="tag" href="/tags/xpc/">xpc</a><a class="tag" href="/tags/f-secure/">f-secure</a><a class="tag" href="/tags/lpe/">lpe</a><a class="tag" href="/tags/vulnerability/">vulnerability</a></span></div></header>
+<details class="toc"><summary>Contents</summary><ol><li class="l2"><a href="#intro">Intro</a></li><li class="l2"><a href="#root-cause-analysis">Root cause analysis</a></li><li class="l2"><a href="#authorization-limits-the-scope">Authorization limits the scope</a></li><li class="l2"><a href="#exploitation---poc">Exploitation - POC</a></li><li class="l2"><a href="#secure-coding-best-practice">Secure coding best practice</a></li><li class="l2"><a href="#conclusion">Conclusion</a></li></ol></details><div class="prose"><h1 id="f-secure-safe-xpc-service-exploitation-cve-2020-14978">F-Secure SAFE XPC service exploitation (CVE-2020-14978)<a class="anchor" href="#f-secure-safe-xpc-service-exploitation-cve-2020-14978" aria-label="link to this section">#</a></h1>
+<h2 id="intro">Intro<a class="anchor" href="#intro" aria-label="link to this section">#</a></h2>
 <p>In this post we will look into an other case study which will show us (again) why XPC client verification is crucial in XPC security, and how added authorization checks can slightly improve (but not fix) the problem. The F-Secure SAFE XPC services installed on macOS were not sufficiently hardened, and a malicious actor had the ability to interact with them. The vulnerability was fixed in version 17.8, it allowed an attacker to query specific settings, or if authorization used, it could prompt a user for password on behalf of F-Secure and ask for permissions to change settings.</p>
-<h2 id="root-cause-analysis">
-  Root cause analysis
-  <a class="heading-link" href="#root-cause-analysis">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
+<h2 id="root-cause-analysis">Root cause analysis<a class="anchor" href="#root-cause-analysis" aria-label="link to this section">#</a></h2>
 <p>We can find the various XPC services offered by F-Secure, by searching for <code>MachServices</code> between all the LaunchDaemons. The product offeres various services.</p>
-<pre tabindex="0"><code>% grep Mach -R /Library/LaunchDaemons                                                                                       
+<pre><code>% grep Mach -R /Library/LaunchDaemons                                                                                       
 /Library/LaunchDaemons/com.f-secure.fscsafeadmind.plist:  &lt;key&gt;MachServices&lt;/key&gt;
-/Library/LaunchDaemons/com.f-secure.fscsafesettingsd.plist:	&lt;key&gt;MachServices&lt;/key&gt;
-/Library/LaunchDaemons/com.f-secure.fsvpn-upstream.production.plist:	&lt;key&gt;MachServices&lt;/key&gt;
-/Library/LaunchDaemons/com.f-secure.fsvpn-service-helper.production.plist:	&lt;key&gt;MachServices&lt;/key&gt;
-/Library/LaunchDaemons/com.f-secure.fsctelemetryd.plist:	&lt;key&gt;MachServices&lt;/key&gt;
-/Library/LaunchDaemons/com.f-secure.fsvpn-service.production.plist:	&lt;key&gt;MachServices&lt;/key&gt;
-</code></pre><p>All of them did the same verification towards the connecting client at the <code>codesignValidForProcess</code> function.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>(<span style="color:#078;font-weight:bold">char</span>)<span style="color:#99f">codesignValidForProcess</span>:(<span style="color:#078;font-weight:bold">int</span>)arg2 {
-</span></span><span style="display:flex;"><span>    var_B4 <span style="color:#555">=</span> arg2;
-</span></span><span style="display:flex;"><span>    var_140 <span style="color:#555">=</span> intrinsic_movdqa(var_140, intrinsic_punpcklqdq(zero_extend_64(<span style="color:#c30">@&#34;anchor apple generic and certificate leaf[subject.OU] = </span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">6KALSAFZJC</span><span style="color:#c30;font-weight:bold">\&#34;</span><span style="color:#c30">&#34;</span>), zero_extend_64(<span style="color:#c30">@&#34;anchor apple and (identifier com.apple.systempreferences or identifier com.apple.systempreferences.legacyLoader)&#34;</span>)));
-</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [NSArray <span style="color:#99f">arrayWithObjects</span>:rdx <span style="color:#99f">count</span>:<span style="color:#f60">0x2</span>];
-</span></span><span style="display:flex;"><span>    rax <span style="color:#555">=</span> [rax <span style="color:#069;font-weight:bold">retain</span>];
-</span></span><span style="display:flex;"><span>    xmm0 <span style="color:#555">=</span> intrinsic_pxor(zero_extend_64(<span style="color:#c30">@&#34;anchor apple and (identifier com.apple.systempreferences or identifier com.apple.systempreferences.legacyLoader)&#34;</span>), zero_extend_64(<span style="color:#c30">@&#34;anchor apple and (identifier com.apple.systempreferences or identifier com.apple.systempreferences.legacyLoader)&#34;</span>));
-</span></span></code></pre></div><p>We can see that it will check if the connecting client is digitally signed by F-Secure (via the team ID) with a certificate from Apple. This is good, however just in the case of Microsoft&rsquo;s bug one key item is missing, which is the client version or the client hardening settings. Normally F-Secure macOS applications are signed with hardened runtime, which prevents someone injecting code into it, however someone might find an old one, which uses the same certificate, but has no runtime. With that being said, after digging through the Internet I found an old version available from here:</p>
-<p><a href="http://www.tdhost.dk/download/F-secure/"  class="external-link" target="_blank" rel="noopener">http://www.tdhost.dk/download/F-secure/</a></p>
-<h2 id="authorization-limits-the-scope">
-  Authorization limits the scope
-  <a class="heading-link" href="#authorization-limits-the-scope">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
+/Library/LaunchDaemons/com.f-secure.fscsafesettingsd.plist:    &lt;key&gt;MachServices&lt;/key&gt;
+/Library/LaunchDaemons/com.f-secure.fsvpn-upstream.production.plist:    &lt;key&gt;MachServices&lt;/key&gt;
+/Library/LaunchDaemons/com.f-secure.fsvpn-service-helper.production.plist:    &lt;key&gt;MachServices&lt;/key&gt;
+/Library/LaunchDaemons/com.f-secure.fsctelemetryd.plist:    &lt;key&gt;MachServices&lt;/key&gt;
+/Library/LaunchDaemons/com.f-secure.fsvpn-service.production.plist:    &lt;key&gt;MachServices&lt;/key&gt;</code></pre>
+<p>All of them did the same verification towards the connecting client at the <code>codesignValidForProcess</code> function.</p>
+<pre><code class=language-objectivec>(char)codesignValidForProcess:(int)arg2 {
+    var_B4 = arg2;
+    var_140 = intrinsic_movdqa(var_140, intrinsic_punpcklqdq(zero_extend_64(@"anchor apple generic and certificate leaf[subject.OU] = \"6KALSAFZJC\""), zero_extend_64(@"anchor apple and (identifier com.apple.systempreferences or identifier com.apple.systempreferences.legacyLoader)")));
+    rax = [NSArray arrayWithObjects:rdx count:0x2];
+    rax = [rax retain];
+    xmm0 = intrinsic_pxor(zero_extend_64(@"anchor apple and (identifier com.apple.systempreferences or identifier com.apple.systempreferences.legacyLoader)"), zero_extend_64(@"anchor apple and (identifier com.apple.systempreferences or identifier com.apple.systempreferences.legacyLoader)"));</code></pre>
+<p>We can see that it will check if the connecting client is digitally signed by F-Secure (via the team ID) with a certificate from Apple. This is good, however just in the case of Microsoft's bug one key item is missing, which is the client version or the client hardening settings. Normally F-Secure macOS applications are signed with hardened runtime, which prevents someone injecting code into it, however someone might find an old one, which uses the same certificate, but has no runtime. With that being said, after digging through the Internet I found an old version available from here:</p>
+<p><a href="http://www.tdhost.dk/download/F-secure/" rel="noopener"><a href="http://www.tdhost.dk/download/F-secure/" rel="noopener">http://www.tdhost.dk/download/F-secure/</a></a></p>
+<h2 id="authorization-limits-the-scope">Authorization limits the scope<a class="anchor" href="#authorization-limits-the-scope" aria-label="link to this section">#</a></h2>
 <p>The way XPC services implement authorization in F-Secure somewhat limit the vulnerability, however for being bulletproof the guideline at the end of the article should be followed, as not all commands need authorization. Here follows a brief description of why Authorization limits the exploit.</p>
 <p>The XPC service will try to authorize the connecting client, with the right <code>system.privilege.admin</code>. This  right looks like this:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span>% security authorizationdb read system.privilege.admin                                   
-</span></span><span style="display:flex;"><span><span style="color:#099">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#099">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;plist</span> <span style="color:#309">version=</span><span style="color:#c30">&#34;1.0&#34;</span><span style="color:#309;font-weight:bold">&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;dict&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>allow-root<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>authenticate-user<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;true/&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>class<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>user<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>comment<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>Used by AuthorizationExecuteWithPrivileges(...).
-</span></span><span style="display:flex;"><span>		AuthorizationExecuteWithPrivileges() is used by programs requesting
-</span></span><span style="display:flex;"><span>		to run a tool as root (e.g., some installers).<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>created<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;real&gt;</span>592465569.41917002<span style="color:#309;font-weight:bold">&lt;/real&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>group<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;string&gt;</span>admin<span style="color:#309;font-weight:bold">&lt;/string&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>modified<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;real&gt;</span>592465569.41917002<span style="color:#309;font-weight:bold">&lt;/real&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>session-owner<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;false/&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>shared<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;false/&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>timeout<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>300<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>tries<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>10000<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;key&gt;</span>version<span style="color:#309;font-weight:bold">&lt;/key&gt;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#309;font-weight:bold">&lt;integer&gt;</span>0<span style="color:#309;font-weight:bold">&lt;/integer&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/dict&gt;</span>
-</span></span><span style="display:flex;"><span><span style="color:#309;font-weight:bold">&lt;/plist&gt;</span>
-</span></span></code></pre></div><p>Basically this means that we need to be either <code>root</code>  or be in the <code>admin</code> group, and in that case authenticate via a prompt. Now when the XPC service asks for authorization it will ask for that on behalf of the connecting client, which doesn&rsquo;t run as root (although if yes, authorization will be granted). The XPC service doesn&rsquo;t have the <code>kAuthorizationFlagInteractionAllowed</code> so if the connecting client didn&rsquo;t ask for an authorization, it will fail, which we can see in the logs:</p>
-<pre tabindex="0"><code>info	14:57:42.800020+0100	authd	Process /usr/local/f-secure/bin/fscsafeadmind.xpc (PID 300) evaluates 1 rights with flags 00000002 (engine 82): (
-    &#34;system.privilege.admin&#34;
+<pre><code class=language-xml>% security authorizationdb read system.privilege.admin                                   
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+&lt;dict&gt;
+    &lt;key&gt;allow-root&lt;/key&gt;
+    &lt;true/&gt;
+    &lt;key&gt;authenticate-user&lt;/key&gt;
+    &lt;true/&gt;
+    &lt;key&gt;class&lt;/key&gt;
+    &lt;string&gt;user&lt;/string&gt;
+    &lt;key&gt;comment&lt;/key&gt;
+    &lt;string&gt;Used by AuthorizationExecuteWithPrivileges(...).
+        AuthorizationExecuteWithPrivileges() is used by programs requesting
+        to run a tool as root (e.g., some installers).&lt;/string&gt;
+    &lt;key&gt;created&lt;/key&gt;
+    &lt;real&gt;592465569.41917002&lt;/real&gt;
+    &lt;key&gt;group&lt;/key&gt;
+    &lt;string&gt;admin&lt;/string&gt;
+    &lt;key&gt;modified&lt;/key&gt;
+    &lt;real&gt;592465569.41917002&lt;/real&gt;
+    &lt;key&gt;session-owner&lt;/key&gt;
+    &lt;false/&gt;
+    &lt;key&gt;shared&lt;/key&gt;
+    &lt;false/&gt;
+    &lt;key&gt;timeout&lt;/key&gt;
+    &lt;integer&gt;300&lt;/integer&gt;
+    &lt;key&gt;tries&lt;/key&gt;
+    &lt;integer&gt;10000&lt;/integer&gt;
+    &lt;key&gt;version&lt;/key&gt;
+    &lt;integer&gt;0&lt;/integer&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;</code></pre>
+<p>Basically this means that we need to be either <code>root</code>  or be in the <code>admin</code> group, and in that case authenticate via a prompt. Now when the XPC service asks for authorization it will ask for that on behalf of the connecting client, which doesn't run as root (although if yes, authorization will be granted). The XPC service doesn't have the <code>kAuthorizationFlagInteractionAllowed</code> so if the connecting client didn't ask for an authorization, it will fail, which we can see in the logs:</p>
+<pre><code>info    14:57:42.800020+0100    authd    Process /usr/local/f-secure/bin/fscsafeadmind.xpc (PID 300) evaluates 1 rights with flags 00000002 (engine 82): (
+    "system.privilege.admin"
 )
-debug	14:57:42.800041+0100	authd	engine 82: user not used password
-debug	14:57:42.800060+0100	authd	engine 82: checking if rule system.privilege.admin contains password-only item
-debug	14:57:42.801121+0100	authd	engine 82: _preevaluate_rule system.privilege.admin
-debug	14:57:42.801198+0100	authd	engine 82: evaluate right system.privilege.admin
-debug	14:57:42.801316+0100	authd	engine 82: using rule system.privilege.admin
-error	14:57:42.801378+0100	authd	Fatal: interaction not allowed (kAuthorizationFlagInteractionAllowed not set) (engine 82)
-debug	14:57:42.801397+0100	authd	Failed to authorize right &#39;system.privilege.admin&#39; by client &#39;/usr/local/f-secure/bin/fscsafeadmind.xpc&#39; [300] for authorization created by &#39;/Users/csaby/Desktop/F-Secure Mac Protection.app&#39; [1180] (2,0) (-60007) (engine 82)
-debug	14:57:42.801444+0100	authd	engine 82: authorize result: -60007
-error	14:57:42.801471+0100	authd	copy_rights: authorization failed
-</code></pre><p>The related code part in F-Secure is (decompiled with Hopper):</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">else</span> {
-</span></span><span style="display:flex;"><span>        r12 <span style="color:#555">=</span> <span style="color:#f60">0x2</span>;
-</span></span><span style="display:flex;"><span>        r14 <span style="color:#555">=</span> <span style="color:#c30">&#34;system.privilege.admin&#34;</span>;
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>var_38 <span style="color:#555">=</span> <span style="color:#f60">0x1</span>;
-</span></span><span style="display:flex;"><span>rbx <span style="color:#555">=</span> <span style="color:#f60">0x0</span>;
-</span></span><span style="display:flex;"><span>NSLog(<span style="color:#c30">@&#34;Authorizing for right name %s&#34;</span>, r14);
-</span></span><span style="display:flex;"><span>rax <span style="color:#555">=</span> AuthorizationCopyRights(var_28, <span style="color:#555">&amp;</span>var_38, <span style="color:#f60">0x0</span>, r12, <span style="color:#f60">0x0</span>);
-</span></span></code></pre></div><p>This means that during an exploitation we will need to do the authorization at the client, which will generate a prompt. However that prompt will be seen as coming from F-Secure cause that is the process we are injecting into.</p>
-<p><img src="https://theevilbit.github.io/images/Secure_coding_XPC_Part4/f-secure_auth.png" alt=""></p>
-<p>Although it might raise the user&rsquo;s suspicion, but as it comes from F-Secure, it&rsquo;s less obvious that this is a malicious action.</p>
-<h2 id="exploitation---poc">
-  Exploitation - POC
-  <a class="heading-link" href="#exploitation---poc">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
+debug    14:57:42.800041+0100    authd    engine 82: user not used password
+debug    14:57:42.800060+0100    authd    engine 82: checking if rule system.privilege.admin contains password-only item
+debug    14:57:42.801121+0100    authd    engine 82: _preevaluate_rule system.privilege.admin
+debug    14:57:42.801198+0100    authd    engine 82: evaluate right system.privilege.admin
+debug    14:57:42.801316+0100    authd    engine 82: using rule system.privilege.admin
+error    14:57:42.801378+0100    authd    Fatal: interaction not allowed (kAuthorizationFlagInteractionAllowed not set) (engine 82)
+debug    14:57:42.801397+0100    authd    Failed to authorize right 'system.privilege.admin' by client '/usr/local/f-secure/bin/fscsafeadmind.xpc' [300] for authorization created by '/Users/csaby/Desktop/F-Secure Mac Protection.app' [1180] (2,0) (-60007) (engine 82)
+debug    14:57:42.801444+0100    authd    engine 82: authorize result: -60007
+error    14:57:42.801471+0100    authd    copy_rights: authorization failed</code></pre>
+<p>The related code part in F-Secure is (decompiled with Hopper):</p>
+<pre><code class=language-objectivec>else {
+        r12 = 0x2;
+        r14 = "system.privilege.admin";
+}
+var_38 = 0x1;
+rbx = 0x0;
+NSLog(@"Authorizing for right name %s", r14);
+rax = AuthorizationCopyRights(var_28, &amp;var_38, 0x0, r12, 0x0);</code></pre>
+<p>This means that during an exploitation we will need to do the authorization at the client, which will generate a prompt. However that prompt will be seen as coming from F-Secure cause that is the process we are injecting into.</p>
+<p><img src="/images/Secure_coding_XPC_Part4/f-secure_auth.png" alt="" loading="lazy"></p>
+<p>Although it might raise the user's suspicion, but as it comes from F-Secure, it's less obvious that this is a malicious action.</p>
+<h2 id="exploitation---poc">Exploitation - POC<a class="anchor" href="#exploitation---poc" aria-label="link to this section">#</a></h2>
 <p>I picked the <code>com.f-secure.fscsafeadmind</code> service to connect to and develop a POC. It implements the <code>fscsafeadmindProtocol</code> protocol, and we can use that interface to talk to the service.</p>
-<p>We can use <code>class-dump</code> to dump the available classes, interfaces, etc&hellip; for the binary. From that the protocol we can use:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@protocol</span> <span style="color:#0a8;font-weight:bold">fscsafeadmindProtocol</span>
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getScreenSaverPasswordState:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg1</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">isKextLoaded:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg2</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">isServiceRunning:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg2</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">unsubscribeEndpoint:</span>(NSXPCListenerEndpoint <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">fromProtocol:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg2</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">subscribeToChangesWithProtocol:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">andEndpoint:</span>(NSXPCListenerEndpoint <span style="color:#555">*</span>)<span style="color:#033">arg2</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setUninstallationProtectionEnabled:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setScanningExclusions:</span>(NSArray <span style="color:#555">*</span>)<span style="color:#033">arg1</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getXFenceDisabledInSettings:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg1</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">disableScheduledScanning</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">enableScheduledScanning:</span>(<span style="color:#078;font-weight:bold">id</span> <span style="color:#555">&lt;</span>NSSecureCoding<span style="color:#555">&gt;</span>)<span style="color:#033">arg1</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setXfenceEnabledNoAuth:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setFRSEnabledNoAuth:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">oasIsTemporarilyDisabled:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg1</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getOASState:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">long</span> <span style="color:#078;font-weight:bold">long</span>))<span style="color:#033">arg1</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setOASEnabledNoAuth:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getIsolationState:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg1</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setFirewallBlock:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setFirewallEnabledNoAuth:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getFirewallState:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">long</span> <span style="color:#078;font-weight:bold">long</span>))<span style="color:#033">arg1</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getSignupDataWithCallback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(NSError <span style="color:#555">*</span>, NSString <span style="color:#555">*</span>, NSString <span style="color:#555">*</span>))<span style="color:#033">arg1</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setTimeLimits:</span>(<span style="color:#078;font-weight:bold">id</span> <span style="color:#555">&lt;</span>NSSecureCoding<span style="color:#555">&gt;</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">user:</span>(<span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#078;font-weight:bold">int</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg3</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">disableWebBlockingForUserWithID:</span>(<span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#078;font-weight:bold">int</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg2</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setFirewallEnabled:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">authorization:</span>(NSData <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg3</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getXfenceNonAdminCanCreateRulesWithCallback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg1</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setXfenceNonAdminCanCreateRules:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">authorization:</span>(NSData <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg3</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">getXFENCEFilterStatusWithCallback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg1</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setXfenceEnabled:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">authorization:</span>(NSData <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg3</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setSubscription:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">key:</span>(NSString <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">authorization:</span>(NSData <span style="color:#555">*</span>)<span style="color:#033">arg3</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">long</span> <span style="color:#078;font-weight:bold">long</span>))<span style="color:#033">arg4</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setFRSEnabled:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">authorization:</span>(NSData <span style="color:#555">*</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg3</span>;
-</span></span><span style="display:flex;"><span>- (<span style="color:#078;font-weight:bold">void</span>)<span style="color:#c0f">setOASEnabled:</span>(<span style="color:#078;font-weight:bold">BOOL</span>)<span style="color:#033">arg1</span> <span style="color:#c0f">resumeTime:</span>(<span style="color:#078;font-weight:bold">double</span>)<span style="color:#033">arg2</span> <span style="color:#c0f">authorization:</span>(NSData <span style="color:#555">*</span>)<span style="color:#033">arg3</span> <span style="color:#c0f">callback:</span>(<span style="color:#078;font-weight:bold">void</span> (<span style="color:#555">^</span>)(<span style="color:#078;font-weight:bold">BOOL</span>))<span style="color:#033">arg4</span>;
-</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">@end</span>
-</span></span></code></pre></div><p>The functions that end with <code>NoAuth</code> are not allowed by default, and that will be denied. We have the rest where we either need or don&rsquo;t need authorization. In this case the functions that don&rsquo;t require are related to reading settings.</p>
+<p>We can use <code>class-dump</code> to dump the available classes, interfaces, etc... for the binary. From that the protocol we can use:</p>
+<pre><code class=language-objectivec>@protocol fscsafeadmindProtocol
+- (void)getScreenSaverPasswordState:(void (^)(BOOL))arg1;
+- (void)isKextLoaded:(NSString *)arg1 callback:(void (^)(BOOL))arg2;
+- (void)isServiceRunning:(NSString *)arg1 callback:(void (^)(BOOL))arg2;
+- (void)unsubscribeEndpoint:(NSXPCListenerEndpoint *)arg1 fromProtocol:(NSString *)arg2;
+- (void)subscribeToChangesWithProtocol:(NSString *)arg1 andEndpoint:(NSXPCListenerEndpoint *)arg2;
+- (void)setUninstallationProtectionEnabled:(BOOL)arg1;
+- (void)setScanningExclusions:(NSArray *)arg1;
+- (void)getXFenceDisabledInSettings:(void (^)(BOOL))arg1;
+- (void)disableScheduledScanning;
+- (void)enableScheduledScanning:(id &lt;NSSecureCoding&gt;)arg1;
+- (void)setXfenceEnabledNoAuth:(BOOL)arg1;
+- (void)setFRSEnabledNoAuth:(BOOL)arg1;
+- (void)oasIsTemporarilyDisabled:(void (^)(BOOL))arg1;
+- (void)getOASState:(void (^)(long long))arg1;
+- (void)setOASEnabledNoAuth:(BOOL)arg1;
+- (void)getIsolationState:(void (^)(BOOL))arg1;
+- (void)setFirewallBlock:(BOOL)arg1;
+- (void)setFirewallEnabledNoAuth:(BOOL)arg1;
+- (void)getFirewallState:(void (^)(long long))arg1;
+- (void)getSignupDataWithCallback:(void (^)(NSError *, NSString *, NSString *))arg1;
+- (void)setTimeLimits:(id &lt;NSSecureCoding&gt;)arg1 user:(unsigned int)arg2 callback:(void (^)(BOOL))arg3;
+- (void)disableWebBlockingForUserWithID:(unsigned int)arg1 callback:(void (^)(BOOL))arg2;
+- (void)setFirewallEnabled:(BOOL)arg1 authorization:(NSData *)arg2 callback:(void (^)(BOOL))arg3;
+- (void)getXfenceNonAdminCanCreateRulesWithCallback:(void (^)(BOOL))arg1;
+- (void)setXfenceNonAdminCanCreateRules:(BOOL)arg1 authorization:(NSData *)arg2 callback:(void (^)(BOOL))arg3;
+- (void)getXFENCEFilterStatusWithCallback:(void (^)(BOOL))arg1;
+- (void)setXfenceEnabled:(BOOL)arg1 authorization:(NSData *)arg2 callback:(void (^)(BOOL))arg3;
+- (void)setSubscription:(BOOL)arg1 key:(NSString *)arg2 authorization:(NSData *)arg3 callback:(void (^)(long long))arg4;
+- (void)setFRSEnabled:(BOOL)arg1 authorization:(NSData *)arg2 callback:(void (^)(BOOL))arg3;
+- (void)setOASEnabled:(BOOL)arg1 resumeTime:(double)arg2 authorization:(NSData *)arg3 callback:(void (^)(BOOL))arg4;
+@end</code></pre>
+<p>The functions that end with <code>NoAuth</code> are not allowed by default, and that will be denied. We have the rest where we either need or don't need authorization. In this case the functions that don't require are related to reading settings.</p>
 <p>Authorization can be implement as follows. We setup an empty authorization and then we add the right <code>system.privilege.admin</code> with the flag <code>kAuthorizationFlagInteractionAllowed</code> to allow for user authentication. This is what will be popup as F-Secure as the screenshot above shows, as we inject into an old version of this app. Authorization will be granted if the user is in the admin group and enters his/her password.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>     NSData                      <span style="color:#555">*</span>authorization;
-</span></span><span style="display:flex;"><span>     OSStatus                    err;
-</span></span><span style="display:flex;"><span>     AuthorizationExternalForm   extForm;
-</span></span><span style="display:flex;"><span>     AuthorizationRef            authref;
-</span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>     err <span style="color:#555">=</span> AuthorizationCreate(<span style="color:#366">NULL</span>, kAuthorizationEmptyEnvironment, kAuthorizationFlagDefaults, <span style="color:#555">&amp;</span>authref);
-</span></span><span style="display:flex;"><span>     <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span><span style="color:#555">*</span> str <span style="color:#555">=</span> CFStringGetCStringPtr(SecCopyErrorMessageString(err, <span style="color:#366">nil</span>), kCFStringEncodingMacRoman);
-</span></span><span style="display:flex;"><span>     printf(<span style="color:#c30">&#34;OSStatus: %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>,str);
-</span></span><span style="display:flex;"><span>     <span style="color:#069;font-weight:bold">if</span> (err <span style="color:#555">==</span> errAuthorizationSuccess)
-</span></span><span style="display:flex;"><span>     {
-</span></span><span style="display:flex;"><span>		AuthorizationItem   oneRight <span style="color:#555">=</span> { <span style="color:#366">NULL</span>, <span style="color:#f60">0</span>, <span style="color:#366">NULL</span>, <span style="color:#f60">0</span> };  
-</span></span><span style="display:flex;"><span>		AuthorizationRights rights <span style="color:#555">=</span> { <span style="color:#f60">1</span>, <span style="color:#555">&amp;</span>oneRight };  
-</span></span><span style="display:flex;"><span>		oneRight.name <span style="color:#555">=</span> <span style="color:#c30">&#34;system.privilege.admin&#34;</span>;  
-</span></span><span style="display:flex;"><span>		err <span style="color:#555">=</span> AuthorizationCopyRights(authref, <span style="color:#555">&amp;</span>rights, <span style="color:#366">NULL</span>, kAuthorizationFlagExtendRights <span style="color:#555">|</span> kAuthorizationFlagInteractionAllowed, <span style="color:#366">NULL</span>);  
-</span></span><span style="display:flex;"><span>		
-</span></span><span style="display:flex;"><span>         err <span style="color:#555">=</span> AuthorizationMakeExternalForm(authref, <span style="color:#555">&amp;</span>extForm);
-</span></span><span style="display:flex;"><span>         str <span style="color:#555">=</span> CFStringGetCStringPtr(SecCopyErrorMessageString(err, <span style="color:#366">nil</span>), kCFStringEncodingMacRoman);
-</span></span><span style="display:flex;"><span>         printf(<span style="color:#c30">&#34;OSStatus: %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>,str);
-</span></span><span style="display:flex;"><span>     }
-</span></span><span style="display:flex;"><span>     <span style="color:#069;font-weight:bold">if</span> (err <span style="color:#555">==</span> errAuthorizationSuccess)
-</span></span><span style="display:flex;"><span>     {
-</span></span><span style="display:flex;"><span>         authorization <span style="color:#555">=</span> [[NSData alloc] <span style="color:#99f">initWithBytes</span>:<span style="color:#555">&amp;</span>extForm <span style="color:#99f">length</span>:<span style="color:#069;font-weight:bold">sizeof</span>(extForm)];
-</span></span><span style="display:flex;"><span>         str <span style="color:#555">=</span> CFStringGetCStringPtr(SecCopyErrorMessageString(err, <span style="color:#366">nil</span>), kCFStringEncodingMacRoman);
-</span></span><span style="display:flex;"><span>         printf(<span style="color:#c30">&#34;OSStatus: %s</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>,str);
-</span></span><span style="display:flex;"><span>     }
-</span></span></code></pre></div><p>Then we can connect to the XPC service easily:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-objectivec" data-lang="objectivec"><span style="display:flex;"><span>NSString<span style="color:#555">*</span>  _serviceName <span style="color:#555">=</span> XPCHelperMachServiceName;
-</span></span><span style="display:flex;"><span>NSXPCConnection<span style="color:#555">*</span> _agentConnection <span style="color:#555">=</span> [[NSXPCConnection alloc] <span style="color:#99f">initWithMachServiceName</span>:_serviceName <span style="color:#99f">options</span>:<span style="color:#f60">4096</span>];
-</span></span><span style="display:flex;"><span>[_agentConnection <span style="color:#99f">setRemoteObjectInterface</span>:[NSXPCInterface <span style="color:#99f">interfaceWithProtocol</span>:@protocol(fscsafeadmindProtocol)]];
-</span></span><span style="display:flex;"><span>[_agentConnection resume];
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">id</span> obj <span style="color:#555">=</span> [_agentConnection <span style="color:#99f">remoteObjectProxyWithErrorHandler</span>:<span style="color:#555">^</span>(NSError<span style="color:#555">*</span> error)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    (<span style="color:#078;font-weight:bold">void</span>)error;
-</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;Connection Failure&#34;</span>);
-</span></span><span style="display:flex;"><span>}];
-</span></span><span style="display:flex;"><span>NSLog(<span style="color:#c30">@&#34;obj: %@&#34;</span>, obj);
-</span></span><span style="display:flex;"><span>NSLog(<span style="color:#c30">@&#34;conn: %@&#34;</span>, _agentConnection);
-</span></span><span style="display:flex;"><span>        <span style="color:#09f;font-style:italic">//get FW state
-</span></span></span><span style="display:flex;"><span>[obj <span style="color:#99f">getFirewallState</span>:<span style="color:#555">^</span>(<span style="color:#078;font-weight:bold">long</span> <span style="color:#078;font-weight:bold">long</span> b){
-</span></span><span style="display:flex;"><span>    NSLog(<span style="color:#c30">@&#34;Response: %llx&#34;</span>,b);
-</span></span><span style="display:flex;"><span>        }];
-</span></span><span style="display:flex;"><span>        
-</span></span><span style="display:flex;"><span>       <span style="color:#09f;font-style:italic">// set frs state
-</span></span></span><span style="display:flex;"><span>[obj <span style="color:#99f">setFRSEnabled</span>:<span style="color:#366">true</span> <span style="color:#99f">authorization</span>:authorization <span style="color:#99f">callback</span>:<span style="color:#555">^</span>(<span style="color:#078;font-weight:bold">BOOL</span> b){
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span>(b) {NSLog(<span style="color:#c30">@&#34;Response: frs yes&#34;</span>);} <span style="color:#069;font-weight:bold">else</span> {NSLog(<span style="color:#c30">@&#34;Response: frs no&#34;</span>);}
-</span></span><span style="display:flex;"><span>        }];
-</span></span><span style="display:flex;"><span>		
-</span></span><span style="display:flex;"><span>NSLog(<span style="color:#c30">@&#34;Done&#34;</span>);
-</span></span></code></pre></div><p>This example will read the firewall state and try to set FRS, which will require authorization.</p>
+<pre><code class=language-objectivec>     NSData                      *authorization;
+     OSStatus                    err;
+     AuthorizationExternalForm   extForm;
+     AuthorizationRef            authref;
+    
+     err = AuthorizationCreate(NULL, kAuthorizationEmptyEnvironment, kAuthorizationFlagDefaults, &amp;authref);
+     const char* str = CFStringGetCStringPtr(SecCopyErrorMessageString(err, nil), kCFStringEncodingMacRoman);
+     printf("OSStatus: %s\n",str);
+     if (err == errAuthorizationSuccess)
+     {
+        AuthorizationItem   oneRight = { NULL, 0, NULL, 0 };  
+        AuthorizationRights rights = { 1, &amp;oneRight };  
+        oneRight.name = "system.privilege.admin";  
+        err = AuthorizationCopyRights(authref, &amp;rights, NULL, kAuthorizationFlagExtendRights | kAuthorizationFlagInteractionAllowed, NULL);  
+        
+         err = AuthorizationMakeExternalForm(authref, &amp;extForm);
+         str = CFStringGetCStringPtr(SecCopyErrorMessageString(err, nil), kCFStringEncodingMacRoman);
+         printf("OSStatus: %s\n",str);
+     }
+     if (err == errAuthorizationSuccess)
+     {
+         authorization = [[NSData alloc] initWithBytes:&amp;extForm length:sizeof(extForm)];
+         str = CFStringGetCStringPtr(SecCopyErrorMessageString(err, nil), kCFStringEncodingMacRoman);
+         printf("OSStatus: %s\n",str);
+     }</code></pre>
+<p>Then we can connect to the XPC service easily:</p>
+<pre><code class=language-objectivec>NSString*  _serviceName = XPCHelperMachServiceName;
+NSXPCConnection* _agentConnection = [[NSXPCConnection alloc] initWithMachServiceName:_serviceName options:4096];
+[_agentConnection setRemoteObjectInterface:[NSXPCInterface interfaceWithProtocol:@protocol(fscsafeadmindProtocol)]];
+[_agentConnection resume];
+
+id obj = [_agentConnection remoteObjectProxyWithErrorHandler:^(NSError* error)
+{
+    (void)error;
+    NSLog(@"Connection Failure");
+}];
+NSLog(@"obj: %@", obj);
+NSLog(@"conn: %@", _agentConnection);
+        //get FW state
+[obj getFirewallState:^(long long b){
+    NSLog(@"Response: %llx",b);
+        }];
+        
+       // set frs state
+[obj setFRSEnabled:true authorization:authorization callback:^(BOOL b){
+    if(b) {NSLog(@"Response: frs yes");} else {NSLog(@"Response: frs no");}
+        }];
+        
+NSLog(@"Done");</code></pre>
+<p>This example will read the firewall state and try to set FRS, which will require authorization.</p>
 <p>This has to be a dylib, as we need to inject it to the old F-Secure app.</p>
-<pre tabindex="0"><code>gcc -dynamiclib -framework Foundation -framework Security fsexp.m -o fsexp.dylib
-</code></pre><p>Then run with <code>DYLD_INSERT_LIBRARIES</code> injection:</p>
-<pre tabindex="0"><code>DYLD_INSERT_LIBRARIES=Desktop/fsexp.dylib ./Desktop/F-Secure\ Mac\ Protection.app/Contents/MacOS/F-Secure\ Mac\ Protection
-</code></pre><p>The old client doesn&rsquo;t have hardened runtime but has the same team ID:</p>
-<pre tabindex="0"><code>% codesign -dv F-Secure/F-Secure\ Mac\ Protection.app/Contents/MacOS/F-Secure\ Mac\ Protection
+<pre><code>gcc -dynamiclib -framework Foundation -framework Security fsexp.m -o fsexp.dylib</code></pre>
+<p>Then run with <code>DYLD_INSERT_LIBRARIES</code> injection:</p>
+<pre><code>DYLD_INSERT_LIBRARIES=Desktop/fsexp.dylib ./Desktop/F-Secure\ Mac\ Protection.app/Contents/MacOS/F-Secure\ Mac\ Protection</code></pre>
+<p>The old client doesn't have hardened runtime but has the same team ID:</p>
+<pre><code>% codesign -dv F-Secure/F-Secure\ Mac\ Protection.app/Contents/MacOS/F-Secure\ Mac\ Protection
 Executable=/Users/csaby/Downloads/F-Secure/F-Secure Mac Protection.app/Contents/MacOS/F-Secure Mac Protection
 Identifier=com.f-secure.fsmac.gui
 Format=app bundle with Mach-O thin (x86_64)
@@ -437,125 +208,34 @@ Timestamp=2018. Nov 29. 8:05:34
 Info.plist entries=24
 TeamIdentifier=6KALSAFZJC
 Sealed Resources version=2 rules=13 files=513
-Internal requirements count=1 size=184
-</code></pre><h2 id="secure-coding-best-practice">
-  Secure coding best practice
-  <a class="heading-link" href="#secure-coding-best-practice">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>As a closure, I would like to repeat (from my earlier post) what is the way of making an XPC connection secure.</p>
-<ol>
-<li>The client process verification in the <code>shouldAcceptNewConnection</code> call should verify the the following:</li>
-</ol>
+Internal requirements count=1 size=184</code></pre>
+<h2 id="secure-coding-best-practice">Secure coding best practice<a class="anchor" href="#secure-coding-best-practice" aria-label="link to this section">#</a></h2>
+<p>As a closure, I would like to repeat (from my earlier post) what is the way of making an XPC connection secure. </p>
+<ol><li>The client process verification in the <code>shouldAcceptNewConnection</code> call should verify the the following:</li></ol>
 <p>a. The connecting process is signed by Apple
 b. The connecting process is signed by your team ID
 c. The connecting process is identified by your bundle ID
-d. The connecting process has a minimum software version, where the fix has been implemented or it&rsquo;s hardened against injection  attacks.</p>
+d. The connecting process has a minimum software version, where the fix has been implemented or it's hardened against injection  attacks.</p>
 <p>For identifying the client at first place, the <code>audit_token</code> should be used instead of the PID, as the second is vulnerable to PID reuse attacks.</p>
-<ol start="2">
-<li>Beyond that the client which is allowed to connect has to be compiled with hardened runtime or library validation, without possessing the following entitlements:</li>
-</ol>
-<pre tabindex="0"><code>com.apple.security.cs.allow-dyld-environment-variables
+<ol start="2"><li>Beyond that the client which is allowed to connect has to be compiled with hardened runtime or library validation, without possessing the following entitlements:
+<pre><code>com.apple.security.cs.allow-dyld-environment-variables
 com.apple.security.cs.disable-library-validation
-com.apple.security.get-task-allow
-</code></pre><p>as these entitlements would allow another process to inject code into the app, and thus allowing it to talk to the helper tool.</p>
-<ol start="3">
-<li>Additionally the connecting client has to be identified by the audit token, and not by PID (process ID).</li>
-</ol>
-<h2 id="conclusion">
-  Conclusion
-  <a class="heading-link" href="#conclusion">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>We saw again in this post why it&rsquo;s extremely important to properly verify connecting clients, and we also saw how we can somewhat make it still a little bit more secure with added authorization.</p>
-
-      </div>
-
-
-      <footer>
-        
-
-
-        
-        
-        
-        
-        
-        
-        
-      </footer>
-    </article>
-
-    
-  </section>
-
-    </div>
-
-    <footer class="footer">
-  <section class="container">
-    ©
-    
-      2019 -
-    
-    2026
-     Csaba Fitzl 
-    ·
-    
-    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
-    
-  </section>
-</footer>
-
-  </main>
-
-  
-
-  
-  
-  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
-  
-
-  
-
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
+com.apple.security.get-task-allow</code></pre>
+<p>as these entitlements would allow another process to inject code into the app, and thus allowing it to talk to the helper tool.</p></li><li>Additionally the connecting client has to be identified by the audit token, and not by PID (process ID).</li></ol>
+<h2 id="conclusion">Conclusion<a class="anchor" href="#conclusion" aria-label="link to this section">#</a></h2>
+<p>We saw again in this post why it's extremely important to properly verify connecting clients, and we also saw how we can somewhat make it still a little bit more secure with added authorization.</p></div>
+<nav class="pn"><a class="prev" href="/posts/amfi_syscall/"><span>← previous</span>The AMFI MACF policy system call</a><a class="next" href="/posts/secure_coding_xpc_part5/"><span>next →</span>CVE-2020-14977 - Secure coding XPC Services - Part 5 - PID reuse attacks</a></nav></article></main>
+  <footer class="foot">
+    <span>© 2026 Csaba Fitzl</span>
+    <span class="social"><a href="https://github.com/theevilbit/" rel="me noopener">GitHub</a><a href="https://x.com/theevilbit" rel="me noopener">X</a><a href="/index.xml" rel="me noopener">RSS</a></span>
+  </footer>
+</div>
+<script>
+document.getElementById("theme").addEventListener("click", function () {
+  var t = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem("tb.theme", t); } catch (e) {}
+});
+</script>
 </body>
 </html>

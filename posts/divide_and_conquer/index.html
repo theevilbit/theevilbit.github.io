@@ -1,239 +1,34 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-  <title>
-  Divide and Conquer - A technique to bypass NextGen AV · theevilbit blog
-</title>
-  <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light dark">
-
-
-
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Divide and Conquer - A technique to bypass NextGen AV · theevilbit</title>
+<meta name="description" content="This blog post describes a generic technique I called internally on our red team assessment &quot;Divide and Conquer&quot;, which can be used to bypass behavioral based NextGen AV detection. It works by splitting malicious actions">
 <meta name="author" content="Csaba Fitzl">
-<meta name="description" content="
-  TL;DR
-  
-    
-    Link to heading
-  
-
-This blog post describes a generic technique I called internally on our red team assessment &ldquo;Divide and Conquer&rdquo;, which can be used to bypass behavioral based NextGen AV detection. It works by splitting malicious actions and API calls into distinct processes.
-
-  Intro
-  
-    
-    Link to heading
-  
-
-Back in 2019 I was part of a red team, where our daily activity was to bypass a specific NextGen AV. I had this idea I called &ldquo;divide and conquer&rdquo;. I was so excited about it, that I had to name it :) That time I didn&rsquo;t want to publicly write about it, and I also haven&rsquo;t found any sources on the Internet that describes this idea (which describes my poor searching skills). Time passed, and by the time I could have write about it, I forgot. Then a few days ago Adam (@Hexacorn) posts this:">
-<meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
-
-
-
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Divide and Conquer - A technique to bypass NextGen AV">
-  <meta name="twitter:description" content="TL;DR Link to heading This blog post describes a generic technique I called internally on our red team assessment “Divide and Conquer”, which can be used to bypass behavioral based NextGen AV detection. It works by splitting malicious actions and API calls into distinct processes.
-Intro Link to heading Back in 2019 I was part of a red team, where our daily activity was to bypass a specific NextGen AV. I had this idea I called “divide and conquer”. I was so excited about it, that I had to name it :) That time I didn’t want to publicly write about it, and I also haven’t found any sources on the Internet that describes this idea (which describes my poor searching skills). Time passed, and by the time I could have write about it, I forgot. Then a few days ago Adam (@Hexacorn) posts this:">
-
-<meta property="og:url" content="https://theevilbit.github.io/posts/divide_and_conquer/">
-  <meta property="og:site_name" content="theevilbit blog">
-  <meta property="og:title" content="Divide and Conquer - A technique to bypass NextGen AV">
-  <meta property="og:description" content="TL;DR Link to heading This blog post describes a generic technique I called internally on our red team assessment “Divide and Conquer”, which can be used to bypass behavioral based NextGen AV detection. It works by splitting malicious actions and API calls into distinct processes.
-Intro Link to heading Back in 2019 I was part of a red team, where our daily activity was to bypass a specific NextGen AV. I had this idea I called “divide and conquer”. I was so excited about it, that I had to name it :) That time I didn’t want to publicly write about it, and I also haven’t found any sources on the Internet that describes this idea (which describes my poor searching skills). Time passed, and by the time I could have write about it, I forgot. Then a few days ago Adam (@Hexacorn) posts this:">
-  <meta property="og:locale" content="en">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2021-01-17T00:00:00+00:00">
-    <meta property="article:modified_time" content="2021-01-17T00:00:00+00:00">
-    <meta property="article:tag" content="Av">
-    <meta property="article:tag" content="Evasion">
-    <meta property="article:tag" content="Bypass">
-
-
-
-
 <link rel="canonical" href="https://theevilbit.github.io/posts/divide_and_conquer/">
-
-
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
-
-
-  
-  
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
-
-
-
-
-
-
-  
-    
-    
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
-  
-
-
-
- 
-
-
-
-
-<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
-
-<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-
-<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
-<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
-
-
-
-
-
-
-
-
-
+<link rel="alternate" type="application/rss+xml" title="theevilbit" href="/index.xml">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>try { var t = localStorage.getItem("tb.theme"); document.documentElement.dataset.theme = t || "dark"; } catch (e) { document.documentElement.dataset.theme = "dark"; }</script>
+<link rel="preload" href="/fonts/IBMPlexSans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts.css?v=1791269065">
+<link rel="stylesheet" href="/style.css?v=1791269065">
 </head>
-
-
-
-
-
-
-<body class="preload-transitions colorscheme-auto">
-  
-<div class="float-container">
-    <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
-    </a>
-</div>
-
-
-  <main class="wrapper">
-    <nav class="navigation">
-  <section class="container">
-    
-    <a class="navigation-title" href="https://theevilbit.github.io/">
-      theevilbit blog
-    </a>
-    
-    
-      <input type="checkbox" id="menu-toggle" />
-      <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
-      </label>
-      <ul class="navigation-list">
-        
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/posts/">Posts</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/shield/">Shield.app</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/tags/">Tags</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/about/">About</a>
-            </li>
-          
-        
-        
-      </ul>
-    
-  </section>
-</nav>
-
-
-    <div class="content">
-      
-  <section class="container post">
-    <article>
-      <header>
-        <div class="post-title">
-          <h1 class="title">
-            <a class="title-link" href="https://theevilbit.github.io/posts/divide_and_conquer/">
-              Divide and Conquer - A technique to bypass NextGen AV
-            </a>
-          </h1>
-        </div>
-        <div class="post-meta">
-          <div class="date">
-            <span class="posted-on">
-              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
-              <time datetime="2021-01-17T00:00:00Z">
-                January 17, 2021
-              </time>
-            </span>
-            <span class="reading-time">
-              <i class="fa-solid fa-clock" aria-hidden="true"></i>
-              4-minute read
-            </span>
-          </div>
-          
-          <div class="categories">
-  <i class="fa-solid fa-folder" aria-hidden="true"></i>
-    <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
-
-          <div class="tags">
-  <i class="fa-solid fa-tag" aria-hidden="true"></i>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/av/">Av</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/evasion/">Evasion</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/bypass/">Bypass</a>
-    </span></div>
-
-        </div>
-      </header>
-
-      <div class="post-content">
-        
-        <h2 id="tldr">
-  TL;DR
-  <a class="heading-link" href="#tldr">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>This blog post describes a generic technique I called internally on our red team assessment &ldquo;Divide and Conquer&rdquo;, which can be used to bypass behavioral based NextGen AV detection. It works by splitting malicious actions and API calls into distinct processes.</p>
-<h2 id="intro">
-  Intro
-  <a class="heading-link" href="#intro">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>Back in 2019 I was part of a red team, where our daily activity was to bypass a specific NextGen AV. I had this idea I called &ldquo;divide and conquer&rdquo;. I was so excited about it, that I had to name it :) That time I didn&rsquo;t want to publicly write about it, and I also haven&rsquo;t found any sources on the Internet that describes this idea (which describes my poor searching skills). Time passed, and by the time I could have write about it, I forgot. Then a few days ago <a href="https://twitter.com/Hexacorn"  class="external-link" target="_blank" rel="noopener">Adam (@Hexacorn)</a> posts <a href="https://twitter.com/Hexacorn/status/1350437846398722049"  class="external-link" target="_blank" rel="noopener">this</a>:</p>
-<blockquote>
-<p>Evasion concept:<br>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/">the<span>evil</span>bit<i class="cursor"></i></a>
+    <nav class="nav"><a href="/posts/" class=on>Posts</a><a href="/beyond/">Beyond</a><a href="/talks/">Talks</a><a href="/shield/">Shield</a><a href="/about/">About</a><a href="/tags/">Tags</a></nav>
+    <button type="button" class="theme" id="theme" aria-label="switch light / dark">◐</button>
+  </header>
+  <main><article class="post">
+<header class="post-head"><h1>Divide and Conquer - A technique to bypass NextGen AV</h1>
+<div class="meta"><time datetime="2021-01-17">Jan 17, 2021</time><span>4 min read</span><span class="tags"><a class="tag" href="/tags/av/">av</a><a class="tag" href="/tags/evasion/">evasion</a><a class="tag" href="/tags/bypass/">bypass</a></span></div></header>
+<details class="toc"><summary>Contents</summary><ol><li class="l2"><a href="#tldr">TL;DR</a></li><li class="l2"><a href="#intro">Intro</a></li><li class="l2"><a href="#background">Background</a></li><li class="l2"><a href="#the-idea">The idea</a></li></ol></details><div class="prose"><h2 id="tldr">TL;DR<a class="anchor" href="#tldr" aria-label="link to this section">#</a></h2>
+<p>This blog post describes a generic technique I called internally on our red team assessment "Divide and Conquer", which can be used to bypass behavioral based NextGen AV detection. It works by splitting malicious actions and API calls into distinct processes.</p>
+<h2 id="intro">Intro<a class="anchor" href="#intro" aria-label="link to this section">#</a></h2>
+<p>Back in 2019 I was part of a red team, where our daily activity was to bypass a specific NextGen AV. I had this idea I called "divide and conquer". I was so excited about it, that I had to name it :) That time I didn't want to publicly write about it, and I also haven't found any sources on the Internet that describes this idea (which describes my poor searching skills). Time passed, and by the time I could have write about it, I forgot. Then a few days ago <a href="https://twitter.com/Hexacorn" rel="noopener">Adam (@Hexacorn)</a> posts <a href="https://twitter.com/Hexacorn/status/1350437846398722049" rel="noopener">this</a>:</p>
+<blockquote><p>Evasion concept:<br>
 OperationSpraying<br>
 spawn a cascade of processes where new instance does a single atomic operation that may not be enough to trigger detection&amp;disrupts operation/process attribution<br>
 example:<br>
@@ -242,141 +37,34 @@ example:<br>
 3 - Allocate buffer in notepad memory, pass handle and address to child process<br>
 4 - Mark it RWX and pass handle and address to child process<br>
 5-N - each instance injecting a few bytes of payload<br>
-N+1 - Triggers payload</p>
-</blockquote>
-<p>He perfectly described what I did. Based on replies to his tweet, others were doing the same stuff silently (like me). Also turned out that Kyriakos Ispoglou (ispo) and Mathias Payer developed <a href="https://github.com/HexHive/malWASH"  class="external-link" target="_blank" rel="noopener">malWASH</a>, which does the same in a more scalable way. That was published 5 years ago, so I guess, no matter what you do in InfoSec, someone has likely done that before :)</p>
-<p>With that I thought it&rsquo;s time to release some details about what I did.</p>
-<h2 id="background">
-  Background
-  <a class="heading-link" href="#background">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
+N+1 - Triggers payload  </p></blockquote>
+<p>He perfectly described what I did. Based on replies to his tweet, others were doing the same stuff silently (like me). Also turned out that Kyriakos Ispoglou (ispo) and Mathias Payer developed <a href="https://github.com/HexHive/malWASH" rel="noopener">malWASH</a>, which does the same in a more scalable way. That was published 5 years ago, so I guess, no matter what you do in InfoSec, someone has likely done that before :)</p>
+<p>With that I thought it's time to release some details about what I did.</p>
+<h2 id="background">Background<a class="anchor" href="#background" aria-label="link to this section">#</a></h2>
 <p>NextGen AVs try to detect processes acting maliciously, so they are full time monitoring their activities. Many times we find that a meterpreter shell can live, until you do something bad, like a hashdump, or lsass access, at that moment your process is being killed. The monitoring is achieved via two ways:</p>
-<ol>
-<li>There is some monitoring at the kernel level, but Windows is not really friendly in that space. You can only do a limited set of callbacks, for file and registry operations or process loading. You can&rsquo;t monitor API calls generically, which is a big problem if you are an AV vendor.</li>
-<li>Because of these limitations, every AV will place hooks in user mode, typically in ntdll, but also plenty of other places, typically in APIs which are being abused by malware. The AV&rsquo;s DLL is being enforced into our process from kernel mode, so we can&rsquo;t really avoid it.</li>
-</ol>
+<ol><li>There is some monitoring at the kernel level, but Windows is not really friendly in that space. You can only do a limited set of callbacks, for file and registry operations or process loading. You can't monitor API calls generically, which is a big problem if you are an AV vendor.</li><li>Because of these limitations, every AV will place hooks in user mode, typically in ntdll, but also plenty of other places, typically in APIs which are being abused by malware. The AV's DLL is being enforced into our process from kernel mode, so we can't really avoid it.</li></ol>
 <p>Overall the detection will rely on monitoring the API calls we make, and if they match a certain pattern, we will be detected and killed with fire. For example one of the most typical process injection happens with calling the following API calls:</p>
-<ul>
-<li>OpenProcess</li>
-<li>VirtualAlloc</li>
-<li>WriteProcessMemory</li>
-<li>CreateRemoteThread</li>
-</ul>
+<ul><li>OpenProcess</li><li>VirtualAlloc</li><li>WriteProcessMemory</li><li>CreateRemoteThread</li></ul>
 <p>If we do these, we are dead.</p>
 <p>A typical bypass is unhooking the user mode hooks or simply doing direct system calls from our code, avoiding ntdll completely. The AV we dealt with figured out a way to detect these unhooks or when we made direct system call, so we had to adapt, and this idea was born.</p>
-<h2 id="the-idea">
-  The idea
-  <a class="heading-link" href="#the-idea">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>Since the detection is relying on detecting our API calls in a process, why not to split the API calls between multiple processes? We can inject a code to a remote process in two (or more) steps. We prepare our &ldquo;malware&rdquo; for doing different things based on the input it gets initially. Using the previous process injection example, here is what we can do.</p>
-<ol>
-<li>On first run we will call the following APIs:</li>
-</ol>
-<ul>
-<li>OpenProcess</li>
-<li>VirtualAlloc</li>
-<li>WriteProcessMemory</li>
-</ul>
-<ol start="2">
-<li>On second run:</li>
-</ol>
-<ul>
-<li>OpenProcess (although with handle inheritance I think this call could be eliminated)</li>
-<li>CreateRemoteThread</li>
-</ul>
-<p>That&rsquo;s it. The AV will see 2 different processes both doing only part of the injection, but none of them makes the full blown stuff. So if there is an operation that involves multiple API calls, and we can split it, we win. The particular AV is very strong in detecting process injections, so I adopted 3 different injection techniques to this method and I managed to bypass the AV in every scenario. As I know this is being detected since then on that particular AV, but I will still avoid talking about it.</p>
-<p>We found that splitting the API calls into two is sufficient for the bypass, but as <a href="https://twitter.com/Hexacorn"  class="external-link" target="_blank" rel="noopener">Adam (@Hexacorn)</a> described, we could go more crazy and split API calls even more.</p>
-<p>Here is a dummy POC for performing process injection using Sections with the above method: <a href="https://gist.github.com/theevilbit/073ca4eb15383eb3254272fc24632efd"  class="external-link" target="_blank" rel="noopener">Divide and Conquer NextGen AV bypass · GitHub</a>. The processes will call itself and pass the step count and the injected memory address to the child process.</p>
-
-      </div>
-
-
-      <footer>
-        
-
-
-        
-        
-        
-        
-        
-        
-        
-      </footer>
-    </article>
-
-    
-  </section>
-
-    </div>
-
-    <footer class="footer">
-  <section class="container">
-    ©
-    
-      2019 -
-    
-    2026
-     Csaba Fitzl 
-    ·
-    
-    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
-    
-  </section>
-</footer>
-
-  </main>
-
-  
-
-  
-  
-  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
-  
-
-  
-
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
+<h2 id="the-idea">The idea<a class="anchor" href="#the-idea" aria-label="link to this section">#</a></h2>
+<p>Since the detection is relying on detecting our API calls in a process, why not to split the API calls between multiple processes? We can inject a code to a remote process in two (or more) steps. We prepare our "malware" for doing different things based on the input it gets initially. Using the previous process injection example, here is what we can do.</p>
+<ol><li>On first run we will call the following APIs:</li><li>OpenProcess</li><li>VirtualAlloc</li><li>WriteProcessMemory</li><li>On second run:</li><li>OpenProcess (although with handle inheritance I think this call could be eliminated)</li><li>CreateRemoteThread</li></ol>
+<p>That's it. The AV will see 2 different processes both doing only part of the injection, but none of them makes the full blown stuff. So if there is an operation that involves multiple API calls, and we can split it, we win. The particular AV is very strong in detecting process injections, so I adopted 3 different injection techniques to this method and I managed to bypass the AV in every scenario. As I know this is being detected since then on that particular AV, but I will still avoid talking about it.</p>
+<p>We found that splitting the API calls into two is sufficient for the bypass, but as <a href="https://twitter.com/Hexacorn" rel="noopener">Adam (@Hexacorn)</a> described, we could go more crazy and split API calls even more.</p>
+<p>Here is a dummy POC for performing process injection using Sections with the above method: <a href="https://gist.github.com/theevilbit/073ca4eb15383eb3254272fc24632efd" rel="noopener">Divide and Conquer NextGen AV bypass · GitHub</a>. The processes will call itself and pass the step count and the injected memory address to the child process.</p></div>
+<nav class="pn"><a class="prev" href="/posts/reversing_cve_2020_9771/"><span>← previous</span>CVE-2020-9771 - Reversing Engineering the Fix</a><a class="next" href="/posts/com.apple.private.security.clear-library-validation/"><span>next →</span>About com.apple.private.security.clear-library-validation</a></nav></article></main>
+  <footer class="foot">
+    <span>© 2026 Csaba Fitzl</span>
+    <span class="social"><a href="https://github.com/theevilbit/" rel="me noopener">GitHub</a><a href="https://x.com/theevilbit" rel="me noopener">X</a><a href="/index.xml" rel="me noopener">RSS</a></span>
+  </footer>
+</div>
+<script>
+document.getElementById("theme").addEventListener("click", function () {
+  var t = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem("tb.theme", t); } catch (e) {}
+});
+</script>
 </body>
 </html>

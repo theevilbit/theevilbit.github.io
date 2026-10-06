@@ -1,468 +1,276 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-  <title>
-  CVE-2020-9771 - Reversing Engineering the Fix · theevilbit blog
-</title>
-  <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light dark">
-
-
-
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CVE-2020-9771 - Reversing Engineering the Fix · theevilbit</title>
+<meta name="description" content="When I originally found the mount_apfs bug back in December, 2019, I honestly had no idea what was the root cause of it, nor had a clue how to even start looking into it. The only thing I knew for sure that the answer is">
 <meta name="author" content="Csaba Fitzl">
-<meta name="description" content="When I originally found the mount_apfs bug back in December, 2019, I honestly had no idea what was the root cause of it, nor had a clue how to even start looking into it. The only thing I knew for sure that the answer is within kernel. My macOS knowledge was still quite fresh that time (and even today), and was busy with so many other stuff that I never had the time to start looking into it.">
-<meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
-
-
-
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="CVE-2020-9771 - Reversing Engineering the Fix">
-  <meta name="twitter:description" content="When I originally found the mount_apfs bug back in December, 2019, I honestly had no idea what was the root cause of it, nor had a clue how to even start looking into it. The only thing I knew for sure that the answer is within kernel. My macOS knowledge was still quite fresh that time (and even today), and was busy with so many other stuff that I never had the time to start looking into it.">
-
-<meta property="og:url" content="https://theevilbit.github.io/posts/reversing_cve_2020_9771/">
-  <meta property="og:site_name" content="theevilbit blog">
-  <meta property="og:title" content="CVE-2020-9771 - Reversing Engineering the Fix">
-  <meta property="og:description" content="When I originally found the mount_apfs bug back in December, 2019, I honestly had no idea what was the root cause of it, nor had a clue how to even start looking into it. The only thing I knew for sure that the answer is within kernel. My macOS knowledge was still quite fresh that time (and even today), and was busy with so many other stuff that I never had the time to start looking into it.">
-  <meta property="og:locale" content="en">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2020-12-13T00:00:00+00:00">
-    <meta property="article:modified_time" content="2020-12-13T00:00:00+00:00">
-    <meta property="article:tag" content="Lpe">
-    <meta property="article:tag" content="Vulnerability">
-    <meta property="article:tag" content="Macos">
-    <meta property="article:tag" content="Reverse Engineering">
-
-
-
-
 <link rel="canonical" href="https://theevilbit.github.io/posts/reversing_cve_2020_9771/">
-
-
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
-
-
-  
-  
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
-
-
-
-
-
-
-  
-    
-    
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
-  
-
-
-
- 
-
-
-
-
-<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
-
-<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-
-<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
-<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
-
-
-
-
-
-
-
-
-
+<link rel="alternate" type="application/rss+xml" title="theevilbit" href="/index.xml">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>try { var t = localStorage.getItem("tb.theme"); document.documentElement.dataset.theme = t || "dark"; } catch (e) { document.documentElement.dataset.theme = "dark"; }</script>
+<link rel="preload" href="/fonts/IBMPlexSans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts.css?v=1791269065">
+<link rel="stylesheet" href="/style.css?v=1791269065">
 </head>
-
-
-
-
-
-
-<body class="preload-transitions colorscheme-auto">
-  
-<div class="float-container">
-    <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
-    </a>
-</div>
-
-
-  <main class="wrapper">
-    <nav class="navigation">
-  <section class="container">
-    
-    <a class="navigation-title" href="https://theevilbit.github.io/">
-      theevilbit blog
-    </a>
-    
-    
-      <input type="checkbox" id="menu-toggle" />
-      <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
-      </label>
-      <ul class="navigation-list">
-        
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/posts/">Posts</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/shield/">Shield.app</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/tags/">Tags</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/about/">About</a>
-            </li>
-          
-        
-        
-      </ul>
-    
-  </section>
-</nav>
-
-
-    <div class="content">
-      
-  <section class="container post">
-    <article>
-      <header>
-        <div class="post-title">
-          <h1 class="title">
-            <a class="title-link" href="https://theevilbit.github.io/posts/reversing_cve_2020_9771/">
-              CVE-2020-9771 - Reversing Engineering the Fix
-            </a>
-          </h1>
-        </div>
-        <div class="post-meta">
-          <div class="date">
-            <span class="posted-on">
-              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
-              <time datetime="2020-12-13T00:00:00Z">
-                December 13, 2020
-              </time>
-            </span>
-            <span class="reading-time">
-              <i class="fa-solid fa-clock" aria-hidden="true"></i>
-              14-minute read
-            </span>
-          </div>
-          
-          <div class="categories">
-  <i class="fa-solid fa-folder" aria-hidden="true"></i>
-    <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
-
-          <div class="tags">
-  <i class="fa-solid fa-tag" aria-hidden="true"></i>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/lpe/">Lpe</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/vulnerability/">Vulnerability</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/macos/">Macos</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/reverse-engineering/">Reverse Engineering</a>
-    </span></div>
-
-        </div>
-      </header>
-
-      <div class="post-content">
-        
-        <p>When I originally found the <code>mount_apfs</code> bug back in December, 2019, I honestly had no idea what was the root cause of it, nor had a clue how to even start looking into it. The only thing I knew for sure that the answer is within kernel. My macOS knowledge was still quite fresh that time (and even today), and was busy with so many other stuff that I never had the time to start looking into it.</p>
-<p>Spring came, and Apple <a href="https://support.apple.com/en-us/HT211100"  class="external-link" target="_blank" rel="noopener">fixed</a> the bug in macOS Catalina 10.15.4, and they attributed this issue to the &ldquo;Sandbox&rdquo;. I changed jobs, summer came, and still didn&rsquo;t have time for it.</p>
-<p>Now we are into one year since I originally reported this. Recently I came across an article about APFS snapshots, which was written back in 2017 by Adam Leventhal for Ars Technica. It&rsquo;s titled as <a href="https://arstechnica.com/gadgets/2017/02/testing-out-snapshots-in-apples-next-generation-apfs-file-system/"  class="external-link" target="_blank" rel="noopener">Testing out snapshots in Apple’s next-generation APFS file system</a>. This showed some system calls, which could be used for making APFS snapshots, and finally gave me a boost, and a pointer where to start looking.</p>
-<p>I <a href="https://theevilbit.github.io/posts/cve_2020_9771/"  class="external-link" target="_blank" rel="noopener">previously</a> wrote about the vulnerability, which allowed someone to mount an APFS snapshot and gain read access to all files within the system, included those protected by privacy. The bug was fixed by only allowing apps having &ldquo;Full Disk Access&rdquo; right to make this mount operation.</p>
-<p>So I finally decided to sit down and take an in-depth look into how Apple fixed it, and find out what&rsquo;s going on.</p>
-<h2 id="chapter-1---the-source">
-  Chapter 1 - The Source
-  <a class="heading-link" href="#chapter-1---the-source">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>Although Apple doesn&rsquo;t open source everything, there is still a decent amount source code available, largely the XNU kernel, which is very useful for any similar investigation. Since image mounting is done via system calls, the source code of the XNU kernel can be very fruitful.</p>
-<p><img src="https://theevilbit.github.io/images/Reversing_CVE_2020_9771/yoda.jpg" alt=""></p>
-<p>During the past year Apple released the source code for XNU till macOS 10.15.6, so I decided to start looking there. I keep a copy of all tarballs, so extracted an earlier version of XNU, 6153.41.3 and also the one used in macOS 10.15.4, which is 6153.141.1. If any changes were made in the open source part we should see that. Let&rsquo;s try to find out if anything changed.</p>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/">the<span>evil</span>bit<i class="cursor"></i></a>
+    <nav class="nav"><a href="/posts/" class=on>Posts</a><a href="/beyond/">Beyond</a><a href="/talks/">Talks</a><a href="/shield/">Shield</a><a href="/about/">About</a><a href="/tags/">Tags</a></nav>
+    <button type="button" class="theme" id="theme" aria-label="switch light / dark">◐</button>
+  </header>
+  <main><article class="post">
+<header class="post-head"><h1>CVE-2020-9771 - Reversing Engineering the Fix</h1>
+<div class="meta"><time datetime="2020-12-13">Dec 13, 2020</time><span>14 min read</span><span class="tags"><a class="tag" href="/tags/lpe/">lpe</a><a class="tag" href="/tags/vulnerability/">vulnerability</a><a class="tag" href="/tags/macos/">macos</a><a class="tag" href="/tags/reverse-engineering/">reverse engineering</a></span></div></header>
+<div class="prose"><p>When I originally found the <code>mount_apfs</code> bug back in December, 2019, I honestly had no idea what was the root cause of it, nor had a clue how to even start looking into it. The only thing I knew for sure that the answer is within kernel. My macOS knowledge was still quite fresh that time (and even today), and was busy with so many other stuff that I never had the time to start looking into it.</p>
+<p>Spring came, and Apple <a href="https://support.apple.com/en-us/HT211100" rel="noopener">fixed</a> the bug in macOS Catalina 10.15.4, and they attributed this issue to the "Sandbox". I changed jobs, summer came, and still didn't have time for it.</p>
+<p>Now we are into one year since I originally reported this. Recently I came across an article about APFS snapshots, which was written back in 2017 by Adam Leventhal for Ars Technica. It's titled as <a href="https://arstechnica.com/gadgets/2017/02/testing-out-snapshots-in-apples-next-generation-apfs-file-system/" rel="noopener">Testing out snapshots in Apple’s next-generation APFS file system</a>. This showed some system calls, which could be used for making APFS snapshots, and finally gave me a boost, and a pointer where to start looking.</p>
+<p>I <a href="/posts/cve_2020_9771/">previously</a> wrote about the vulnerability, which allowed someone to mount an APFS snapshot and gain read access to all files within the system, included those protected by privacy. The bug was fixed by only allowing apps having "Full Disk Access" right to make this mount operation.</p>
+<p>So I finally decided to sit down and take an in-depth look into how Apple fixed it, and find out what's going on.</p>
+<h2 id="chapter-1---the-source">Chapter 1 - The Source<a class="anchor" href="#chapter-1---the-source" aria-label="link to this section">#</a></h2>
+<p>Although Apple doesn't open source everything, there is still a decent amount source code available, largely the XNU kernel, which is very useful for any similar investigation. Since image mounting is done via system calls, the source code of the XNU kernel can be very fruitful.</p>
+<p><img src="/images/Reversing_CVE_2020_9771/yoda.jpg" alt="" loading="lazy"></p>
+<p>During the past year Apple released the source code for XNU till macOS 10.15.6, so I decided to start looking there. I keep a copy of all tarballs, so extracted an earlier version of XNU, 6153.41.3 and also the one used in macOS 10.15.4, which is 6153.141.1. If any changes were made in the open source part we should see that. Let's try to find out if anything changed.</p>
 <p>First we will start with tracking how snapshot mounting happens through system calls using <code>xnu-6153.41.3</code>. The file <code>./xnu-6153.41.3/libsyscall/wrappers/fs_snapshot.c</code> contains wrapper for various snapshot mounting related system calls. The one that is interesting for us is <code>fs_snapshot_mount</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#c0f">fs_snapshot_mount</span>(<span style="color:#078;font-weight:bold">int</span> dirfd, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>dir, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>snapshot,
-</span></span><span style="display:flex;"><span>    <span style="color:#078;font-weight:bold">uint32_t</span> flags)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">return</span> <span style="color:#c0f">__fs_snapshot</span>(SNAPSHOT_OP_MOUNT, dirfd, snapshot, dir,
-</span></span><span style="display:flex;"><span>	           <span style="color:#366">NULL</span>, flags);
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>This function does a call to <code>fs_snapshot</code> with the opcode <code>SNAPSHOT_OP_MOUNT</code>. This function eventually leads to <code>fs_snapshot </code>, which can be found in <code>./xnu-6153.41.3/bsd/vfs/vfs_syscalls.c</code>. Here is a small section of it.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">/*
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> * FS snapshot operations dispatcher
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> */</span>
-</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span>
-</span></span><span style="display:flex;"><span><span style="color:#c0f">fs_snapshot</span>(__unused <span style="color:#078;font-weight:bold">proc_t</span> p, <span style="color:#069;font-weight:bold">struct</span> fs_snapshot_args <span style="color:#555">*</span>uap,
-</span></span><span style="display:flex;"><span>    __unused <span style="color:#078;font-weight:bold">int32_t</span> <span style="color:#555">*</span>retval)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>...
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">SNAPSHOT_OP_MOUNT</span>:
-</span></span><span style="display:flex;"><span>		error <span style="color:#555">=</span> <span style="color:#c0f">snapshot_mount</span>(uap<span style="color:#555">-&gt;</span>dirfd, uap<span style="color:#555">-&gt;</span>name1, uap<span style="color:#555">-&gt;</span>name2,
-</span></span><span style="display:flex;"><span>		    uap<span style="color:#555">-&gt;</span>data, uap<span style="color:#555">-&gt;</span>flags, ctx);
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">break</span>;
-</span></span><span style="display:flex;"><span>...
-</span></span></code></pre></div><p>It&rsquo;s not a very long function, and at the very end it has a switch table, which is based on the opcodes passed. In our case it leads to  <code>snapshot_mount</code>. This function is in the same file, and it looks like the following.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">int</span>
-</span></span><span style="display:flex;"><span><span style="color:#c0f">snapshot_mount</span>(<span style="color:#078;font-weight:bold">int</span> dirfd, <span style="color:#078;font-weight:bold">user_addr_t</span> name, <span style="color:#078;font-weight:bold">user_addr_t</span> directory,
-</span></span><span style="display:flex;"><span>    __unused <span style="color:#078;font-weight:bold">user_addr_t</span> mnt_data, __unused <span style="color:#078;font-weight:bold">uint32_t</span> flags, <span style="color:#078;font-weight:bold">vfs_context_t</span> ctx)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">vnode_t</span> rvp, snapdvp, snapvp, vp, pvp;
-</span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">int</span> error;
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">struct</span> nameidata <span style="color:#555">*</span>snapndp, <span style="color:#555">*</span>dirndp;
-</span></span><span style="display:flex;"><span>	<span style="color:#09f;font-style:italic">/* carving out a chunk for structs that are too big to be on stack. */</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">struct</span> {
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">struct</span> nameidata snapnd;
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">struct</span> nameidata dirnd;
-</span></span><span style="display:flex;"><span>	} <span style="color:#555">*</span> __snapshot_mount_data;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#c0f">MALLOC</span>(__snapshot_mount_data, <span style="color:#078;font-weight:bold">void</span> <span style="color:#555">*</span>, <span style="color:#069;font-weight:bold">sizeof</span>(<span style="color:#555">*</span>__snapshot_mount_data),
-</span></span><span style="display:flex;"><span>	    M_TEMP, M_WAITOK);
-</span></span><span style="display:flex;"><span>	snapndp <span style="color:#555">=</span> <span style="color:#555">&amp;</span>__snapshot_mount_data<span style="color:#555">-&gt;</span>snapnd;
-</span></span><span style="display:flex;"><span>	dirndp <span style="color:#555">=</span> <span style="color:#555">&amp;</span>__snapshot_mount_data<span style="color:#555">-&gt;</span>dirnd;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	error <span style="color:#555">=</span> <span style="color:#c0f">vnode_get_snapshot</span>(dirfd, <span style="color:#555">&amp;</span>rvp, <span style="color:#555">&amp;</span>snapdvp, name, snapndp, LOOKUP,
-</span></span><span style="display:flex;"><span>	    OP_LOOKUP, ctx);
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (error) {
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">goto</span> out;
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	snapvp  <span style="color:#555">=</span> snapndp<span style="color:#555">-&gt;</span>ni_vp;
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span><span style="color:#c0f">vnode_mount</span>(rvp) <span style="color:#555">||</span> (<span style="color:#c0f">vnode_mount</span>(rvp) <span style="color:#555">==</span> dead_mountp)) {
-</span></span><span style="display:flex;"><span>		error <span style="color:#555">=</span> EIO;
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">goto</span> out1;
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#09f;font-style:italic">/* Get the vnode to be covered */</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#c0f">NDINIT</span>(dirndp, LOOKUP, OP_MOUNT, FOLLOW <span style="color:#555">|</span> AUDITVNPATH1 <span style="color:#555">|</span> WANTPARENT,
-</span></span><span style="display:flex;"><span>	    UIO_USERSPACE, directory, ctx);
-</span></span><span style="display:flex;"><span>	error <span style="color:#555">=</span> <span style="color:#c0f">namei</span>(dirndp);
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (error) {
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">goto</span> out1;
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	vp <span style="color:#555">=</span> dirndp<span style="color:#555">-&gt;</span>ni_vp;
-</span></span><span style="display:flex;"><span>	pvp <span style="color:#555">=</span> dirndp<span style="color:#555">-&gt;</span>ni_dvp;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> ((vp<span style="color:#555">-&gt;</span>v_flag <span style="color:#555">&amp;</span> VROOT) <span style="color:#555">&amp;&amp;</span> (vp<span style="color:#555">-&gt;</span>v_mount<span style="color:#555">-&gt;</span>mnt_flag <span style="color:#555">&amp;</span> MNT_ROOTFS)) {
-</span></span><span style="display:flex;"><span>		error <span style="color:#555">=</span> EINVAL;
-</span></span><span style="display:flex;"><span>	} <span style="color:#069;font-weight:bold">else</span> {
-</span></span><span style="display:flex;"><span>		<span style="color:#078;font-weight:bold">mount_t</span> mp <span style="color:#555">=</span> <span style="color:#c0f">vnode_mount</span>(rvp);
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">struct</span> fs_snapshot_mount_args smnt_data;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		smnt_data.sm_mp  <span style="color:#555">=</span> mp;
-</span></span><span style="display:flex;"><span>		smnt_data.sm_cnp <span style="color:#555">=</span> <span style="color:#555">&amp;</span>snapndp<span style="color:#555">-&gt;</span>ni_cnd;
-</span></span><span style="display:flex;"><span>		error <span style="color:#555">=</span> <span style="color:#c0f">mount_common</span>(mp<span style="color:#555">-&gt;</span>mnt_vfsstat.f_fstypename, pvp, vp,
-</span></span><span style="display:flex;"><span>		    <span style="color:#555">&amp;</span>dirndp<span style="color:#555">-&gt;</span>ni_cnd, <span style="color:#c0f">CAST_USER_ADDR_T</span>(<span style="color:#555">&amp;</span>smnt_data), flags <span style="color:#555">&amp;</span> MNT_DONTBROWSE,
-</span></span><span style="display:flex;"><span>		    KERNEL_MOUNT_SNAPSHOT, <span style="color:#366">NULL</span>, FALSE, ctx);
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#c0f">vnode_put</span>(vp);
-</span></span><span style="display:flex;"><span>	<span style="color:#c0f">vnode_put</span>(pvp);
-</span></span><span style="display:flex;"><span>	<span style="color:#c0f">nameidone</span>(dirndp);
-</span></span><span style="display:flex;"><span><span style="color:#99f">out1</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#c0f">vnode_put</span>(snapvp);
-</span></span><span style="display:flex;"><span>	<span style="color:#c0f">vnode_put</span>(snapdvp);
-</span></span><span style="display:flex;"><span>	<span style="color:#c0f">vnode_put</span>(rvp);
-</span></span><span style="display:flex;"><span>	<span style="color:#c0f">nameidone</span>(snapndp);
-</span></span><span style="display:flex;"><span><span style="color:#99f">out</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#c0f">FREE</span>(__snapshot_mount_data, M_TEMP);
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">return</span> error;
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>This function is eventually calls out to <code>mount_common</code>, which is also in the same file, and it will be responsible for the actual mount. Let&rsquo;s see how this function has changed, and for that we will use the code from <code>xnu-6153.141.1</code> specifically the file <code>./xnu-6153.141.1/bsd/vfs/vfs_syscalls.c</code>. I won&rsquo;t paste the entire function again, just the new important part.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#if CONFIG_MACF
-</span></span></span><span style="display:flex;"><span>	error <span style="color:#555">=</span> <span style="color:#c0f">mac_mount_check_snapshot_mount</span>(ctx, rvp, vp, <span style="color:#555">&amp;</span>dirndp<span style="color:#555">-&gt;</span>ni_cnd, snapndp<span style="color:#555">-&gt;</span>ni_cnd.cn_nameptr,
-</span></span><span style="display:flex;"><span>	    mp<span style="color:#555">-&gt;</span>mnt_vfsstat.f_fstypename);
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (error) {
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">goto</span> out2;
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span><span style="color:#099">#endif
-</span></span></span></code></pre></div><p>We can see that a callout to a MACF (Mandatory Access Control Framework) policy was added. On a very-very high level this is an extendable framework which can enforce various policies, restriction, and authorize or reject certain operations. On macOS the largest MACF policy extensions is the <code>Sandbox</code>. There are others, like <code>AppleMobileFileIntegrity</code>, but Sandbox is by far the largest with hooking more than 100 system calls.</p>
-<p>This is where things start to make sense, because if we recall that Apple considered this a bug in &ldquo;Sandbox&rdquo;, this callout makes sense.</p>
-<p>Apparently the bug is that a Sandbox check was missing. If we search for <code>mac_mount_*</code> in the old source code, we will see that there are many callouts, but not with the snapshot call, and specifically the <code>mac_mount_check_snapshot_mount</code> doesn&rsquo;t exists in earlier versions.</p>
-<p>Let&rsquo;s move on. This function is defined in two places, first in <code>xnu-6153.141.1/security/mac_base.c</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">mac_mount_check_snapshot_mount</span>(<span style="color:#078;font-weight:bold">vfs_context_t</span> ctx, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>rvp, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>vp, <span style="color:#069;font-weight:bold">struct</span> componentname <span style="color:#555">*</span>cnp,
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>name, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>vfc_name);
-</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span>
-</span></span><span style="display:flex;"><span><span style="color:#c0f">mac_mount_check_snapshot_mount</span>(<span style="color:#078;font-weight:bold">vfs_context_t</span> ctx __unused, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>rvp __unused, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>vp __unused,
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">struct</span> componentname <span style="color:#555">*</span>cnp __unused, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>name __unused, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>vfc_name __unused)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">return</span> <span style="color:#f60">0</span>;
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>Here this function simply returns 0, which in case of the MACF framework, means &ldquo;allow&rdquo;. I&rsquo;m guessing here, but I think this is just to ensure that if none of the MACF policy hooks support this check, the operation will be allowed. I think this is like a default allow action.</p>
+<pre><code class=language-c>fs_snapshot_mount(int dirfd, const char *dir, const char *snapshot,
+    uint32_t flags)
+{
+    return __fs_snapshot(SNAPSHOT_OP_MOUNT, dirfd, snapshot, dir,
+               NULL, flags);
+}</code></pre>
+<p>This function does a call to <code>fs_snapshot</code> with the opcode <code>SNAPSHOT_OP_MOUNT</code>. This function eventually leads to <code>fs_snapshot</code>, which can be found in <code>./xnu-6153.41.3/bsd/vfs/vfs_syscalls.c</code>. Here is a small section of it.</p>
+<pre><code class=language-c>/*
+ * FS snapshot operations dispatcher
+ */
+int
+fs_snapshot(__unused proc_t p, struct fs_snapshot_args *uap,
+    __unused int32_t *retval)
+{
+...
+    case SNAPSHOT_OP_MOUNT:
+        error = snapshot_mount(uap-&gt;dirfd, uap-&gt;name1, uap-&gt;name2,
+            uap-&gt;data, uap-&gt;flags, ctx);
+        break;
+...</code></pre>
+<p>It's not a very long function, and at the very end it has a switch table, which is based on the opcodes passed. In our case it leads to  <code>snapshot_mount</code>. This function is in the same file, and it looks like the following.</p>
+<pre><code class=language-c>static int
+snapshot_mount(int dirfd, user_addr_t name, user_addr_t directory,
+    __unused user_addr_t mnt_data, __unused uint32_t flags, vfs_context_t ctx)
+{
+    vnode_t rvp, snapdvp, snapvp, vp, pvp;
+    int error;
+    struct nameidata *snapndp, *dirndp;
+    /* carving out a chunk for structs that are too big to be on stack. */
+    struct {
+        struct nameidata snapnd;
+        struct nameidata dirnd;
+    } * __snapshot_mount_data;
+
+    MALLOC(__snapshot_mount_data, void *, sizeof(*__snapshot_mount_data),
+        M_TEMP, M_WAITOK);
+    snapndp = &amp;__snapshot_mount_data-&gt;snapnd;
+    dirndp = &amp;__snapshot_mount_data-&gt;dirnd;
+
+    error = vnode_get_snapshot(dirfd, &amp;rvp, &amp;snapdvp, name, snapndp, LOOKUP,
+        OP_LOOKUP, ctx);
+    if (error) {
+        goto out;
+    }
+
+    snapvp  = snapndp-&gt;ni_vp;
+    if (!vnode_mount(rvp) || (vnode_mount(rvp) == dead_mountp)) {
+        error = EIO;
+        goto out1;
+    }
+
+    /* Get the vnode to be covered */
+    NDINIT(dirndp, LOOKUP, OP_MOUNT, FOLLOW | AUDITVNPATH1 | WANTPARENT,
+        UIO_USERSPACE, directory, ctx);
+    error = namei(dirndp);
+    if (error) {
+        goto out1;
+    }
+
+    vp = dirndp-&gt;ni_vp;
+    pvp = dirndp-&gt;ni_dvp;
+
+    if ((vp-&gt;v_flag &amp; VROOT) &amp;&amp; (vp-&gt;v_mount-&gt;mnt_flag &amp; MNT_ROOTFS)) {
+        error = EINVAL;
+    } else {
+        mount_t mp = vnode_mount(rvp);
+        struct fs_snapshot_mount_args smnt_data;
+
+        smnt_data.sm_mp  = mp;
+        smnt_data.sm_cnp = &amp;snapndp-&gt;ni_cnd;
+        error = mount_common(mp-&gt;mnt_vfsstat.f_fstypename, pvp, vp,
+            &amp;dirndp-&gt;ni_cnd, CAST_USER_ADDR_T(&amp;smnt_data), flags &amp; MNT_DONTBROWSE,
+            KERNEL_MOUNT_SNAPSHOT, NULL, FALSE, ctx);
+    }
+
+    vnode_put(vp);
+    vnode_put(pvp);
+    nameidone(dirndp);
+out1:
+    vnode_put(snapvp);
+    vnode_put(snapdvp);
+    vnode_put(rvp);
+    nameidone(snapndp);
+out:
+    FREE(__snapshot_mount_data, M_TEMP);
+    return error;
+}</code></pre>
+<p>This function is eventually calls out to <code>mount_common</code>, which is also in the same file, and it will be responsible for the actual mount. Let's see how this function has changed, and for that we will use the code from <code>xnu-6153.141.1</code> specifically the file <code>./xnu-6153.141.1/bsd/vfs/vfs_syscalls.c</code>. I won't paste the entire function again, just the new important part.</p>
+<pre><code class=language-c>#if CONFIG_MACF
+    error = mac_mount_check_snapshot_mount(ctx, rvp, vp, &amp;dirndp-&gt;ni_cnd, snapndp-&gt;ni_cnd.cn_nameptr,
+        mp-&gt;mnt_vfsstat.f_fstypename);
+    if (error) {
+        goto out2;
+    }
+#endif</code></pre>
+<p>We can see that a callout to a MACF (Mandatory Access Control Framework) policy was added. On a very-very high level this is an extendable framework which can enforce various policies, restriction, and authorize or reject certain operations. On macOS the largest MACF policy extensions is the <code>Sandbox</code>. There are others, like <code>AppleMobileFileIntegrity</code>, but Sandbox is by far the largest with hooking more than 100 system calls.</p>
+<p>This is where things start to make sense, because if we recall that Apple considered this a bug in "Sandbox", this callout makes sense.</p>
+<p>Apparently the bug is that a Sandbox check was missing. If we search for <code>mac_mount_*</code> in the old source code, we will see that there are many callouts, but not with the snapshot call, and specifically the <code>mac_mount_check_snapshot_mount</code> doesn't exists in earlier versions.</p>
+<p>Let's move on. This function is defined in two places, first in <code>xnu-6153.141.1/security/mac_base.c</code>.</p>
+<pre><code class=language-c>int mac_mount_check_snapshot_mount(vfs_context_t ctx, struct vnode *rvp, struct vnode *vp, struct componentname *cnp,
+    const char *name, const char *vfc_name);
+int
+mac_mount_check_snapshot_mount(vfs_context_t ctx __unused, struct vnode *rvp __unused, struct vnode *vp __unused,
+    struct componentname *cnp __unused, const char *name __unused, const char *vfc_name __unused)
+{
+    return 0;
+}</code></pre>
+<p>Here this function simply returns 0, which in case of the MACF framework, means "allow". I'm guessing here, but I think this is just to ensure that if none of the MACF policy hooks support this check, the operation will be allowed. I think this is like a default allow action. </p>
 <p>The other implementation is in <code>xnu-6153.141.1/security/mac_vfs.c</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#c0f">mac_mount_check_snapshot_mount</span>(<span style="color:#078;font-weight:bold">vfs_context_t</span> ctx, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>rvp, <span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>vp, <span style="color:#069;font-weight:bold">struct</span> componentname <span style="color:#555">*</span>cnp,
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>name, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>vfc_name)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">kauth_cred_t</span> cred;
-</span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">int</span> error;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#099">#if SECURITY_MAC_CHECK_ENFORCE
-</span></span></span><span style="display:flex;"><span>	<span style="color:#09f;font-style:italic">/* 21167099 - only check if we allow write */</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span>mac_vnode_enforce) {
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> <span style="color:#f60">0</span>;
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span><span style="color:#099">#endif
-</span></span></span><span style="display:flex;"><span>	cred <span style="color:#555">=</span> <span style="color:#c0f">vfs_context_ucred</span>(ctx);
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span><span style="color:#c0f">mac_cred_check_enforce</span>(cred)) {
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> <span style="color:#f60">0</span>;
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	<span style="color:#c0f">VFS_KERNEL_DEBUG_START1</span>(<span style="color:#f60">92</span>, vp);
-</span></span><span style="display:flex;"><span>	<span style="color:#c0f">MAC_CHECK</span>(mount_check_snapshot_mount, cred, rvp, vp, cnp, name, vfc_name);
-</span></span><span style="display:flex;"><span>	<span style="color:#c0f">VFS_KERNEL_DEBUG_END1</span>(<span style="color:#f60">92</span>, vp);
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">return</span> error;
-</span></span><span style="display:flex;"><span>} 
-</span></span></code></pre></div><p>This function uses the macro <code>MAC_CHECK</code>. This is defined in <code>./xnu-6153.141.1/security/mac_internal.h</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#define MAC_CHECK(check, args...) do {                                  \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">	struct mac_policy_conf *mpc;                                    \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">	u_int i;                                                        \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">                                                                        \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">	error = 0;                                                      \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">	for (i = 0; i &lt; mac_policy_list.staticmax; i++) {               \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">	        mpc = mac_policy_list.entries[i].mpc;                   \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">	        if (mpc == NULL)                                        \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">	                continue;                                       \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">                                                                        \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">	        if (mpc-&gt;mpc_ops-&gt;mpo_ ## check != NULL)                \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">	                error = mac_error_select(                       \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">	                    mpc-&gt;mpc_ops-&gt;mpo_ ## check (args),         \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">	                    error);                                     \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">	}                                                               \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">	if (mac_policy_list_conditional_busy() != 0) {                  \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">	        for (; i &lt;= mac_policy_list.maxindex; i++) {            \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">	                mpc = mac_policy_list.entries[i].mpc;           \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">	                if (mpc == NULL)                                \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">	                        continue;                               \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">                                                                        \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">	                if (mpc-&gt;mpc_ops-&gt;mpo_ ## check != NULL)        \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">	                        error = mac_error_select(               \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">	                            mpc-&gt;mpc_ops-&gt;mpo_ ## check (args), \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">	                            error);                             \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">	        }                                                       \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">	        mac_policy_list_unbusy();                               \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">	}                                                               \
-</span></span></span><span style="display:flex;"><span><span style="color:#099">} while (0)
-</span></span></span></code></pre></div><p>Eventually this macro will iterate over all MACF policy extension, and call the related function. There are many callouts to <code>mac_error_select</code> function, which is implemented in <code>./xnu-6153.141.1/security/mac_base.c</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">/*
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> * Define an error value precedence, and given two arguments, selects the
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> * value with the higher precedence.
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> */</span>
-</span></span><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span>
-</span></span><span style="display:flex;"><span><span style="color:#c0f">mac_error_select</span>(<span style="color:#078;font-weight:bold">int</span> error1, <span style="color:#078;font-weight:bold">int</span> error2)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	<span style="color:#09f;font-style:italic">/* Certain decision-making errors take top priority. */</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (error1 <span style="color:#555">==</span> EDEADLK <span style="color:#555">||</span> error2 <span style="color:#555">==</span> EDEADLK) {
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> EDEADLK;
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#09f;font-style:italic">/* Invalid arguments should be reported where possible. */</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (error1 <span style="color:#555">==</span> EINVAL <span style="color:#555">||</span> error2 <span style="color:#555">==</span> EINVAL) {
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> EINVAL;
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#09f;font-style:italic">/* Precedence goes to &#34;visibility&#34;, with both process and file. */</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (error1 <span style="color:#555">==</span> ESRCH <span style="color:#555">||</span> error2 <span style="color:#555">==</span> ESRCH) {
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> ESRCH;
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (error1 <span style="color:#555">==</span> ENOENT <span style="color:#555">||</span> error2 <span style="color:#555">==</span> ENOENT) {
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> ENOENT;
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#09f;font-style:italic">/* Precedence goes to DAC/MAC protections. */</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (error1 <span style="color:#555">==</span> EACCES <span style="color:#555">||</span> error2 <span style="color:#555">==</span> EACCES) {
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> EACCES;
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#09f;font-style:italic">/* Precedence goes to privilege. */</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (error1 <span style="color:#555">==</span> EPERM <span style="color:#555">||</span> error2 <span style="color:#555">==</span> EPERM) {
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> EPERM;
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#09f;font-style:italic">/* Precedence goes to error over success; otherwise, arbitrary. */</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (error1 <span style="color:#555">!=</span> <span style="color:#f60">0</span>) {
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> error1;
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">return</span> error2;
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>What it does is comparing the error messages returned by the various MACF policy extensions, and ensure that if one of those didn&rsquo;t allow the operation, it will return the error accordingly. There is a certain priority for the various errors, and the &ldquo;highest&rdquo; will be returned. This also means that if any of the extension denies the action, it will be denied.</p>
+<pre><code class=language-c>mac_mount_check_snapshot_mount(vfs_context_t ctx, struct vnode *rvp, struct vnode *vp, struct componentname *cnp,
+    const char *name, const char *vfc_name)
+{
+    kauth_cred_t cred;
+    int error;
+
+#if SECURITY_MAC_CHECK_ENFORCE
+    /* 21167099 - only check if we allow write */
+    if (!mac_vnode_enforce) {
+        return 0;
+    }
+#endif
+    cred = vfs_context_ucred(ctx);
+    if (!mac_cred_check_enforce(cred)) {
+        return 0;
+    }
+    VFS_KERNEL_DEBUG_START1(92, vp);
+    MAC_CHECK(mount_check_snapshot_mount, cred, rvp, vp, cnp, name, vfc_name);
+    VFS_KERNEL_DEBUG_END1(92, vp);
+    return error;
+} </code></pre>
+<p>This function uses the macro <code>MAC_CHECK</code>. This is defined in <code>./xnu-6153.141.1/security/mac_internal.h</code>.</p>
+<pre><code class=language-c>#define MAC_CHECK(check, args...) do {                                  \
+    struct mac_policy_conf *mpc;                                    \
+    u_int i;                                                        \
+                                                                        \
+    error = 0;                                                      \
+    for (i = 0; i &lt; mac_policy_list.staticmax; i++) {               \
+            mpc = mac_policy_list.entries[i].mpc;                   \
+            if (mpc == NULL)                                        \
+                    continue;                                       \
+                                                                        \
+            if (mpc-&gt;mpc_ops-&gt;mpo_ ## check != NULL)                \
+                    error = mac_error_select(                       \
+                        mpc-&gt;mpc_ops-&gt;mpo_ ## check (args),         \
+                        error);                                     \
+    }                                                               \
+    if (mac_policy_list_conditional_busy() != 0) {                  \
+            for (; i &lt;= mac_policy_list.maxindex; i++) {            \
+                    mpc = mac_policy_list.entries[i].mpc;           \
+                    if (mpc == NULL)                                \
+                            continue;                               \
+                                                                        \
+                    if (mpc-&gt;mpc_ops-&gt;mpo_ ## check != NULL)        \
+                            error = mac_error_select(               \
+                                mpc-&gt;mpc_ops-&gt;mpo_ ## check (args), \
+                                error);                             \
+            }                                                       \
+            mac_policy_list_unbusy();                               \
+    }                                                               \
+} while (0)</code></pre>
+<p>Eventually this macro will iterate over all MACF policy extension, and call the related function. There are many callouts to <code>mac_error_select</code> function, which is implemented in <code>./xnu-6153.141.1/security/mac_base.c</code>.</p>
+<pre><code class=language-c>/*
+ * Define an error value precedence, and given two arguments, selects the
+ * value with the higher precedence.
+ */
+int
+mac_error_select(int error1, int error2)
+{
+    /* Certain decision-making errors take top priority. */
+    if (error1 == EDEADLK || error2 == EDEADLK) {
+        return EDEADLK;
+    }
+
+    /* Invalid arguments should be reported where possible. */
+    if (error1 == EINVAL || error2 == EINVAL) {
+        return EINVAL;
+    }
+
+    /* Precedence goes to "visibility", with both process and file. */
+    if (error1 == ESRCH || error2 == ESRCH) {
+        return ESRCH;
+    }
+
+    if (error1 == ENOENT || error2 == ENOENT) {
+        return ENOENT;
+    }
+
+    /* Precedence goes to DAC/MAC protections. */
+    if (error1 == EACCES || error2 == EACCES) {
+        return EACCES;
+    }
+
+    /* Precedence goes to privilege. */
+    if (error1 == EPERM || error2 == EPERM) {
+        return EPERM;
+    }
+
+    /* Precedence goes to error over success; otherwise, arbitrary. */
+    if (error1 != 0) {
+        return error1;
+    }
+    return error2;
+}</code></pre>
+<p>What it does is comparing the error messages returned by the various MACF policy extensions, and ensure that if one of those didn't allow the operation, it will return the error accordingly. There is a certain priority for the various errors, and the "highest" will be returned. This also means that if any of the extension denies the action, it will be denied.</p>
 <p>The fact that a 0 is expected as return for an allowed operation is well documented at the <code>mpo_mount_check_snapshot_mount_t</code> type definition inside <code>./xnu-6153.141.1/security/mac_policy.h</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#09f;font-style:italic">/**
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> *  @brief Access control check for fs_snapshot_mount
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> *  @param cred Subject credential
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> *  @param rvp Vnode of either the root directory of the
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> *  filesystem to mount snapshot of, or the device from
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> *  which to mount the snapshot.
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> *  @param vp Vnode that is to be the mount point
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> *  @param cnp Component name for vp
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> *  @param name Name of snapshot to mount
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> *  @param vfc_name Filesystem type name
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> *
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> *  Determine whether the subject identified by the credential can
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> *  mount the named snapshot from the filesystem at the given
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> *  directory.
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> *
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> *  @return Return 0 if access is granted, otherwise an appropriate value
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> *  for errno should be returned.
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic"> */</span>
-</span></span><span style="display:flex;"><span><span style="color:#069;font-weight:bold">typedef</span> <span style="color:#078;font-weight:bold">int</span> <span style="color:#c0f">mpo_mount_check_snapshot_mount_t</span>(
-</span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">kauth_cred_t</span> cred,
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>rvp,
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">struct</span> vnode <span style="color:#555">*</span>vp,
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">struct</span> componentname <span style="color:#555">*</span>cnp,
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>name,
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>vfc_name
-</span></span><span style="display:flex;"><span>	);
-</span></span></code></pre></div><p>It says <code>@return Return 0 if access is granted</code>. This is generally true for all MACF calls, not just this.</p>
-<p>An interesting thing I found is that in order to use the  <code>fs_snaphot</code> system call, which is also used by <a href="https://github.com/ahl/apfs"  class="external-link" target="_blank" rel="noopener">snapUtil</a>, and not get denied, you need the <code>com.apple.developer.vfs.snapshot</code> entitlement.</p>
+<pre><code class=language-c>/**
+ *  @brief Access control check for fs_snapshot_mount
+ *  @param cred Subject credential
+ *  @param rvp Vnode of either the root directory of the
+ *  filesystem to mount snapshot of, or the device from
+ *  which to mount the snapshot.
+ *  @param vp Vnode that is to be the mount point
+ *  @param cnp Component name for vp
+ *  @param name Name of snapshot to mount
+ *  @param vfc_name Filesystem type name
+ *
+ *  Determine whether the subject identified by the credential can
+ *  mount the named snapshot from the filesystem at the given
+ *  directory.
+ *
+ *  @return Return 0 if access is granted, otherwise an appropriate value
+ *  for errno should be returned.
+ */
+typedef int mpo_mount_check_snapshot_mount_t(
+    kauth_cred_t cred,
+    struct vnode *rvp,
+    struct vnode *vp,
+    struct componentname *cnp,
+    const char *name,
+    const char *vfc_name
+    );</code></pre>
+<p>It says <code>@return Return 0 if access is granted</code>. This is generally true for all MACF calls, not just this.</p>
+<p>An interesting thing I found is that in order to use the  <code>fs_snaphot</code> system call, which is also used by <a href="https://github.com/ahl/apfs" rel="noopener">snapUtil</a>, and not get denied, you need the <code>com.apple.developer.vfs.snapshot</code> entitlement.</p>
 <p>Now that we now that there is a MACF call, time to take a look on the Sandbox. For this we will use the Sandbox extension from Big Sur instead of Catalina.</p>
-<h2 id="chapter-2---the-sandbox">
-  Chapter 2 - The Sandbox
-  <a class="heading-link" href="#chapter-2---the-sandbox">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
+<h2 id="chapter-2---the-sandbox">Chapter 2 - The Sandbox<a class="anchor" href="#chapter-2---the-sandbox" aria-label="link to this section">#</a></h2>
 <p>The <code>mount_check_snapshot_mount</code> Sandbox hook is implemented by the <code>hook_mount_check_snapshot_mount</code> function.</p>
-<pre tabindex="0"><code class="language-clike" data-lang="clike">int _hook_mount_check_snapshot_mount(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
+<pre><code class=language-clike>int _hook_mount_check_snapshot_mount(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
     var_30 = **qword_44080;
     var_40 = 0xaaaaaaaaaaaaaaaa;
     *(&amp;var_40 + 0x8) = 0xaaaaaaaaaaaaaaaa;
@@ -477,9 +285,9 @@
             rax = ___stack_chk_fail();
     }
     return rax;
-}
-</code></pre><p>This is a short function, which calls into <code>cred_sb_evaluate</code> with the opcode 0x2c. It&rsquo;s very common for Sandbox hook functions, to be short, and pass evaluation for the <code>cred_sb_evaluate</code> function with a given opcode.</p>
-<pre tabindex="0"><code class="language-clike" data-lang="clike">int _cred_sb_evaluate(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
+}</code></pre>
+<p>This is a short function, which calls into <code>cred_sb_evaluate</code> with the opcode 0x2c. It's very common for Sandbox hook functions, to be short, and pass evaluation for the <code>cred_sb_evaluate</code> function with a given opcode.</p>
+<pre><code class=language-clike>int _cred_sb_evaluate(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
     r9 = arg5;
     r8 = arg4;
     rdi = arg0;
@@ -503,33 +311,31 @@
     _sandbox_release(rbx, r14);
     rax = rax;
     return rax;
-}
-</code></pre><p><code>cred_sb_evaluate</code> is also not very long and it further calls into <code>sb_evaluate_internal</code>, passing the opcode. This is a massive, and very complex function, and ultimately this is what will determine if the operation is allowed or not. Most hook operations end up calling into this internal function. It&rsquo;s over 1000 lines of code even if decompiled.</p>
-<p>I decided not to fully reverse engineer this as in itself it would be weeks of work, but I still wanted to see the decision making process, so jumped into kernel debugging. I wrote about how to do kernel debugging on macOS earlier, which can be found in my company&rsquo;s website, here: <a href="https://www.offensive-security.com/offsec/kernel-debugging-macos-with-sip/"  class="external-link" target="_blank" rel="noopener">Kernel Debugging macOS with SIP</a>.</p>
-<blockquote>
-<p>A small detour. Kernel debugging on Big Sur, with VMware Fusion 12.1 doesn&rsquo;t work well if the VM has more than 1 vCPU. No matter if we use VMware&rsquo;s GDB stub or proper XNU kernel debugging, when we &ldquo;continue&rdquo; after a breakpoint, the VM will hang forever and the &ldquo;vmware-vmx&rdquo; process will go high on CPU. This could also happen with 1 vCPU, but rarely.</p>
-</blockquote>
+}</code></pre>
+<p><code>cred_sb_evaluate</code> is also not very long and it further calls into <code>sb_evaluate_internal</code>, passing the opcode. This is a massive, and very complex function, and ultimately this is what will determine if the operation is allowed or not. Most hook operations end up calling into this internal function. It's over 1000 lines of code even if decompiled.</p>
+<p>I decided not to fully reverse engineer this as in itself it would be weeks of work, but I still wanted to see the decision making process, so jumped into kernel debugging. I wrote about how to do kernel debugging on macOS earlier, which can be found in my company's website, here: <a href="https://www.offensive-security.com/offsec/kernel-debugging-macos-with-sip/" rel="noopener">Kernel Debugging macOS with SIP</a>.</p>
+<blockquote><p>A small detour. Kernel debugging on Big Sur, with VMware Fusion 12.1 doesn't work well if the VM has more than 1 vCPU. No matter if we use VMware's GDB stub or proper XNU kernel debugging, when we "continue" after a breakpoint, the VM will hang forever and the "vmware-vmx" process will go high on CPU. This could also happen with 1 vCPU, but rarely.  </p></blockquote>
 <p>Once kernel debugging is going, we start by setting a breakpoint on <code>hook_mount_check_snapshot_mount</code> and continue.</p>
-<pre tabindex="0"><code>(lldb) b hook_mount_check_snapshot_mount
+<pre><code>(lldb) b hook_mount_check_snapshot_mount
 Breakpoint 1: where = Sandbox`hook_mount_check_snapshot_mount, address = 0xffffff801021a49c
 (lldb) c
-Process 1 resuming
-</code></pre><p>Then we issue a snapshot mount in Terminal to trigger the breakpoint. We do this first from a Terminal, which has no Full Disk Access set.</p>
-<pre tabindex="0"><code>mount_apfs -o noowners,ro -s com.apple.TimeMachine.2020-12-04-045333.local /System/Volumes/Data /tmp/snap
-</code></pre><p>We will hit our breakpoint.</p>
-<pre tabindex="0"><code>Process 1 stopped
-* thread #3, name = &#39;0xffffff86a42b4000&#39;, queue = &#39;cpu-0&#39;, stop reason = breakpoint 1.1
+Process 1 resuming</code></pre>
+<p>Then we issue a snapshot mount in Terminal to trigger the breakpoint. We do this first from a Terminal, which has no Full Disk Access set.</p>
+<pre><code>mount_apfs -o noowners,ro -s com.apple.TimeMachine.2020-12-04-045333.local /System/Volumes/Data /tmp/snap</code></pre>
+<p>We will hit our breakpoint.</p>
+<pre><code>Process 1 stopped
+* thread #3, name = '0xffffff86a42b4000', queue = 'cpu-0', stop reason = breakpoint 1.1
     frame #0: 0xffffff801021a49c Sandbox`hook_mount_check_snapshot_mount
 Sandbox`hook_mount_check_snapshot_mount:
 -&gt;  0xffffff801021a49c &lt;+0&gt;: int3   
     0xffffff801021a49d &lt;+1&gt;: mov    rbp, rsp
     0xffffff801021a4a0 &lt;+4&gt;: push   r15
     0xffffff801021a4a2 &lt;+6&gt;: push   r14
-Target 0: (kernel) stopped.
-</code></pre><p>We can step through the execution till <code>sb_evaluate_internal</code> returns and then check the value of RAX, which contains the return value, and the &ldquo;decision&rdquo; of the evaluation.</p>
-<pre tabindex="0"><code>(lldb)  
+Target 0: (kernel) stopped.</code></pre>
+<p>We can step through the execution till <code>sb_evaluate_internal</code> returns and then check the value of RAX, which contains the return value, and the "decision" of the evaluation.</p>
+<pre><code>(lldb)  
 Process 1 stopped
-* thread #3, name = &#39;0xffffff86a42b4000&#39;, queue = &#39;cpu-0&#39;, stop reason = instruction step over
+* thread #3, name = '0xffffff86a42b4000', queue = 'cpu-0', stop reason = instruction step over
     frame #0: 0xffffff8010217f57 Sandbox`cred_sb_evaluate + 119
 Sandbox`cred_sb_evaluate:
 -&gt;  0xffffff8010217f57 &lt;+119&gt;: mov    r14, rax
@@ -538,34 +344,34 @@ Sandbox`cred_sb_evaluate:
     0xffffff8010217f62 &lt;+130&gt;: mov    rax, r14
 Target 0: (kernel) stopped.
 (lldb) register read $rax
-     rax = 0x00000001ffffffff
-</code></pre><p>We can see that the return value is <code>0x00000001ffffffff</code>, which is definitely not 0, which means that the operation is not allowed. This will be eventually returned upwards.</p>
+     rax = 0x00000001ffffffff</code></pre>
+<p>We can see that the return value is <code>0x00000001ffffffff</code>, which is definitely not 0, which means that the operation is not allowed. This will be eventually returned upwards.</p>
 <p>If we check the backtrace we will see that we got here through slightly different system call, compared to what we checked originally in the XNU source code.</p>
-<pre tabindex="0"><code>(lldb) bt
-* thread #3, name = &#39;0xffffff86a42b4000&#39;, queue = &#39;cpu-0&#39;, stop reason = instruction step over
+<pre><code>(lldb) bt
+* thread #3, name = '0xffffff86a42b4000', queue = 'cpu-0', stop reason = instruction step over
   * frame #0: 0xffffff8010217f6c Sandbox`cred_sb_evaluate + 140
     frame #1: 0xffffff801021a535 Sandbox`hook_mount_check_snapshot_mount + 153
-    frame #2: 0xffffff800daafe3f kernel`mac_mount_check_snapshot_mount(ctx=&lt;unavailable&gt;, rvp=0xffffff869e187200, vp=0xffffff86ae81bd00, cnp=0x0000000000000000, name=&#34;com.apple.TimeMachine.2020-12-11-135636.local&#34;, vfc_name=&#34;apfs&#34;) at mac_vfs.c:2376:2 [opt]
+    frame #2: 0xffffff800daafe3f kernel`mac_mount_check_snapshot_mount(ctx=&lt;unavailable&gt;, rvp=0xffffff869e187200, vp=0xffffff86ae81bd00, cnp=0x0000000000000000, name="com.apple.TimeMachine.2020-12-11-135636.local", vfc_name="apfs") at mac_vfs.c:2376:2 [opt]
     frame #3: 0xffffff80102eb5fb apfs`handle_snapshot_mount + 4808
     frame #4: 0xffffff80102e5524 apfs`apfs_vfsop_mount + 9469
     frame #5: 0xffffff800d54f198 kernel`mount_common(fstypename=&lt;unavailable&gt;, pvp=0xffffff869e54d200, vp=&lt;unavailable&gt;, cnp=&lt;unavailable&gt;, fsmountargs=140732678379552, flags=2097177, internal_flags=0, labelstr=0x0000000000000000, kernelmount=0, ctx=0xffffff86a3f57438) at vfs_syscalls.c:1220:11 [opt]
     frame #6: 0xffffff800d551145 kernel`__mac_mount(p=&lt;unavailable&gt;, uap=0xffffffa04e8fbf18, retval=&lt;unavailable&gt;) at vfs_syscalls.c:596:10 [opt]
     frame #7: 0xffffff800d550cfe kernel`mount(p=&lt;unavailable&gt;, uap=&lt;unavailable&gt;, retval=&lt;unavailable&gt;) at vfs_syscalls.c:356:9 [opt]
     frame #8: 0xffffff800d969ceb kernel`unix_syscall64(state=&lt;unavailable&gt;) at systemcalls.c:412:10 [opt]
-    frame #9: 0xffffff800d2621f6 kernel`hndl_unix_scall64 + 22
-</code></pre><p>We can see that <code>mount_apfs</code> called the <code>mount</code> system call, instead of the <code>fs_snapshot</code>, and <code>mount_common</code> eventually called into the <code>apfs</code> kernel extension to handle the mount operation. Then <code>apfs</code> called <code>mac_mount_check_snapshot_mount</code> what we saw earlier.</p>
+    frame #9: 0xffffff800d2621f6 kernel`hndl_unix_scall64 + 22</code></pre>
+<p>We can see that <code>mount_apfs</code> called the <code>mount</code> system call, instead of the <code>fs_snapshot</code>, and <code>mount_common</code> eventually called into the <code>apfs</code> kernel extension to handle the mount operation. Then <code>apfs</code> called <code>mac_mount_check_snapshot_mount</code> what we saw earlier. </p>
 <p>If we open <code>apfs</code> in Hopper and navigate to this function, we will find this callout.</p>
-<pre tabindex="0"><code class="language-clike" data-lang="clike">int _handle_snapshot_mount(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
+<pre><code class=language-clike>int _handle_snapshot_mount(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
 ...
 rax = _mac_mount_check_snapshot_mount(var_528, rsi, rdx, rcx, r8, r9);
-...
-</code></pre><p>Now let&rsquo;s give Terminal &ldquo;Full Disk Access&rdquo; rights, and try mounting again.</p>
-<pre tabindex="0"><code>(lldb) b 0xffffff8010217f5a
+...</code></pre>
+<p>Now let's give Terminal "Full Disk Access" rights, and try mounting again.</p>
+<pre><code>(lldb) b 0xffffff8010217f5a
 Breakpoint 4: where = Sandbox`cred_sb_evaluate + 122, address = 0xffffff8010217f5a
 (lldb) c
 Process 1 resuming
 Process 1 stopped
-* thread #12, name = &#39;0xffffff86a00a36c0&#39;, queue = &#39;cpu-0&#39;, stop reason = breakpoint 4.1
+* thread #12, name = '0xffffff86a00a36c0', queue = 'cpu-0', stop reason = breakpoint 4.1
     frame #0: 0xffffff8010217f5a Sandbox`cred_sb_evaluate + 122
 Sandbox`cred_sb_evaluate:
 -&gt;  0xffffff8010217f5a &lt;+122&gt;: int3   
@@ -574,10 +380,10 @@ Sandbox`cred_sb_evaluate:
     0xffffff8010217f62 &lt;+130&gt;: mov    rax, r14
 Target 0: (kernel) stopped.
 (lldb) bt
-* thread #12, name = &#39;0xffffff86a00a36c0&#39;, queue = &#39;cpu-0&#39;, stop reason = breakpoint 4.1
+* thread #12, name = '0xffffff86a00a36c0', queue = 'cpu-0', stop reason = breakpoint 4.1
   * frame #0: 0xffffff8010217f5a Sandbox`cred_sb_evaluate + 122
     frame #1: 0xffffff801021a535 Sandbox`hook_mount_check_snapshot_mount + 153
-    frame #2: 0xffffff800daafe3f kernel`mac_mount_check_snapshot_mount(ctx=&lt;unavailable&gt;, rvp=0xffffff869e187200, vp=0xffffff86ae81bd00, cnp=0x0000000000000000, name=&#34;com.apple.TimeMachine.2020-12-11-135636.local&#34;, vfc_name=&#34;apfs&#34;) at mac_vfs.c:2376:2 [opt]
+    frame #2: 0xffffff800daafe3f kernel`mac_mount_check_snapshot_mount(ctx=&lt;unavailable&gt;, rvp=0xffffff869e187200, vp=0xffffff86ae81bd00, cnp=0x0000000000000000, name="com.apple.TimeMachine.2020-12-11-135636.local", vfc_name="apfs") at mac_vfs.c:2376:2 [opt]
     frame #3: 0xffffff80102eb5fb apfs`handle_snapshot_mount + 4808
     frame #4: 0xffffff80102e5524 apfs`apfs_vfsop_mount + 9469
     frame #5: 0xffffff800d54f198 kernel`mount_common(fstypename=&lt;unavailable&gt;, pvp=0xffffff869e54d200, vp=&lt;unavailable&gt;, cnp=&lt;unavailable&gt;, fsmountargs=140732897724560, flags=2097177, internal_flags=0, labelstr=0x0000000000000000, kernelmount=0, ctx=0xffffff86a35383b0) at vfs_syscalls.c:1220:11 [opt]
@@ -586,103 +392,25 @@ Target 0: (kernel) stopped.
     frame #8: 0xffffff800d969ceb kernel`unix_syscall64(state=&lt;unavailable&gt;) at systemcalls.c:412:10 [opt]
     frame #9: 0xffffff800d2621f6 kernel`hndl_unix_scall64 + 22
 (lldb) register read $rax
-     rax = 0x0000000000000000
-</code></pre><p>Once we hit our breakpoint we will set a new breakpoint which is hit upon returning from <code>sb_evaluate_internal</code>. Now if we check the value of <code>RAX</code>, we will find that the return value is &ldquo;0&rdquo;, and our operation will indeed be successful. This confirms that indeed this is where the decision happens, and this check was missing prior Catalina 10.15.4.</p>
+     rax = 0x0000000000000000</code></pre>
+<p>Once we hit our breakpoint we will set a new breakpoint which is hit upon returning from <code>sb_evaluate_internal</code>. Now if we check the value of <code>RAX</code>, we will find that the return value is "0", and our operation will indeed be successful. This confirms that indeed this is where the decision happens, and this check was missing prior Catalina 10.15.4.</p>
 <p>If we do a binary diffing on the Sandbox between macOS version 10.15.3 and 10.15.4 we will see that the function <code>hook_mount_check_snapshot_mount</code> was introduced at this version.</p>
-<h2 id="conclusion">
-  Conclusion
-  <a class="heading-link" href="#conclusion">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
+<h2 id="conclusion">Conclusion<a class="anchor" href="#conclusion" aria-label="link to this section">#</a></h2>
 <p>In this rather long post we explored the secrets behind the fix for CVE-2020-9771. We started with reviewing the changes in the XNU source code, and found that a new MACF policy check, <code>mac_mount_check_snapshot_mount</code> was introduced for snapshot mounting. Then we moved over the Sandbox, where we examined the <code>hook_mount_check_snapshot_mount</code> function, which implements this check by calling into <code>sb_evaluate_internal</code>. Lastly we used kernel debugging to confirm the decision made by the Sandbox and compare the results of having and not having FDA rights.</p>
-<p>I hope this was a useful article, I certainly learned a lot by going through this process. I think I will always feel like a n00b, no matter what, but now at least I&rsquo;m one step forward.</p>
-<p><img src="https://theevilbit.github.io/images/Reversing_CVE_2020_9771/babyyoda.jpg" alt=""></p>
-
-      </div>
-
-
-      <footer>
-        
-
-
-        
-        
-        
-        
-        
-        
-        
-      </footer>
-    </article>
-
-    
-  </section>
-
-    </div>
-
-    <footer class="footer">
-  <section class="container">
-    ©
-    
-      2019 -
-    
-    2026
-     Csaba Fitzl 
-    ·
-    
-    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
-    
-  </section>
-</footer>
-
-  </main>
-
-  
-
-  
-  
-  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
-  
-
-  
-
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
+<p>I hope this was a useful article, I certainly learned a lot by going through this process. I think I will always feel like a n00b, no matter what, but now at least I'm one step forward.</p>
+<p><img src="/images/Reversing_CVE_2020_9771/babyyoda.jpg" alt="" loading="lazy"></p></div>
+<nav class="pn"><a class="prev" href="/posts/microsoft_teams_lpe/"><span>← previous</span>NOCVE - Microsoft Teams for macOS Local Privilege Escalation</a><a class="next" href="/posts/divide_and_conquer/"><span>next →</span>Divide and Conquer - A technique to bypass NextGen AV</a></nav></article></main>
+  <footer class="foot">
+    <span>© 2026 Csaba Fitzl</span>
+    <span class="social"><a href="https://github.com/theevilbit/" rel="me noopener">GitHub</a><a href="https://x.com/theevilbit" rel="me noopener">X</a><a href="/index.xml" rel="me noopener">RSS</a></span>
+  </footer>
+</div>
+<script>
+document.getElementById("theme").addEventListener("click", function () {
+  var t = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem("tb.theme", t); } catch (e) {}
+});
+</script>
 </body>
 </html>

@@ -1,423 +1,165 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-  <title>
-  AMFI Launch Constraints - First Quick Look · theevilbit blog
-</title>
-  <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light dark">
-
-
-
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AMFI Launch Constraints - First Quick Look · theevilbit</title>
+<meta name="description" content="Dropping some initial quick notes for a new security feature I ran into on macOS Ventura. It&#x27;s called &quot;Launch Constraints&quot; and lives inside AMFI.">
 <meta name="author" content="Csaba Fitzl">
-<meta name="description" content="Dropping some initial quick notes for a new security feature I ran into on macOS Ventura. It&rsquo;s called &ldquo;Launch Constraints&rdquo; and lives inside AMFI.
-Do the following experiment: Copy Terminal.app to your HOME folder and try to run it on Monterey and Ventura. On the former it will work without any issues, on the other it will fail, and we will get the following error:
-2022-06-14 05:59:55.254678&#43;0200 0x5481     Default     0x0                  0      0
-kernel: (AppleMobileFileIntegrity) AMFI: Launch Constraint Violation (enforcing), error
-info: c[1]p[1]m[1]e[2], (Constraint not matched) launching proc[vc: 1 pid: 1112]:
-/Users/ace/Terminal.app/Contents/MacOS/Terminal, launch type 0, failure proc [vc: 1 pid:
-1112]: /Users/ace/Terminal.app/Contents/MacOS/Terminal
-This is interesting. If we copy it to other locations, it will fail as well. The reason looks to be something called &ldquo;Launch Constraint&rdquo;. So it seems that it will disallow the execution of system apps outside their location. This is pretty nice, as this has been abused plenty of times in the past, as moving them out of their place usually allowed someone inject code into them. Remember these TCC bypasses?">
-<meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
-
-
-
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="AMFI Launch Constraints - First Quick Look">
-  <meta name="twitter:description" content="Dropping some initial quick notes for a new security feature I ran into on macOS Ventura. It’s called “Launch Constraints” and lives inside AMFI.
-Do the following experiment: Copy Terminal.app to your HOME folder and try to run it on Monterey and Ventura. On the former it will work without any issues, on the other it will fail, and we will get the following error:
-2022-06-14 05:59:55.254678&#43;0200 0x5481 Default 0x0 0 0 kernel: (AppleMobileFileIntegrity) AMFI: Launch Constraint Violation (enforcing), error info: c[1]p[1]m[1]e[2], (Constraint not matched) launching proc[vc: 1 pid: 1112]: /Users/ace/Terminal.app/Contents/MacOS/Terminal, launch type 0, failure proc [vc: 1 pid: 1112]: /Users/ace/Terminal.app/Contents/MacOS/Terminal This is interesting. If we copy it to other locations, it will fail as well. The reason looks to be something called “Launch Constraint”. So it seems that it will disallow the execution of system apps outside their location. This is pretty nice, as this has been abused plenty of times in the past, as moving them out of their place usually allowed someone inject code into them. Remember these TCC bypasses?">
-
-<meta property="og:url" content="https://theevilbit.github.io/posts/amfi_launch_constraints/">
-  <meta property="og:site_name" content="theevilbit blog">
-  <meta property="og:title" content="AMFI Launch Constraints - First Quick Look">
-  <meta property="og:description" content="Dropping some initial quick notes for a new security feature I ran into on macOS Ventura. It’s called “Launch Constraints” and lives inside AMFI.
-Do the following experiment: Copy Terminal.app to your HOME folder and try to run it on Monterey and Ventura. On the former it will work without any issues, on the other it will fail, and we will get the following error:
-2022-06-14 05:59:55.254678&#43;0200 0x5481 Default 0x0 0 0 kernel: (AppleMobileFileIntegrity) AMFI: Launch Constraint Violation (enforcing), error info: c[1]p[1]m[1]e[2], (Constraint not matched) launching proc[vc: 1 pid: 1112]: /Users/ace/Terminal.app/Contents/MacOS/Terminal, launch type 0, failure proc [vc: 1 pid: 1112]: /Users/ace/Terminal.app/Contents/MacOS/Terminal This is interesting. If we copy it to other locations, it will fail as well. The reason looks to be something called “Launch Constraint”. So it seems that it will disallow the execution of system apps outside their location. This is pretty nice, as this has been abused plenty of times in the past, as moving them out of their place usually allowed someone inject code into them. Remember these TCC bypasses?">
-  <meta property="og:locale" content="en">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2022-06-14T00:00:00+00:00">
-    <meta property="article:modified_time" content="2022-06-14T00:00:00+00:00">
-    <meta property="article:tag" content="Macos">
-    <meta property="article:tag" content="Internals">
-    <meta property="article:tag" content="Amfi">
-
-
-
-
 <link rel="canonical" href="https://theevilbit.github.io/posts/amfi_launch_constraints/">
-
-
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
-
-
-  
-  
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
-
-
-
-
-
-
-  
-    
-    
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
-  
-
-
-
- 
-
-
-
-
-<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
-
-<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-
-<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
-<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
-
-
-
-
-
-
-
-
-
+<link rel="alternate" type="application/rss+xml" title="theevilbit" href="/index.xml">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>try { var t = localStorage.getItem("tb.theme"); document.documentElement.dataset.theme = t || "dark"; } catch (e) { document.documentElement.dataset.theme = "dark"; }</script>
+<link rel="preload" href="/fonts/IBMPlexSans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts.css?v=1791269065">
+<link rel="stylesheet" href="/style.css?v=1791269065">
 </head>
-
-
-
-
-
-
-<body class="preload-transitions colorscheme-auto">
-  
-<div class="float-container">
-    <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
-    </a>
-</div>
-
-
-  <main class="wrapper">
-    <nav class="navigation">
-  <section class="container">
-    
-    <a class="navigation-title" href="https://theevilbit.github.io/">
-      theevilbit blog
-    </a>
-    
-    
-      <input type="checkbox" id="menu-toggle" />
-      <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
-      </label>
-      <ul class="navigation-list">
-        
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/posts/">Posts</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/shield/">Shield.app</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/tags/">Tags</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/about/">About</a>
-            </li>
-          
-        
-        
-      </ul>
-    
-  </section>
-</nav>
-
-
-    <div class="content">
-      
-  <section class="container post">
-    <article>
-      <header>
-        <div class="post-title">
-          <h1 class="title">
-            <a class="title-link" href="https://theevilbit.github.io/posts/amfi_launch_constraints/">
-              AMFI Launch Constraints - First Quick Look
-            </a>
-          </h1>
-        </div>
-        <div class="post-meta">
-          <div class="date">
-            <span class="posted-on">
-              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
-              <time datetime="2022-06-14T00:00:00Z">
-                June 14, 2022
-              </time>
-            </span>
-            <span class="reading-time">
-              <i class="fa-solid fa-clock" aria-hidden="true"></i>
-              4-minute read
-            </span>
-          </div>
-          
-          <div class="categories">
-  <i class="fa-solid fa-folder" aria-hidden="true"></i>
-    <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
-
-          <div class="tags">
-  <i class="fa-solid fa-tag" aria-hidden="true"></i>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/macos/">Macos</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/internals/">Internals</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/amfi/">Amfi</a>
-    </span></div>
-
-        </div>
-      </header>
-
-      <div class="post-content">
-        
-        <p>Dropping some initial quick notes for a new security feature I ran into on macOS Ventura. It&rsquo;s called &ldquo;Launch Constraints&rdquo; and lives inside AMFI.</p>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/">the<span>evil</span>bit<i class="cursor"></i></a>
+    <nav class="nav"><a href="/posts/" class=on>Posts</a><a href="/beyond/">Beyond</a><a href="/talks/">Talks</a><a href="/shield/">Shield</a><a href="/about/">About</a><a href="/tags/">Tags</a></nav>
+    <button type="button" class="theme" id="theme" aria-label="switch light / dark">◐</button>
+  </header>
+  <main><article class="post">
+<header class="post-head"><h1>AMFI Launch Constraints - First Quick Look</h1>
+<div class="meta"><time datetime="2022-06-14">Jun 14, 2022</time><span>3 min read</span><span class="tags"><a class="tag" href="/tags/macos/">macos</a><a class="tag" href="/tags/internals/">internals</a><a class="tag" href="/tags/amfi/">amfi</a></span></div></header>
+<div class="prose"><p>Dropping some initial quick notes for a new security feature I ran into on macOS Ventura. It's called "Launch Constraints" and lives inside AMFI.</p>
 <p>Do the following experiment: Copy <code>Terminal.app</code> to your HOME folder and try to run it on Monterey and Ventura. On the former it will work without any issues, on the other it will fail, and we will get the following error:</p>
-<pre tabindex="0"><code>2022-06-14 05:59:55.254678+0200 0x5481     Default     0x0                  0      0
+<pre><code>2022-06-14 05:59:55.254678+0200 0x5481     Default     0x0                  0      0
 kernel: (AppleMobileFileIntegrity) AMFI: Launch Constraint Violation (enforcing), error
 info: c[1]p[1]m[1]e[2], (Constraint not matched) launching proc[vc: 1 pid: 1112]:
 /Users/ace/Terminal.app/Contents/MacOS/Terminal, launch type 0, failure proc [vc: 1 pid:
-1112]: /Users/ace/Terminal.app/Contents/MacOS/Terminal
-</code></pre><p>This is interesting. If we copy it to other locations, it will fail as well. The reason looks to be something called &ldquo;Launch Constraint&rdquo;. So it seems that it will disallow the execution of system apps outside their location. This is pretty nice, as this has been abused plenty of times in the past, as moving them out of their place usually allowed someone inject code into them. Remember these TCC bypasses?</p>
-<p><a href="https://wojciechregula.blog/post/change-home-directory-and-bypass-tcc-aka-cve-2020-27937/"  class="external-link" target="_blank" rel="noopener">Change home directory and bypass TCC aka CVE-2020-27937</a>
-<a href="https://blog.xpnsec.com/bypassing-macos-privacy-controls/"  class="external-link" target="_blank" rel="noopener">Bypassing MacOS Privacy Controls</a></p>
+1112]: /Users/ace/Terminal.app/Contents/MacOS/Terminal</code></pre>
+<p>This is interesting. If we copy it to other locations, it will fail as well. The reason looks to be something called "Launch Constraint". So it seems that it will disallow the execution of system apps outside their location. This is pretty nice, as this has been abused plenty of times in the past, as moving them out of their place usually allowed someone inject code into them. Remember these TCC bypasses?</p>
+<p><a href="https://wojciechregula.blog/post/change-home-directory-and-bypass-tcc-aka-cve-2020-27937/" rel="noopener">Change home directory and bypass TCC aka CVE-2020-27937</a>
+<a href="https://blog.xpnsec.com/bypassing-macos-privacy-controls/" rel="noopener">Bypassing MacOS Privacy Controls</a> </p>
 <p>But there is more!</p>
 <p>If we try to execute any of the binaries from Terminal, which has an associated LaunchDaemon / Agent, it will fail.</p>
-<pre tabindex="0"><code>ace@ventura ~ % /usr/libexec/periodic-wrapper
-zsh: killed     /usr/libexec/periodic-wrapper
-</code></pre><p>and:</p>
-<pre tabindex="0"><code>2022-06-14 06:09:24.419580+0200 0x65f4     Default     0x0                  0      0
+<pre><code>ace@ventura ~ % /usr/libexec/periodic-wrapper
+zsh: killed     /usr/libexec/periodic-wrapper</code></pre>
+<p>and:</p>
+<pre><code>2022-06-14 06:09:24.419580+0200 0x65f4     Default     0x0                  0      0
 kernel: (AppleMobileFileIntegrity) AMFI: Launch Constraint Violation (enforcing), error
 info: c[1]p[1]m[1]e[1], (Constraint not matched) launching proc[vc: 1 pid: 1195]
 /usr/libexec/periodic-wrapper, launch type 0, failure proc [vc: 1 pid: 1195]:
-/usr/libexec/periodic-wrapper
-</code></pre><p>Also nice, this has been also abused in the past. Remember powerdir?</p>
-<p><a href="https://www.microsoft.com/security/blog/2022/01/10/new-macos-vulnerability-powerdir-could-lead-to-unauthorized-user-data-access/"  class="external-link" target="_blank" rel="noopener">New macOS vulnerability, “powerdir,” could lead to unauthorized user data access - Microsoft Security Blog</a></p>
+/usr/libexec/periodic-wrapper</code></pre>
+<p>Also nice, this has been also abused in the past. Remember powerdir?</p>
+<p><a href="https://www.microsoft.com/security/blog/2022/01/10/new-macos-vulnerability-powerdir-could-lead-to-unauthorized-user-data-access/" rel="noopener">New macOS vulnerability, “powerdir,” could lead to unauthorized user data access - Microsoft Security Blog</a></p>
 <p>Even if you copy these binaries out of their location, they will fail.</p>
-<p>Let&rsquo;s take a quick look into AMFI. (Since the KEXT binary is no longer present, you need either the KDK or load it from the kernel cache). It has some interesting new functions:</p>
-<pre tabindex="0"><code>ConfigurationSettings::enforceLaunchConstraints(void)
+<p>Let's take a quick look into AMFI. (Since the KEXT binary is no longer present, you need either the KDK or load it from the kernel cache). It has some interesting new functions:</p>
+<pre><code>ConfigurationSettings::enforceLaunchConstraints(void)
 ConfigurationSettings::allow3rdPartyLaunchConstraints(void)
-_proc_check_launch_constraints(proc *,int,int,void *,ulong,launch_constraint_data *,char **,ulong *)
-</code></pre><p>The settings are initialized in:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#078;font-weight:bold">char</span> <span style="color:#c0f">configurationSettingsInit</span>(<span style="color:#078;font-weight:bold">void</span>)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>  IORegistryEntry <span style="color:#555">*</span>v0; <span style="color:#09f;font-style:italic">// r12
-</span></span></span><span style="display:flex;"><span>  <span style="color:#069;font-weight:bold">const</span> OSMetaClassBase <span style="color:#555">*</span>v1; <span style="color:#09f;font-style:italic">// rax
-</span></span></span><span style="display:flex;"><span>  OSMetaClassBase <span style="color:#555">*</span>v2; <span style="color:#09f;font-style:italic">// rax
-</span></span></span><span style="display:flex;"><span>  <span style="color:#078;font-weight:bold">boolean_t</span> v3; <span style="color:#09f;font-style:italic">// ebx
-</span></span></span><span style="display:flex;"><span>  <span style="color:#078;font-weight:bold">int</span> v4; <span style="color:#09f;font-style:italic">// r13d
-</span></span></span><span style="display:flex;"><span>  <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>v5; <span style="color:#09f;font-style:italic">// rax
-</span></span></span><span style="display:flex;"><span>  <span style="color:#078;font-weight:bold">int</span> v6; <span style="color:#09f;font-style:italic">// r15d
-</span></span></span><span style="display:flex;"><span>  <span style="color:#078;font-weight:bold">int</span> v7; <span style="color:#09f;font-style:italic">// r14d
-</span></span></span><span style="display:flex;"><span>  <span style="color:#078;font-weight:bold">bool</span> v8; <span style="color:#09f;font-style:italic">// zf
-</span></span></span><span style="display:flex;"><span>  <span style="color:#078;font-weight:bold">bool</span> v9; <span style="color:#09f;font-style:italic">// bl
-</span></span></span><span style="display:flex;"><span>  <span style="color:#078;font-weight:bold">bool</span> v10; <span style="color:#09f;font-style:italic">// r15
-</span></span></span><span style="display:flex;"><span>  <span style="color:#078;font-weight:bold">boolean_t</span> v12; <span style="color:#09f;font-style:italic">// [rsp+Ch] [rbp-34h]
-</span></span></span><span style="display:flex;"><span>  <span style="color:#078;font-weight:bold">int</span> v13; <span style="color:#09f;font-style:italic">// [rsp+10h] [rbp-30h]
-</span></span></span><span style="display:flex;"><span>  <span style="color:#078;font-weight:bold">int</span> v14[<span style="color:#f60">11</span>]; <span style="color:#09f;font-style:italic">// [rsp+14h] [rbp-2Ch] BYREF
-</span></span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#c0f">sysctl_register_oid</span>(<span style="color:#555">&amp;</span>sysctl__security_mac_amfi);
-</span></span><span style="display:flex;"><span>  <span style="color:#c0f">sysctl_register_oid</span>(<span style="color:#555">&amp;</span>sysctl__security_mac_amfi_developer_mode_status);
-</span></span><span style="display:flex;"><span>  <span style="color:#c0f">sysctl_register_oid</span>(<span style="color:#555">&amp;</span>sysctl__security_mac_amfi_developer_mode_resolved);
-</span></span><span style="display:flex;"><span>  <span style="color:#c0f">sysctl_register_oid</span>(<span style="color:#555">&amp;</span>sysctl__security_mac_amfi_launch_constraints_enforced);
-</span></span><span style="display:flex;"><span>  <span style="color:#c0f">sysctl_register_oid</span>(<span style="color:#555">&amp;</span>sysctl__security_mac_amfi_launch_constraints_3rd_party_allowed);
-</span></span><span style="display:flex;"><span>  <span style="color:#c0f">sysctl_register_oid</span>(<span style="color:#555">&amp;</span>sysctl__security_mac_amfi_launch_env_logging);
-</span></span><span style="display:flex;"><span>  v0 <span style="color:#555">=</span> IORegistryEntry<span style="color:#555">::</span><span style="color:#c0f">fromPath</span>(<span style="color:#c30">&#34;/chosen&#34;</span>, gIODTPlane, <span style="color:#f60">0LL</span>, <span style="color:#f60">0LL</span>, <span style="color:#f60">0LL</span>);
-</span></span><span style="display:flex;"><span>  <span style="color:#069;font-weight:bold">if</span> ( v0 )
-</span></span><span style="display:flex;"><span>  {
-</span></span><span style="display:flex;"><span>    v1 <span style="color:#555">=</span> (<span style="color:#069;font-weight:bold">const</span> OSMetaClassBase <span style="color:#555">*</span>)((<span style="color:#069;font-weight:bold">__int64</span> (<span style="color:#069;font-weight:bold">__fastcall</span> <span style="color:#555">*</span>)(IORegistryEntry <span style="color:#555">*</span>, <span style="color:#069;font-weight:bold">const</span> <span style="color:#078;font-weight:bold">char</span> <span style="color:#555">*</span>))v0<span style="color:#555">-&gt;</span>getProperty_1)(
-</span></span><span style="display:flex;"><span>                                    v0,
-</span></span><span style="display:flex;"><span>                                    <span style="color:#c30">&#34;security-mode-change-enable&#34;</span>);
-</span></span><span style="display:flex;"><span>    v2 <span style="color:#555">=</span> OSMetaClassBase<span style="color:#555">::</span><span style="color:#c0f">safeMetaCast</span>(v1, OSData<span style="color:#555">::</span>metaClass);
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> ( v2 )
-</span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>      <span style="color:#069;font-weight:bold">if</span> ( <span style="color:#555">*</span>(_DWORD <span style="color:#555">*</span>)((<span style="color:#069;font-weight:bold">__int64</span> (<span style="color:#069;font-weight:bold">__fastcall</span> <span style="color:#555">*</span>)(OSMetaClassBase <span style="color:#555">*</span>))v2<span style="color:#555">-&gt;</span>__vftable[<span style="color:#f60">2</span>]._RESERVEDOSMetaClassBase4)(v2) )
-</span></span><span style="display:flex;"><span>        bootedWithModeChangeEnabled <span style="color:#555">=</span> <span style="color:#f60">1</span>;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>  <span style="color:#c0f">macOSPolicyConfigurationInit</span>();
-</span></span><span style="display:flex;"><span>  v14[<span style="color:#f60">0</span>] <span style="color:#555">=</span> <span style="color:#f60">0</span>;
-</span></span><span style="display:flex;"><span>  v3 <span style="color:#555">=</span> <span style="color:#c0f">PE_parse_boot_argn</span>(<span style="color:#c30">&#34;amfi_enforce_launch_constraints&#34;</span>, v14, <span style="color:#f60">4</span>);
-</span></span><span style="display:flex;"><span>  v4 <span style="color:#555">=</span> v3;
-</span></span><span style="display:flex;"><span>  <span style="color:#069;font-weight:bold">if</span> ( v3 )
-</span></span><span style="display:flex;"><span>    v4 <span style="color:#555">=</span> v14[<span style="color:#f60">0</span>];
-</span></span><span style="display:flex;"><span>  v12 <span style="color:#555">=</span> <span style="color:#c0f">PE_parse_boot_argn</span>(<span style="color:#c30">&#34;amfi_allow_3p_launch_constraints&#34;</span>, v14, <span style="color:#f60">4</span>);
-</span></span><span style="display:flex;"><span>  v13 <span style="color:#555">=</span> v14[<span style="color:#f60">0</span>];
-</span></span><span style="display:flex;"><span>  <span style="color:#c0f">LODWORD</span>(v5) <span style="color:#555">=</span> <span style="color:#c0f">PE_parse_boot_argn</span>(<span style="color:#c30">&#34;BATS_TESTPLAN_ID&#34;</span>, v14, <span style="color:#f60">4</span>);
-</span></span><span style="display:flex;"><span>  v6 <span style="color:#555">=</span> (<span style="color:#078;font-weight:bold">int</span>)v5;
-</span></span><span style="display:flex;"><span>  v7 <span style="color:#555">=</span> v14[<span style="color:#f60">0</span>];
-</span></span><span style="display:flex;"><span>  v8 <span style="color:#555">=</span> v3 <span style="color:#555">==</span> <span style="color:#f60">0</span>;
-</span></span><span style="display:flex;"><span>  v9 <span style="color:#555">=</span> v3 <span style="color:#555">!=</span> <span style="color:#f60">0</span>;
-</span></span><span style="display:flex;"><span>  <span style="color:#069;font-weight:bold">if</span> ( v8 <span style="color:#555">||</span> <span style="color:#555">!</span>v4 )
-</span></span><span style="display:flex;"><span>  {
-</span></span><span style="display:flex;"><span>    <span style="color:#c0f">LODWORD</span>(v5) <span style="color:#555">=</span> <span style="color:#c0f">csr_check</span>(<span style="color:#f60">2LL</span>);
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">if</span> ( (_DWORD)v5 )
-</span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>      <span style="color:#c0f">LODWORD</span>(v5) <span style="color:#555">=</span> <span style="color:#c0f">csr_check</span>(<span style="color:#555">&amp;</span>dword_10);
-</span></span><span style="display:flex;"><span>      <span style="color:#069;font-weight:bold">if</span> ( <span style="color:#555">!</span>(_DWORD)v5 )
-</span></span><span style="display:flex;"><span>      {
-</span></span><span style="display:flex;"><span>        v5 <span style="color:#555">=</span> <span style="color:#555">&amp;</span>BootedDevice;
-</span></span><span style="display:flex;"><span>        <span style="color:#069;font-weight:bold">if</span> ( BootedDevice
-</span></span><span style="display:flex;"><span>          <span style="color:#555">||</span> (v10 <span style="color:#555">=</span> v6 <span style="color:#555">!=</span> <span style="color:#f60">0</span>,
-</span></span><span style="display:flex;"><span>              <span style="color:#c0f">LOBYTE</span>(v5) <span style="color:#555">=</span> macOSPolicyConfig<span style="color:#555">::</span><span style="color:#c0f">bniAllowAsPlatform</span>((macOSPolicyConfig <span style="color:#555">*</span>)<span style="color:#555">&amp;</span>dword_10),
-</span></span><span style="display:flex;"><span>              (_BYTE)v5)
-</span></span><span style="display:flex;"><span>          <span style="color:#555">||</span> v7 <span style="color:#555">!=</span> <span style="color:#f60">0</span> <span style="color:#555">&amp;&amp;</span> v10
-</span></span><span style="display:flex;"><span>          <span style="color:#555">||</span> (<span style="color:#c0f">LOBYTE</span>(v5) <span style="color:#555">=</span> v4 <span style="color:#555">==</span> <span style="color:#f60">0</span>, v4 <span style="color:#555">==</span> <span style="color:#f60">0</span> <span style="color:#555">&amp;&amp;</span> v9) )
-</span></span><span style="display:flex;"><span>        {
-</span></span><span style="display:flex;"><span>          launchConstraintsEnforced <span style="color:#555">=</span> <span style="color:#f60">0</span>;
-</span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>        <span style="color:#069;font-weight:bold">if</span> ( v12 <span style="color:#555">&amp;&amp;</span> v13 )
-</span></span><span style="display:flex;"><span>          launchConstraint3rdPartyAllowed <span style="color:#555">=</span> <span style="color:#f60">1</span>;
-</span></span><span style="display:flex;"><span>      }
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    <span style="color:#069;font-weight:bold">else</span>
-</span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>      launchConstraintsEnforced <span style="color:#555">=</span> <span style="color:#f60">0</span>;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>  <span style="color:#069;font-weight:bold">else</span>
-</span></span><span style="display:flex;"><span>  {
-</span></span><span style="display:flex;"><span>    launchConstraintsEnforced <span style="color:#555">=</span> <span style="color:#f60">1</span>;
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>  <span style="color:#069;font-weight:bold">if</span> ( v0 )
-</span></span><span style="display:flex;"><span>    <span style="color:#c0f">LOBYTE</span>(v5) <span style="color:#555">=</span> ((<span style="color:#069;font-weight:bold">__int64</span> (<span style="color:#069;font-weight:bold">__fastcall</span> <span style="color:#555">*</span>)(IORegistryEntry <span style="color:#555">*</span>))v0<span style="color:#555">-&gt;</span>release_0)(v0);
-</span></span><span style="display:flex;"><span>  <span style="color:#069;font-weight:bold">return</span> (<span style="color:#078;font-weight:bold">char</span>)v5;
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>We find two things. One is that the settings are taken from the PE boot_args and that there is an associated sysctl entry. We can find that:</p>
-<pre tabindex="0"><code>ace@ventura ~ % sysctl security | grep launch_constraints                      
+_proc_check_launch_constraints(proc *,int,int,void *,ulong,launch_constraint_data *,char **,ulong *)</code></pre>
+<p>The settings are initialized in:</p>
+<pre><code class=language-c>char configurationSettingsInit(void)
+{
+  IORegistryEntry *v0; // r12
+  const OSMetaClassBase *v1; // rax
+  OSMetaClassBase *v2; // rax
+  boolean_t v3; // ebx
+  int v4; // r13d
+  char *v5; // rax
+  int v6; // r15d
+  int v7; // r14d
+  bool v8; // zf
+  bool v9; // bl
+  bool v10; // r15
+  boolean_t v12; // [rsp+Ch] [rbp-34h]
+  int v13; // [rsp+10h] [rbp-30h]
+  int v14[11]; // [rsp+14h] [rbp-2Ch] BYREF
+
+  sysctl_register_oid(&amp;sysctl__security_mac_amfi);
+  sysctl_register_oid(&amp;sysctl__security_mac_amfi_developer_mode_status);
+  sysctl_register_oid(&amp;sysctl__security_mac_amfi_developer_mode_resolved);
+  sysctl_register_oid(&amp;sysctl__security_mac_amfi_launch_constraints_enforced);
+  sysctl_register_oid(&amp;sysctl__security_mac_amfi_launch_constraints_3rd_party_allowed);
+  sysctl_register_oid(&amp;sysctl__security_mac_amfi_launch_env_logging);
+  v0 = IORegistryEntry::fromPath("/chosen", gIODTPlane, 0LL, 0LL, 0LL);
+  if ( v0 )
+  {
+    v1 = (const OSMetaClassBase *)((__int64 (__fastcall *)(IORegistryEntry *, const char *))v0-&gt;getProperty_1)(
+                                    v0,
+                                    "security-mode-change-enable");
+    v2 = OSMetaClassBase::safeMetaCast(v1, OSData::metaClass);
+    if ( v2 )
+    {
+      if ( *(_DWORD *)((__int64 (__fastcall *)(OSMetaClassBase *))v2-&gt;__vftable[2]._RESERVEDOSMetaClassBase4)(v2) )
+        bootedWithModeChangeEnabled = 1;
+    }
+  }
+  macOSPolicyConfigurationInit();
+  v14[0] = 0;
+  v3 = PE_parse_boot_argn("amfi_enforce_launch_constraints", v14, 4);
+  v4 = v3;
+  if ( v3 )
+    v4 = v14[0];
+  v12 = PE_parse_boot_argn("amfi_allow_3p_launch_constraints", v14, 4);
+  v13 = v14[0];
+  LODWORD(v5) = PE_parse_boot_argn("BATS_TESTPLAN_ID", v14, 4);
+  v6 = (int)v5;
+  v7 = v14[0];
+  v8 = v3 == 0;
+  v9 = v3 != 0;
+  if ( v8 || !v4 )
+  {
+    LODWORD(v5) = csr_check(2LL);
+    if ( (_DWORD)v5 )
+    {
+      LODWORD(v5) = csr_check(&amp;dword_10);
+      if ( !(_DWORD)v5 )
+      {
+        v5 = &amp;BootedDevice;
+        if ( BootedDevice
+          || (v10 = v6 != 0,
+              LOBYTE(v5) = macOSPolicyConfig::bniAllowAsPlatform((macOSPolicyConfig *)&amp;dword_10),
+              (_BYTE)v5)
+          || v7 != 0 &amp;&amp; v10
+          || (LOBYTE(v5) = v4 == 0, v4 == 0 &amp;&amp; v9) )
+        {
+          launchConstraintsEnforced = 0;
+        }
+        if ( v12 &amp;&amp; v13 )
+          launchConstraint3rdPartyAllowed = 1;
+      }
+    }
+    else
+    {
+      launchConstraintsEnforced = 0;
+    }
+  }
+  else
+  {
+    launchConstraintsEnforced = 1;
+  }
+  if ( v0 )
+    LOBYTE(v5) = ((__int64 (__fastcall *)(IORegistryEntry *))v0-&gt;release_0)(v0);
+  return (char)v5;
+}</code></pre>
+<p>We find two things. One is that the settings are taken from the PE boot_args and that there is an associated sysctl entry. We can find that:</p>
+<pre><code>ace@ventura ~ % sysctl security | grep launch_constraints                      
 security.mac.amfi.launch_constraints_enforced: 1
-security.mac.amfi.launch_constraints_3rd_party_allowed: 0
-</code></pre><p><code>_proc_check_launch_constraints</code> does the heavy lifting, and it will need further reversing, as it&rsquo;s a long function. It will be interesting to see how it works in the deep.</p>
-<p>If SIP is disabled this feature won&rsquo;t be enforced:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">if</span> ( ConfigurationSettings<span style="color:#555">::</span><span style="color:#c0f">launchEnvDebugLoggingEnabled</span>((ConfigurationSettings <span style="color:#555">*</span>)<span style="color:#555">&amp;</span>v51) )
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>  v17 <span style="color:#555">=</span> <span style="color:#f60">0</span>;
-</span></span><span style="display:flex;"><span>  <span style="color:#c0f">IOLog</span>(<span style="color:#c30">&#34;SIP is disabled, not checking launch constraints</span><span style="color:#c30;font-weight:bold">\n</span><span style="color:#c30">&#34;</span>);
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>I think this feature mitigates a whole exploit class and I think this was long overdue by Apple. So good job to everyone who was involved! Regardless it&rsquo;s nice to see this in work, even if my job is harder now :D</p>
-
-      </div>
-
-
-      <footer>
-        
-
-
-        
-        
-        
-        
-        
-        
-        
-      </footer>
-    </article>
-
-    
-  </section>
-
-    </div>
-
-    <footer class="footer">
-  <section class="container">
-    ©
-    
-      2019 -
-    
-    2026
-     Csaba Fitzl 
-    ·
-    
-    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
-    
-  </section>
-</footer>
-
-  </main>
-
-  
-
-  
-  
-  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
-  
-
-  
-
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
+security.mac.amfi.launch_constraints_3rd_party_allowed: 0</code></pre>
+<p><code>_proc_check_launch_constraints</code> does the heavy lifting, and it will need further reversing, as it's a long function. It will be interesting to see how it works in the deep.</p>
+<p>If SIP is disabled this feature won't be enforced:</p>
+<pre><code class=language-c>if ( ConfigurationSettings::launchEnvDebugLoggingEnabled((ConfigurationSettings *)&amp;v51) )
+{
+  v17 = 0;
+  IOLog("SIP is disabled, not checking launch constraints\n");
+}</code></pre>
+<p>I think this feature mitigates a whole exploit class and I think this was long overdue by Apple. So good job to everyone who was involved! Regardless it's nice to see this in work, even if my job is harder now :D</p></div>
+<nav class="pn"><a class="prev" href="/posts/cve-2021-30808/"><span>← previous</span>CVE-2021-30808 - CVE-2021-1784 strikes back - TCC bypass via mounting</a><a class="next" href="/posts/cve-2017-2533/"><span>next →</span>CVE-2017-2533 - The details behind</a></nav></article></main>
+  <footer class="foot">
+    <span>© 2026 Csaba Fitzl</span>
+    <span class="social"><a href="https://github.com/theevilbit/" rel="me noopener">GitHub</a><a href="https://x.com/theevilbit" rel="me noopener">X</a><a href="/index.xml" rel="me noopener">RSS</a></span>
+  </footer>
+</div>
+<script>
+document.getElementById("theme").addEventListener("click", function () {
+  var t = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem("tb.theme", t); } catch (e) {}
+});
+</script>
 </body>
 </html>

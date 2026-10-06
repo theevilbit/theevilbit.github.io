@@ -1,217 +1,36 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-  <title>
-  macOS Monterey Shortcuts - First look · theevilbit blog
-</title>
-  <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light dark">
-
-
-
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>macOS Monterey Shortcuts - First look · theevilbit</title>
+<meta name="description" content="Apple announced macOS Monterey (macOS 12) this week at WWDC, and one of its new features that caught my eye is Shortcuts. It&#x27;s already available on iOS, but it made its way to macOS. My security focused brain immediately">
 <meta name="author" content="Csaba Fitzl">
-<meta name="description" content="Apple announced macOS Monterey (macOS 12) this week at WWDC, and one of its new features that caught my eye is Shortcuts. It&rsquo;s already available on iOS, but it made its way to macOS. My security focused brain immediately thought about how cool this feature could be for red teamers or pentesters to persist on macOS :) So I decided to take a quick look on the new functionality, focusing on how it works. All of the below information is based on macOS Monterey Developer Beta 1.">
-<meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
-
-
-
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="macOS Monterey Shortcuts - First look">
-  <meta name="twitter:description" content="Apple announced macOS Monterey (macOS 12) this week at WWDC, and one of its new features that caught my eye is Shortcuts. It’s already available on iOS, but it made its way to macOS. My security focused brain immediately thought about how cool this feature could be for red teamers or pentesters to persist on macOS :) So I decided to take a quick look on the new functionality, focusing on how it works. All of the below information is based on macOS Monterey Developer Beta 1.">
-
-<meta property="og:url" content="https://theevilbit.github.io/posts/monterey_shortcuts/">
-  <meta property="og:site_name" content="theevilbit blog">
-  <meta property="og:title" content="macOS Monterey Shortcuts - First look">
-  <meta property="og:description" content="Apple announced macOS Monterey (macOS 12) this week at WWDC, and one of its new features that caught my eye is Shortcuts. It’s already available on iOS, but it made its way to macOS. My security focused brain immediately thought about how cool this feature could be for red teamers or pentesters to persist on macOS :) So I decided to take a quick look on the new functionality, focusing on how it works. All of the below information is based on macOS Monterey Developer Beta 1.">
-  <meta property="og:locale" content="en">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2021-06-10T00:00:00+00:00">
-    <meta property="article:modified_time" content="2021-06-10T00:00:00+00:00">
-    <meta property="article:tag" content="Macos">
-    <meta property="article:tag" content="Internals">
-    <meta property="article:tag" content="Shortcuts">
-
-
-
-
 <link rel="canonical" href="https://theevilbit.github.io/posts/monterey_shortcuts/">
-
-
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
-
-
-  
-  
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
-
-
-
-
-
-
-  
-    
-    
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
-  
-
-
-
- 
-
-
-
-
-<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
-
-<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-
-<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
-<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
-
-
-
-
-
-
-
-
-
+<link rel="alternate" type="application/rss+xml" title="theevilbit" href="/index.xml">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>try { var t = localStorage.getItem("tb.theme"); document.documentElement.dataset.theme = t || "dark"; } catch (e) { document.documentElement.dataset.theme = "dark"; }</script>
+<link rel="preload" href="/fonts/IBMPlexSans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts.css?v=1791269065">
+<link rel="stylesheet" href="/style.css?v=1791269065">
 </head>
-
-
-
-
-
-
-<body class="preload-transitions colorscheme-auto">
-  
-<div class="float-container">
-    <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
-    </a>
-</div>
-
-
-  <main class="wrapper">
-    <nav class="navigation">
-  <section class="container">
-    
-    <a class="navigation-title" href="https://theevilbit.github.io/">
-      theevilbit blog
-    </a>
-    
-    
-      <input type="checkbox" id="menu-toggle" />
-      <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
-      </label>
-      <ul class="navigation-list">
-        
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/posts/">Posts</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/shield/">Shield.app</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/tags/">Tags</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/about/">About</a>
-            </li>
-          
-        
-        
-      </ul>
-    
-  </section>
-</nav>
-
-
-    <div class="content">
-      
-  <section class="container post">
-    <article>
-      <header>
-        <div class="post-title">
-          <h1 class="title">
-            <a class="title-link" href="https://theevilbit.github.io/posts/monterey_shortcuts/">
-              macOS Monterey Shortcuts - First look
-            </a>
-          </h1>
-        </div>
-        <div class="post-meta">
-          <div class="date">
-            <span class="posted-on">
-              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
-              <time datetime="2021-06-10T00:00:00Z">
-                June 10, 2021
-              </time>
-            </span>
-            <span class="reading-time">
-              <i class="fa-solid fa-clock" aria-hidden="true"></i>
-              6-minute read
-            </span>
-          </div>
-          
-          <div class="categories">
-  <i class="fa-solid fa-folder" aria-hidden="true"></i>
-    <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
-
-          <div class="tags">
-  <i class="fa-solid fa-tag" aria-hidden="true"></i>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/macos/">Macos</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/internals/">Internals</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/shortcuts/">Shortcuts</a>
-    </span></div>
-
-        </div>
-      </header>
-
-      <div class="post-content">
-        
-        <p>Apple announced macOS Monterey (macOS 12) this week at WWDC, and one of its new features that caught my eye is <strong>Shortcuts</strong>. It&rsquo;s already available on iOS, but it made its way to macOS. My security focused brain immediately thought about how cool this feature could be for red teamers or pentesters to persist on macOS :) So I decided to take a quick look on the new functionality, focusing on how it works. All of the below information is based on macOS Monterey Developer Beta 1.</p>
-<h2 id="the-shortcutsapp">
-  The Shortcuts.app
-  <a class="heading-link" href="#the-shortcutsapp">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>Shortcuts can be created by the <code>Shortcuts.app</code>. I created a new shortcut, named it &ldquo;testcut&rdquo; and added a shell script as an action, which will create the file <code>/tmp/testcut</code>. This is shown below.</p>
-<p><img src="https://theevilbit.github.io/images/monterey_shortcuts/demo.png" alt=""></p>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/">the<span>evil</span>bit<i class="cursor"></i></a>
+    <nav class="nav"><a href="/posts/" class=on>Posts</a><a href="/beyond/">Beyond</a><a href="/talks/">Talks</a><a href="/shield/">Shield</a><a href="/about/">About</a><a href="/tags/">Tags</a></nav>
+    <button type="button" class="theme" id="theme" aria-label="switch light / dark">◐</button>
+  </header>
+  <main><article class="post">
+<header class="post-head"><h1>macOS Monterey Shortcuts - First look</h1>
+<div class="meta"><time datetime="2021-06-10">Jun 10, 2021</time><span>6 min read</span><span class="tags"><a class="tag" href="/tags/macos/">macos</a><a class="tag" href="/tags/internals/">internals</a><a class="tag" href="/tags/shortcuts/">shortcuts</a></span></div></header>
+<details class="toc"><summary>Contents</summary><ol><li class="l2"><a href="#the-shortcutsapp">The Shortcuts.app</a></li><li class="l2"><a href="#shortcuts-database-configuration">Shortcuts Database &amp; Configuration</a></li><li class="l2"><a href="#shortcuts-cli">shortcuts CLI</a></li><li class="l2"><a href="#execution">Execution</a></li><li class="l2"><a href="#conclusion">Conclusion</a></li></ol></details><div class="prose"><p>Apple announced macOS Monterey (macOS 12) this week at WWDC, and one of its new features that caught my eye is <strong>Shortcuts</strong>. It's already available on iOS, but it made its way to macOS. My security focused brain immediately thought about how cool this feature could be for red teamers or pentesters to persist on macOS :) So I decided to take a quick look on the new functionality, focusing on how it works. All of the below information is based on macOS Monterey Developer Beta 1.</p>
+<h2 id="the-shortcutsapp">The Shortcuts.app<a class="anchor" href="#the-shortcutsapp" aria-label="link to this section">#</a></h2>
+<p>Shortcuts can be created by the <code>Shortcuts.app</code>. I created a new shortcut, named it "testcut" and added a shell script as an action, which will create the file <code>/tmp/testcut</code>. This is shown below.</p>
+<p><img src="/images/monterey_shortcuts/demo.png" alt="" loading="lazy"></p>
 <p>I will use this example along the way, when I explore the internals of Shortcuts.</p>
 <p>Before moving on, here are the code signing properties of the application.</p>
-<pre tabindex="0"><code>csaby@macos12 ~ % codesign -dv --entitlements :- /System/Applications/Shortcuts.app                     
+<pre><code>csaby@macos12 ~ % codesign -dv --entitlements :- /System/Applications/Shortcuts.app                     
 Executable=/System/Applications/Shortcuts.app/Contents/MacOS/Shortcuts
 Identifier=com.apple.shortcuts
 Format=app bundle with Mach-O universal (x86_64 arm64e)
@@ -223,239 +42,233 @@ Info.plist entries=54
 TeamIdentifier=not set
 Sealed Resources version=2 rules=2 files=0
 Internal requirements count=1 size=68
-&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;
-&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;https://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;
-&lt;plist version=&#34;1.0&#34;&gt;
-	&lt;dict&gt;
-		&lt;key&gt;com.apple.CompanionLink&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;aps-environment&lt;/key&gt;
-		&lt;string&gt;production&lt;/string&gt;
-		&lt;key&gt;com.apple.developer.siri&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.sharing.Client&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.coreduetd.allow&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.private.homekit&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.developer.homekit&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.developer.healthkit&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.private.corerecents&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.shortcuts.ActionKit&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.private.cloudkit.spi&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.security.app-sandbox&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.shortcuts.mac-helper&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.fileprovider.enumerate&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.private.swc.system-app&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.proactive.eventtracker&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.security.network.client&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.siri.VoiceShortcuts.xpc&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.homekit.private-spi-access&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.locationd.effective_bundle&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.rootless.storage.shortcuts&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.runningboard.launchprocess&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.fileprovider.extension-host&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.intents.extension.discovery&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.private.cloudkit.masquerade&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.developer.associated-domains&lt;/key&gt;
-		&lt;array&gt;&lt;/array&gt;
-		&lt;key&gt;com.apple.private.suggestions.contacts&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.frontboard.launchapplications&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.intents.uiextension.discovery&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.runningboard.terminateprocess&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.private.cloudkit.setEnvironment&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.private.network.socket-delegate&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.security.automation.apple-events&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.developer.homekit.background-mode&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.private.security.system-application&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.managedconfiguration.profiled-access&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.avfoundation.allows-set-output-device&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.private.coreservices.canmaplsdatabase&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.avfoundation.allow-system-wide-context&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.security.personal-information.location&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.security.files.user-selected.read-write&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.security.personal-information.calendars&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.application-identifier&lt;/key&gt;
-		&lt;string&gt;com.apple.shortcuts&lt;/string&gt;
-		&lt;key&gt;com.apple.avfoundation.allows-access-to-device-list&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.rootless.storage.coreduet_knowledge_store&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.security.personal-information.addressbook&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.private.hid.client.event-dispatch.internal&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.security.personal-information.photos-library&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.developer.icloud-container-environment&lt;/key&gt;
-		&lt;string&gt;Production&lt;/string&gt;
-		&lt;key&gt;com.apple.developer.icloud-services&lt;/key&gt;
-		&lt;array&gt;
-			&lt;string&gt;CloudDocuments&lt;/string&gt;
-			&lt;string&gt;CloudKit&lt;/string&gt;
-		&lt;/array&gt;
-		&lt;key&gt;com.apple.avfoundation.allow-identifying-output-device-details&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.private.healthkit.source.identities&lt;/key&gt;
-		&lt;array&gt;
-			&lt;string&gt;com.apple.shortcuts&lt;/string&gt;
-		&lt;/array&gt;
-		&lt;key&gt;com.apple.security.system-groups&lt;/key&gt;
-		&lt;array&gt;
-			&lt;string&gt;systemgroup.com.apple.configurationprofiles&lt;/string&gt;
-		&lt;/array&gt;
-		&lt;key&gt;com.apple.developer.icloud-container-identifiers&lt;/key&gt;
-		&lt;array&gt;
-			&lt;string&gt;iCloud.is.workflow.my.workflows&lt;/string&gt;
-		&lt;/array&gt;
-		&lt;key&gt;com.apple.developer.ubiquity-container-identifiers&lt;/key&gt;
-		&lt;array&gt;
-			&lt;string&gt;iCloud.is.workflow.my.workflows&lt;/string&gt;
-		&lt;/array&gt;
-		&lt;key&gt;com.apple.security.application-groups&lt;/key&gt;
-		&lt;array&gt;
-			&lt;string&gt;group.is.workflow.my.app&lt;/string&gt;
-			&lt;string&gt;group.is.workflow.shortcuts&lt;/string&gt;
-		&lt;/array&gt;
-		&lt;key&gt;com.apple.private.donotdisturb.settings.request.client-identifiers&lt;/key&gt;
-		&lt;string&gt;com.apple.focus.activity-manager&lt;/string&gt;
-		&lt;key&gt;com.apple.security.temporary-exception.sbpl&lt;/key&gt;
-		&lt;array&gt;
-			&lt;string&gt;(allow appleevent-send)&lt;/string&gt;
-			&lt;string&gt;(allow distributed-notification-post)&lt;/string&gt;
-		&lt;/array&gt;
-		&lt;key&gt;com.apple.security.temporary-exception.shared-preference.read-write&lt;/key&gt;
-		&lt;array&gt;
-			&lt;string&gt;com.apple.shortcuts&lt;/string&gt;
-			&lt;string&gt;com.apple.siri.shortcuts&lt;/string&gt;
-			&lt;string&gt;pbs&lt;/string&gt;
-		&lt;/array&gt;
-		&lt;key&gt;keychain-access-groups&lt;/key&gt;
-		&lt;array&gt;
-			&lt;string&gt;V568VXD5P8.is.workflow.my.app&lt;/string&gt;
-			&lt;string&gt;com.apple.MediaRemote.pairing&lt;/string&gt;
-			&lt;string&gt;com.apple.sharing.appleidauthentication&lt;/string&gt;
-		&lt;/array&gt;
-		&lt;key&gt;com.apple.security.temporary-exception.files.home-relative-path.read-write&lt;/key&gt;
-		&lt;array&gt;
-			&lt;string&gt;/Library/Shortcuts/&lt;/string&gt;
-			&lt;string&gt;/Library/SyncedIntentDefinitions/&lt;/string&gt;
-		&lt;/array&gt;
-		&lt;key&gt;com.apple.security.temporary-exception.files.home-relative-path.read-only&lt;/key&gt;
-		&lt;array&gt;
-			&lt;string&gt;/Library/CoreBehavior/&lt;/string&gt;
-			&lt;string&gt;/Library/UserConfigurationProfiles/&lt;/string&gt;
-		&lt;/array&gt;
-		&lt;key&gt;com.apple.private.appleevents.allowedtosend&lt;/key&gt;
-		&lt;dict&gt;
-			&lt;key&gt;com.apple.private.appleevents.allowed.INec.INei&lt;/key&gt;
-			&lt;true/&gt;
-			&lt;key&gt;com.apple.private.appleevents.allowed.aevt.quit&lt;/key&gt;
-			&lt;true/&gt;
-		&lt;/dict&gt;
-		&lt;key&gt;com.apple.private.tcc.allow&lt;/key&gt;
-		&lt;array&gt;
-			&lt;string&gt;kTCCServiceAddressBook&lt;/string&gt;
-			&lt;string&gt;kTCCServiceAppleEvents&lt;/string&gt;
-			&lt;string&gt;kTCCServiceCalendar&lt;/string&gt;
-			&lt;string&gt;kTCCServiceCamera&lt;/string&gt;
-			&lt;string&gt;kTCCServiceMediaLibrary&lt;/string&gt;
-			&lt;string&gt;kTCCServiceMicrophone&lt;/string&gt;
-			&lt;string&gt;kTCCServicePhotos&lt;/string&gt;
-			&lt;string&gt;kTCCServicePhotosAdd&lt;/string&gt;
-			&lt;string&gt;kTCCServiceReminders&lt;/string&gt;
-			&lt;string&gt;kTCCServiceSpeechRecognition&lt;/string&gt;
-			&lt;string&gt;kTCCServiceWillow&lt;/string&gt;
-		&lt;/array&gt;
-		&lt;key&gt;com.apple.security.temporary-exception.mach-lookup.global-name&lt;/key&gt;
-		&lt;array&gt;
-			&lt;string&gt;com.apple.Music.MPMusicPlayerControllerInternal&lt;/string&gt;
-			&lt;string&gt;com.apple.SharingServices&lt;/string&gt;
-			&lt;string&gt;com.apple.amp.library.framework&lt;/string&gt;
-			&lt;string&gt;com.apple.coreduetd.knowledge&lt;/string&gt;
-			&lt;string&gt;com.apple.donotdisturb.service&lt;/string&gt;
-			&lt;string&gt;com.apple.donotdisturb.service.non-launching&lt;/string&gt;
-			&lt;string&gt;com.apple.locationd.desktop.registration&lt;/string&gt;
-			&lt;string&gt;com.apple.locationd.desktop.synchronous&lt;/string&gt;
-			&lt;string&gt;com.apple.photos.service&lt;/string&gt;
-			&lt;string&gt;com.apple.siri.VoiceShortcuts.xpc&lt;/string&gt;
-		&lt;/array&gt;
-	&lt;/dict&gt;
-&lt;/plist&gt;
-</code></pre><p>The above XML has been beautified, as the embedded one, has no new line characters or spaces, and it&rsquo;s unreadable. As we can see, the application is very rich in entitlements, most notably it&rsquo;s sandboxed (<code>com.apple.security.app-sandbox</code>), has quite a few TCC exceptions (<code>kTCCServiceAddressBook</code>,&hellip;.) and also one that suggest it has access to a SIP protected location <code>com.apple.rootless.storage.shortcuts</code>. This is what I will cover next.</p>
-<h2 id="shortcuts-database--configuration">
-  Shortcuts Database &amp; Configuration
-  <a class="heading-link" href="#shortcuts-database--configuration">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>All of the Shortcuts files are stored under the user&rsquo;s HOME folder at <code>~/Library/Shortcuts</code>. This location is protected by the Sandbox (SIP), as we can&rsquo;t access it unless we have Full Disk Access permissions granted or the entitlement <code>com.apple.rootless.storage.shortcuts</code>.</p>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "https://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+    &lt;dict&gt;
+        &lt;key&gt;com.apple.CompanionLink&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;aps-environment&lt;/key&gt;
+        &lt;string&gt;production&lt;/string&gt;
+        &lt;key&gt;com.apple.developer.siri&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.sharing.Client&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.coreduetd.allow&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.private.homekit&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.developer.homekit&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.developer.healthkit&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.private.corerecents&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.shortcuts.ActionKit&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.private.cloudkit.spi&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.security.app-sandbox&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.shortcuts.mac-helper&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.fileprovider.enumerate&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.private.swc.system-app&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.proactive.eventtracker&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.security.network.client&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.siri.VoiceShortcuts.xpc&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.homekit.private-spi-access&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.locationd.effective_bundle&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.rootless.storage.shortcuts&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.runningboard.launchprocess&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.fileprovider.extension-host&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.intents.extension.discovery&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.private.cloudkit.masquerade&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.developer.associated-domains&lt;/key&gt;
+        &lt;array&gt;&lt;/array&gt;
+        &lt;key&gt;com.apple.private.suggestions.contacts&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.frontboard.launchapplications&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.intents.uiextension.discovery&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.runningboard.terminateprocess&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.private.cloudkit.setEnvironment&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.private.network.socket-delegate&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.security.automation.apple-events&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.developer.homekit.background-mode&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.private.security.system-application&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.managedconfiguration.profiled-access&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.avfoundation.allows-set-output-device&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.private.coreservices.canmaplsdatabase&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.avfoundation.allow-system-wide-context&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.security.personal-information.location&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.security.files.user-selected.read-write&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.security.personal-information.calendars&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.application-identifier&lt;/key&gt;
+        &lt;string&gt;com.apple.shortcuts&lt;/string&gt;
+        &lt;key&gt;com.apple.avfoundation.allows-access-to-device-list&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.rootless.storage.coreduet_knowledge_store&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.security.personal-information.addressbook&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.private.hid.client.event-dispatch.internal&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.security.personal-information.photos-library&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.developer.icloud-container-environment&lt;/key&gt;
+        &lt;string&gt;Production&lt;/string&gt;
+        &lt;key&gt;com.apple.developer.icloud-services&lt;/key&gt;
+        &lt;array&gt;
+            &lt;string&gt;CloudDocuments&lt;/string&gt;
+            &lt;string&gt;CloudKit&lt;/string&gt;
+        &lt;/array&gt;
+        &lt;key&gt;com.apple.avfoundation.allow-identifying-output-device-details&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.private.healthkit.source.identities&lt;/key&gt;
+        &lt;array&gt;
+            &lt;string&gt;com.apple.shortcuts&lt;/string&gt;
+        &lt;/array&gt;
+        &lt;key&gt;com.apple.security.system-groups&lt;/key&gt;
+        &lt;array&gt;
+            &lt;string&gt;systemgroup.com.apple.configurationprofiles&lt;/string&gt;
+        &lt;/array&gt;
+        &lt;key&gt;com.apple.developer.icloud-container-identifiers&lt;/key&gt;
+        &lt;array&gt;
+            &lt;string&gt;iCloud.is.workflow.my.workflows&lt;/string&gt;
+        &lt;/array&gt;
+        &lt;key&gt;com.apple.developer.ubiquity-container-identifiers&lt;/key&gt;
+        &lt;array&gt;
+            &lt;string&gt;iCloud.is.workflow.my.workflows&lt;/string&gt;
+        &lt;/array&gt;
+        &lt;key&gt;com.apple.security.application-groups&lt;/key&gt;
+        &lt;array&gt;
+            &lt;string&gt;group.is.workflow.my.app&lt;/string&gt;
+            &lt;string&gt;group.is.workflow.shortcuts&lt;/string&gt;
+        &lt;/array&gt;
+        &lt;key&gt;com.apple.private.donotdisturb.settings.request.client-identifiers&lt;/key&gt;
+        &lt;string&gt;com.apple.focus.activity-manager&lt;/string&gt;
+        &lt;key&gt;com.apple.security.temporary-exception.sbpl&lt;/key&gt;
+        &lt;array&gt;
+            &lt;string&gt;(allow appleevent-send)&lt;/string&gt;
+            &lt;string&gt;(allow distributed-notification-post)&lt;/string&gt;
+        &lt;/array&gt;
+        &lt;key&gt;com.apple.security.temporary-exception.shared-preference.read-write&lt;/key&gt;
+        &lt;array&gt;
+            &lt;string&gt;com.apple.shortcuts&lt;/string&gt;
+            &lt;string&gt;com.apple.siri.shortcuts&lt;/string&gt;
+            &lt;string&gt;pbs&lt;/string&gt;
+        &lt;/array&gt;
+        &lt;key&gt;keychain-access-groups&lt;/key&gt;
+        &lt;array&gt;
+            &lt;string&gt;V568VXD5P8.is.workflow.my.app&lt;/string&gt;
+            &lt;string&gt;com.apple.MediaRemote.pairing&lt;/string&gt;
+            &lt;string&gt;com.apple.sharing.appleidauthentication&lt;/string&gt;
+        &lt;/array&gt;
+        &lt;key&gt;com.apple.security.temporary-exception.files.home-relative-path.read-write&lt;/key&gt;
+        &lt;array&gt;
+            &lt;string&gt;/Library/Shortcuts/&lt;/string&gt;
+            &lt;string&gt;/Library/SyncedIntentDefinitions/&lt;/string&gt;
+        &lt;/array&gt;
+        &lt;key&gt;com.apple.security.temporary-exception.files.home-relative-path.read-only&lt;/key&gt;
+        &lt;array&gt;
+            &lt;string&gt;/Library/CoreBehavior/&lt;/string&gt;
+            &lt;string&gt;/Library/UserConfigurationProfiles/&lt;/string&gt;
+        &lt;/array&gt;
+        &lt;key&gt;com.apple.private.appleevents.allowedtosend&lt;/key&gt;
+        &lt;dict&gt;
+            &lt;key&gt;com.apple.private.appleevents.allowed.INec.INei&lt;/key&gt;
+            &lt;true/&gt;
+            &lt;key&gt;com.apple.private.appleevents.allowed.aevt.quit&lt;/key&gt;
+            &lt;true/&gt;
+        &lt;/dict&gt;
+        &lt;key&gt;com.apple.private.tcc.allow&lt;/key&gt;
+        &lt;array&gt;
+            &lt;string&gt;kTCCServiceAddressBook&lt;/string&gt;
+            &lt;string&gt;kTCCServiceAppleEvents&lt;/string&gt;
+            &lt;string&gt;kTCCServiceCalendar&lt;/string&gt;
+            &lt;string&gt;kTCCServiceCamera&lt;/string&gt;
+            &lt;string&gt;kTCCServiceMediaLibrary&lt;/string&gt;
+            &lt;string&gt;kTCCServiceMicrophone&lt;/string&gt;
+            &lt;string&gt;kTCCServicePhotos&lt;/string&gt;
+            &lt;string&gt;kTCCServicePhotosAdd&lt;/string&gt;
+            &lt;string&gt;kTCCServiceReminders&lt;/string&gt;
+            &lt;string&gt;kTCCServiceSpeechRecognition&lt;/string&gt;
+            &lt;string&gt;kTCCServiceWillow&lt;/string&gt;
+        &lt;/array&gt;
+        &lt;key&gt;com.apple.security.temporary-exception.mach-lookup.global-name&lt;/key&gt;
+        &lt;array&gt;
+            &lt;string&gt;com.apple.Music.MPMusicPlayerControllerInternal&lt;/string&gt;
+            &lt;string&gt;com.apple.SharingServices&lt;/string&gt;
+            &lt;string&gt;com.apple.amp.library.framework&lt;/string&gt;
+            &lt;string&gt;com.apple.coreduetd.knowledge&lt;/string&gt;
+            &lt;string&gt;com.apple.donotdisturb.service&lt;/string&gt;
+            &lt;string&gt;com.apple.donotdisturb.service.non-launching&lt;/string&gt;
+            &lt;string&gt;com.apple.locationd.desktop.registration&lt;/string&gt;
+            &lt;string&gt;com.apple.locationd.desktop.synchronous&lt;/string&gt;
+            &lt;string&gt;com.apple.photos.service&lt;/string&gt;
+            &lt;string&gt;com.apple.siri.VoiceShortcuts.xpc&lt;/string&gt;
+        &lt;/array&gt;
+    &lt;/dict&gt;
+&lt;/plist&gt;</code></pre>
+<p>The above XML has been beautified, as the embedded one, has no new line characters or spaces, and it's unreadable. As we can see, the application is very rich in entitlements, most notably it's sandboxed (<code>com.apple.security.app-sandbox</code>), has quite a few TCC exceptions (<code>kTCCServiceAddressBook</code>,....) and also one that suggest it has access to a SIP protected location <code>com.apple.rootless.storage.shortcuts</code>. This is what I will cover next.</p>
+<h2 id="shortcuts-database-configuration">Shortcuts Database &amp; Configuration<a class="anchor" href="#shortcuts-database-configuration" aria-label="link to this section">#</a></h2>
+<p>All of the Shortcuts files are stored under the user's HOME folder at <code>~/Library/Shortcuts</code>. This location is protected by the Sandbox (SIP), as we can't access it unless we have Full Disk Access permissions granted or the entitlement <code>com.apple.rootless.storage.shortcuts</code>.</p>
 <p>We find the following files in this location:</p>
-<pre tabindex="0"><code>csaby@macos12 ~ % ls -l Library/Shortcuts
+<pre><code>csaby@macos12 ~ % ls -l Library/Shortcuts
 total 4696
 -rw-r--r--@ 1 csaby  staff      237 Jun  8 22:59 SecuredPreferences.plist
 -rw-r--r--@ 1 csaby  staff   262144 Jun  8 10:04 Shortcuts.sqlite
 -rw-r--r--@ 1 csaby  staff    32768 Jun  8 22:55 Shortcuts.sqlite-shm
 -rw-r--r--@ 1 csaby  staff  1400832 Jun 10 22:20 Shortcuts.sqlite-wal
--rw-r--r--  1 csaby  staff       60 Jun 10 22:20 Spotlight.dat
-</code></pre><p>Let&rsquo;s start with <code>SecuredPreferences.plist</code>. This file contains the &ldquo;advanced&rdquo; configuration option for Shortcuts. The file is very short.</p>
-<pre tabindex="0"><code>&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;
-&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;
-&lt;plist version=&#34;1.0&#34;&gt;
+-rw-r--r--  1 csaby  staff       60 Jun 10 22:20 Spotlight.dat</code></pre>
+<p>Let's start with <code>SecuredPreferences.plist</code>. This file contains the "advanced" configuration option for Shortcuts. The file is very short.</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
 &lt;dict&gt;
-	&lt;key&gt;WFAllowDeletingLargeAmountsOfDataKey&lt;/key&gt;
-	&lt;true/&gt;
-	&lt;key&gt;WFAllowDeletingWithoutConfirmationKey&lt;/key&gt;
-	&lt;true/&gt;
-	&lt;key&gt;WFAllowSharingLargeAmountsOfDataKey&lt;/key&gt;
-	&lt;true/&gt;
-	&lt;key&gt;WFScriptingActionEnabledKey&lt;/key&gt;
-	&lt;true/&gt;
+    &lt;key&gt;WFAllowDeletingLargeAmountsOfDataKey&lt;/key&gt;
+    &lt;true/&gt;
+    &lt;key&gt;WFAllowDeletingWithoutConfirmationKey&lt;/key&gt;
+    &lt;true/&gt;
+    &lt;key&gt;WFAllowSharingLargeAmountsOfDataKey&lt;/key&gt;
+    &lt;true/&gt;
+    &lt;key&gt;WFScriptingActionEnabledKey&lt;/key&gt;
+    &lt;true/&gt;
 &lt;/dict&gt;
-&lt;/plist&gt;
-</code></pre><p>It can be mapped one-to-one to the options on the advanced configuration preferences pane.</p>
-<p><img src="https://theevilbit.github.io/images/monterey_shortcuts/settings.png" alt=""></p>
-<p>Let&rsquo;s take a look on the database. I&rsquo;m sure <a href="https://twitter.com/iamevltwin"  class="external-link" target="_blank" rel="noopener">Sarah Edwards</a> will come up with some awesome queries for her Apollo 4n6 project. :) I won&rsquo;t go too crazy here.</p>
-<pre tabindex="0"><code>csaby@macos12 ~ % sqlite3 Library/Shortcuts/Shortcuts.sqlite
+&lt;/plist&gt;</code></pre>
+<p>It can be mapped one-to-one to the options on the advanced configuration preferences pane.</p>
+<p><img src="/images/monterey_shortcuts/settings.png" alt="" loading="lazy"></p>
+<p>Let's take a look on the database. I'm sure <a href="https://twitter.com/iamevltwin" rel="noopener">Sarah Edwards</a> will come up with some awesome queries for her Apollo 4n6 project. :) I won't go too crazy here.</p>
+<pre><code>csaby@macos12 ~ % sqlite3 Library/Shortcuts/Shortcuts.sqlite
 SQLite version 3.35.3 2021-03-26 16:31:39
-Enter &#34;.help&#34; for usage hints.
+Enter ".help" for usage hints.
 sqlite&gt; .tables
 ZACCESSRESOURCEPERMISSION                  
 ZCLOUDKITSYNCTOKEN                         
@@ -477,38 +290,30 @@ Z_3PARENTS
 Z_3SHORTCUTS                               
 Z_METADATA                                 
 Z_MODELCACHE                               
-Z_PRIMARYKEY    
-</code></pre><p>The database have quite a few tables, but what I found most interesting is <code>ZSHORTCUT</code> and <code>ZSHORTCUTACTIONS</code>. From the former we can get the shortcut names, and their description.</p>
-<pre tabindex="0"><code>sqlite&gt; select ZNAME,ZACTIONSDESCRIPTION from ZSHORTCUT;
+Z_PRIMARYKEY    </code></pre>
+<p>The database have quite a few tables, but what I found most interesting is <code>ZSHORTCUT</code> and <code>ZSHORTCUTACTIONS</code>. From the former we can get the shortcut names, and their description.</p>
+<pre><code>sqlite&gt; select ZNAME,ZACTIONSDESCRIPTION from ZSHORTCUT;
 ZNAME|ZACTIONSDESCRIPTION
-testcut|Run Shell Script
-</code></pre><p>There are many other metadata columns, like time creation, modification, and so on, but I don&rsquo;t show it here.</p>
+testcut|Run Shell Script</code></pre>
+<p>There are many other metadata columns, like time creation, modification, and so on, but I don't show it here.</p>
 <p><code>ZSHORTCUTACTIONS</code> will contain information about the configured actions.</p>
-<pre tabindex="0"><code>sqlite&gt; select * from ZSHORTCUTACTIONS;
+<pre><code>sqlite&gt; select * from ZSHORTCUTACTIONS;
 Z_PK|Z_ENT|Z_OPT|ZSHORTCUT|ZDATA
-3|5|9|3|bplist00??_WFWorkflowActionIdentifier_WFWorkflowActionParameters_&#34;is.workflow.actions.runshellscript?   VScriptTUUID_touch /tmp/testcut_$2252E11A-5DEF-446E-BC5D-F053391273CC
-,Insz?
-</code></pre><p>As we can find in the above query, the actions is stored as a binary plist. Unfortunatley plutil will fail converting it. :-/</p>
-<pre tabindex="0"><code>csaby@macos12 ~ % sqlite3 Library/Shortcuts/Shortcuts.sqlite &#34;select ZDATA from ZSHORTCUTACTIONS where Z_PK=3&#34; | plutil -convert xml1 - -o -
-&lt;stdin&gt;: Property List error: Unexpected character b at line 1 / JSON error: JSON text did not start with array or object and option to allow fragments not set. around line 1, column 0.
-</code></pre><p>Nevertheless, we can still spot our <code>touch /tmp/testcut</code> command inside. So if ever someone wants to persist using shortcuts, this is the table to use, and cross reference entries with other tables.</p>
-<blockquote>
-<p>Forensics note: deleted shortcut actions will remain in the database!</p>
-</blockquote>
-<h2 id="shortcuts-cli">
-  shortcuts CLI
-  <a class="heading-link" href="#shortcuts-cli">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
+3|5|9|3|bplist00??_WFWorkflowActionIdentifier_WFWorkflowActionParameters_"is.workflow.actions.runshellscript?   VScriptTUUID_touch /tmp/testcut_$2252E11A-5DEF-446E-BC5D-F053391273CC
+,Insz?</code></pre>
+<p>As we can find in the above query, the actions is stored as a binary plist. Unfortunatley plutil will fail converting it. :-/</p>
+<pre><code>csaby@macos12 ~ % sqlite3 Library/Shortcuts/Shortcuts.sqlite "select ZDATA from ZSHORTCUTACTIONS where Z_PK=3" | plutil -convert xml1 - -o -
+&lt;stdin&gt;: Property List error: Unexpected character b at line 1 / JSON error: JSON text did not start with array or object and option to allow fragments not set. around line 1, column 0.</code></pre>
+<p>Nevertheless, we can still spot our <code>touch /tmp/testcut</code> command inside. So if ever someone wants to persist using shortcuts, this is the table to use, and cross reference entries with other tables.</p>
+<blockquote><p>Forensics note: deleted shortcut actions will remain in the database!  </p></blockquote>
+<h2 id="shortcuts-cli">shortcuts CLI<a class="anchor" href="#shortcuts-cli" aria-label="link to this section">#</a></h2>
 <p>Shortcuts also has a command line utility, located at <code>/usr/bin/shortcuts</code>. We can use it to list, view and execute shortcuts. Listing will display the available shortcuts.</p>
-<pre tabindex="0"><code>csaby@macos12 ~ % shortcuts list
-testcut
-</code></pre><p>It will only list the active ones, and omit any deleted.</p>
+<pre><code>csaby@macos12 ~ % shortcuts list
+testcut</code></pre>
+<p>It will only list the active ones, and omit any deleted.</p>
 <p>Viewing will simply open the main <code>Shortcuts.app</code> and load the given shortcut.</p>
-<p>Before moving moving on to execution, let&rsquo;s take a quick look at its entitlements.</p>
-<pre tabindex="0"><code>csaby@macos12 ~ % codesign -dv --entitlements :- /usr/bin/shortcuts
+<p>Before moving moving on to execution, let's take a quick look at its entitlements.</p>
+<pre><code>csaby@macos12 ~ % codesign -dv --entitlements :- /usr/bin/shortcuts
 Executable=/usr/bin/shortcuts
 Identifier=com.apple.shortcuts.ShortcutsCommandLine
 Format=Mach-O universal (x86_64 arm64e)
@@ -520,55 +325,49 @@ Info.plist entries=19
 TeamIdentifier=not set
 Sealed Resources=none
 Internal requirements count=1 size=88
-&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;
-&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;https://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;
-&lt;plist version=&#34;1.0&#34;&gt;
-	&lt;dict&gt;
-		&lt;key&gt;com.apple.siri.VoiceShortcuts.xpc&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.rootless.storage.shortcuts&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.application-identifier&lt;/key&gt;
-		&lt;string&gt;com.apple.shortcuts.ShortcutsCommandLine&lt;/string&gt;
-		&lt;key&gt;com.apple.security.temporary-exception.sbpl&lt;/key&gt;
-		&lt;array&gt;
-			&lt;string&gt;(allow distributed-notification-post)&lt;/string&gt;
-		&lt;/array&gt;
-		&lt;key&gt;com.apple.security.temporary-exception.files.home-relative-path.read-write&lt;/key&gt;
-		&lt;array&gt;
-			&lt;string&gt;/Library/Shortcuts/&lt;/string&gt;
-		&lt;/array&gt;
-		&lt;key&gt;com.apple.security.temporary-exception.mach-lookup.global-name&lt;/key&gt;
-		&lt;array&gt;
-			&lt;string&gt;com.apple.siri.VoiceShortcuts.xpc&lt;/string&gt;
-		&lt;/array&gt;
-	&lt;/dict&gt;
-&lt;/plist&gt;
-</code></pre><p>It also has the <code>com.apple.rootless.storage.shortcuts</code> entitlement, along with <code>com.apple.security.temporary-exception.files.home-relative-path.read-write</code> rule which allows it to access the shortcut database.</p>
-<p>Next let&rsquo;s take a look what happens when we execute our shortcut.</p>
-<h2 id="execution">
-  Execution
-  <a class="heading-link" href="#execution">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>I used Patrick Wardle&rsquo;s <a href="https://objective-see.com/products/utilities.html#ProcessMonitor"  class="external-link" target="_blank" rel="noopener">ProcessMonitor</a> to watch what happens when I run <code>shortcuts run testcut</code>.</p>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "https://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+    &lt;dict&gt;
+        &lt;key&gt;com.apple.siri.VoiceShortcuts.xpc&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.rootless.storage.shortcuts&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.application-identifier&lt;/key&gt;
+        &lt;string&gt;com.apple.shortcuts.ShortcutsCommandLine&lt;/string&gt;
+        &lt;key&gt;com.apple.security.temporary-exception.sbpl&lt;/key&gt;
+        &lt;array&gt;
+            &lt;string&gt;(allow distributed-notification-post)&lt;/string&gt;
+        &lt;/array&gt;
+        &lt;key&gt;com.apple.security.temporary-exception.files.home-relative-path.read-write&lt;/key&gt;
+        &lt;array&gt;
+            &lt;string&gt;/Library/Shortcuts/&lt;/string&gt;
+        &lt;/array&gt;
+        &lt;key&gt;com.apple.security.temporary-exception.mach-lookup.global-name&lt;/key&gt;
+        &lt;array&gt;
+            &lt;string&gt;com.apple.siri.VoiceShortcuts.xpc&lt;/string&gt;
+        &lt;/array&gt;
+    &lt;/dict&gt;
+&lt;/plist&gt;</code></pre>
+<p>It also has the <code>com.apple.rootless.storage.shortcuts</code> entitlement, along with <code>com.apple.security.temporary-exception.files.home-relative-path.read-write</code> rule which allows it to access the shortcut database.</p>
+<p>Next let's take a look what happens when we execute our shortcut.</p>
+<h2 id="execution">Execution<a class="anchor" href="#execution" aria-label="link to this section">#</a></h2>
+<p>I used Patrick Wardle's <a href="https://objective-see.com/products/utilities.html#ProcessMonitor" rel="noopener">ProcessMonitor</a> to watch what happens when I run <code>shortcuts run testcut</code>. </p>
 <p>The relevant events are the following:</p>
-<pre tabindex="0"><code>{&#34;event&#34;:&#34;ES_EVENT_TYPE_NOTIFY_EXEC&#34;,&#34;process&#34;:{&#34;pid&#34;:27552,&#34;path&#34;:&#34;/usr/bin/shortcuts&#34;,&#34;uid&#34;:501,&#34;arguments&#34;:[&#34;shortcuts&#34;,&#34;run&#34;,&#34;testcut&#34;],&#34;ppid&#34;:19388,&#34;ancestors&#34;:[19388,19387,19385,1],&#34;signing info&#34;:{&#34;csFlags&#34;:570522385,&#34;signatureIdentifier&#34;:&#34;com.apple.shortcuts.ShortcutsCommandLine&#34;,&#34;cdHash&#34;:&#34;89E43245F73BDFB56F80B23B43353C519D1AE2&#34;,&#34;isPlatformBinary&#34;:1}}}
+<pre><code>{"event":"ES_EVENT_TYPE_NOTIFY_EXEC","process":{"pid":27552,"path":"/usr/bin/shortcuts","uid":501,"arguments":["shortcuts","run","testcut"],"ppid":19388,"ancestors":[19388,19387,19385,1],"signing info":{"csFlags":570522385,"signatureIdentifier":"com.apple.shortcuts.ShortcutsCommandLine","cdHash":"89E43245F73BDFB56F80B23B43353C519D1AE2","isPlatformBinary":1}}}
 
-{&#34;event&#34;:&#34;ES_EVENT_TYPE_NOTIFY_EXEC&#34;,&#34;process&#34;:{&#34;pid&#34;:27553,&#34;path&#34;:&#34;/System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/BackgroundShortcutRunner.xpc/Contents/MacOS/BackgroundShortcutRunner&#34;,&#34;uid&#34;:501,&#34;arguments&#34;:[&#34;/System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/BackgroundShortcutRunner.xpc/Contents/MacOS/BackgroundShortcutRunner&#34;],&#34;ppid&#34;:1,&#34;ancestors&#34;:[1],&#34;signing info&#34;:{&#34;csFlags&#34;:570522385,&#34;signatureIdentifier&#34;:&#34;com.apple.WorkflowKit.BackgroundShortcutRunner&#34;,&#34;cdHash&#34;:&#34;DF1F3A29EA01E827CDFDA696A05AE0C1C2B8B9&#34;,&#34;isPlatformBinary&#34;:1}}}
+{"event":"ES_EVENT_TYPE_NOTIFY_EXEC","process":{"pid":27553,"path":"/System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/BackgroundShortcutRunner.xpc/Contents/MacOS/BackgroundShortcutRunner","uid":501,"arguments":["/System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/BackgroundShortcutRunner.xpc/Contents/MacOS/BackgroundShortcutRunner"],"ppid":1,"ancestors":[1],"signing info":{"csFlags":570522385,"signatureIdentifier":"com.apple.WorkflowKit.BackgroundShortcutRunner","cdHash":"DF1F3A29EA01E827CDFDA696A05AE0C1C2B8B9","isPlatformBinary":1}}}
 
-{&#34;event&#34;:&#34;ES_EVENT_TYPE_NOTIFY_EXEC&#34;,&#34;process&#34;:{&#34;pid&#34;:27556,&#34;path&#34;:&#34;/System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/MacHelper.xpc/Contents/MacOS/MacHelper&#34;,&#34;uid&#34;:501,&#34;arguments&#34;:[&#34;/System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/MacHelper.xpc/Contents/MacOS/MacHelper&#34;],&#34;ppid&#34;:1,&#34;ancestors&#34;:[1],&#34;signing info&#34;:{&#34;csFlags&#34;:570522385,&#34;signatureIdentifier&#34;:&#34;com.apple.WorkflowKit.MacHelper&#34;,&#34;cdHash&#34;:&#34;F3A1B2D858F28373BE6F52CF4C5E2DF19B65D&#34;,&#34;isPlatformBinary&#34;:1}}}
+{"event":"ES_EVENT_TYPE_NOTIFY_EXEC","process":{"pid":27556,"path":"/System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/MacHelper.xpc/Contents/MacOS/MacHelper","uid":501,"arguments":["/System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/MacHelper.xpc/Contents/MacOS/MacHelper"],"ppid":1,"ancestors":[1],"signing info":{"csFlags":570522385,"signatureIdentifier":"com.apple.WorkflowKit.MacHelper","cdHash":"F3A1B2D858F28373BE6F52CF4C5E2DF19B65D","isPlatformBinary":1}}}
 
-{&#34;event&#34;:&#34;ES_EVENT_TYPE_NOTIFY_FORK&#34;,&#34;process&#34;:{&#34;pid&#34;:27558,&#34;path&#34;:&#34;/System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/MacHelper.xpc/Contents/MacOS/MacHelper&#34;,&#34;uid&#34;:501,&#34;arguments&#34;:[],&#34;ppid&#34;:27556,&#34;ancestors&#34;:[27556],&#34;signing info&#34;:{&#34;csFlags&#34;:570522385,&#34;signatureIdentifier&#34;:&#34;com.apple.WorkflowKit.MacHelper&#34;,&#34;cdHash&#34;:&#34;F3A1B2D858F28373BE6F52CF4C5E2DF19B65D&#34;,&#34;isPlatformBinary&#34;:1}}}
+{"event":"ES_EVENT_TYPE_NOTIFY_FORK","process":{"pid":27558,"path":"/System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/MacHelper.xpc/Contents/MacOS/MacHelper","uid":501,"arguments":[],"ppid":27556,"ancestors":[27556],"signing info":{"csFlags":570522385,"signatureIdentifier":"com.apple.WorkflowKit.MacHelper","cdHash":"F3A1B2D858F28373BE6F52CF4C5E2DF19B65D","isPlatformBinary":1}}}
 
-{&#34;event&#34;:&#34;ES_EVENT_TYPE_NOTIFY_EXEC&#34;,&#34;process&#34;:{&#34;pid&#34;:27558,&#34;path&#34;:&#34;/bin/zsh&#34;,&#34;uid&#34;:501,&#34;arguments&#34;:[&#34;/bin/zsh&#34;,&#34;-c&#34;,&#34;touch /tmp/testcut&#34;,&#34;-&#34;],&#34;ppid&#34;:27556,&#34;ancestors&#34;:[27556],&#34;signing info&#34;:{&#34;csFlags&#34;:570510081,&#34;signatureIdentifier&#34;:&#34;com.apple.zsh&#34;,&#34;cdHash&#34;:&#34;467AA8464C3C76FDB13FFE1FD356CE4BD75A44&#34;,&#34;isPlatformBinary&#34;:1}}}
+{"event":"ES_EVENT_TYPE_NOTIFY_EXEC","process":{"pid":27558,"path":"/bin/zsh","uid":501,"arguments":["/bin/zsh","-c","touch /tmp/testcut","-"],"ppid":27556,"ancestors":[27556],"signing info":{"csFlags":570510081,"signatureIdentifier":"com.apple.zsh","cdHash":"467AA8464C3C76FDB13FFE1FD356CE4BD75A44","isPlatformBinary":1}}}
 
-{&#34;event&#34;:&#34;ES_EVENT_TYPE_NOTIFY_EXEC&#34;,&#34;process&#34;:{&#34;pid&#34;:27558,&#34;path&#34;:&#34;/usr/bin/touch&#34;,&#34;uid&#34;:501,&#34;arguments&#34;:[&#34;touch&#34;,&#34;/tmp/testcut&#34;],&#34;ppid&#34;:27556,&#34;ancestors&#34;:[27556],&#34;signing info&#34;:{&#34;csFlags&#34;:570522385,&#34;signatureIdentifier&#34;:&#34;com.apple.touch&#34;,&#34;cdHash&#34;:&#34;4547651A716192E0A34744DFECC015C8373B663&#34;,&#34;isPlatformBinary&#34;:1}}}
-</code></pre><p>Based on the sequence of events, <code>shortcuts</code> will call the <code>BackgroundShortcutRunner</code> XPC service first. This service will further call the <code>MacHelper</code> XPC service, which will finally execute our command.</p>
+{"event":"ES_EVENT_TYPE_NOTIFY_EXEC","process":{"pid":27558,"path":"/usr/bin/touch","uid":501,"arguments":["touch","/tmp/testcut"],"ppid":27556,"ancestors":[27556],"signing info":{"csFlags":570522385,"signatureIdentifier":"com.apple.touch","cdHash":"4547651A716192E0A34744DFECC015C8373B663","isPlatformBinary":1}}}</code></pre>
+<p>Based on the sequence of events, <code>shortcuts</code> will call the <code>BackgroundShortcutRunner</code> XPC service first. This service will further call the <code>MacHelper</code> XPC service, which will finally execute our command.</p>
 <p>One interesting note is that <code>MacHelper</code> has Full Disk Access.</p>
-<pre tabindex="0"><code>csaby@macos12 ~ % codesign -dv --entitlements :- /System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/MacHelper.xpc/Contents/MacOS/MacHelper
+<pre><code>csaby@macos12 ~ % codesign -dv --entitlements :- /System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/MacHelper.xpc/Contents/MacOS/MacHelper
 Executable=/System/Library/PrivateFrameworks/WorkflowKit.framework/XPCServices/MacHelper.xpc/Contents/MacOS/MacHelper
 Identifier=com.apple.WorkflowKit.MacHelper
 Format=bundle with Mach-O universal (x86_64 arm64e)
@@ -580,114 +379,36 @@ Info.plist entries=23
 TeamIdentifier=not set
 Sealed Resources version=2 rules=2 files=0
 Internal requirements count=1 size=80
-&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;
-&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;https://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;
-&lt;plist version=&#34;1.0&#34;&gt;
-	&lt;dict&gt;
-		&lt;key&gt;com.apple.dock.add-item&lt;/key&gt;
-		&lt;true/&gt;
-		&lt;key&gt;com.apple.private.tcc.allow&lt;/key&gt;
-		&lt;array&gt;
-			&lt;string&gt;kTCCServiceSystemPolicyAllFiles&lt;/string&gt;
-		&lt;/array&gt;
-		&lt;key&gt;com.apple.application-identifier&lt;/key&gt;
-		&lt;string&gt;com.apple.WorkflowKit.MacHelper&lt;/string&gt;
-	&lt;/dict&gt;
-&lt;/plist&gt;
-</code></pre><p>Yet, its shell child process doesn&rsquo;t inherit its rights, so our script won&rsquo;t run with FDA rights.</p>
-<h2 id="conclusion">
-  Conclusion
-  <a class="heading-link" href="#conclusion">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "https://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+    &lt;dict&gt;
+        &lt;key&gt;com.apple.dock.add-item&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;com.apple.private.tcc.allow&lt;/key&gt;
+        &lt;array&gt;
+            &lt;string&gt;kTCCServiceSystemPolicyAllFiles&lt;/string&gt;
+        &lt;/array&gt;
+        &lt;key&gt;com.apple.application-identifier&lt;/key&gt;
+        &lt;string&gt;com.apple.WorkflowKit.MacHelper&lt;/string&gt;
+    &lt;/dict&gt;
+&lt;/plist&gt;</code></pre>
+<p>Yet, its shell child process doesn't inherit its rights, so our script won't run with FDA rights.</p>
+<h2 id="conclusion">Conclusion<a class="anchor" href="#conclusion" aria-label="link to this section">#</a></h2>
 <p>I think there will be plenty of interesting items uncovered later regarding Shortcuts. This is just a first glimpse, and as we are still at the 1st Beta things might change.</p>
-<p>I also recommend watching <a href="https://developer.apple.com/videos/play/wwdc2021/10232/"  class="external-link" target="_blank" rel="noopener">Meet Shortcuts for macOS - WWDC 2021 - Videos - Apple Developer</a>.</p>
-
-      </div>
-
-
-      <footer>
-        
-
-
-        
-        
-        
-        
-        
-        
-        
-      </footer>
-    </article>
-
-    
-  </section>
-
-    </div>
-
-    <footer class="footer">
-  <section class="container">
-    ©
-    
-      2019 -
-    
-    2026
-     Csaba Fitzl 
-    ·
-    
-    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
-    
-  </section>
-</footer>
-
-  </main>
-
-  
-
-  
-  
-  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
-  
-
-  
-
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
+<p>I also recommend watching <a href="https://developer.apple.com/videos/play/wwdc2021/10232/" rel="noopener">Meet Shortcuts for macOS - WWDC 2021 - Videos - Apple Developer</a>.</p></div>
+<nav class="pn"><a class="prev" href="/posts/teamviewer_lpe/"><span>← previous</span>NOCVE - TeamViewer Local Privilege Escalation Vulnerability</a><a class="next" href="/posts/gatekeeper_not_a_bypass/"><span>next →</span>GateKeeper - Not a Bypass (Again)</a></nav></article></main>
+  <footer class="foot">
+    <span>© 2026 Csaba Fitzl</span>
+    <span class="social"><a href="https://github.com/theevilbit/" rel="me noopener">GitHub</a><a href="https://x.com/theevilbit" rel="me noopener">X</a><a href="/index.xml" rel="me noopener">RSS</a></span>
+  </footer>
+</div>
+<script>
+document.getElementById("theme").addEventListener("click", function () {
+  var t = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem("tb.theme", t); } catch (e) {}
+});
+</script>
 </body>
 </html>

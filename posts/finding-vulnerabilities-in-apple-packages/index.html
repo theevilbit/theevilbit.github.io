@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Finding Vulnerabilities in Apple Packages at Scale · theevilbit</title>
+<meta name="description" content="This article summarizes work we performed in 2024, which we shared in our &quot;Finding Vulnerabilities in Apple Packages at Scale&quot; talk at MacDevOpsYVR and SecurityFest conferences earlier this year.">
+<meta name="author" content="Csaba Fitzl">
+<link rel="canonical" href="https://theevilbit.github.io/posts/finding-vulnerabilities-in-apple-packages/">
+<link rel="alternate" type="application/rss+xml" title="theevilbit" href="/index.xml">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>try { var t = localStorage.getItem("tb.theme"); document.documentElement.dataset.theme = t || "dark"; } catch (e) { document.documentElement.dataset.theme = "dark"; }</script>
+<link rel="preload" href="/fonts/IBMPlexSans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts.css?v=1791269065">
+<link rel="stylesheet" href="/style.css?v=1791269065">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/">the<span>evil</span>bit<i class="cursor"></i></a>
+    <nav class="nav"><a href="/posts/" class=on>Posts</a><a href="/beyond/">Beyond</a><a href="/talks/">Talks</a><a href="/shield/">Shield</a><a href="/about/">About</a><a href="/tags/">Tags</a></nav>
+    <button type="button" class="theme" id="theme" aria-label="switch light / dark">◐</button>
+  </header>
+  <main><article class="post">
+<header class="post-head"><h1>Finding Vulnerabilities in Apple Packages at Scale</h1>
+<div class="meta"><time datetime="2025-09-09">Sep 9, 2025</time><span>1 min read</span><span class="tags"><a class="tag" href="/tags/macos/">macos</a><a class="tag" href="/tags/lpe/">lpe</a><a class="tag" href="/tags/installer/">installer</a><a class="tag" href="/tags/vulnerability/">vulnerability</a><a class="tag" href="/tags/cve/">cve</a></span></div></header>
+<div class="prose"><h2 id="intro">Intro<a class="anchor" href="#intro" aria-label="link to this section">#</a></h2>
+<p>This article summarizes work we performed in 2024, which we shared in our "Finding Vulnerabilities in Apple Packages at Scale" talk at MacDevOpsYVR and SecurityFest conferences earlier this year.</p>
+<p>In macOS, two daemons handle package installation: installd and system_installd. The first is invoked when we install third-party packages, the second is for Apple-signed packages. We'll revisit why vulnerabilities in Apple-signed packages can be devastating, focusing on system_installd, which is more frequently abused.</p>
+<p>...</p>
+<p>The full blog was published at my company's (Iru, formerly Kandji) website: <a href="https://www.iru.com/blog/finding-vulnerabilities-in-apple-packages" rel="noopener"><a href="https://www.iru.com/blog/finding-vulnerabilities-in-apple-packages" rel="noopener">https://www.iru.com/blog/finding-vulnerabilities-in-apple-packages</a></a></p></div>
+<nav class="pn"><a class="prev" href="/posts/macos-audit-story-part3/"><span>← previous</span>The diskarbitrationd and storagekitd Audit Story Part 3</a><a class="next" href="/posts/crashone-cve-2025-24277-macos-sandbox-escape/"><span>next →</span>CrashOne - A Starbucks Story - CVE-2025-24277</a></nav></article></main>
+  <footer class="foot">
+    <span>© 2026 Csaba Fitzl</span>
+    <span class="social"><a href="https://github.com/theevilbit/" rel="me noopener">GitHub</a><a href="https://x.com/theevilbit" rel="me noopener">X</a><a href="/index.xml" rel="me noopener">RSS</a></span>
+  </footer>
+</div>
+<script>
+document.getElementById("theme").addEventListener("click", function () {
+  var t = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem("tb.theme", t); } catch (e) {}
+});
+</script>
+</body>
+</html>

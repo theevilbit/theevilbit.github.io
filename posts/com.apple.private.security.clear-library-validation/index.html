@@ -1,472 +1,251 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-  <title>
-  About com.apple.private.security.clear-library-validation · theevilbit blog
-</title>
-  <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light dark">
-
-
-
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About com.apple.private.security.clear-library-validation · theevilbit</title>
+<meta name="description" content="On macOS 10.15.2 Apple introduced the com.apple.private.security.clear-library-validation entitlement, which is slowly replacing the previously used com.apple.security.cs.disable-library-validation entitlement on system ">
 <meta name="author" content="Csaba Fitzl">
-<meta name="description" content="
-  TL;DR
-  
-    
-    Link to heading
-  
-
-On macOS 10.15.2 Apple introduced the com.apple.private.security.clear-library-validation entitlement, which is slowly replacing the previously used com.apple.security.cs.disable-library-validation entitlement on system binaries. Although their impact is the about the same, the way they work is different. While library validation is automatically disabled using com.apple.security.cs.disable-library-validation, with com.apple.private.security.clear-library-validation, the application has to disable it for itself through a csops system call.
-
-  Intro
-  
-    
-    Link to heading
-  
-
-With the release of Big Sur, I noticed that many of the system binaries have a new entitlement, which I didn&rsquo;t see before, and that is com.apple.private.security.clear-library-validation (later it turned out that it was introduced earlier, but I didn&rsquo;t know about it that time). These applications possessed the com.apple.security.cs.disable-library-validation before, so it seemed that this is being replaced with a new one. The name suggest similarity, and testing it also confirmed, that these binaries can still load third party plugins signed by non Apple developers. This means that these entitlements have the same impact.">
-<meta name="keywords" content="blog,macos,apple,security,vulnerability,exploit,cve">
-
-
-
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="About com.apple.private.security.clear-library-validation">
-  <meta name="twitter:description" content="TL;DR Link to heading On macOS 10.15.2 Apple introduced the com.apple.private.security.clear-library-validation entitlement, which is slowly replacing the previously used com.apple.security.cs.disable-library-validation entitlement on system binaries. Although their impact is the about the same, the way they work is different. While library validation is automatically disabled using com.apple.security.cs.disable-library-validation, with com.apple.private.security.clear-library-validation, the application has to disable it for itself through a csops system call.
-Intro Link to heading With the release of Big Sur, I noticed that many of the system binaries have a new entitlement, which I didn’t see before, and that is com.apple.private.security.clear-library-validation (later it turned out that it was introduced earlier, but I didn’t know about it that time). These applications possessed the com.apple.security.cs.disable-library-validation before, so it seemed that this is being replaced with a new one. The name suggest similarity, and testing it also confirmed, that these binaries can still load third party plugins signed by non Apple developers. This means that these entitlements have the same impact.">
-
-<meta property="og:url" content="https://theevilbit.github.io/posts/com.apple.private.security.clear-library-validation/">
-  <meta property="og:site_name" content="theevilbit blog">
-  <meta property="og:title" content="About com.apple.private.security.clear-library-validation">
-  <meta property="og:description" content="TL;DR Link to heading On macOS 10.15.2 Apple introduced the com.apple.private.security.clear-library-validation entitlement, which is slowly replacing the previously used com.apple.security.cs.disable-library-validation entitlement on system binaries. Although their impact is the about the same, the way they work is different. While library validation is automatically disabled using com.apple.security.cs.disable-library-validation, with com.apple.private.security.clear-library-validation, the application has to disable it for itself through a csops system call.
-Intro Link to heading With the release of Big Sur, I noticed that many of the system binaries have a new entitlement, which I didn’t see before, and that is com.apple.private.security.clear-library-validation (later it turned out that it was introduced earlier, but I didn’t know about it that time). These applications possessed the com.apple.security.cs.disable-library-validation before, so it seemed that this is being replaced with a new one. The name suggest similarity, and testing it also confirmed, that these binaries can still load third party plugins signed by non Apple developers. This means that these entitlements have the same impact.">
-  <meta property="og:locale" content="en">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2021-01-19T00:00:00+00:00">
-    <meta property="article:modified_time" content="2021-01-19T00:00:00+00:00">
-    <meta property="article:tag" content="Macos">
-    <meta property="article:tag" content="Internals">
-    <meta property="article:tag" content="Codesigning">
-    <meta property="article:tag" content="Entitlement">
-
-
-
-
 <link rel="canonical" href="https://theevilbit.github.io/posts/com.apple.private.security.clear-library-validation/">
-
-
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://theevilbit.github.io/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
-
-
-  
-  
-  <link rel="stylesheet" href="https://theevilbit.github.io/css/coder.min.4410e480b3bad72c110a96b56e5aa8c36c24a0f3735b278818123b0fa4393fcd.css" integrity="sha256-RBDkgLO61ywRCpa1blqow2wkoPNzWyeIGBI7D6Q5P80=" crossorigin="anonymous" media="screen" />
-
-
-
-
-
-
-  
-    
-    
-    <link rel="stylesheet" href="https://theevilbit.github.io/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
-  
-
-
-
- 
-
-
-
-
-<link rel="icon" type="image/svg+xml" href="https://theevilbit.github.io/images/favicon.svg" sizes="any">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="https://theevilbit.github.io/images/favicon-16x16.png" sizes="16x16">
-
-<link rel="apple-touch-icon" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="180x180" href="https://theevilbit.github.io/images/apple-touch-icon.png">
-
-<link rel="manifest" href="https://theevilbit.github.io/site.webmanifest">
-<link rel="mask-icon" href="https://theevilbit.github.io/images/safari-pinned-tab.svg" color="#5bbad5">
-
-
-
-
-
-
-
-
-
+<link rel="alternate" type="application/rss+xml" title="theevilbit" href="/index.xml">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>try { var t = localStorage.getItem("tb.theme"); document.documentElement.dataset.theme = t || "dark"; } catch (e) { document.documentElement.dataset.theme = "dark"; }</script>
+<link rel="preload" href="/fonts/IBMPlexSans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts.css?v=1791269065">
+<link rel="stylesheet" href="/style.css?v=1791269065">
 </head>
-
-
-
-
-
-
-<body class="preload-transitions colorscheme-auto">
-  
-<div class="float-container">
-    <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
-    </a>
-</div>
-
-
-  <main class="wrapper">
-    <nav class="navigation">
-  <section class="container">
-    
-    <a class="navigation-title" href="https://theevilbit.github.io/">
-      theevilbit blog
-    </a>
-    
-    
-      <input type="checkbox" id="menu-toggle" />
-      <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
-      </label>
-      <ul class="navigation-list">
-        
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/posts/">Posts</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/talks/">Talks and Workshops</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/shield/">Shield.app</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/beyond/">Beyond good ol&#39; LaunchAgents</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/tags/">Tags</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link " href="https://theevilbit.github.io/about/">About</a>
-            </li>
-          
-        
-        
-      </ul>
-    
-  </section>
-</nav>
-
-
-    <div class="content">
-      
-  <section class="container post">
-    <article>
-      <header>
-        <div class="post-title">
-          <h1 class="title">
-            <a class="title-link" href="https://theevilbit.github.io/posts/com.apple.private.security.clear-library-validation/">
-              About com.apple.private.security.clear-library-validation
-            </a>
-          </h1>
-        </div>
-        <div class="post-meta">
-          <div class="date">
-            <span class="posted-on">
-              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
-              <time datetime="2021-01-19T00:00:00Z">
-                January 19, 2021
-              </time>
-            </span>
-            <span class="reading-time">
-              <i class="fa-solid fa-clock" aria-hidden="true"></i>
-              9-minute read
-            </span>
-          </div>
-          
-          <div class="categories">
-  <i class="fa-solid fa-folder" aria-hidden="true"></i>
-    <a href="https://theevilbit.github.io/categories/blog/">BLOG</a></div>
-
-          <div class="tags">
-  <i class="fa-solid fa-tag" aria-hidden="true"></i>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/macos/">Macos</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/internals/">Internals</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/codesigning/">Codesigning</a>
-    </span>
-      <span class="separator">•</span>
-    <span class="tag">
-      <a href="https://theevilbit.github.io/tags/entitlement/">Entitlement</a>
-    </span></div>
-
-        </div>
-      </header>
-
-      <div class="post-content">
-        
-        <h2 id="tldr">
-  TL;DR
-  <a class="heading-link" href="#tldr">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/">the<span>evil</span>bit<i class="cursor"></i></a>
+    <nav class="nav"><a href="/posts/" class=on>Posts</a><a href="/beyond/">Beyond</a><a href="/talks/">Talks</a><a href="/shield/">Shield</a><a href="/about/">About</a><a href="/tags/">Tags</a></nav>
+    <button type="button" class="theme" id="theme" aria-label="switch light / dark">◐</button>
+  </header>
+  <main><article class="post">
+<header class="post-head"><h1>About com.apple.private.security.clear-library-validation</h1>
+<div class="meta"><time datetime="2021-01-19">Jan 19, 2021</time><span>8 min read</span><span class="tags"><a class="tag" href="/tags/macos/">macos</a><a class="tag" href="/tags/internals/">internals</a><a class="tag" href="/tags/codesigning/">codesigning</a><a class="tag" href="/tags/entitlement/">entitlement</a></span></div></header>
+<details class="toc"><summary>Contents</summary><ol><li class="l2"><a href="#tldr">TL;DR</a></li><li class="l2"><a href="#intro">Intro</a></li><li class="l2"><a href="#the-csops-system-call">The csops system call</a></li><li class="l2"><a href="#ssh">SSH</a></li><li class="l2"><a href="#history">History</a></li><li class="l2"><a href="#why-is-it-good">Why is it good?</a></li><li class="l2"><a href="#recap">Recap</a></li></ol></details><div class="prose"><h2 id="tldr">TL;DR<a class="anchor" href="#tldr" aria-label="link to this section">#</a></h2>
 <p>On macOS 10.15.2 Apple introduced the <code>com.apple.private.security.clear-library-validation</code> entitlement, which is slowly replacing the previously used <code>com.apple.security.cs.disable-library-validation</code> entitlement on system binaries. Although their impact is the about the same, the way they work is different. While library validation is automatically disabled using <code>com.apple.security.cs.disable-library-validation</code>, with <code>com.apple.private.security.clear-library-validation</code>, the application has to disable it for itself through a <code>csops</code> system call.</p>
-<h2 id="intro">
-  Intro
-  <a class="heading-link" href="#intro">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>With the release of Big Sur, I noticed that many of the system binaries have a new entitlement, which I didn&rsquo;t see before, and that is <code>com.apple.private.security.clear-library-validation</code> (later it turned out that it was introduced earlier, but I didn&rsquo;t know about it that time). These applications possessed the <code>com.apple.security.cs.disable-library-validation</code> before, so it seemed that this is being replaced with a new one. The name suggest similarity, and testing it also confirmed, that these binaries can still load third party plugins signed by non Apple developers. This means that these entitlements have the same impact.</p>
+<h2 id="intro">Intro<a class="anchor" href="#intro" aria-label="link to this section">#</a></h2>
+<p>With the release of Big Sur, I noticed that many of the system binaries have a new entitlement, which I didn't see before, and that is <code>com.apple.private.security.clear-library-validation</code> (later it turned out that it was introduced earlier, but I didn't know about it that time). These applications possessed the <code>com.apple.security.cs.disable-library-validation</code> before, so it seemed that this is being replaced with a new one. The name suggest similarity, and testing it also confirmed, that these binaries can still load third party plugins signed by non Apple developers. This means that these entitlements have the same impact.</p>
 <p>However their inner working is different.</p>
-<h2 id="the-csops-system-call">
-  The csops system call
-  <a class="heading-link" href="#the-csops-system-call">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>I didn&rsquo;t dig into this new entitlement until I run into a new <code>csops</code> operation code listed below, which can be found in <code>xnu-7195.50.7.100.1/bsd/sys/codesign.h</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#define CS_OPS_CLEAR_LV     15  </span><span style="color:#09f;font-style:italic">/* clear the library validation flag */</span><span style="color:#099">
-</span></span></span></code></pre></div><p><code>csops</code> is a system call that can be used to perform various code signing related operation on processes. We can query the status of a process, set various flags during runtime, query its code signing blob, and so on. This was a new one that I didn&rsquo;t spot before, so I started to go after it.</p>
+<h2 id="the-csops-system-call">The csops system call<a class="anchor" href="#the-csops-system-call" aria-label="link to this section">#</a></h2>
+<p>I didn't dig into this new entitlement until I run into a new <code>csops</code> operation code listed below, which can be found in <code>xnu-7195.50.7.100.1/bsd/sys/codesign.h</code>.</p>
+<pre><code class=language-c>#define CS_OPS_CLEAR_LV     15  /* clear the library validation flag */</code></pre>
+<p><code>csops</code> is a system call that can be used to perform various code signing related operation on processes. We can query the status of a process, set various flags during runtime, query its code signing blob, and so on. This was a new one that I didn't spot before, so I started to go after it.</p>
 <p>The description of this constant says that we can use this operation code to clear the library validation flag of a process. This means that if we can run this on a process we can load third party libraries into it if the call is successful.</p>
 <p>This constant is only referenced inside the <code>xnu-7195.50.7.100.1/bsd/kern/kern_proc.c</code> source file, which contains the source for the <code>csops_internal</code> function. This is the function that will be run when the system call is made. Here is the relevant part of the source code concerning the <code>CS_OPS_CLEAR_LV</code> operation.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">static</span> <span style="color:#078;font-weight:bold">int</span>
-</span></span><span style="display:flex;"><span><span style="color:#c0f">csops_internal</span>(<span style="color:#078;font-weight:bold">pid_t</span> pid, <span style="color:#078;font-weight:bold">int</span> ops, <span style="color:#078;font-weight:bold">user_addr_t</span> uaddr, <span style="color:#078;font-weight:bold">user_size_t</span> usersize, <span style="color:#078;font-weight:bold">user_addr_t</span> uaudittoken)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>(...)
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (pid <span style="color:#555">==</span> <span style="color:#f60">0</span>) {
-</span></span><span style="display:flex;"><span>		pid <span style="color:#555">=</span> <span style="color:#c0f">proc_selfpid</span>();
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (pid <span style="color:#555">==</span> <span style="color:#c0f">proc_selfpid</span>()) {
-</span></span><span style="display:flex;"><span>		forself <span style="color:#555">=</span> <span style="color:#f60">1</span>;
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">switch</span> (ops) {
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_STATUS</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CDHASH</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_PIDOFFSET</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_ENTITLEMENTS_BLOB</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_IDENTITY</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_BLOB</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_TEAMID</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEAR_LV</span>:
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">break</span>;          <span style="color:#09f;font-style:italic">/* not restricted to root */</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">default</span><span style="color:#555">:</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> (forself <span style="color:#555">==</span> <span style="color:#f60">0</span> <span style="color:#555">&amp;&amp;</span> <span style="color:#c0f">kauth_cred_issuser</span>(<span style="color:#c0f">kauth_cred_get</span>()) <span style="color:#555">!=</span> TRUE) {
-</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">return</span> EPERM;
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">break</span>;
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	pt <span style="color:#555">=</span> <span style="color:#c0f">proc_find</span>(pid);
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (pt <span style="color:#555">==</span> PROC_NULL) {
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> ESRCH;
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>(...)
-</span></span><span style="display:flex;"><span><span style="color:#099">#if CONFIG_MACF
-</span></span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">switch</span> (ops) {
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_MARKINVALID</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_MARKHARD</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_MARKKILL</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_MARKRESTRICT</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_SET_STATUS</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEARINSTALLER</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEARPLATFORM</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEAR_LV</span>:
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> ((error <span style="color:#555">=</span> <span style="color:#c0f">mac_proc_check_set_cs_info</span>(<span style="color:#c0f">current_proc</span>(), pt, ops))) {
-</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">goto</span> out;
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">break</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">default</span><span style="color:#555">:</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> ((error <span style="color:#555">=</span> <span style="color:#c0f">mac_proc_check_get_cs_info</span>(<span style="color:#c0f">current_proc</span>(), pt, ops))) {
-</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">goto</span> out;
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span><span style="color:#099">#endif
-</span></span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">switch</span> (ops) {
-</span></span><span style="display:flex;"><span>(...)
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEAR_LV</span>: {
-</span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">/*
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * This option is used to remove library validation from
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * a running process. This is used in plugin architectures
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * when a program needs to load untrusted libraries. This
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * allows the process to maintain library validation as
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * long as possible, then drop it only when required.
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * Once a process has loaded the untrusted library,
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * relying on library validation in the future will
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * not be effective. An alternative is to re-exec
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * your application without library validation, or
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * fork an untrusted child.
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 */</span>
-</span></span><span style="display:flex;"><span><span style="color:#099">#if !defined(XNU_TARGET_OS_OSX)
-</span></span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">// We only support dropping library validation on macOS
-</span></span></span><span style="display:flex;"><span>		error <span style="color:#555">=</span> ENOTSUP;
-</span></span><span style="display:flex;"><span><span style="color:#099">#else
-</span></span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">/*
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * if we have the flag set, and the caller wants
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * to remove it, and they&#39;re entitled to, then
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * we remove it from the csflags
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 *
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * NOTE: We are fine to poke into the task because
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * we get a ref to pt when we do the proc_find
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * at the beginning of this function.
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 *
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * We also only allow altering ourselves.
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 */</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> (forself <span style="color:#555">==</span> <span style="color:#f60">1</span> <span style="color:#555">&amp;&amp;</span> <span style="color:#c0f">IOTaskHasEntitlement</span>(pt<span style="color:#555">-&gt;</span>task, CLEAR_LV_ENTITLEMENT)) {
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">proc_lock</span>(pt);
-</span></span><span style="display:flex;"><span>			pt<span style="color:#555">-&gt;</span>p_csflags <span style="color:#555">&amp;=</span> (<span style="color:#555">~</span>(CS_REQUIRE_LV <span style="color:#555">|</span> CS_FORCED_LV));
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">proc_unlock</span>(pt);
-</span></span><span style="display:flex;"><span>			error <span style="color:#555">=</span> <span style="color:#f60">0</span>;
-</span></span><span style="display:flex;"><span>		} <span style="color:#069;font-weight:bold">else</span> {
-</span></span><span style="display:flex;"><span>			error <span style="color:#555">=</span> EPERM;
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>(...)
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>We will go through this piece by piece.  There are three places where it gets checked. We will start with the first <code>switch</code> case.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#069;font-weight:bold">switch</span> (ops) {
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_STATUS</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CDHASH</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_PIDOFFSET</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_ENTITLEMENTS_BLOB</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_IDENTITY</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_BLOB</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_TEAMID</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEAR_LV</span>:
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">break</span>;          <span style="color:#09f;font-style:italic">/* not restricted to root */</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">default</span><span style="color:#555">:</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> (forself <span style="color:#555">==</span> <span style="color:#f60">0</span> <span style="color:#555">&amp;&amp;</span> <span style="color:#c0f">kauth_cred_issuser</span>(<span style="color:#c0f">kauth_cred_get</span>()) <span style="color:#555">!=</span> TRUE) {
-</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">return</span> EPERM;
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">break</span>;
-</span></span><span style="display:flex;"><span>	}
-</span></span></code></pre></div><p>What happens here is that the system will allow non-root execution of the operations listed in the switch table, including the one, which is in the focus of our interest. This means that we can call <code>csops</code> with the <code>CS_OPS_CLEAR_LV</code> operation even if we are not running as root.</p>
-<p>Let&rsquo;s move on to the other switch case.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#if CONFIG_MACF
-</span></span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">switch</span> (ops) {
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_MARKINVALID</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_MARKHARD</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_MARKKILL</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_MARKRESTRICT</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_SET_STATUS</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEARINSTALLER</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEARPLATFORM</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEAR_LV</span>:
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> ((error <span style="color:#555">=</span> <span style="color:#c0f">mac_proc_check_set_cs_info</span>(<span style="color:#c0f">current_proc</span>(), pt, ops))) {
-</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">goto</span> out;
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">break</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">default</span><span style="color:#555">:</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> ((error <span style="color:#555">=</span> <span style="color:#c0f">mac_proc_check_get_cs_info</span>(<span style="color:#c0f">current_proc</span>(), pt, ops))) {
-</span></span><span style="display:flex;"><span>			<span style="color:#069;font-weight:bold">goto</span> out;
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span><span style="color:#099">#endif
-</span></span></span></code></pre></div><p>Here we have a MACF policy call, using the function <code>mac_proc_check_get_cs_info</code>. MACF policy calls return 0 if they are successful, and this is what being check on the condition. The <code>mac_proc_check_get_cs_info</code> function is implemented inside <code>xnu-7195.50.7.100.1/security/mac_process.c</code>. Let&rsquo;s follow it.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#078;font-weight:bold">int</span>
-</span></span><span style="display:flex;"><span><span style="color:#c0f">mac_proc_check_set_cs_info</span>(<span style="color:#078;font-weight:bold">proc_t</span> curp, <span style="color:#078;font-weight:bold">proc_t</span> target, <span style="color:#078;font-weight:bold">unsigned</span> <span style="color:#078;font-weight:bold">int</span> op)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">kauth_cred_t</span> cred;
-</span></span><span style="display:flex;"><span>	<span style="color:#078;font-weight:bold">int</span> error <span style="color:#555">=</span> <span style="color:#f60">0</span>;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#099">#if SECURITY_MAC_CHECK_ENFORCE
-</span></span></span><span style="display:flex;"><span>	<span style="color:#09f;font-style:italic">/* 21167099 - only check if we allow write */</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span>mac_proc_enforce) {
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> <span style="color:#f60">0</span>;
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span><span style="color:#099">#endif
-</span></span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">if</span> (<span style="color:#555">!</span><span style="color:#c0f">mac_proc_check_enforce</span>(curp)) {
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">return</span> <span style="color:#f60">0</span>;
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	cred <span style="color:#555">=</span> <span style="color:#c0f">kauth_cred_proc_ref</span>(curp);
-</span></span><span style="display:flex;"><span>	<span style="color:#c0f">MAC_CHECK</span>(proc_check_set_cs_info, cred, target, op);
-</span></span><span style="display:flex;"><span>	<span style="color:#c0f">kauth_cred_unref</span>(<span style="color:#555">&amp;</span>cred);
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">return</span> error;
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>This function will eventually make a MACF call using the <code>MAC_CHECK</code> macro, what I already discussed in my <a href="https://theevilbit.github.io/posts/reversing_cve_2020_9771/"  class="external-link" target="_blank" rel="noopener">Reversing engineering the fix of CVE-2020-9771</a> post. It will iterate over the MACF policy hooks, which make a check on <code>proc_check_set_cs_info</code>. This is only hooked right now by the Sandbox, which we can see below.</p>
-<pre tabindex="0"><code class="language-clike" data-lang="clike">void _hook_proc_check_set_cs_info(int arg0, int arg1) {
+<pre><code class=language-c>static int
+csops_internal(pid_t pid, int ops, user_addr_t uaddr, user_size_t usersize, user_addr_t uaudittoken)
+{
+(...)
+    if (pid == 0) {
+        pid = proc_selfpid();
+    }
+    if (pid == proc_selfpid()) {
+        forself = 1;
+    }
+
+
+    switch (ops) {
+    case CS_OPS_STATUS:
+    case CS_OPS_CDHASH:
+    case CS_OPS_PIDOFFSET:
+    case CS_OPS_ENTITLEMENTS_BLOB:
+    case CS_OPS_IDENTITY:
+    case CS_OPS_BLOB:
+    case CS_OPS_TEAMID:
+    case CS_OPS_CLEAR_LV:
+        break;          /* not restricted to root */
+    default:
+        if (forself == 0 &amp;&amp; kauth_cred_issuser(kauth_cred_get()) != TRUE) {
+            return EPERM;
+        }
+        break;
+    }
+
+    pt = proc_find(pid);
+    if (pt == PROC_NULL) {
+        return ESRCH;
+    }
+(...)
+#if CONFIG_MACF
+    switch (ops) {
+    case CS_OPS_MARKINVALID:
+    case CS_OPS_MARKHARD:
+    case CS_OPS_MARKKILL:
+    case CS_OPS_MARKRESTRICT:
+    case CS_OPS_SET_STATUS:
+    case CS_OPS_CLEARINSTALLER:
+    case CS_OPS_CLEARPLATFORM:
+    case CS_OPS_CLEAR_LV:
+        if ((error = mac_proc_check_set_cs_info(current_proc(), pt, ops))) {
+            goto out;
+        }
+        break;
+    default:
+        if ((error = mac_proc_check_get_cs_info(current_proc(), pt, ops))) {
+            goto out;
+        }
+    }
+#endif
+    switch (ops) {
+(...)
+    case CS_OPS_CLEAR_LV: {
+        /*
+         * This option is used to remove library validation from
+         * a running process. This is used in plugin architectures
+         * when a program needs to load untrusted libraries. This
+         * allows the process to maintain library validation as
+         * long as possible, then drop it only when required.
+         * Once a process has loaded the untrusted library,
+         * relying on library validation in the future will
+         * not be effective. An alternative is to re-exec
+         * your application without library validation, or
+         * fork an untrusted child.
+         */
+#if !defined(XNU_TARGET_OS_OSX)
+        // We only support dropping library validation on macOS
+        error = ENOTSUP;
+#else
+        /*
+         * if we have the flag set, and the caller wants
+         * to remove it, and they're entitled to, then
+         * we remove it from the csflags
+         *
+         * NOTE: We are fine to poke into the task because
+         * we get a ref to pt when we do the proc_find
+         * at the beginning of this function.
+         *
+         * We also only allow altering ourselves.
+         */
+        if (forself == 1 &amp;&amp; IOTaskHasEntitlement(pt-&gt;task, CLEAR_LV_ENTITLEMENT)) {
+            proc_lock(pt);
+            pt-&gt;p_csflags &amp;= (~(CS_REQUIRE_LV | CS_FORCED_LV));
+            proc_unlock(pt);
+            error = 0;
+        } else {
+            error = EPERM;
+        }
+(...)
+}</code></pre>
+<p>We will go through this piece by piece.  There are three places where it gets checked. We will start with the first <code>switch</code> case. </p>
+<pre><code class=language-c>switch (ops) {
+    case CS_OPS_STATUS:
+    case CS_OPS_CDHASH:
+    case CS_OPS_PIDOFFSET:
+    case CS_OPS_ENTITLEMENTS_BLOB:
+    case CS_OPS_IDENTITY:
+    case CS_OPS_BLOB:
+    case CS_OPS_TEAMID:
+    case CS_OPS_CLEAR_LV:
+        break;          /* not restricted to root */
+    default:
+        if (forself == 0 &amp;&amp; kauth_cred_issuser(kauth_cred_get()) != TRUE) {
+            return EPERM;
+        }
+        break;
+    }</code></pre>
+<p>What happens here is that the system will allow non-root execution of the operations listed in the switch table, including the one, which is in the focus of our interest. This means that we can call <code>csops</code> with the <code>CS_OPS_CLEAR_LV</code> operation even if we are not running as root.</p>
+<p>Let's move on to the other switch case.</p>
+<pre><code class=language-c>#if CONFIG_MACF
+    switch (ops) {
+    case CS_OPS_MARKINVALID:
+    case CS_OPS_MARKHARD:
+    case CS_OPS_MARKKILL:
+    case CS_OPS_MARKRESTRICT:
+    case CS_OPS_SET_STATUS:
+    case CS_OPS_CLEARINSTALLER:
+    case CS_OPS_CLEARPLATFORM:
+    case CS_OPS_CLEAR_LV:
+        if ((error = mac_proc_check_set_cs_info(current_proc(), pt, ops))) {
+            goto out;
+        }
+        break;
+    default:
+        if ((error = mac_proc_check_get_cs_info(current_proc(), pt, ops))) {
+            goto out;
+        }
+    }
+#endif</code></pre>
+<p>Here we have a MACF policy call, using the function <code>mac_proc_check_get_cs_info</code>. MACF policy calls return 0 if they are successful, and this is what being check on the condition. The <code>mac_proc_check_get_cs_info</code> function is implemented inside <code>xnu-7195.50.7.100.1/security/mac_process.c</code>. Let's follow it.</p>
+<pre><code class=language-c>int
+mac_proc_check_set_cs_info(proc_t curp, proc_t target, unsigned int op)
+{
+    kauth_cred_t cred;
+    int error = 0;
+
+#if SECURITY_MAC_CHECK_ENFORCE
+    /* 21167099 - only check if we allow write */
+    if (!mac_proc_enforce) {
+        return 0;
+    }
+#endif
+    if (!mac_proc_check_enforce(curp)) {
+        return 0;
+    }
+
+    cred = kauth_cred_proc_ref(curp);
+    MAC_CHECK(proc_check_set_cs_info, cred, target, op);
+    kauth_cred_unref(&amp;cred);
+
+    return error;
+}</code></pre>
+<p>This function will eventually make a MACF call using the <code>MAC_CHECK</code> macro, what I already discussed in my <a href="/posts/reversing_cve_2020_9771/">Reversing engineering the fix of CVE-2020-9771</a> post. It will iterate over the MACF policy hooks, which make a check on <code>proc_check_set_cs_info</code>. This is only hooked right now by the Sandbox, which we can see below.</p>
+<pre><code class=language-clike>void _hook_proc_check_set_cs_info(int arg0, int arg1) {
     ___bzero(&amp;var_1A0, 0x188);
     *(int32_t *)(&amp;var_1A0 + 0xa8) = 0x4;
     *(&amp;var_1A0 + 0xb8) = arg1;
     _cred_sb_evaluate(arg0, 0x65, &amp;var_1A0, rcx, r8, r9);
     return;
-}
-</code></pre><p>This will make an internal call to <code>_cred_sb_evaluate</code> with the opcode <code>0x65</code>, I also discussed this in my previous post.</p>
+}</code></pre>
+<p>This will make an internal call to <code>_cred_sb_evaluate</code> with the opcode <code>0x65</code>, I also discussed this in my previous post.</p>
 <p>Going back to our <code>csops</code> call, we can determine that a MACF policy check will be run if this operation is allowed or not for the calling process.</p>
 <p>Assuming yes, we move on, and finally reach the point where the operation is actually implemented.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>	<span style="color:#069;font-weight:bold">case</span> <span style="color:#99f">CS_OPS_CLEAR_LV</span>: {
-</span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">/*
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * This option is used to remove library validation from
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * a running process. This is used in plugin architectures
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * when a program needs to load untrusted libraries. This
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * allows the process to maintain library validation as
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * long as possible, then drop it only when required.
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * Once a process has loaded the untrusted library,
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * relying on library validation in the future will
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * not be effective. An alternative is to re-exec
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * your application without library validation, or
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * fork an untrusted child.
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 */</span>
-</span></span><span style="display:flex;"><span><span style="color:#099">#if !defined(XNU_TARGET_OS_OSX)
-</span></span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">// We only support dropping library validation on macOS
-</span></span></span><span style="display:flex;"><span>		error <span style="color:#555">=</span> ENOTSUP;
-</span></span><span style="display:flex;"><span><span style="color:#099">#else
-</span></span></span><span style="display:flex;"><span>		<span style="color:#09f;font-style:italic">/*
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * if we have the flag set, and the caller wants
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * to remove it, and they&#39;re entitled to, then
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * we remove it from the csflags
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 *
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * NOTE: We are fine to poke into the task because
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * we get a ref to pt when we do the proc_find
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * at the beginning of this function.
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 *
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 * We also only allow altering ourselves.
-</span></span></span><span style="display:flex;"><span><span style="color:#09f;font-style:italic">		 */</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#069;font-weight:bold">if</span> (forself <span style="color:#555">==</span> <span style="color:#f60">1</span> <span style="color:#555">&amp;&amp;</span> <span style="color:#c0f">IOTaskHasEntitlement</span>(pt<span style="color:#555">-&gt;</span>task, CLEAR_LV_ENTITLEMENT)) {
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">proc_lock</span>(pt);
-</span></span><span style="display:flex;"><span>			pt<span style="color:#555">-&gt;</span>p_csflags <span style="color:#555">&amp;=</span> (<span style="color:#555">~</span>(CS_REQUIRE_LV <span style="color:#555">|</span> CS_FORCED_LV));
-</span></span><span style="display:flex;"><span>			<span style="color:#c0f">proc_unlock</span>(pt);
-</span></span><span style="display:flex;"><span>			error <span style="color:#555">=</span> <span style="color:#f60">0</span>;
-</span></span><span style="display:flex;"><span>		} <span style="color:#069;font-weight:bold">else</span> {
-</span></span><span style="display:flex;"><span>			error <span style="color:#555">=</span> EPERM;
-</span></span><span style="display:flex;"><span>		}
-</span></span></code></pre></div><p>I think the description added by Apple is very nice, detailed and explains everything. If the requirements are satisfied it will clear the library validation flag of the target process (<code>pt-&gt;p_csflags &amp;= (~(CS_REQUIRE_LV | CS_FORCED_LV));</code>).</p>
+<pre><code class=language-c>    case CS_OPS_CLEAR_LV: {
+        /*
+         * This option is used to remove library validation from
+         * a running process. This is used in plugin architectures
+         * when a program needs to load untrusted libraries. This
+         * allows the process to maintain library validation as
+         * long as possible, then drop it only when required.
+         * Once a process has loaded the untrusted library,
+         * relying on library validation in the future will
+         * not be effective. An alternative is to re-exec
+         * your application without library validation, or
+         * fork an untrusted child.
+         */
+#if !defined(XNU_TARGET_OS_OSX)
+        // We only support dropping library validation on macOS
+        error = ENOTSUP;
+#else
+        /*
+         * if we have the flag set, and the caller wants
+         * to remove it, and they're entitled to, then
+         * we remove it from the csflags
+         *
+         * NOTE: We are fine to poke into the task because
+         * we get a ref to pt when we do the proc_find
+         * at the beginning of this function.
+         *
+         * We also only allow altering ourselves.
+         */
+        if (forself == 1 &amp;&amp; IOTaskHasEntitlement(pt-&gt;task, CLEAR_LV_ENTITLEMENT)) {
+            proc_lock(pt);
+            pt-&gt;p_csflags &amp;= (~(CS_REQUIRE_LV | CS_FORCED_LV));
+            proc_unlock(pt);
+            error = 0;
+        } else {
+            error = EPERM;
+        }</code></pre>
+<p>I think the description added by Apple is very nice, detailed and explains everything. If the requirements are satisfied it will clear the library validation flag of the target process (<code>pt-&gt;p_csflags &amp;= (~(CS_REQUIRE_LV | CS_FORCED_LV));</code>).</p>
 <p>The condition is very strict. This operation can be called by processes only on themselves (<code>forself == 1</code>) and those that has the entitlement defined by the constant <code>CLEAR_LV_ENTITLEMENT</code>. This is defined in <code>xnu-7195.50.7.100.1/bsd/sys/codesign.h</code>.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f0f3f3;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#099">#define CLEAR_LV_ENTITLEMENT &#34;com.apple.private.security.clear-library-validation&#34;
-</span></span></span></code></pre></div><p>And the loop is closed we got the entitlement which we saw before.</p>
+<pre><code class=language-c>#define CLEAR_LV_ENTITLEMENT "com.apple.private.security.clear-library-validation"</code></pre>
+<p>And the loop is closed we got the entitlement which we saw before.</p>
 <p>To sum up, we can say that a process owning the <code>com.apple.private.security.clear-library-validation</code> entitlement can call the <code>csops</code> system call using the <code>CLEAR_LV_ENTITLEMENT</code> to clear the library validation code signing flag on itself. This works even if the process is not running as root.</p>
-<h2 id="ssh">
-  SSH
-  <a class="heading-link" href="#ssh">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
+<h2 id="ssh">SSH<a class="anchor" href="#ssh" aria-label="link to this section">#</a></h2>
 <p>To confirm this finding I loaded <code>ssh</code>, which has this entitlement, into Hopper, and verify that it uses <code>csops</code> to disable library validation.</p>
-<pre tabindex="0"><code class="language-clike" data-lang="clike">int sub_10016d41f(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
+<pre><code class=language-clike>int sub_10016d41f(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
 (...)
 loc_10016d67b:
     rax = getpid();
@@ -477,122 +256,32 @@ loc_10016d694:
     rdx = 0x0;
     rcx = 0x0;
     rbx = 0x0;
-    sub_10014e556(&#34;csops(CS_OPS_CLEAR_LV) failed: %d&#34;, rax, rdx, rcx, r8, r9, stack[-136]);
-(...)
-</code></pre><p>Indeed we can find the function which calls <code>csops</code> with the opcode <code>0xf</code>, which is the <code>CS_OPS_CLEAR_LV</code> operation. There is even a nice detailed error message if that call fails.</p>
-<h2 id="history">
-  History
-  <a class="heading-link" href="#history">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
+    sub_10014e556("csops(CS_OPS_CLEAR_LV) failed: %d", rax, rdx, rcx, r8, r9, stack[-136]);
+(...)</code></pre>
+<p>Indeed we can find the function which calls <code>csops</code> with the opcode <code>0xf</code>, which is the <code>CS_OPS_CLEAR_LV</code> operation. There is even a nice detailed error message if that call fails.</p>
+<h2 id="history">History<a class="anchor" href="#history" aria-label="link to this section">#</a></h2>
 <p>Although I only noticed this in Big Sur, this feature was introduced earlier. The detailed <code>csops</code> operation to clear the library validation flag was introduced in <code>xnu-6153.61.1</code>, which was used on macOS 10.15.2. However binaries that used this entitlement were only available since macOS 10.15.4, and it started with four applications: <code>su</code>, <code>screen</code>, <code>login</code>, and  <code>passwd</code>.</p>
 <p>As of Big Sur (macOS 11.0) 20 binaries posses this new entitlement, so Apple is slowly migrating over to this new method.</p>
-<h2 id="why-is-it-good">
-  Why is it good?
-  <a class="heading-link" href="#why-is-it-good">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>One might wonder what&rsquo;s the benefit of using this method over the old one. I&rsquo;m only speculating here, but I can see some benefits. With the new method, when applications being loaded, library validation will be enforced, which means that you can&rsquo;t perform a dylib hijacking or proxying attack on such binaries. This is very common problem especially on third party apps.</p>
-<p>You can still inject code to such apps, but only via plugins, and not through other means. Although a plugin might not be more difficult than a standard dylib, it&rsquo;s still a good move towards a better design. Unfortunately, as the name suggests, it&rsquo;s only available for Apple itself, if we try to use it on our own binary we get an error.</p>
-<pre tabindex="0"><code>mac_vnode_check_signature: /tmp/launch: code signature validation failed fatally: When validating /tmp/launch:
+<h2 id="why-is-it-good">Why is it good?<a class="anchor" href="#why-is-it-good" aria-label="link to this section">#</a></h2>
+<p>One might wonder what's the benefit of using this method over the old one. I'm only speculating here, but I can see some benefits. With the new method, when applications being loaded, library validation will be enforced, which means that you can't perform a dylib hijacking or proxying attack on such binaries. This is very common problem especially on third party apps.</p>
+<p>You can still inject code to such apps, but only via plugins, and not through other means. Although a plugin might not be more difficult than a standard dylib, it's still a good move towards a better design. Unfortunately, as the name suggests, it's only available for Apple itself, if we try to use it on our own binary we get an error.</p>
+<pre><code>mac_vnode_check_signature: /tmp/launch: code signature validation failed fatally: When validating /tmp/launch:
   Code has restricted entitlements, but the validation of its code signature failed.
-Unsatisfied Entitlements:
-</code></pre><h2 id="recap">
-  Recap
-  <a class="heading-link" href="#recap">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<p>We saw that Apple introduced a new entitlement, <code>com.apple.private.security.clear-library-validation</code> in macOS 10.15.2, which allows a process to clear the library validation flag on itself using <code>csops</code> system calls. Apple is slowly migrating over applications from using the old  <code>com.apple.security.cs.disable-library-validation</code> entitlement to this new one, which allows a slightly more secure design.</p>
-
-      </div>
-
-
-      <footer>
-        
-
-
-        
-        
-        
-        
-        
-        
-        
-      </footer>
-    </article>
-
-    
-  </section>
-
-    </div>
-
-    <footer class="footer">
-  <section class="container">
-    ©
-    
-      2019 -
-    
-    2026
-     Csaba Fitzl 
-    ·
-    
-    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
-    
-  </section>
-</footer>
-
-  </main>
-
-  
-
-  
-  
-  <script src="https://theevilbit.github.io/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
-  
-
-  
-
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
+Unsatisfied Entitlements:</code></pre>
+<h2 id="recap">Recap<a class="anchor" href="#recap" aria-label="link to this section">#</a></h2>
+<p>We saw that Apple introduced a new entitlement, <code>com.apple.private.security.clear-library-validation</code> in macOS 10.15.2, which allows a process to clear the library validation flag on itself using <code>csops</code> system calls. Apple is slowly migrating over applications from using the old  <code>com.apple.security.cs.disable-library-validation</code> entitlement to this new one, which allows a slightly more secure design.</p></div>
+<nav class="pn"><a class="prev" href="/posts/divide_and_conquer/"><span>← previous</span>Divide and Conquer - A technique to bypass NextGen AV</a><a class="next" href="/posts/macos_crashreporter/"><span>next →</span>CVE-2020-9900 &amp; CVE-2021-1786 - Abusing macOS Crash Reporter</a></nav></article></main>
+  <footer class="foot">
+    <span>© 2026 Csaba Fitzl</span>
+    <span class="social"><a href="https://github.com/theevilbit/" rel="me noopener">GitHub</a><a href="https://x.com/theevilbit" rel="me noopener">X</a><a href="/index.xml" rel="me noopener">RSS</a></span>
+  </footer>
+</div>
+<script>
+document.getElementById("theme").addEventListener("click", function () {
+  var t = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem("tb.theme", t); } catch (e) {}
+});
+</script>
 </body>
 </html>
